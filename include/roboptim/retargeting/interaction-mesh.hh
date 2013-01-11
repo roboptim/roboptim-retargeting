@@ -10,6 +10,30 @@ namespace roboptim
 {
   namespace retargeting
   {
+    /// \brief Interaction mesh nodes (vertices)
+    ///
+    /// Contain both the vertex position in the Euclidian space
+    /// and the vertex id.
+    ///
+    /// The id is used to determine what is the vertex position
+    /// in the optimization vector.
+    struct Vertex
+    {
+      /// \brief Vertex id, aka position amongst optimization variables.
+      unsigned id;
+      /// \brief Vertex position in Euclidian space.
+      Eigen::Matrix<double, 3, 1> position;
+    };
+
+    /// \brief Links betweens nodes in the interactive mesh.
+    ///
+    /// Contains each node weight to avoid useless recomputations.
+    struct Edge
+    {
+      /// \brief Edge weight when computing Laplacian coordinates.
+      double weight;
+    };
+
     /// \brief Store an interaction mesh structure.
     ///
     /// An interaction mesh is a bidirectional graph.
@@ -21,10 +45,8 @@ namespace roboptim
       typedef boost::adjacency_list<boost::vecS,
 				    boost::vecS,
 				    boost::undirectedS,
-				    boost::no_property,
-				    boost::property<
-				      boost::vertex_index_t,
-				      roboptim::Function::size_type> > graph_t;
+				    Vertex,
+				    Edge> graph_t;
       typedef boost::graph_traits<graph_t>::vertex_iterator
       vertex_iterator_t;
       typedef boost::graph_traits<graph_t>::edge_iterator
@@ -53,7 +75,14 @@ namespace roboptim
 	return graph_;
       }
 
+      /// \brief Compute current edges weights based on vertices positions.
+      ///
+      /// Each time a vertex position is updated the weights are invalidated
+      /// and should be recomputed.
+      void computeVertexWeights ();
+
     private:
+      /// \brief Underlying Boost graph.
       graph_t graph_;
     };
 

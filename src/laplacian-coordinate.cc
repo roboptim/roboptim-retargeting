@@ -7,8 +7,10 @@ namespace roboptim
   {
     LaplacianCoordinate::LaplacianCoordinate
     (InteractionMeshShPtr_t mesh,
-     InteractionMesh::vertex_iterator_t vertex) throw ()
-      : roboptim::Function (1, 3, "laplacian coordinate"),
+     InteractionMesh::vertex_descriptor_t vertex) throw ()
+      : roboptim::Function
+	(boost::num_vertices (mesh->graph ()) * 3 * 1, 3,
+	 "laplacian coordinate"),
 	mesh_ (mesh),
 	vertex_ (vertex)
     {
@@ -23,38 +25,51 @@ namespace roboptim
       const throw ()
     {
       assert (result.size () == 3);
-      assert (x.size () - *vertex_ * 3 + 2 > 0);
+      assert (x.size () - vertex_ * 3 + 2 > 0);
 
-      result[0] = x[*vertex_ * 3 + 0];
-      result[1] = x[*vertex_ * 3 + 1];
-      result[2] = x[*vertex_ * 3 + 2];
+      const Vertex& vertex = mesh_->graph ()[vertex_];
 
-      InteractionMesh::index_map_t index =
-	boost::get(boost::vertex_index, mesh_->graph ());
-      std::pair<InteractionMesh::adjacency_iterator_t,
-		InteractionMesh::adjacency_iterator_t> neighbors =
-	boost::adjacent_vertices (vertex (1, mesh_->graph ()),
-				  mesh_->graph ());
+      std::cout << "Vertex id: " << vertex.id << std::endl;
+
+      result[0] = x[vertex.id * 3 + 0];
+      result[1] = x[vertex.id * 3 + 1];
+      result[2] = x[vertex.id * 3 + 2];
+
+      std::cout << "Euclidian position: "
+		<< result[0] << " "
+		<< result[1] << " "
+		<< result[2]
+		<< std::endl;
+
+      InteractionMesh::out_edge_iterator_t edgeIt;
+      InteractionMesh::out_edge_iterator_t edgeEnd;
+      boost::tie(edgeIt, edgeEnd) =
+	boost::out_edges (vertex_, mesh_->graph ());
  
-      for(; neighbors.first != neighbors.second; ++neighbors.first)
+      for(; edgeIt != edgeEnd; ++edgeIt)
 	{
-	  roboptim::Function::size_type nodePosition =
-	    index[*neighbors.first];
+	  const Edge& edge = mesh_->graph()[*edgeIt];
 
-	  Eigen::Matrix<double, 3, 1> w;
-	  w[0] = 1. /
-	    (x[*vertex_ * 3 + 0] - x[nodePosition * 3 + 0]) *
-	    (x[*vertex_ * 3 + 0] - x[nodePosition * 3 + 0]);
-	  w[1] = 1. /
-	    (x[*vertex_ * 3 + 1] - x[nodePosition * 3 + 1]) *
-	    (x[*vertex_ * 3 + 1] - x[nodePosition * 3 + 1]);
-	  w[2] = 1. /
-	    (x[*vertex_ * 3 + 2] - x[nodePosition * 3 + 2]) *
-	    (x[*vertex_ * 3 + 2] - x[nodePosition * 3 + 2]);
+	  InteractionMesh::vertex_descriptor_t source =
+	    boost::source (*edgeIt, mesh_->graph ());
+	  InteractionMesh::vertex_descriptor_t target =
+	    boost::target (*edgeIt, mesh_->graph ());
+	  const Vertex& neighbor = (vertex_ == source)
+	    ? mesh_->graph ()[target]
+	    : mesh_->graph ()[source];
 
-	  result[0] -= w[0] * x[nodePosition * 3 + 0];
-	  result[1] -= w[1] * x[nodePosition * 3 + 1];
-	  result[2] -= w[2] * x[nodePosition * 3 + 2];
+	  std::cout << "--- edge ---" << std::endl;
+	  std::cout << "Edge weight: " << edge.weight << std::endl;
+	  std::cout << "Vertex id: " << neighbor.id << std::endl;
+	  std::cout << "Euclidian position: "
+		    << neighbor.position[0] << " "
+		    << neighbor.position[1] << " "
+		    << neighbor.position[2]
+		    << std::endl;
+
+	  std::cout << "w: " << edge.weight << std::endl;
+
+	  result -= neighbor.position * edge.weight;
 	}
     }
    } // end of namespace retargeting.

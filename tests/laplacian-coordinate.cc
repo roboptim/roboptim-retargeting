@@ -17,16 +17,31 @@ BOOST_AUTO_TEST_CASE (simple)
   // Add two vertices.
   roboptim::retargeting::InteractionMesh::vertex_descriptor_t v0 =
     boost::add_vertex (mesh->graph ());
+
+  mesh->graph ()[v0].id = 0;
+  mesh->graph ()[v0].position[0] = 0.;
+  mesh->graph ()[v0].position[1] = 0.;
+  mesh->graph ()[v0].position[2] = 0.;
+
   roboptim::retargeting::InteractionMesh::vertex_descriptor_t v1 =
     boost::add_vertex (mesh->graph ());
+
+  mesh->graph ()[v1].id = 1;
+  mesh->graph ()[v1].position[0] = 1.;
+  mesh->graph ()[v1].position[1] = 1.;
+  mesh->graph ()[v1].position[2] = 1.;
 
   // Link them using an edge.
   boost::add_edge (v0, v1, mesh->graph ());
 
-  roboptim::Function::argument_t x (2);
-  roboptim::retargeting::LaplacianCoordinate lc
-    (mesh,
-     std::find (boost::vertices (mesh->graph ()).first,
-		boost::vertices (mesh->graph ()).second,
-		v0));
+  mesh->computeVertexWeights ();
+
+  roboptim::Function::argument_t x (2 * 3);
+  for (unsigned i = 0; i < x.size (); ++i)
+    x[i] = 0.;
+  roboptim::retargeting::LaplacianCoordinate lc (mesh, v0);
+
+  std::cout << lc.inputSize () << std::endl;
+  std::cout << lc (x) << std::endl;
+
 }

@@ -23,13 +23,13 @@ namespace roboptim
 
 	explicit LaplacianCoordinate
 	(InteractionMeshShPtr_t mesh,
-	 InteractionMesh::vertex_iterator_t edge) throw ();
+	 InteractionMesh::vertex_descriptor_t edge) throw ();
 	virtual ~LaplacianCoordinate () throw ();
 	void impl_compute (result_t& result, const argument_t& x)
 	  const throw ();
       private:
 	InteractionMeshShPtr_t mesh_;
-	InteractionMesh::vertex_iterator_t vertex_;
+	InteractionMesh::vertex_descriptor_t vertex_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
