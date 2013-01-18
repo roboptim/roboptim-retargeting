@@ -58,6 +58,25 @@ namespace roboptim
 	}
     }
 
+    Eigen::Matrix<double, Eigen::Dynamic, 1>
+    InteractionMesh::optimizationVector ()
+    {
+      Eigen::Matrix<double, Eigen::Dynamic, 1> x (optimizationVectorSize ());
+
+      vertex_iterator_t vertexIt;
+      vertex_iterator_t vertexEnd;
+
+      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
+      for (; vertexIt != vertexEnd; ++vertexIt)
+	{
+	  const Vertex& vertex = graph ()[*vertexIt];
+	  x[vertex.id * 3 + 0] = vertex.position[0];
+	  x[vertex.id * 3 + 1] = vertex.position[1];
+	  x[vertex.id * 3 + 2] = vertex.position[2];
+	}
+      return x;
+    }
+
     void operator >> (const YAML::Node& node, InteractionMesh& mesh)
     {
       if (node.Type () != YAML::NodeType::Sequence)
@@ -93,6 +112,7 @@ namespace roboptim
 	  mesh.graph ()[vertex].position[1] = y;
 	  mesh.graph ()[vertex].position[2] = z;
 	}
+      mesh.computeVertexWeights ();
     }
 
     InteractionMeshShPtr_t
@@ -134,6 +154,28 @@ namespace roboptim
 		    << std::endl;
 	}
 
+      return mesh;
+    }
+
+    InteractionMeshShPtr_t
+    InteractionMesh::makeFromOptimizationVariables
+    (const Eigen::Matrix<double, Eigen::Dynamic, 1>& x)
+    {
+      InteractionMeshShPtr_t mesh =
+	boost::make_shared<InteractionMesh> ();
+
+      unsigned id = 0;
+      for (unsigned i = 0; i < x.size () / 3; ++i)
+	{
+	  vertex_descriptor_t vertex =
+	    boost::add_vertex (mesh->graph ());
+	  
+	  mesh->graph ()[vertex].id = id++;
+	  mesh->graph ()[vertex].position[0] = x[i * 3 + 0];
+	  mesh->graph ()[vertex].position[1] = x[i * 3 + 1];
+	  mesh->graph ()[vertex].position[2] = x[i * 3 + 2];
+	}
+      mesh->computeVertexWeights ();
       return mesh;
     }
 

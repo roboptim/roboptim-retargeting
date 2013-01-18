@@ -2,7 +2,7 @@
 # define ROBOPTIM_RETARGETING_DEFORMATION_ENERGY_HH
 # include <roboptim/core/function.hh>
 
-# include <roboptim/retargeting/interaction-mesh.hh>
+# include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
 {
@@ -12,13 +12,13 @@ namespace roboptim
     {
     public:
       explicit LaplacianDeformationEnergy
-      (InteractionMeshShPtr_t mesh) throw ();
+      (AnimatedInteractionMeshShPtr_t mesh) throw ();
 
       virtual ~LaplacianDeformationEnergy () throw ();
       void impl_compute (result_t& result, const argument_t& x)
 	const throw ();
     private:
-      InteractionMeshShPtr_t mesh_;
+      AnimatedInteractionMeshShPtr_t animatedMesh_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

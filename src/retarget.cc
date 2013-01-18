@@ -1,5 +1,7 @@
 #include "roboptim/retargeting/retarget.hh"
 
+#include "roboptim/retargeting/laplacian-deformation-energy.hh"
+
 
 namespace roboptim
 {
@@ -7,7 +9,8 @@ namespace roboptim
   {
     Retarget::Retarget (const std::string& initialTrajectory)
       : animatedMesh_
-	(AnimatedInteractionMesh::loadAnimatedMesh (initialTrajectory))
+	(AnimatedInteractionMesh::loadAnimatedMesh (initialTrajectory)),
+	cost_ (animatedMesh_)
     {
     }
 

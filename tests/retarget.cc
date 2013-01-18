@@ -19,6 +19,11 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::retargeting::Retarget retarget
     (trajectoryFile);
 
+  Eigen::Matrix<double, Eigen::Dynamic, 1> x
+    (retarget.animatedMesh ()->optimizationVectorSize ());
+  
+  std::cout << "Cost: " << retarget.cost ()(x) << std::endl;
+
   for (unsigned i = 0;
        i < retarget.animatedMesh ()->meshes ().size ();
        ++i)

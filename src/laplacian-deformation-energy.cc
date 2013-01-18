@@ -6,11 +6,11 @@ namespace roboptim
   namespace retargeting
   {
     LaplacianDeformationEnergy::LaplacianDeformationEnergy
-    (InteractionMeshShPtr_t mesh) throw ()
+    (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
       : roboptim::Function
-	(boost::num_vertices (mesh->graph ()) * 3 * 1,
+	(animatedMesh->optimizationVectorSize (),
 	 1, ""),
-	mesh_ (mesh)
+	animatedMesh_ (animatedMesh)
     {}
 
     LaplacianDeformationEnergy::~LaplacianDeformationEnergy () throw ()
@@ -23,17 +23,31 @@ namespace roboptim
     {
       result.resize (1);
 
-      InteractionMesh::vertex_iterator_t vertexIt;
-      InteractionMesh::vertex_iterator_t vertexEnd;
-
-      boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh_->graph ());
-      for (; vertexIt != vertexEnd; ++vertexIt)
+      for (unsigned i = 0; i < animatedMesh_->meshes ().size (); ++i)
 	{
-	  LaplacianCoordinate lcOrigin (mesh_, *vertexIt);
+	  InteractionMeshShPtr_t mesh = animatedMesh_->meshes ()[i];
+	  InteractionMesh::vertex_iterator_t vertexIt;
+	  InteractionMesh::vertex_iterator_t vertexEnd;
+	  
+	  unsigned i = 0;
+	  long unsigned int nVertices = boost::num_vertices (mesh->graph ());
+	  boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh->graph ());
+	  for (; vertexIt != vertexEnd; ++vertexIt)
+	    {
+	      LaplacianCoordinate lcOrigin (mesh, *vertexIt);
+	      
+	      InteractionMeshShPtr_t newMesh =
+		InteractionMesh::makeFromOptimizationVariables
+		(x.segment (i * nVertices * 3, nVertices * 3));
+	      LaplacianCoordinate lcNew (newMesh, *vertexIt);
 
-	  //FIXME: mesh should be different.
-	  LaplacianCoordinate lcNew (mesh_, *vertexIt);
-	  result[0] += (lcOrigin (x) - lcNew (x)).squaredNorm ();
+	      result[0] += (lcOrigin
+			    (mesh->optimizationVector ())
+			    - lcNew 
+			    (x.segment (i * nVertices * 3, nVertices * 3))
+			    ).squaredNorm ();
+	      ++i;
+	    }
 	}
 
       result[0] *= .5;

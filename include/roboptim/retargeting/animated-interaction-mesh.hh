@@ -34,6 +34,30 @@ namespace roboptim
       {
 	return meshes_;
       }
+
+      std::size_t
+      countFrames () const
+      {
+	return meshes ().size ();
+      }
+
+      std::size_t
+      optimizationVectorSize () const
+      {
+	if (!countFrames ())
+	  return 0;
+	return 3
+	  * boost::num_vertices (meshes ()[0]->graph ())
+	  * countFrames ();
+      }
+
+      Eigen::Matrix<double, Eigen::Dynamic, 1>
+      makeOptimizationVector () const
+      {
+	return Eigen::Matrix<double, Eigen::Dynamic, 1>
+	  (optimizationVectorSize ());
+ 
+      }
     private:
       double framerate_;
       std::vector<InteractionMeshShPtr_t> meshes_;

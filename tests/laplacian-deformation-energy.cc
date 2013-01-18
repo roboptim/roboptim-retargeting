@@ -36,10 +36,14 @@ BOOST_AUTO_TEST_CASE (simple)
 
   mesh->computeVertexWeights ();
 
+  roboptim::retargeting::AnimatedInteractionMeshShPtr_t animatedMesh=
+    boost::make_shared<roboptim::retargeting::AnimatedInteractionMesh> ();
+  animatedMesh->meshes ().push_back (mesh);
+
   roboptim::Function::argument_t x (2 * 3);
   for (unsigned i = 0; i < x.size (); ++i)
     x[i] = 0.;
-  roboptim::retargeting::LaplacianDeformationEnergy lde (mesh);
+  roboptim::retargeting::LaplacianDeformationEnergy lde (animatedMesh);
 
   std::cout << lde.inputSize () << std::endl;
   std::cout << lde (x) << std::endl;

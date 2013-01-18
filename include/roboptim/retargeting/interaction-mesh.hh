@@ -76,6 +76,9 @@ namespace roboptim
       static InteractionMeshShPtr_t loadMesh
       (const std::string& trajectoryFile, unsigned frameId);
 
+      static InteractionMeshShPtr_t makeFromOptimizationVariables
+      (const Eigen::Matrix<double, Eigen::Dynamic, 1>& x);
+
       const graph_t& graph () const throw ()
       {
 	return graph_;
@@ -85,6 +88,15 @@ namespace roboptim
       {
 	return graph_;
       }
+
+      unsigned long int
+      optimizationVectorSize () const
+      {
+	return boost::num_vertices (graph ()) * 3;
+      }
+
+      Eigen::Matrix<double, Eigen::Dynamic, 1>
+      optimizationVector ();
 
       /// \brief Compute current edges weights based on vertices positions.
       ///

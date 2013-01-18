@@ -9,7 +9,7 @@ namespace roboptim
     (InteractionMeshShPtr_t mesh,
      InteractionMesh::vertex_descriptor_t vertex) throw ()
       : roboptim::Function
-	(boost::num_vertices (mesh->graph ()) * 3 * 1, 3,
+	(mesh->optimizationVectorSize (), 3,
 	 "laplacian coordinate"),
 	mesh_ (mesh),
 	vertex_ (vertex)

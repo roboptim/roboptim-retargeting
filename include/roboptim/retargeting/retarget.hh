@@ -2,6 +2,7 @@
 # define ROBOPTIM_RETARGETING_RETARGET_HH
 # include <string>
 
+# include <roboptim/retargeting/laplacian-deformation-energy.hh>
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
@@ -21,8 +22,19 @@ namespace roboptim
 	return animatedMesh_;
       }
 
+      const LaplacianDeformationEnergy& cost () const
+      {
+	return cost_;
+      }
+
+      LaplacianDeformationEnergy& cost ()
+      {
+	return cost_;
+      }
+
     private:
       AnimatedInteractionMeshShPtr_t animatedMesh_;
+      LaplacianDeformationEnergy cost_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
