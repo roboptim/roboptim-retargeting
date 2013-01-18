@@ -1,4 +1,7 @@
+#include <stdexcept>
 #include <boost/make_shared.hpp>
+
+#include <log4cxx/logger.h>
 
 #include <fstream>
 #include <yaml-cpp/iterator.h>
@@ -7,10 +10,15 @@
 #include "roboptim/retargeting/animated-interaction-mesh.hh"
 #include "roboptim/retargeting/interaction-mesh.hh"
 
+#include "yaml-helper.hh"
+
 namespace roboptim
 {
   namespace retargeting
   {
+    log4cxx::LoggerPtr AnimatedInteractionMesh::logger
+    (log4cxx::Logger::getLogger("roboptim.retargeting.AnimatedInteractionMesh"));
+
     AnimatedInteractionMesh::AnimatedInteractionMesh ()
       :  framerate_ (),
 	 meshes_ ()
@@ -24,10 +32,11 @@ namespace roboptim
     (const std::string& trajectoryFile,
      const std::string& characterFile)
     {
-      std::cout << "loading animated mesh from files: "
-		<< trajectoryFile << " (trajectory) "
-		<< characterFile << " (character)"
-		<< std::endl;
+      LOG4CXX_INFO
+	(logger,
+	 "loading animated mesh from files: "
+	 << trajectoryFile << " (trajectory) "
+	 << characterFile << " (character)");
 
       AnimatedInteractionMeshShPtr_t animatedMesh =
 	boost::make_shared<AnimatedInteractionMesh> ();
@@ -36,22 +45,20 @@ namespace roboptim
       {
 	std::ifstream fin (trajectoryFile.c_str ());
 	if (!fin.good ())
-	  std::cerr << "bad stream"  << std::endl;
+	  throw std::runtime_error ("bad stream");
 	YAML::Parser parser (fin);
 
 	YAML::Node doc;
 
 	if (!parser.GetNextDocument (doc))
-	  std::cerr << "empty document" << std::endl;
+	  throw std::runtime_error ("empty document");
 
-	if (doc.Type () != YAML::NodeType::Map)
-	  std::cerr << "bad node type, should be map but is "
-		    << doc.Type () << std::endl;
+	checkNodeType (doc, YAML::NodeType::Map);
 
 	std::string type;
 	doc["type"] >> type;
 	if (type != "MultiVector3Seq")
-	  std::cerr << "bad content" << std::endl;
+	  throw std::runtime_error ("bad content");
 	// content
 	doc["frameRate"] >> animatedMesh->framerate_;
 
@@ -69,30 +76,25 @@ namespace roboptim
 	  }
 
 	if (numFrames != animatedMesh->meshes_.size ())
-	  std::cerr << "inconsistent data" << std::endl;
+	  throw std::runtime_error ("inconsistent data");
 
 	if (parser.GetNextDocument(doc))
-	  {
-	    std::cerr << "warning: ignoring multiple documents in YAML file"
-		      << std::endl;
-	  }
+	  LOG4CXX_WARN (logger, "ignoring multiple documents in YAML file");
       }
 
       // Parse character file.
       {
 	std::ifstream fin (characterFile.c_str ());
 	if (!fin.good ())
-	  std::cerr << "bad stream"  << std::endl;
+	  throw std::runtime_error ("bad stream");
 	YAML::Parser parser (fin);
 
 	YAML::Node doc;
 
 	if (!parser.GetNextDocument (doc))
-	  std::cerr << "empty document" << std::endl;
-	
-	if (doc.Type () != YAML::NodeType::Map)
-	  std::cerr << "bad node type, should be map but is "
-		    << doc.Type () << std::endl;
+	  throw std::runtime_error ("empty document");
+
+	checkNodeType (doc, YAML::NodeType::Map);
 
 	// Load edges.
 	const YAML::Node& node = doc["edges"];

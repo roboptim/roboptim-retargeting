@@ -2,6 +2,8 @@
 # define ROBOPTIM_RETARGETING_ANIMATED_INTERACTION_MESH
 # include <vector>
 
+# include <log4cxx/logger.h>
+
 # include <boost/shared_ptr.hpp>
 
 # include <roboptim/retargeting/interaction-mesh.hh>
@@ -62,9 +64,10 @@ namespace roboptim
       {
 	return Eigen::Matrix<double, Eigen::Dynamic, 1>
 	  (optimizationVectorSize ());
- 
+
       }
     private:
+      static log4cxx::LoggerPtr logger;
       double framerate_;
       std::vector<InteractionMeshShPtr_t> meshes_;
     };

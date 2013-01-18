@@ -5,6 +5,9 @@ namespace roboptim
 {
   namespace retargeting
   {
+    log4cxx::LoggerPtr LaplacianCoordinate::logger
+    (log4cxx::Logger::getLogger("roboptim.retargeting.LaplacianCoordinate"));
+
     LaplacianCoordinate::LaplacianCoordinate
     (InteractionMeshShPtr_t mesh,
      InteractionMesh::vertex_descriptor_t vertex) throw ()
@@ -29,23 +32,24 @@ namespace roboptim
 
       const Vertex& vertex = mesh_->graph ()[vertex_];
 
-      std::cout << "Vertex id: " << vertex.id << std::endl;
+      LOG4CXX_TRACE
+	(logger, "Vertex id: " << vertex.id);
 
       result[0] = x[vertex.id * 3 + 0];
       result[1] = x[vertex.id * 3 + 1];
       result[2] = x[vertex.id * 3 + 2];
 
-      std::cout << "Euclidian position: "
-		<< result[0] << " "
-		<< result[1] << " "
-		<< result[2]
-		<< std::endl;
+      LOG4CXX_TRACE (logger,
+		     "Euclidian position: "
+		     << result[0] << " "
+		     << result[1] << " "
+		     << result[2]);
 
       InteractionMesh::out_edge_iterator_t edgeIt;
       InteractionMesh::out_edge_iterator_t edgeEnd;
       boost::tie(edgeIt, edgeEnd) =
 	boost::out_edges (vertex_, mesh_->graph ());
- 
+
       for(; edgeIt != edgeEnd; ++edgeIt)
 	{
 	  const Edge& edge = mesh_->graph()[*edgeIt];
@@ -58,16 +62,16 @@ namespace roboptim
 	    ? mesh_->graph ()[target]
 	    : mesh_->graph ()[source];
 
-	  std::cout << "--- edge ---" << std::endl;
-	  std::cout << "Edge weight: " << edge.weight << std::endl;
-	  std::cout << "Vertex id: " << neighbor.id << std::endl;
-	  std::cout << "Euclidian position: "
-		    << neighbor.position[0] << " "
-		    << neighbor.position[1] << " "
-		    << neighbor.position[2]
-		    << std::endl;
-
-	  std::cout << "w: " << edge.weight << std::endl;
+	  LOG4CXX_TRACE
+	    (logger,
+	     "--- edge ---\n"
+	     << "Edge weight: " << edge.weight << "\n"
+	     << "Vertex id: " << neighbor.id << "\n"
+	     << "Euclidian position: "
+	     << neighbor.position[0] << " "
+	     << neighbor.position[1] << " "
+	     << neighbor.position[2] << "\n"
+	     "w: " << edge.weight);
 
 	  result -= neighbor.position * edge.weight;
 	}

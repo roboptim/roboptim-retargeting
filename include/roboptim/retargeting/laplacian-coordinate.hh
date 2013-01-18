@@ -1,5 +1,6 @@
 #ifndef ROBOPTIM_RETARGETING_LAPLACIAN_COORDINATE_HH
 # define ROBOPTIM_RETARGETING_LAPLACIAN_COORDINATE_HH
+# include <log4cxx/logger.h>
 # include <roboptim/core/function.hh>
 
 # include <roboptim/retargeting/interaction-mesh.hh>
@@ -28,6 +29,7 @@ namespace roboptim
 	void impl_compute (result_t& result, const argument_t& x)
 	  const throw ();
       private:
+	static log4cxx::LoggerPtr logger;
 	InteractionMeshShPtr_t mesh_;
 	InteractionMesh::vertex_descriptor_t vertex_;
     };

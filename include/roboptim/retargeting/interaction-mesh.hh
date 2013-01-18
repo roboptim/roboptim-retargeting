@@ -6,6 +6,8 @@
 # include <boost/graph/graph_traits.hpp>
 # include <boost/graph/adjacency_list.hpp>
 
+# include <log4cxx/logger.h>
+
 namespace YAML
 {
   class Node;
@@ -105,6 +107,8 @@ namespace roboptim
       void computeVertexWeights ();
 
     private:
+      static log4cxx::LoggerPtr logger;
+
       /// \brief Underlying Boost graph.
       graph_t graph_;
     };

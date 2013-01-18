@@ -1,3 +1,5 @@
+#include <stdexcept>
+#include <boost/format.hpp>
 #include <boost/make_shared.hpp>
 
 #include <fstream>
@@ -6,10 +8,15 @@
 
 #include "roboptim/retargeting/interaction-mesh.hh"
 
+#include "yaml-helper.hh"
+
 namespace roboptim
 {
   namespace retargeting
   {
+    log4cxx::LoggerPtr InteractionMesh::logger
+    (log4cxx::Logger::getLogger("roboptim.retargeting.InteractionMesh"));
+
     InteractionMesh::InteractionMesh ()
     {}
 
@@ -31,15 +38,16 @@ namespace roboptim
 	  const Vertex& source = graph ()[boost::source (*edgeIt, graph ())];
 	  const Vertex& target = graph ()[boost::target (*edgeIt, graph ())];
 
-	  std::cout << "--- edge ---" << std::endl
-		    << "source position: "
-		    << source.position[0] << " "
-		    << source.position[1] << " "
-		    << source.position[2] << std::endl
-		    << "target position: "
-		    << target.position[0] << " "
-		    << target.position[1] << " "
-		    << target.position[2] << std::endl;
+	  LOG4CXX_TRACE(logger,
+			"--- edge ---\n"
+			<< "source position: "
+			<< source.position[0] << " "
+			<< source.position[1] << " "
+			<< source.position[2] << "\n"
+			<< "target position: "
+			<< target.position[0] << " "
+			<< target.position[1] << " "
+			<< target.position[2])
 
 	  edge.weight = (source.position - target.position).squaredNorm ();
 	  if (edge.weight == 0.)
@@ -79,12 +87,7 @@ namespace roboptim
 
     void operator >> (const YAML::Node& node, InteractionMesh& mesh)
     {
-      if (node.Type () != YAML::NodeType::Sequence)
-	{
-	  std::cerr << "invalid node type" << std::endl;
-	  return;
-	}
-
+      checkNodeType (node, YAML::NodeType::Sequence);
       unsigned id = 0;
 
       // Iterate over vertices.
@@ -92,12 +95,7 @@ namespace roboptim
 	{
 	  const YAML::Node& vertexNode = *it;
 
-	  if (vertexNode.Type () != YAML::NodeType::Sequence)
-	    {
-	      std::cerr << "invalid node type" << std::endl;
-	      continue;
-	    }
-
+	  checkNodeType (vertexNode, YAML::NodeType::Sequence);
 
 	  InteractionMesh::vertex_descriptor_t
 	    vertex = boost::add_vertex (mesh.graph ());
@@ -106,7 +104,7 @@ namespace roboptim
 	  vertexNode[0] >> x;
 	  vertexNode[1] >> y;
 	  vertexNode[2] >> z;
-	  
+
 	  mesh.graph ()[vertex].id = id++;
 	  mesh.graph ()[vertex].position[0] = x;
 	  mesh.graph ()[vertex].position[1] = y;
@@ -119,29 +117,27 @@ namespace roboptim
     InteractionMesh::loadMesh (const std::string& file,
 			       unsigned frameId)
     {
-      std::cout << "loading mesh from file: " << file << std::endl;
+      LOG4CXX_INFO (logger, "loading mesh from file: ");
 
       InteractionMeshShPtr_t mesh =
 	boost::make_shared<InteractionMesh> ();
 
       std::ifstream fin (file.c_str ());
       if (!fin.good ())
-	std::cerr << "bad stream"  << std::endl;
+	throw std::runtime_error ("bad stream");
       YAML::Parser parser (fin);
-      
+
       YAML::Node doc;
 
       if (!parser.GetNextDocument (doc))
-	std::cerr << "empty document" << std::endl;
+	throw std::runtime_error ("empty document");
 
-      if (doc.Type () != YAML::NodeType::Map)
-	std::cerr << "bad node type, should be map but is "
-		  << doc.Type () << std::endl;
-      
+      checkNodeType (doc, YAML::NodeType::Map);
+
       std::string type;
       doc["type"] >> type;
       if (type != "MultiVector3Seq")
-	std::cerr << "bad content" << std::endl;
+	throw std::runtime_error ("bad content");
       // content
       // frameRate
       // numFrames
@@ -149,10 +145,8 @@ namespace roboptim
       doc["frames"][frameId] >> *mesh;
 
       if (parser.GetNextDocument(doc))
-	{
-	  std::cerr << "warning: ignoring multiple documents in YAML file"
-		    << std::endl;
-	}
+	LOG4CXX_WARN
+	  (logger, "ignoring multiple documents in YAML file");
 
       return mesh;
     }
@@ -169,7 +163,7 @@ namespace roboptim
 	{
 	  vertex_descriptor_t vertex =
 	    boost::add_vertex (mesh->graph ());
-	  
+
 	  mesh->graph ()[vertex].id = id++;
 	  mesh->graph ()[vertex].position[0] = x[i * 3 + 0];
 	  mesh->graph ()[vertex].position[1] = x[i * 3 + 1];
