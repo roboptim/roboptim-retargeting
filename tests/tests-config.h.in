@@ -1,6 +1,15 @@
 #ifndef TESTS_CONFIG_H
 # define TESTS_CONFIG_H
+# include <string>
+# include <log4cxx/xml/domconfigurator.h>
 
 static const char* TESTS_DATA_DIR = "@TESTS_DATA_DIR@";
+
+inline void configureLog4cxx ()
+{
+  std::string log4cxxConfigurationFile = TESTS_DATA_DIR;
+  log4cxxConfigurationFile += "/log4cxx.xml";
+  log4cxx::xml::DOMConfigurator::configure (log4cxxConfigurationFile);
+}
 
 #endif //! TESTS_CONFIG_H

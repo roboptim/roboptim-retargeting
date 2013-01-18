@@ -1,4 +1,5 @@
 #include <boost/make_shared.hpp>
+#include <log4cxx/basicconfigurator.h>
 #include <roboptim/retargeting/laplacian-deformation-energy.hh>
 #include <roboptim/retargeting/interaction-mesh.hh>
 
@@ -7,10 +8,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
+#include "tests-config.h"
+
 using boost::test_tools::output_test_stream;
 
 BOOST_AUTO_TEST_CASE (simple)
 {
+  configureLog4cxx ();
   roboptim::retargeting::InteractionMeshShPtr_t mesh =
     boost::make_shared<roboptim::retargeting::InteractionMesh> ();
 

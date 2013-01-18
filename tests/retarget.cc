@@ -13,6 +13,8 @@ using boost::test_tools::output_test_stream;
 
 BOOST_AUTO_TEST_CASE (simple)
 {
+  configureLog4cxx ();
+
   std::string trajectoryFile = TESTS_DATA_DIR;
   trajectoryFile += "/dance_longer-markers.yaml";
 
