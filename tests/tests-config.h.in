@@ -1,0 +1,6 @@
+#ifndef TESTS_CONFIG_H
+# define TESTS_CONFIG_H
+
+static const char* TESTS_DATA_DIR = "@TESTS_DATA_DIR@";
+
+#endif //! TESTS_CONFIG_H

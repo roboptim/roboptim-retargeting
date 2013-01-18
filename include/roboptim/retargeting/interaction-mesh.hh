@@ -6,10 +6,18 @@
 # include <boost/graph/graph_traits.hpp>
 # include <boost/graph/adjacency_list.hpp>
 
+namespace YAML
+{
+  class Node;
+} // end of namespace YAML.
+
 namespace roboptim
 {
   namespace retargeting
   {
+    class InteractionMesh;
+    typedef boost::shared_ptr<InteractionMesh> InteractionMeshShPtr_t;
+
     /// \brief Interaction mesh nodes (vertices)
     ///
     /// Contain both the vertex position in the Euclidian space
@@ -65,6 +73,8 @@ namespace roboptim
       explicit InteractionMesh ();
       ~InteractionMesh ();
 
+      static InteractionMeshShPtr_t loadMesh (const std::string&);
+
       const graph_t& graph () const throw ()
       {
 	return graph_;
@@ -86,7 +96,7 @@ namespace roboptim
       graph_t graph_;
     };
 
-    typedef boost::shared_ptr<InteractionMesh> InteractionMeshShPtr_t;
+    void operator >> (YAML::Node& node, InteractionMesh& mesh);
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 
