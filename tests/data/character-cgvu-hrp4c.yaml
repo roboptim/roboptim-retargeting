@@ -1,0 +1,250 @@
+
+labelMap:
+  - [ Hip, Hips ]
+  - [ Chest, Spine ]
+  - [ Collar, Spine1 ]
+  - [ Neck, head ]
+  - [ Head, head__end ]
+
+  - [ RightCollar, RightShoulder ]
+  - [ RightShoulder, RightArm ]
+  - [ RightElbow, RightForeArm ]
+  - [ RightWrist, RightHand ]
+  - [ RightHand, RightHand__end ]
+
+  - [ RightHip, RightUpLeg ]
+  - [ RightKnee_org, RightLeg ]
+  - [ RightAnkle_org, RightFoot ]
+  - [ RightFoot, RightToes ]
+  - [ RightToe_org, RightToes__end ]
+
+  - [ LeftCollar, LeftShoulder ]
+  - [ LeftShoulder, LeftArm ]
+  - [ LeftElbow, LeftForeArm ]
+  - [ LeftWrist, LeftHand ]
+  - [ LeftHand, LeftHand__end ]
+
+  - [ LeftHip, LeftUpLeg ]
+  - [ LeftKnee_org, LeftLeg ]
+  - [ LeftAnkle_org, LeftFoot ]
+  - [ LeftFoot, LeftToes ]
+  - [ LeftToe_org, LeftToes__end ]
+
+
+edges:
+  - [ Chest, Collar, 0.2878 ]
+  - [ LeftShoulder, LeftElbow, 0.283 ]
+  - [ RightShoulder, RightElbow, 0.2830 ]
+  - [ LeftHip, LeftKnee_org, 0.3585 ]
+  - [ LeftKnee_org, LeftAnkle_org, 0.3412 ]
+  - [ LeftAnkle_org, LeftFoot, 0.1384 ]
+  - [ LeftFoot, LeftToe_org, 0.031 ]
+
+  - [ RightHip, RightKnee_org, 0.3585 ]
+  - [ RightKnee_org, RightAnkle_org, 0.3412]
+  - [ RightAnkle_org, RightFoot, 0.1384 ]
+  - [ RightFoot, RightToe_org, 0.031 ]
+
+defaultSegment:
+  type: cylinder
+  spanRatio: [ 1.0 ]
+  spanConst: [ 0.1, 0.1, 0.1]
+
+segments:
+  - label: Waist
+    axis0: [ [ RihgtUpLeg, LeftHip ], Chest ]
+    secondAxis: [ RightHip, LeftHip ]
+    spanRatio: [ 1.0, 1.0 ]
+    spanConst: [ 0.0, 0.0, 0.2 ]
+  - label: Torso
+    axis0: [ Chest, Collar ]
+    secondAxis: [ LeftShoulder, RightShoulder ]
+    spanRatio: [ 1.0, 0.8 ]
+    spanConst: [ 0.0, 0.0, 0.3 ]
+  - label: Neck
+    axis0: [ Collar, Neck ]
+  - label: Head
+    axis0: [ Neck, Head ]
+    spanConst: [ 0.1, 0.2, 0.1 ]
+    
+  - label: LeftArm
+    axis0: [ LeftShoulder, LeftElbow ]
+  - label: LeftRoreArm
+    axis0: [ LeftElbow, LeftWrist ]
+  - label: LeftHand
+    axis0: [ LeftWrist, LeftHand ]
+
+  - label: RightArm
+    axis0: [ RightShoulder, RightElbow ]
+  - label: RightRoreArm
+    axis0: [ RightElbow, RightWrist ]
+  - label: RightHand
+    axis0: [ RightWrist, RightHand ]
+
+  - label: RightThigh
+    axis0: [ RightHip, RightKnee]
+  - label: RightShin
+    axis0: [ RightKnee, RightAnkle ]
+  - label: RightFoot
+    axis0: [ RightFoot, RightAnkle ]
+  - label: RightToe
+    axis0: [ RightToe, RightFoot ]
+
+  - label: LeftThigh
+    axis0: [ LeftHip, LeftKnee ]
+  - label: LeftShin
+    axis0: [ LeftKnee, LeftAnkle ]
+  - label: LeftFoot
+    axis0: [ LeftFoot, LeftAnkle ]
+  - label: LeftToe
+    axis0: [ LeftToe, LeftFoot ]
+
+extraMarkers:
+
+  - marker: BackChest
+    bone: Chest
+    pos: [ -0.01, 0.0, 0.0 ]
+
+  - marker: LeftWristThumb
+    bone: LeftWrist
+    pos: [ 0.025, 0.0, 0.0 ]
+    
+  - marker: LeftWristPinky
+    bone: LeftWrist
+    pos: [ -0.025, 0.0, 0.0 ]
+
+  - marker: RightWristThumb
+    bone: RightWrist
+    pos: [ 0.025, 0.0, 0.0 ]
+    
+  - marker: RightWristPinky
+    bone: RightWrist
+    pos: [ -0.025, 0.0, 0.0 ]
+    
+  - marker: FrontCollar
+    bone: Collar
+    pos: [ 0.06, 0.0, 0.0 ]
+    
+  - marker: RightHead
+    bone: Neck
+    pos: [ 0.0, -0.06, 0.12 ]
+    
+  - marker: LeftHead
+    bone: Neck
+    pos: [ 0.0, 0.06, 0.12 ]
+    
+  - marker: Chin
+    bone: Neck
+    pos: [ 0.04, 0.0, -0.02 ]
+
+  - marker: LeftKnee
+    bone: LeftKnee_org
+    pos: [ 0.03, 0.0, 0.0 ]
+
+  - marker: RightKnee
+    bone: RightKnee_org
+    pos: [ 0.03, 0.0, 0.0 ]
+
+  - marker: LeftAnkle
+    bone: LeftAnkle_org
+    pos: [ 0.0, 0.0, 0.05 ]
+
+  - marker: RightAnkle
+    bone: RightAnkle_org
+    pos: [ 0.0, 0.0, 0.05 ]
+
+  - marker: RightFootL
+    bone: RightFoot
+    pos: [ 0.0, 0.04, 0.03 ]
+
+  - marker: RightFootR
+    bone: RightFoot
+    pos: [ 0.0, -0.04, 0.03 ]
+
+  - marker: LeftFootR
+    bone: LeftFoot
+    pos: [ 0.0, -0.04, 0.03 ]
+
+  - marker: LeftFootL
+    bone: LeftFoot
+    pos: [ 0.0, 0.04, 0.03 ]
+
+  - marker: LeftToe
+    bone: LeftFoot
+    pos: [ 0.08, 0.0, 0.025 ]
+
+  - marker: RightToe
+    bone: RightFoot
+    pos: [ 0.08, 0.0, 0.025 ]
+
+unnecessaryMarkers:
+  - Hip
+  - RightCollar
+  - LeftCollar
+  - Head
+  - RightWrist
+  - LeftWrist
+  - RightKnee_org
+  - LeftKnee_org
+  - RightAnkle_org
+  - LeftAnkle_org
+  - RightFoot
+  - LeftFoot
+  - RightToe_org
+  - LeftToe_org
+
+extraMarkerEdges:
+  - [ Chest, RightHip, 0.2268 ]
+  - [ Chest, LeftHip, 0.2268 ]
+  - [ Chest, BackChest, 0.02 ]
+  - [ BackChest, RightHip, 0.2268 ]
+  - [ BackChest, LeftHip, 0.2268 ]
+  - [ LeftHip, RightHip, 0.175 ]
+  - [ Chest, FrontCollar, 0.2878 ]
+  - [ Chest, RightShoulder, 0.3293 ]
+  - [ Chest, LeftShoulder, 0.3293 ]
+  - [ RightShoulder, LeftShoulder, 0.32 ]
+  - [ FrontCollar, RightShoulder, 0.1789 ]
+  - [ FrontCollar, LeftShoulder, 0.1789 ]
+  - [ FrontCollar, Neck, 0.1691 ]
+  - [ Neck, RightShoulder, 0.2186 ]
+  - [ Neck, LeftShoulder, 0.2186 ]
+  - [ Neck, RightHead, 0.15 ]
+  - [ Neck, LeftHead, 0.15 ]
+  - [ Neck, Chin, 0.1077 ]
+  - [ Chin, RightHead, 0.2115 ]
+  - [ Chin, LeftHead, 0.2115 ]
+  - [ RightHead, LeftHead, 0.14 ]
+  - [ LeftElbow, LeftWristThumb, 0.2238 ]
+  - [ LeftElbow, LeftWristPinky, 0.2238 ]
+  - [ LeftWristThumb, LeftWristPinky, 0.05 ]
+  - [ LeftWristThumb, LeftHand, 0.1817 ]
+  - [ LeftWristPinky, LeftHand, 0.1817 ]
+  - [ RightElbow, RightWristThumb, 0.2238 ]
+  - [ RightElbow, RightWristPinky, 0.2238 ]
+  - [ RightWristThumb, RightWristPinky, 0.05 ]
+  - [ RightWristThumb, RightHand, 0.1817 ]
+  - [ RightWristPinky, RightHand, 0.1817 ]
+
+  - [ RightHip, RightKnee, 0.3585 ]
+  - [ RightKnee, RightAnkle, 0.3412]
+  - [ RightAnkle, RightFootL, 0.1441 ]
+  - [ RightAnkle, RightFootR, 0.1441 ]
+  - [ RightFootL, RightFootR, 0.08 ]
+  - [ RightToe, RightFootL, 0.0506 ]
+  - [ RightToe, RightFootR, 0.0506 ]
+
+  - [ LeftHip, LeftKnee, 0.3585 ]
+  - [ LeftKnee, LeftAnkle, 0.3412 ]
+  - [ LeftAnkle, LeftFootR, 0.1441 ]
+  - [ LeftAnkle, LeftFootL, 0.1441 ]
+  - [ LeftFootR, LeftFootL, 0.08 ]
+  - [ LeftToe, LeftFootR, 0.0506 ]
+  - [ LeftToe, LeftFootL, 0.0506 ]
+  
+extraMarkerSegments:
+  - label: LeftHand
+    axis0: [ LeftWrist, LeftHand ]
+    secondAxis: [ LeftThumb, LeftPinky ]
+    spanRatio: [ 1.0, 1.0 ]
+    spanConst: [ 0.0, 0.0, 0.0 ]

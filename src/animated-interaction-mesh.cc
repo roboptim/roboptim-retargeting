@@ -20,56 +20,93 @@ namespace roboptim
     {}
 
     AnimatedInteractionMeshShPtr_t
-    AnimatedInteractionMesh::loadAnimatedMesh (const std::string& file)
+    AnimatedInteractionMesh::loadAnimatedMesh
+    (const std::string& trajectoryFile,
+     const std::string& characterFile)
     {
-      std::cout << "loading animated mesh from file: "
-		<< file << std::endl;
+      std::cout << "loading animated mesh from files: "
+		<< trajectoryFile << " (trajectory) "
+		<< characterFile << " (character)"
+		<< std::endl;
 
       AnimatedInteractionMeshShPtr_t animatedMesh =
 	boost::make_shared<AnimatedInteractionMesh> ();
 
-      std::ifstream fin (file.c_str ());
-      if (!fin.good ())
-	std::cerr << "bad stream"  << std::endl;
-      YAML::Parser parser (fin);
-      
-      YAML::Node doc;
+      // Parse trajectory file.
+      {
+	std::ifstream fin (trajectoryFile.c_str ());
+	if (!fin.good ())
+	  std::cerr << "bad stream"  << std::endl;
+	YAML::Parser parser (fin);
 
-      if (!parser.GetNextDocument (doc))
-	std::cerr << "empty document" << std::endl;
+	YAML::Node doc;
 
-      if (doc.Type () != YAML::NodeType::Map)
-	std::cerr << "bad node type, should be map but is "
-		  << doc.Type () << std::endl;
-      
-      std::string type;
-      doc["type"] >> type;
-      if (type != "MultiVector3Seq")
-	std::cerr << "bad content" << std::endl;
-      // content
-      doc["frameRate"] >> animatedMesh->framerate_;
+	if (!parser.GetNextDocument (doc))
+	  std::cerr << "empty document" << std::endl;
 
-      unsigned numFrames = 0;
-      doc["numFrames"] >> numFrames;
+	if (doc.Type () != YAML::NodeType::Map)
+	  std::cerr << "bad node type, should be map but is "
+		    << doc.Type () << std::endl;
 
-      for (YAML::Iterator it = doc["frames"].begin ();
-	   it != doc["frames"].end (); ++it)
-	{
-	  InteractionMeshShPtr_t mesh =
-	    boost::make_shared<InteractionMesh> ();
-	  const YAML::Node& node = *it;
-	  node >> *mesh;
-	  animatedMesh->meshes_.push_back (mesh);
-	}
+	std::string type;
+	doc["type"] >> type;
+	if (type != "MultiVector3Seq")
+	  std::cerr << "bad content" << std::endl;
+	// content
+	doc["frameRate"] >> animatedMesh->framerate_;
 
-      if (numFrames != animatedMesh->meshes_.size ())
-	std::cerr << "inconsistent data" << std::endl;
+	unsigned numFrames = 0;
+	doc["numFrames"] >> numFrames;
 
-      if (parser.GetNextDocument(doc))
-	{
-	  std::cerr << "warning: ignoring multiple documents in YAML file"
-		    << std::endl;
-	}
+	for (YAML::Iterator it = doc["frames"].begin ();
+	     it != doc["frames"].end (); ++it)
+	  {
+	    InteractionMeshShPtr_t mesh =
+	      boost::make_shared<InteractionMesh> ();
+	    const YAML::Node& node = *it;
+	    node >> *mesh;
+	    animatedMesh->meshes_.push_back (mesh);
+	  }
+
+	if (numFrames != animatedMesh->meshes_.size ())
+	  std::cerr << "inconsistent data" << std::endl;
+
+	if (parser.GetNextDocument(doc))
+	  {
+	    std::cerr << "warning: ignoring multiple documents in YAML file"
+		      << std::endl;
+	  }
+      }
+
+      // Parse character file.
+      {
+	std::ifstream fin (characterFile.c_str ());
+	if (!fin.good ())
+	  std::cerr << "bad stream"  << std::endl;
+	YAML::Parser parser (fin);
+
+	YAML::Node doc;
+
+	if (!parser.GetNextDocument (doc))
+	  std::cerr << "empty document" << std::endl;
+	
+	if (doc.Type () != YAML::NodeType::Map)
+	  std::cerr << "bad node type, should be map but is "
+		    << doc.Type () << std::endl;
+
+	// Load edges.
+	const YAML::Node& node = doc["edges"];
+	for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
+	  {
+	    std::string startMarker, endMarker;
+	    double scale = 0.;
+
+	    (*it)[0] >> startMarker;
+	    (*it)[1] >> endMarker;
+	    (*it)[2] >> scale;
+	  }
+      }
+
 
       return animatedMesh;
     }

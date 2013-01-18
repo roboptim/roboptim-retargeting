@@ -6,10 +6,15 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   ${HEADERS}
   acceleration-energy.cc
   animated-interaction-mesh.cc
+  bone-length.cc
+  collision.cc
   interaction-mesh.cc
   laplacian-coordinate.cc
   laplacian-deformation-energy.cc
+  position.cc
   retarget.cc
+  sum.cc
+  torque.cc
   )
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)

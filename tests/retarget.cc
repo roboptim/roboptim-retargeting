@@ -16,13 +16,24 @@ BOOST_AUTO_TEST_CASE (simple)
   std::string trajectoryFile = TESTS_DATA_DIR;
   trajectoryFile += "/dance_longer-markers.yaml";
 
+  std::string characterFile = TESTS_DATA_DIR;
+  characterFile += "/character-cgvu-hrp4c.yaml";
+
   roboptim::retargeting::Retarget retarget
-    (trajectoryFile);
+    (trajectoryFile,
+     characterFile);
 
   Eigen::Matrix<double, Eigen::Dynamic, 1> x
     (retarget.animatedMesh ()->optimizationVectorSize ());
-  
-  std::cout << "Cost: " << retarget.cost ()(x) << std::endl;
+  x.setZero ();
+
+  std::cout << "Cost (laplacian): "
+	    << (*retarget.costLaplacian ())(x) << std::endl;
+  std::cout << "Cost (acceleration): "
+	    << (*retarget.costAcceleration ())(x) << std::endl;
+  std::cout << "Cost: " << (*retarget.cost ())(x) << std::endl;
+
+  std::cout << "Problem:\n" << *retarget.problem () << std::endl;
 
   for (unsigned i = 0;
        i < retarget.animatedMesh ()->meshes ().size ();
@@ -32,7 +43,7 @@ BOOST_AUTO_TEST_CASE (simple)
 		<< "Number of vertices: "
 		<< boost::num_vertices
 	(retarget.animatedMesh ()->meshes ()[i]->graph ()) << std::endl;
-      
+
       std::ofstream graphvizFile
 	((boost::format ("/tmp/graph_%1%.dot") % i).str().c_str ());
       boost::write_graphviz

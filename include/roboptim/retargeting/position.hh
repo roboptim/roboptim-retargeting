@@ -1,18 +1,29 @@
 #ifndef ROBOPTIM_RETARGETING_POSITION_HH
 # define ROBOPTIM_RETARGETING_POSITION_HH
-# include <roboptim/core/function.hh>
+# include <boost/shared_ptr.hpp>
+# include <roboptim/core/differentiable-function.hh>
 
 namespace roboptim
 {
-  class Position : public roboptim::Function
+  namespace retargeting
   {
-  public:
-    explicit Position ();
-    virtual ~Position () throw ();
-    void impl_compute (result_t& result, const argument_t& x)
-      const throw ();
-  private:
-  };
+    class Position;
+    typedef boost::shared_ptr<Position> PositionShPtr_t;
+
+    class Position : public roboptim::DifferentiableFunction
+    {
+    public:
+      explicit Position () throw ();
+      virtual ~Position () throw ();
+      void impl_compute (result_t& result, const argument_t& x)
+	const throw ();
+      void impl_gradient (gradient_t& gradient,
+			  const argument_t& argument,
+			  size_type functionId = 0)
+	const throw ();
+    private:
+    };
+  } // end of namespace retargeting.
 } // end of namespace roboptim.
 
 #endif //! ROBOPTIM_RETARGETING_POSITION_HH

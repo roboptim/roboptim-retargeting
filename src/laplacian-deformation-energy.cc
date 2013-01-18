@@ -7,7 +7,7 @@ namespace roboptim
   {
     LaplacianDeformationEnergy::LaplacianDeformationEnergy
     (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
-      : roboptim::Function
+      : roboptim::DifferentiableFunction
 	(animatedMesh->optimizationVectorSize (),
 	 1, ""),
 	animatedMesh_ (animatedMesh)
@@ -52,6 +52,14 @@ namespace roboptim
 
       result[0] *= .5;
     }
+
+    void
+    LaplacianDeformationEnergy::impl_gradient
+    (gradient_t&,
+     const argument_t&,
+     size_type)
+      const throw ()
+    {}
 
   } // end of namespace retargeting.
 } // end of namespace roboptim.

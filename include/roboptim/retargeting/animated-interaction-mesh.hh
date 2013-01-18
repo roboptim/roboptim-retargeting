@@ -22,7 +22,8 @@ namespace roboptim
       ~AnimatedInteractionMesh ();
 
       static AnimatedInteractionMeshShPtr_t loadAnimatedMesh
-      (const std::string& trajectoryFile);
+      (const std::string& trajectoryFile,
+       const std::string& characterFile);
 
 
       const std::vector<InteractionMeshShPtr_t>& meshes () const
@@ -33,6 +34,11 @@ namespace roboptim
       std::vector<InteractionMeshShPtr_t>& meshes ()
       {
 	return meshes_;
+      }
+
+      const double& framerate () const
+      {
+	return framerate_;
       }
 
       std::size_t
