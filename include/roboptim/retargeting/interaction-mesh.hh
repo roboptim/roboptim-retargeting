@@ -73,7 +73,8 @@ namespace roboptim
       explicit InteractionMesh ();
       ~InteractionMesh ();
 
-      static InteractionMeshShPtr_t loadMesh (const std::string&);
+      static InteractionMeshShPtr_t loadMesh
+      (const std::string& trajectoryFile, unsigned frameId);
 
       const graph_t& graph () const throw ()
       {
@@ -96,8 +97,10 @@ namespace roboptim
       graph_t graph_;
     };
 
-    void operator >> (YAML::Node& node, InteractionMesh& mesh);
+    void operator >> (const YAML::Node& node, InteractionMesh& mesh);
+
   } // end of namespace retargeting.
+
 } // end of namespace roboptim.
 
 #endif //! ROBOPTIM_RETARGETING_INTERACTION_MESH_HH

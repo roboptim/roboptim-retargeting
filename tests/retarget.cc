@@ -1,3 +1,4 @@
+#include <boost/format.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <roboptim/retargeting/retarget.hh>
 
@@ -18,11 +19,20 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::retargeting::Retarget retarget
     (trajectoryFile);
 
-  std::cout << "Number of vertices: "
-	    << boost::num_vertices (retarget.mesh ()->graph ()) << std::endl;
-
-  std::ofstream graphvizFile ("/tmp/graph.dot");
-  boost::write_graphviz (graphvizFile, retarget.mesh ()->graph ());
+  for (unsigned i = 0;
+       i < retarget.animatedMesh ()->meshes ().size ();
+       ++i)
+    {
+      std::cout << " --- frame " << i << " ---" << std::endl
+		<< "Number of vertices: "
+		<< boost::num_vertices
+	(retarget.animatedMesh ()->meshes ()[i]->graph ()) << std::endl;
+      
+      std::ofstream graphvizFile
+	((boost::format ("/tmp/graph_%1%.dot") % i).str().c_str ());
+      boost::write_graphviz
+	(graphvizFile, retarget.animatedMesh ()->meshes ()[i]->graph ());
+    }
 
   retarget.solve ();
 }

@@ -5,6 +5,7 @@ SET(PLUGINDIR lib/${PROJECT_NAME})
 ADD_LIBRARY(roboptim-retargeting SHARED
   ${HEADERS}
   acceleration-energy.cc
+  animated-interaction-mesh.cc
   interaction-mesh.cc
   laplacian-coordinate.cc
   laplacian-deformation-energy.cc

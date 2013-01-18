@@ -2,7 +2,7 @@
 # define ROBOPTIM_RETARGETING_RETARGET_HH
 # include <string>
 
-# include <roboptim/retargeting/interaction-mesh.hh>
+# include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
 {
@@ -16,12 +16,13 @@ namespace roboptim
       virtual ~Retarget ();
       void solve ();
 
-      InteractionMeshShPtr_t mesh ()
+      AnimatedInteractionMeshShPtr_t animatedMesh ()
       {
-	return mesh_;
+	return animatedMesh_;
       }
+
     private:
-      InteractionMeshShPtr_t mesh_;
+      AnimatedInteractionMeshShPtr_t animatedMesh_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

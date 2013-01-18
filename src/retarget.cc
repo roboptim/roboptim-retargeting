@@ -6,7 +6,8 @@ namespace roboptim
   namespace retargeting
   {
     Retarget::Retarget (const std::string& initialTrajectory)
-      : mesh_ (InteractionMesh::loadMesh (initialTrajectory))
+      : animatedMesh_
+	(AnimatedInteractionMesh::loadAnimatedMesh (initialTrajectory))
     {
     }
 

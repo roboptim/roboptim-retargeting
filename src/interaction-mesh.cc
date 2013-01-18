@@ -60,12 +60,25 @@ namespace roboptim
 
     void operator >> (const YAML::Node& node, InteractionMesh& mesh)
     {
+      if (node.Type () != YAML::NodeType::Sequence)
+	{
+	  std::cerr << "invalid node type" << std::endl;
+	  return;
+	}
+
       unsigned id = 0;
 
       // Iterate over vertices.
       for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
 	{
 	  const YAML::Node& vertexNode = *it;
+
+	  if (vertexNode.Type () != YAML::NodeType::Sequence)
+	    {
+	      std::cerr << "invalid node type" << std::endl;
+	      continue;
+	    }
+
 
 	  InteractionMesh::vertex_descriptor_t
 	    vertex = boost::add_vertex (mesh.graph ());
@@ -83,7 +96,8 @@ namespace roboptim
     }
 
     InteractionMeshShPtr_t
-    InteractionMesh::loadMesh (const std::string& file)
+    InteractionMesh::loadMesh (const std::string& file,
+			       unsigned frameId)
     {
       std::cout << "loading mesh from file: " << file << std::endl;
 
@@ -112,7 +126,7 @@ namespace roboptim
       // frameRate
       // numFrames
 
-      doc["frames"][0] >> *mesh;
+      doc["frames"][frameId] >> *mesh;
 
       if (parser.GetNextDocument(doc))
 	{
