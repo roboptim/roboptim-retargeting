@@ -16,6 +16,10 @@ BOOST_AUTO_TEST_CASE (simple)
 {
   configureLog4cxx ();
 
+  log4cxx::LoggerPtr logger
+    (log4cxx::Logger::getLogger
+     ("roboptim.retargeting.tests.laplacian-coordinate"));
+
   roboptim::retargeting::InteractionMeshShPtr_t mesh =
     boost::make_shared<roboptim::retargeting::InteractionMesh> ();
 
@@ -46,7 +50,7 @@ BOOST_AUTO_TEST_CASE (simple)
     x[i] = 0.;
   roboptim::retargeting::LaplacianCoordinate lc (mesh, v0);
 
-  std::cout << lc.inputSize () << std::endl;
-  std::cout << lc (x) << std::endl;
+  LOG4CXX_INFO (logger, lc.inputSize ());
+  LOG4CXX_INFO (logger, lc (x));
 
 }

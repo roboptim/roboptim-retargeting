@@ -15,6 +15,10 @@ using boost::test_tools::output_test_stream;
 BOOST_AUTO_TEST_CASE (simple)
 {
   configureLog4cxx ();
+  log4cxx::LoggerPtr logger
+    (log4cxx::Logger::getLogger
+     ("roboptim.retargeting.tests.laplacian-deformation-energy"));
+
   roboptim::retargeting::InteractionMeshShPtr_t mesh =
     boost::make_shared<roboptim::retargeting::InteractionMesh> ();
 
@@ -49,7 +53,6 @@ BOOST_AUTO_TEST_CASE (simple)
     x[i] = 0.;
   roboptim::retargeting::LaplacianDeformationEnergy lde (animatedMesh);
 
-  std::cout << lde.inputSize () << std::endl;
-  std::cout << lde (x) << std::endl;
-
+  LOG4CXX_INFO (logger, lde.inputSize ());
+  LOG4CXX_INFO (logger, lde (x));
 }

@@ -1,5 +1,6 @@
 #include <boost/format.hpp>
 #include <boost/graph/graphviz.hpp>
+#include <log4cxx/logger.h>
 #include <roboptim/retargeting/retarget.hh>
 
 #define BOOST_TEST_MODULE retarget
@@ -15,6 +16,9 @@ BOOST_AUTO_TEST_CASE (simple)
 {
   configureLog4cxx ();
 
+  log4cxx::LoggerPtr logger
+    (log4cxx::Logger::getLogger("roboptim.retargeting.tests.retarget"));
+
   std::string trajectoryFile = TESTS_DATA_DIR;
   trajectoryFile += "/dance_longer-markers.yaml";
 
@@ -29,22 +33,28 @@ BOOST_AUTO_TEST_CASE (simple)
     (retarget.animatedMesh ()->optimizationVectorSize ());
   x.setZero ();
 
-  std::cout << "Cost (laplacian): "
-	    << (*retarget.costLaplacian ())(x) << std::endl;
-  std::cout << "Cost (acceleration): "
-	    << (*retarget.costAcceleration ())(x) << std::endl;
-  std::cout << "Cost: " << (*retarget.cost ())(x) << std::endl;
+  LOG4CXX_INFO (logger,
+		"Cost (laplacian): "
+		<< (*retarget.costLaplacian ())(x));
+  LOG4CXX_INFO (logger,
+		"Cost (acceleration): "
+		<< (*retarget.costAcceleration ())(x));
+  LOG4CXX_INFO (logger,
+		"Cost: " << (*retarget.cost ())(x));
 
-  std::cout << "Problem:\n" << *retarget.problem () << std::endl;
+  LOG4CXX_INFO (logger,
+		"Problem:\n" << *retarget.problem ());
 
   for (unsigned i = 0;
        i < retarget.animatedMesh ()->meshes ().size ();
        ++i)
     {
-      std::cout << " --- frame " << i << " ---" << std::endl
-		<< "Number of vertices: "
-		<< boost::num_vertices
-	(retarget.animatedMesh ()->meshes ()[i]->graph ()) << std::endl;
+      LOG4CXX_DEBUG
+	(logger,
+	 " --- frame " << i << " ---"
+	 << "Number of vertices: "
+	 << boost::num_vertices
+	 (retarget.animatedMesh ()->meshes ()[i]->graph ()));
 
       std::ofstream graphvizFile
 	((boost::format ("/tmp/graph_%1%.dot") % i).str().c_str ());

@@ -8,8 +8,29 @@
     </layout>
   </appender>
 
+  <appender name="journalAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="/tmp/roboptim-debug-tests.log" />
+    <param name="append" value="false" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+	     value="%d %-5p [%t:%x] %C{2} (%F:%L) - %m%n" />
+    </layout>
+  </appender>
+
   <root>
-    <priority value="warn" />
-    <appender-ref ref="consoleAppender"/>
+    <priority value="info" />
+    <appender-ref ref="journalAppender"/>
   </root>
+
+  <category name="roboptim">
+    <priority value="warn" />
+  </category>
+
+  <category name="roboptim.retargeting">
+    <priority value="info" />
+  </category>
+
+  <category name="roboptim.retargeting.tests">
+    <appender-ref ref="consoleAppender"/>
+  </category>
 </log4j:configuration>
