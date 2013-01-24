@@ -18,8 +18,7 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   yaml-helper.cc yaml-helper.hh
   )
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
-
-PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core-plugin-ipopt)
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)
 SET_TARGET_PROPERTIES(roboptim-retargeting PROPERTIES SOVERSION 0.0.0)
