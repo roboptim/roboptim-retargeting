@@ -20,6 +20,8 @@ namespace roboptim
     class AnimatedInteractionMesh
     {
     public:
+      typedef std::vector<std::string> labelsVector_t;
+
       explicit AnimatedInteractionMesh ();
       ~AnimatedInteractionMesh ();
 
@@ -66,10 +68,22 @@ namespace roboptim
 	  (optimizationVectorSize ());
 
       }
+
+      const labelsVector_t& vertexLabels () const
+      {
+	return vertexLabels_;
+      }
+
+    protected:
+      static void loadEdgesFromYaml
+      (const YAML::Node& node, AnimatedInteractionMeshShPtr_t animatedMesh);
+
+
     private:
       static log4cxx::LoggerPtr logger;
       double framerate_;
       std::vector<InteractionMeshShPtr_t> meshes_;
+      labelsVector_t vertexLabels_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

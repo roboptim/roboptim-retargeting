@@ -141,6 +141,7 @@ namespace roboptim
       // content
       // frameRate
       // numFrames
+      // partLabels
 
       doc["frames"][frameId] >> *mesh;
 

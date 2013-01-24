@@ -59,7 +59,14 @@ BOOST_AUTO_TEST_CASE (simple)
       std::ofstream graphvizFile
 	((boost::format ("/tmp/graph_%1%.dot") % i).str().c_str ());
       boost::write_graphviz
-	(graphvizFile, retarget.animatedMesh ()->meshes ()[i]->graph ());
+	(graphvizFile, retarget.animatedMesh ()->meshes ()[i]->graph (),
+	 roboptim::retargeting::InteractionMeshGraphVertexWriter<
+	   roboptim::retargeting::InteractionMesh::graph_t>
+	 (retarget.animatedMesh ()->meshes ()[i]->graph (),
+	  retarget.animatedMesh ()->vertexLabels ()),
+	 roboptim::retargeting::InteractionMeshGraphEdgeWriter<
+	   roboptim::retargeting::InteractionMesh::graph_t>
+	 (retarget.animatedMesh ()->meshes ()[i]->graph ()));
     }
 
   retarget.solve ();

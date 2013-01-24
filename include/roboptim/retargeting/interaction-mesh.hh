@@ -115,6 +115,59 @@ namespace roboptim
 
     void operator >> (const YAML::Node& node, InteractionMesh& mesh);
 
+    template <class Name>
+    class InteractionMeshGraphEdgeWriter
+    {
+    public:
+      InteractionMeshGraphEdgeWriter (Name name)
+	: name (name)
+      {}
+
+      template <class Edge>
+      void
+      operator() (std::ostream& out, const Edge& v) const
+      {
+	out << "[label=\""
+	    << "weight: "
+	    << name[v].weight
+	    << "\"]";
+      }
+    private:
+      Name name;
+    };
+
+    template <class Name>
+    class InteractionMeshGraphVertexWriter
+    {
+    public:
+      InteractionMeshGraphVertexWriter (Name name,
+					const std::vector<std::string>& labels)
+	: name (name),
+	  labels (labels)
+      {}
+
+      template <class Vertex>
+      void
+      operator() (std::ostream& out, const Vertex& v) const
+      {
+	out << "[label=\""
+
+	    << "id: "
+	    << name[v].id
+	    << ", label: "
+	    << labels[name[v].id]
+	    << ", position: ["
+	    << name[v].position[0] << ", "
+	    << name[v].position[1] << ", "
+	    << name[v].position[2] << "]"
+
+	    << "\"]";
+      }
+    private:
+      Name name;
+      const std::vector<std::string>& labels;
+    };
+
   } // end of namespace retargeting.
 
 } // end of namespace roboptim.

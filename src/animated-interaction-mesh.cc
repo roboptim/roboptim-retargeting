@@ -1,4 +1,7 @@
+#include <algorithm>
 #include <stdexcept>
+#include <boost/foreach.hpp>
+#include <boost/format.hpp>
 #include <boost/make_shared.hpp>
 
 #include <log4cxx/logger.h>
@@ -21,11 +24,72 @@ namespace roboptim
 
     AnimatedInteractionMesh::AnimatedInteractionMesh ()
       :  framerate_ (),
-	 meshes_ ()
+	 meshes_ (),
+	 vertexLabels_ ()
     {}
 
     AnimatedInteractionMesh::~AnimatedInteractionMesh ()
     {}
+
+    void
+    AnimatedInteractionMesh::loadEdgesFromYaml
+    (const YAML::Node& node,
+     AnimatedInteractionMeshShPtr_t animatedMesh)
+    {
+      typedef AnimatedInteractionMesh::labelsVector_t labelsVector_t;
+      for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
+	{
+	  std::string startMarker, endMarker;
+	  //double scale = 0.;
+
+	  (*it)[0] >> startMarker;
+	  (*it)[1] >> endMarker;
+	  //(*it)[2] >> scale;
+
+	  labelsVector_t::const_iterator itStartMarker =
+	    std::find (animatedMesh->vertexLabels_.begin (),
+		       animatedMesh->vertexLabels_.end (),
+		       startMarker);
+	  labelsVector_t::const_iterator itEndMarker =
+	    std::find (animatedMesh->vertexLabels_.begin (),
+		       animatedMesh->vertexLabels_.end (),
+		       endMarker);
+	  if (itStartMarker == animatedMesh->vertexLabels_.end ())
+	    {
+	      LOG4CXX_WARN
+		(logger,
+		 boost::format("unknown marker '%1%' in character file")
+		 % startMarker);
+	      continue;
+	    }
+	  if (itEndMarker == animatedMesh->vertexLabels_.end ())
+	    {
+	      LOG4CXX_WARN
+		(logger,
+		 boost::format("unknown marker '%1%' in character file")
+		 % endMarker);
+	      continue;
+	    }
+	  if (itStartMarker == itEndMarker)
+	    {
+	      LOG4CXX_WARN
+		(logger,
+		 "source and target vertex are the same, ignoring");
+	      continue;
+	    }
+
+	  BOOST_FOREACH (InteractionMeshShPtr_t mesh,
+			 animatedMesh->meshes_)
+	    {
+	      InteractionMesh::vertex_descriptor_t source =
+		itStartMarker - animatedMesh->vertexLabels_.begin ();
+	      InteractionMesh::vertex_descriptor_t target =
+		itEndMarker - animatedMesh->vertexLabels_.begin ();
+	      boost::add_edge (source, target, mesh->graph ());
+	      mesh->computeVertexWeights ();
+	    }
+	}
+    }
 
     AnimatedInteractionMeshShPtr_t
     AnimatedInteractionMesh::loadAnimatedMesh
@@ -65,6 +129,14 @@ namespace roboptim
 	unsigned numFrames = 0;
 	doc["numFrames"] >> numFrames;
 
+	for (YAML::Iterator it = doc["partLabels"].begin ();
+	     it != doc["partLabels"].end (); ++it)
+	  {
+	    std::string label;
+	    *it >> label;
+	    animatedMesh->vertexLabels_.push_back (label);
+	  }
+
 	for (YAML::Iterator it = doc["frames"].begin ();
 	     it != doc["frames"].end (); ++it)
 	  {
@@ -76,7 +148,8 @@ namespace roboptim
 	  }
 
 	if (numFrames != animatedMesh->meshes_.size ())
-	  throw std::runtime_error ("inconsistent data");
+	  throw std::runtime_error
+	    ("number of frames does not match numFrames header value");
 
 	if (parser.GetNextDocument(doc))
 	  LOG4CXX_WARN (logger, "ignoring multiple documents in YAML file");
@@ -97,16 +170,8 @@ namespace roboptim
 	checkNodeType (doc, YAML::NodeType::Map);
 
 	// Load edges.
-	const YAML::Node& node = doc["edges"];
-	for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
-	  {
-	    std::string startMarker, endMarker;
-	    double scale = 0.;
-
-	    (*it)[0] >> startMarker;
-	    (*it)[1] >> endMarker;
-	    (*it)[2] >> scale;
-	  }
+	loadEdgesFromYaml (doc["edges"], animatedMesh);
+	loadEdgesFromYaml (doc["extraMarkerEdges"], animatedMesh);
       }
 
 
