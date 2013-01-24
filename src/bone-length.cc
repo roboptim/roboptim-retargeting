@@ -5,10 +5,15 @@ namespace roboptim
   namespace retargeting
   {
     BoneLength::BoneLength
-    () throw ()
+    (AnimatedInteractionMeshShPtr_t animatedMesh,
+     unsigned frameId,
+     InteractionMesh::edge_descriptor_t edgeId) throw ()
       : roboptim::DifferentiableFunction
-	(1,
-	 1, "")
+	(animatedMesh->optimizationVectorSize (),
+	 1, ""),
+	animatedMesh_ (animatedMesh),
+	frameId_ (frameId),
+	edgeId_ (edgeId)
     {}
 
     BoneLength::~BoneLength () throw ()
@@ -19,6 +24,7 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+      result[1] = 0.;
     }
 
     void

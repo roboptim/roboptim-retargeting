@@ -35,7 +35,7 @@ namespace roboptim
 	  for (unsigned i = 0; i < animatedMesh_->meshes ().size (); ++i)
 	    {
 	      BoneLengthShPtr_t boneLengthConstraint =
-		boost::make_shared<BoneLength> ();
+		boost::make_shared<BoneLength> (animatedMesh_, i, *edgeIt);
 	      boneLengths_.push_back (boneLengthConstraint);
 	    }
 
