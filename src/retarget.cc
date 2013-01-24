@@ -24,7 +24,22 @@ namespace roboptim
       cost_ = boost::make_shared<Sum> (costs);
       problem_ = boost::make_shared<problem_t> (*cost_);
 
-      // Add constraints.
+      // Create bone lengths constraints,
+      // one per edge and per frame if the scale is different from 1.
+      InteractionMesh::edge_iterator_t edgeIt;
+      InteractionMesh::edge_iterator_t edgeEnd;
+      boost::tie (edgeIt, edgeEnd) =
+	boost::edges (animatedMesh_->meshes ()[0]->graph ());
+      for (; edgeIt != edgeEnd; ++edgeIt)
+	if (animatedMesh_->meshes ()[0]->graph ()[*edgeIt].scale != 1.)
+	  for (unsigned i = 0; i < animatedMesh_->meshes ().size (); ++i)
+	    {
+	      BoneLengthShPtr_t boneLengthConstraint =
+		boost::make_shared<BoneLength> ();
+	      boneLengths_.push_back (boneLengthConstraint);
+	    }
+
+      // Add constraints to problem.
 
       // -- Bone length
       for (unsigned i = 0; i < boneLengths_.size (); ++i)

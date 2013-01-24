@@ -40,11 +40,11 @@ namespace roboptim
       for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
 	{
 	  std::string startMarker, endMarker;
-	  //double scale = 0.;
+	  double scale = 0.;
 
 	  (*it)[0] >> startMarker;
 	  (*it)[1] >> endMarker;
-	  //(*it)[2] >> scale;
+	  (*it)[2] >> scale;
 
 	  labelsVector_t::const_iterator itStartMarker =
 	    std::find (animatedMesh->vertexLabels_.begin (),
@@ -85,7 +85,13 @@ namespace roboptim
 		itStartMarker - animatedMesh->vertexLabels_.begin ();
 	      InteractionMesh::vertex_descriptor_t target =
 		itEndMarker - animatedMesh->vertexLabels_.begin ();
-	      boost::add_edge (source, target, mesh->graph ());
+	      InteractionMesh::edge_descriptor_t edge;
+	      bool ok;
+	      boost::tie (edge, ok) =
+		boost::add_edge (source, target, mesh->graph ());
+	      if (!ok)
+		LOG4CXX_WARN (logger, "failed to add edge");
+	      mesh->graph ()[edge].scale = scale;
 	      mesh->computeVertexWeights ();
 	    }
 	}

@@ -42,6 +42,12 @@ namespace roboptim
     {
       /// \brief Edge weight when computing Laplacian coordinates.
       double weight;
+
+      /// \brief Scaling that should be applied to this edge during
+      ///        retargeting.
+      ///
+      /// 1 means no change.
+      double scale;
     };
 
     /// \brief Store an interaction mesh structure.
@@ -130,6 +136,8 @@ namespace roboptim
 	out << "[label=\""
 	    << "weight: "
 	    << name[v].weight
+	    << ", scale: "
+	    << name[v].scale
 	    << "\"]";
       }
     private:
