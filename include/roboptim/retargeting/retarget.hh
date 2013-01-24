@@ -4,12 +4,14 @@
 
 # include <boost/shared_ptr.hpp>
 
+# include <roboptim/core/generic-solver.hh>
 # include <roboptim/core/problem.hh>
+# include <roboptim/core/solver.hh>
 # include <roboptim/core/sum-of-c1-squares.hh>
 
 # include <roboptim/retargeting/acceleration-energy.hh>
-# include <roboptim/retargeting/laplacian-deformation-energy.hh>
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
+# include <roboptim/retargeting/laplacian-deformation-energy.hh>
 # include <roboptim/retargeting/sum.hh>
 
 # include <roboptim/retargeting/bone-length.hh>
@@ -27,6 +29,9 @@ namespace roboptim
       typedef roboptim::Problem<DerivableFunction,
 				boost::mpl::vector<DerivableFunction> >
       problem_t;
+      typedef roboptim::Solver<DerivableFunction,
+			       boost::mpl::vector<DerivableFunction> >
+      solver_t;
       typedef boost::shared_ptr<problem_t>
       problemShPtr_t;
 
@@ -80,7 +85,19 @@ namespace roboptim
       {
 	return problem_;
       }
+
+      /// \brief Return the optimization result.
+      ///
+      /// You *have* to call solve() first otherwise
+      /// the result will contain no information.
+      const GenericSolver::result_t& result () const
+      {
+	return result_;
+      }
+
     private:
+      static log4cxx::LoggerPtr logger;
+
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       LaplacianDeformationEnergyShPtr_t costLaplacian_;
       AccelerationEnergyShPtr_t costAcceleration_;
@@ -91,6 +108,8 @@ namespace roboptim
       std::vector<PositionShPtr_t> positions_;
       std::vector<CollisionShPtr_t> collisions_;
       std::vector<TorqueShPtr_t> torques_;
+
+      GenericSolver::result_t result_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

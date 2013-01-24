@@ -42,9 +42,6 @@ BOOST_AUTO_TEST_CASE (simple)
   LOG4CXX_INFO (logger,
 		"Cost: " << (*retarget.cost ())(x));
 
-  LOG4CXX_INFO (logger,
-		"Problem:\n" << *retarget.problem ());
-
   for (unsigned i = 0;
        i < retarget.animatedMesh ()->meshes ().size ();
        ++i)
@@ -69,5 +66,28 @@ BOOST_AUTO_TEST_CASE (simple)
 	 (retarget.animatedMesh ()->meshes ()[i]->graph ()));
     }
 
+  LOG4CXX_INFO (logger,
+		"Problem:\n" << *retarget.problem ());
+
   retarget.solve ();
+
+  // Check if the minimization has succeed.
+  if (retarget.result ().which () !=
+      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE)
+    {
+      std::cout << "A solution should have been found. Failing..."
+                << std::endl
+                << boost::get<roboptim::SolverError>
+	(retarget.result ()).what ()
+                << std::endl;
+      return;
+    }
+
+  // Get the result.
+  const roboptim::Result& result =
+    boost::get<roboptim::Result> (retarget.result ());
+
+  // Display the result.
+  std::cout << "A solution has been found: " << std::endl;
+  std::cout << result << std::endl;
 }

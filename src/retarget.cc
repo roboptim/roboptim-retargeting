@@ -1,11 +1,16 @@
 #include <boost/make_shared.hpp>
 
+#include <roboptim/core/solver-factory.hh>
+
 #include "roboptim/retargeting/retarget.hh"
 
 namespace roboptim
 {
   namespace retargeting
   {
+    log4cxx::LoggerPtr Retarget::logger
+    (log4cxx::Logger::getLogger("roboptim.retargeting.Retarget"));
+
     Retarget::Retarget (const std::string& initialTrajectory,
 			const std::string& character)
       : animatedMesh_
@@ -16,7 +21,8 @@ namespace roboptim
 	costAcceleration_
 	(boost::make_shared<AccelerationEnergy> (animatedMesh_)),
 	cost_ (),
-	problem_ ()
+	problem_ (),
+	result_ ()
     {
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
@@ -69,6 +75,14 @@ namespace roboptim
     void
     Retarget::solve ()
     {
+      roboptim::SolverFactory<solver_t> factory ("ipopt", *problem_);
+      solver_t& solver = factory ();
+
+      LOG4CXX_INFO (logger, "Solver:\n" << solver);
+      LOG4CXX_DEBUG(logger, "start solving...");
+      solver.solve ();
+      LOG4CXX_DEBUG(logger, "problem solved.");
+      result_ = solver.minimum ();
     }
 
   } // end of namespace retargeting.
