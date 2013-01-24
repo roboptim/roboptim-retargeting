@@ -6,6 +6,8 @@
 #include <yaml-cpp/iterator.h>
 #include <yaml-cpp/yaml.h>
 
+#include <roboptim/core/finite-difference-gradient.hh>
+
 #include "roboptim/retargeting/interaction-mesh.hh"
 
 #include "yaml-helper.hh"

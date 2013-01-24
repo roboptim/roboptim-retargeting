@@ -1,3 +1,4 @@
+#include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/torque.hh"
 
 namespace roboptim
@@ -23,11 +24,14 @@ namespace roboptim
 
     void
     Torque::impl_gradient
-    (gradient_t&,
-     const argument_t&,
-     size_type)
+    (gradient_t& gradient,
+     const argument_t& x,
+     size_type i)
       const throw ()
     {
+      roboptim::FiniteDifferenceGradient<>
+	fdg (*this);
+      fdg.gradient (gradient, x, i);
     }
 
   } // end of namespace retargeting.

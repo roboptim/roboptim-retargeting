@@ -1,3 +1,5 @@
+#include <roboptim/core/finite-difference-gradient.hh>
+
 #include "roboptim/retargeting/laplacian-deformation-energy.hh"
 #include "roboptim/retargeting/laplacian-coordinate.hh"
 
@@ -28,14 +30,14 @@ namespace roboptim
 	  InteractionMeshShPtr_t mesh = animatedMesh_->meshes ()[i];
 	  InteractionMesh::vertex_iterator_t vertexIt;
 	  InteractionMesh::vertex_iterator_t vertexEnd;
-	  
+
 	  unsigned i = 0;
 	  long unsigned int nVertices = boost::num_vertices (mesh->graph ());
 	  boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh->graph ());
 	  for (; vertexIt != vertexEnd; ++vertexIt)
 	    {
 	      LaplacianCoordinate lcOrigin (mesh, *vertexIt);
-	      
+
 	      InteractionMeshShPtr_t newMesh =
 		InteractionMesh::makeFromOptimizationVariables
 		(x.segment (i * nVertices * 3, nVertices * 3));
@@ -43,7 +45,7 @@ namespace roboptim
 
 	      result[0] += (lcOrigin
 			    (mesh->optimizationVector ())
-			    - lcNew 
+			    - lcNew
 			    (x.segment (i * nVertices * 3, nVertices * 3))
 			    ).squaredNorm ();
 	      ++i;
@@ -55,11 +57,14 @@ namespace roboptim
 
     void
     LaplacianDeformationEnergy::impl_gradient
-    (gradient_t&,
-     const argument_t&,
-     size_type)
+    (gradient_t& gradient,
+     const argument_t& x,
+     size_type i)
       const throw ()
-    {}
-
+    {
+      roboptim::FiniteDifferenceGradient<>
+	fdg (*this);
+      fdg.gradient (gradient, x, i);
+    }
   } // end of namespace retargeting.
 } // end of namespace roboptim.
