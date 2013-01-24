@@ -1,6 +1,3 @@
-# Define the directory where plug-ins will be installed.
-SET(PLUGINDIR lib/${PROJECT_NAME})
-
 # Main library.
 ADD_LIBRARY(roboptim-retargeting SHARED
   ${HEADERS}
