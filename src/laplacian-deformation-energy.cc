@@ -32,24 +32,25 @@ namespace roboptim
 	  InteractionMesh::vertex_iterator_t vertexIt;
 	  InteractionMesh::vertex_iterator_t vertexEnd;
 
-	  unsigned vertexId = 0;
 	  long unsigned int nVertices = boost::num_vertices (mesh->graph ());
+
+	  InteractionMeshShPtr_t newMesh =
+	    InteractionMesh::makeFromOptimizationVariables
+	    (x.segment
+	     (frameId * nVertices * 3, nVertices * 3));
+
+	  unsigned vertexId = 0;
 	  boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh->graph ());
 	  for (; vertexIt != vertexEnd; ++vertexIt)
 	    {
 	      LaplacianCoordinate lcOrigin (mesh, *vertexIt);
-
-	      InteractionMeshShPtr_t newMesh =
-		InteractionMesh::makeFromOptimizationVariables
-		(x.segment
-		 (vertexId * nVertices * 3, nVertices * 3));
 	      LaplacianCoordinate lcNew (newMesh, *vertexIt);
 
 	      result[0] += (lcOrigin
 			    (mesh->optimizationVector ())
 			    - lcNew
 			    (x.segment
-			     (vertexId * nVertices * 3, nVertices * 3))
+			     (frameId * nVertices * 3, nVertices * 3))
 			    ).squaredNorm ();
 	      ++vertexId;
 	    }
