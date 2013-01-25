@@ -25,13 +25,14 @@ namespace roboptim
     {
       result.resize (1);
 
-      for (unsigned i = 0; i < animatedMesh_->meshes ().size (); ++i)
+      for (unsigned frameId = 0;
+	   frameId < animatedMesh_->meshes ().size (); ++frameId)
 	{
-	  InteractionMeshShPtr_t mesh = animatedMesh_->meshes ()[i];
+	  InteractionMeshShPtr_t mesh = animatedMesh_->meshes ()[frameId];
 	  InteractionMesh::vertex_iterator_t vertexIt;
 	  InteractionMesh::vertex_iterator_t vertexEnd;
 
-	  unsigned i = 0;
+	  unsigned vertexId = 0;
 	  long unsigned int nVertices = boost::num_vertices (mesh->graph ());
 	  boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh->graph ());
 	  for (; vertexIt != vertexEnd; ++vertexIt)
@@ -40,15 +41,17 @@ namespace roboptim
 
 	      InteractionMeshShPtr_t newMesh =
 		InteractionMesh::makeFromOptimizationVariables
-		(x.segment (i * nVertices * 3, nVertices * 3));
+		(x.segment
+		 (vertexId * nVertices * 3, nVertices * 3));
 	      LaplacianCoordinate lcNew (newMesh, *vertexIt);
 
 	      result[0] += (lcOrigin
 			    (mesh->optimizationVector ())
 			    - lcNew
-			    (x.segment (i * nVertices * 3, nVertices * 3))
+			    (x.segment
+			     (vertexId * nVertices * 3, nVertices * 3))
 			    ).squaredNorm ();
-	      ++i;
+	      ++vertexId;
 	    }
 	}
 

@@ -1,0 +1,7 @@
+#ifndef ROBOPTIM_RETARGETING_DIRECTORIES_HH
+# define ROBOPTIM_RETARGETING_DIRECTORIES_HH
+
+static const char* PKG_SHARE_DIR =
+  "@CMAKE_INSTALL_PREFIX@/share/roboptim/retargeting";
+
+#endif //! TESTS_CONFIG_H

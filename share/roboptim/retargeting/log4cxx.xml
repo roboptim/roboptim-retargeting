@@ -33,4 +33,8 @@
   <category name="roboptim.retargeting.tests">
     <appender-ref ref="consoleAppender"/>
   </category>
+
+  <category name="roboptim.retargeting.roboptim-retarget-motion">
+    <appender-ref ref="consoleAppender"/>
+  </category>
 </log4j:configuration>

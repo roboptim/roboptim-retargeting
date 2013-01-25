@@ -20,7 +20,7 @@ INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/cpack.cmake)
 
-SET(PROJECT_NAME roboptim-trajectory)
+SET(PROJECT_NAME roboptim-retargeting)
 SET(PROJECT_DESCRIPTION "RobOptim retargeting")
 SET(PROJECT_URL "http://github.com/thomas-moulard/roboptim-retargeting")
 
@@ -57,6 +57,7 @@ ADD_REQUIRED_DEPENDENCY("metapod")
 
 HEADER_INSTALL("${HEADERS}")
 
+ADD_SUBDIRECTORY(share)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(tests)
 

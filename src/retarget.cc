@@ -53,9 +53,9 @@ namespace roboptim
       // Add constraints to problem.
 
       // -- Bone length
-      for (unsigned i = 0; i < boneLengths_.size (); ++i)
-	problem_->addConstraint (boneLengths_[i],
-				 roboptim::Function::makeInterval (0., 0.));
+      // for (unsigned i = 0; i < boneLengths_.size (); ++i)
+      // 	problem_->addConstraint (boneLengths_[i],
+      // 				 roboptim::Function::makeInterval (0., 0.));
 
       // -- Position
       for (unsigned i = 0; i < positions_.size (); ++i)

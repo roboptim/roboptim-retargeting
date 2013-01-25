@@ -20,27 +20,14 @@ BOOST_AUTO_TEST_CASE (simple)
     (log4cxx::Logger::getLogger("roboptim.retargeting.tests.retarget"));
 
   std::string trajectoryFile = TESTS_DATA_DIR;
-  trajectoryFile += "/dance_longer-markers.yaml";
+  trajectoryFile += "/data/dance_longer-markers.yaml";
 
   std::string characterFile = TESTS_DATA_DIR;
-  characterFile += "/character-cgvu-hrp4c.yaml";
+  characterFile += "/data/character-cgvu-hrp4c.yaml";
 
   roboptim::retargeting::Retarget retarget
     (trajectoryFile,
      characterFile);
-
-  Eigen::Matrix<double, Eigen::Dynamic, 1> x
-    (retarget.animatedMesh ()->optimizationVectorSize ());
-  x.setZero ();
-
-  LOG4CXX_INFO (logger,
-		"Cost (laplacian): "
-		<< (*retarget.costLaplacian ())(x));
-  LOG4CXX_INFO (logger,
-		"Cost (acceleration): "
-		<< (*retarget.costAcceleration ())(x));
-  LOG4CXX_INFO (logger,
-		"Cost: " << (*retarget.cost ())(x));
 
   for (unsigned i = 0;
        i < retarget.animatedMesh ()->meshes ().size ();
