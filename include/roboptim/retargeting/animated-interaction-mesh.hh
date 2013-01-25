@@ -29,6 +29,9 @@ namespace roboptim
       (const std::string& trajectoryFile,
        const std::string& characterFile);
 
+      static AnimatedInteractionMeshShPtr_t makeFromOptimizationVariables
+      (const Eigen::Matrix<double, Eigen::Dynamic, 1>& x,
+       AnimatedInteractionMeshShPtr_t previousAnimatedMesh);
 
       const std::vector<InteractionMeshShPtr_t>& meshes () const
       {
@@ -73,6 +76,9 @@ namespace roboptim
       {
 	return vertexLabels_;
       }
+
+      void writeGraphvizGraphs (const std::string& path);
+      void writeTrajectory (const std::string& filename);
 
     protected:
       static void loadEdgesFromYaml

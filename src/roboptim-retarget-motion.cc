@@ -134,6 +134,7 @@ int main (int argc, char** argv)
   roboptim::retargeting::Retarget retarget
     (trajectoryFilePath.string (),
      characterFilePath.string ());
+  retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
 
   LOG4CXX_DEBUG (logger,
 		"Problem:\n" << *retarget.problem ());
@@ -158,7 +159,17 @@ int main (int argc, char** argv)
   const roboptim::Result& result =
     boost::get<roboptim::Result> (retarget.result ());
 
-  // Display the result.
-  std::cout << "A solution has been found: " << std::endl;
-  std::cout << result << std::endl;
+  LOG4CXX_INFO
+    (logger,
+     "a solution has been found, writing it to /tmp/result.yaml");
+
+  
+  roboptim::retargeting::AnimatedInteractionMeshShPtr_t resultTrajectory =
+    roboptim::retargeting::
+    AnimatedInteractionMesh::makeFromOptimizationVariables
+    (result.value,
+     retarget.animatedMesh ());
+  resultTrajectory->writeTrajectory("/tmp/result.yaml");
+
+  LOG4CXX_INFO (logger, "trajectory writing succeeded, exiting");
 }

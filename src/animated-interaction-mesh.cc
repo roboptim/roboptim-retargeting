@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/graph/graphviz.hpp>
 
 #include <log4cxx/logger.h>
 
@@ -182,6 +183,93 @@ namespace roboptim
 
 
       return animatedMesh;
+    }
+
+    void
+    AnimatedInteractionMesh::writeGraphvizGraphs (const std::string& path)
+    {
+      for (unsigned i = 0; i < meshes ().size (); ++i)
+	{
+	  std::ofstream graphvizFile
+	    ((boost::format ("%1%/graph_%2%.dot")
+	      % path % i).str().c_str ());
+	  boost::write_graphviz
+	    (graphvizFile, meshes ()[i]->graph (),
+	     roboptim::retargeting::InteractionMeshGraphVertexWriter<
+	       roboptim::retargeting::InteractionMesh::graph_t>
+	     (meshes ()[i]->graph (),
+	      vertexLabels ()),
+	     roboptim::retargeting::InteractionMeshGraphEdgeWriter<
+	       roboptim::retargeting::InteractionMesh::graph_t>
+	     (meshes ()[i]->graph ()));
+	}
+    }
+
+    AnimatedInteractionMeshShPtr_t
+    AnimatedInteractionMesh::makeFromOptimizationVariables
+    (const Eigen::Matrix<double, Eigen::Dynamic, 1>& x,
+     AnimatedInteractionMeshShPtr_t previousAnimatedMesh)
+    {
+      AnimatedInteractionMeshShPtr_t animatedMesh =
+	boost::make_shared<AnimatedInteractionMesh> ();
+
+      animatedMesh->framerate_ = previousAnimatedMesh->framerate_;
+      animatedMesh->vertexLabels_ = previousAnimatedMesh->vertexLabels_;
+
+      if (previousAnimatedMesh->meshes_.empty ())
+	return animatedMesh;
+
+      unsigned numVertices =
+	previousAnimatedMesh->meshes_[0]->optimizationVectorSize ();
+      for (unsigned frameId = 0;
+	   frameId < previousAnimatedMesh->meshes_.size (); ++frameId)
+	{
+	  animatedMesh->meshes_.push_back
+	    (InteractionMesh::makeFromOptimizationVariables
+	     (x.segment (3 * numVertices * frameId, 3 * numVertices)));
+	}
+
+      return animatedMesh;
+    }
+
+    void
+    AnimatedInteractionMesh::writeTrajectory (const std::string& filename)
+    {
+      YAML::Emitter out;
+      out
+	<< YAML::Comment("Marker motion data format version 1.0")
+	<< YAML::BeginMap
+	<< YAML::Key << "type" << YAML::Value << "MultiVector3Seq"
+	<< YAML::Key << "content" << YAML::Value << "MarkerMotion"
+	<< YAML::Key << "framerate" << YAML::Value << framerate_
+	<< YAML::Key << "numFrames" << YAML::Value << meshes_.size ()
+	<< YAML::Key << "partLabels" << YAML::Value
+	<< YAML::BeginSeq
+	     ;
+      for (unsigned i = 0; i < vertexLabels_.size (); ++i)
+	out << vertexLabels_[i];
+      out
+	<< YAML::EndSeq
+	<< YAML::Key << "numParts" << YAML::Value << vertexLabels_.size ()
+	<< YAML::Key << "frames" << YAML::Value
+	<< YAML::BeginSeq
+	;
+      for (unsigned frameId = 0; frameId < meshes_.size (); ++frameId)
+	{
+	  out << YAML::BeginSeq;
+	  Eigen::Matrix<double, 1, Eigen::Dynamic> x =
+	    meshes_[frameId]->optimizationVector ();
+	  for (unsigned i = 0; i < x.cols (); ++i)
+	    out << x[i];
+	  out << YAML::EndSeq;
+	}
+      out
+	<< YAML::EndSeq
+	<< YAML::EndMap
+	;
+      
+      std::ofstream file (filename.c_str ());
+      file << out.c_str ();
     }
 
   } // end of namespace retargeting.

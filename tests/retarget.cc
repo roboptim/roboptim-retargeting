@@ -1,5 +1,4 @@
 #include <boost/format.hpp>
-#include <boost/graph/graphviz.hpp>
 #include <log4cxx/logger.h>
 #include <roboptim/retargeting/retarget.hh>
 
@@ -28,30 +27,7 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::retargeting::Retarget retarget
     (trajectoryFile,
      characterFile);
-
-  for (unsigned i = 0;
-       i < retarget.animatedMesh ()->meshes ().size ();
-       ++i)
-    {
-      LOG4CXX_DEBUG
-	(logger,
-	 " --- frame " << i << " ---"
-	 << "Number of vertices: "
-	 << boost::num_vertices
-	 (retarget.animatedMesh ()->meshes ()[i]->graph ()));
-
-      std::ofstream graphvizFile
-	((boost::format ("/tmp/graph_%1%.dot") % i).str().c_str ());
-      boost::write_graphviz
-	(graphvizFile, retarget.animatedMesh ()->meshes ()[i]->graph (),
-	 roboptim::retargeting::InteractionMeshGraphVertexWriter<
-	   roboptim::retargeting::InteractionMesh::graph_t>
-	 (retarget.animatedMesh ()->meshes ()[i]->graph (),
-	  retarget.animatedMesh ()->vertexLabels ()),
-	 roboptim::retargeting::InteractionMeshGraphEdgeWriter<
-	   roboptim::retargeting::InteractionMesh::graph_t>
-	 (retarget.animatedMesh ()->meshes ()[i]->graph ()));
-    }
+  retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
 
   LOG4CXX_INFO (logger,
 		"Problem:\n" << *retarget.problem ());
