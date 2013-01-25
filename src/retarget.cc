@@ -30,6 +30,11 @@ namespace roboptim
       cost_ = boost::make_shared<Sum> (costs);
       problem_ = boost::make_shared<problem_t> (*cost_);
 
+      // Use loaded animated interaction mesh to provide starting
+      // point.
+      problem_->startingPoint () =
+	animatedMesh_->makeOptimizationVector ();
+
       // Create bone lengths constraints,
       // one per edge and per frame if the scale is different from 1.
       InteractionMesh::edge_iterator_t edgeIt;
