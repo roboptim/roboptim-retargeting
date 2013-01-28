@@ -219,14 +219,15 @@ namespace roboptim
       if (previousAnimatedMesh->meshes_.empty ())
 	return animatedMesh;
 
-      unsigned numVertices =
+      unsigned optimizationVectorSizeOneFrame =
 	previousAnimatedMesh->meshes_[0]->optimizationVectorSize ();
       for (unsigned frameId = 0;
 	   frameId < previousAnimatedMesh->meshes_.size (); ++frameId)
 	{
 	  animatedMesh->meshes_.push_back
 	    (InteractionMesh::makeFromOptimizationVariables
-	     (x.segment (3 * numVertices * frameId, 3 * numVertices)));
+	     (x.segment (optimizationVectorSizeOneFrame * frameId,
+			 optimizationVectorSizeOneFrame)));
 	}
 
       return animatedMesh;

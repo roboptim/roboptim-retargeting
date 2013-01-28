@@ -45,6 +45,7 @@ int main (int argc, char** argv)
   // Parse options.
   std::string trajectoryFile;
   std::string characterFile;
+  std::string verbosityLevel;
 
   po::options_description desc ("Allowed options");
   desc.add_options ()
@@ -54,6 +55,9 @@ int main (int argc, char** argv)
      "markers trajectory (YAML)")
     ("robot,r", po::value<std::string> (&characterFile),
      "robot description (YAML)")
+    ("verbosity-level,l",
+     po::value<std::string> (&verbosityLevel),
+     "Verbosity level (WARN, DEBUG, TRACE)")
     ;
 
   po::variables_map vm;
@@ -69,6 +73,18 @@ int main (int argc, char** argv)
       return 5;
     }
 
+  // Setup log from command line options.
+  if (!verbosityLevel.empty ())
+    {
+      log4cxx::LoggerPtr rootLogger (log4cxx::Logger::getRootLogger ());
+      log4cxx::LevelPtr level = log4cxx::Level::toLevel (verbosityLevel);
+      if (level)
+	rootLogger->setLevel (level);
+      else
+	LOG4CXX_ERROR (logger, "invalid logging level");
+    }
+
+  // Dispatch particular working modes.
   if (vm.count ("help"))
     {
       help (desc);
@@ -163,11 +179,11 @@ int main (int argc, char** argv)
     (logger,
      "a solution has been found, writing it to /tmp/result.yaml");
 
-  
+
   roboptim::retargeting::AnimatedInteractionMeshShPtr_t resultTrajectory =
     roboptim::retargeting::
     AnimatedInteractionMesh::makeFromOptimizationVariables
-    (result.value,
+    (result.x,
      retarget.animatedMesh ());
   resultTrajectory->writeTrajectory("/tmp/result.yaml");
 
