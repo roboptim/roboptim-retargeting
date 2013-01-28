@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE (simple)
     (log4cxx::Logger::getLogger("roboptim.retargeting.tests.retarget"));
 
   std::string trajectoryFile = TESTS_DATA_DIR;
-  trajectoryFile += "/data/dance_longer-markers.yaml";
+  trajectoryFile += "/data/dance_one-frame.yaml";
 
   std::string characterFile = TESTS_DATA_DIR;
   characterFile += "/data/character-cgvu-hrp4c.yaml";

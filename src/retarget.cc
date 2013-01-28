@@ -83,6 +83,11 @@ namespace roboptim
       roboptim::SolverFactory<solver_t> factory ("ipopt", *problem_);
       solver_t& solver = factory ();
 
+      // Set solver parameters.
+      solver.parameters ()["max-iterations"].value = 1;
+      solver.parameters ()["ipopt.output_file"].value =
+	"/tmp/ipopt.log";
+
       LOG4CXX_INFO (logger, "Solver:\n" << solver);
       LOG4CXX_DEBUG(logger, "start solving...");
       solver.solve ();

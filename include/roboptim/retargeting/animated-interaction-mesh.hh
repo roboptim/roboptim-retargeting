@@ -65,18 +65,14 @@ namespace roboptim
       }
 
       Eigen::Matrix<double, Eigen::Dynamic, 1>
-      makeOptimizationVector () const
-      {
-	return Eigen::Matrix<double, Eigen::Dynamic, 1>
-	  (optimizationVectorSize ());
-
-      }
+      makeOptimizationVector () const;
 
       const labelsVector_t& vertexLabels () const
       {
 	return vertexLabels_;
       }
 
+      void writeGraphvizGraphs (std::ostream& out, unsigned id);
       void writeGraphvizGraphs (const std::string& path);
       void writeTrajectory (const std::string& filename);
 

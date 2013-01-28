@@ -33,6 +33,8 @@ namespace roboptim
       unsigned id;
       /// \brief Vertex position in Euclidian space.
       Eigen::Matrix<double, 3, 1> position;
+
+      EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     };
 
     /// \brief Links betweens nodes in the interactive mesh.

@@ -186,6 +186,22 @@ namespace roboptim
     }
 
     void
+    AnimatedInteractionMesh::writeGraphvizGraphs (std::ostream& out,
+						  unsigned i)
+    {
+      boost::write_graphviz
+	(out, meshes ()[i]->graph (),
+	 roboptim::retargeting::InteractionMeshGraphVertexWriter<
+	   roboptim::retargeting::InteractionMesh::graph_t>
+	 (meshes ()[i]->graph (),
+	  vertexLabels ()),
+	 roboptim::retargeting::InteractionMeshGraphEdgeWriter<
+	   roboptim::retargeting::InteractionMesh::graph_t>
+	 (meshes ()[i]->graph ()));
+
+    }
+
+    void
     AnimatedInteractionMesh::writeGraphvizGraphs (const std::string& path)
     {
       for (unsigned i = 0; i < meshes ().size (); ++i)
@@ -193,15 +209,7 @@ namespace roboptim
 	  std::ofstream graphvizFile
 	    ((boost::format ("%1%/graph_%2%.dot")
 	      % path % i).str().c_str ());
-	  boost::write_graphviz
-	    (graphvizFile, meshes ()[i]->graph (),
-	     roboptim::retargeting::InteractionMeshGraphVertexWriter<
-	       roboptim::retargeting::InteractionMesh::graph_t>
-	     (meshes ()[i]->graph (),
-	      vertexLabels ()),
-	     roboptim::retargeting::InteractionMeshGraphEdgeWriter<
-	       roboptim::retargeting::InteractionMesh::graph_t>
-	     (meshes ()[i]->graph ()));
+	  writeGraphvizGraphs (graphvizFile, i);
 	}
     }
 
@@ -224,11 +232,39 @@ namespace roboptim
       for (unsigned frameId = 0;
 	   frameId < previousAnimatedMesh->meshes_.size (); ++frameId)
 	{
-	  animatedMesh->meshes_.push_back
-	    (InteractionMesh::makeFromOptimizationVariables
-	     (x.segment (optimizationVectorSizeOneFrame * frameId,
-			 optimizationVectorSizeOneFrame)));
-	}
+	  InteractionMeshShPtr_t mesh =
+	    InteractionMesh::makeFromOptimizationVariables
+	    (x.segment (optimizationVectorSizeOneFrame * frameId,
+			optimizationVectorSizeOneFrame));
+
+	  // Add back edges.
+	  InteractionMeshShPtr_t oldMesh =
+	    previousAnimatedMesh->meshes ()[frameId];
+
+	  InteractionMesh::edge_iterator_t edgeIt;
+	  InteractionMesh::edge_iterator_t edgeEnd;
+	  boost::tie (edgeIt, edgeEnd) = boost::edges (oldMesh->graph ());
+	  for (; edgeIt != edgeEnd; ++edgeIt)
+	    {
+	      InteractionMesh::vertex_descriptor_t source =
+		boost::source (*edgeIt, oldMesh->graph ());
+	      InteractionMesh::vertex_descriptor_t target =
+		boost::target (*edgeIt, oldMesh->graph ());
+	      InteractionMesh::edge_descriptor_t edge;
+	      bool ok;
+	      boost::tie (edge, ok) =
+		boost::add_edge (source, target, mesh->graph ());
+	      mesh->graph ()[edge].scale = oldMesh->graph ()[*edgeIt].scale;
+	      if (!ok)
+		LOG4CXX_WARN (logger, "failed to add edge");
+	    }
+
+	  // Update weights.
+	  mesh->computeVertexWeights ();
+
+	  // Add generated mesh.
+	  animatedMesh->meshes_.push_back (mesh);
+ 	}
 
       return animatedMesh;
     }
@@ -268,10 +304,31 @@ namespace roboptim
 	<< YAML::EndSeq
 	<< YAML::EndMap
 	;
-      
+
       std::ofstream file (filename.c_str ());
       file << out.c_str ();
     }
+
+    Eigen::Matrix<double, Eigen::Dynamic, 1>
+    AnimatedInteractionMesh::makeOptimizationVector () const
+    {
+      Eigen::Matrix<double, Eigen::Dynamic, 1>
+	x (optimizationVectorSize ());
+      x.setZero ();
+      if (meshes ().empty ())
+	return x;
+
+      unsigned idx = 0;
+      for (unsigned i = 0; i < meshes ().size (); ++i)
+	{
+	  unsigned length = meshes ()[i]->optimizationVectorSize ();
+	  x.segment (idx, length) = meshes ()[i]->optimizationVector ();
+	  idx += length;
+	}
+
+      return x;
+    }
+
 
   } // end of namespace retargeting.
 } // end of namespace roboptim.
