@@ -1,5 +1,5 @@
 #include <roboptim/retargeting/acceleration-energy.hh>
-#include <roboptim/retargeting/interaction-mesh.hh>
+#include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 #define BOOST_TEST_MODULE acceleration_energy
 

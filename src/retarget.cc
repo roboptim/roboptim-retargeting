@@ -37,13 +37,13 @@ namespace roboptim
 
       // Create bone lengths constraints,
       // one per edge and per frame if the scale is different from 1.
-      InteractionMesh::edge_iterator_t edgeIt;
-      InteractionMesh::edge_iterator_t edgeEnd;
+      AnimatedInteractionMesh::edge_iterator_t edgeIt;
+      AnimatedInteractionMesh::edge_iterator_t edgeEnd;
       boost::tie (edgeIt, edgeEnd) =
-	boost::edges (animatedMesh_->meshes ()[0]->graph ());
+	boost::edges (animatedMesh_->graph ());
       for (; edgeIt != edgeEnd; ++edgeIt)
-	if (animatedMesh_->meshes ()[0]->graph ()[*edgeIt].scale != 1.)
-	  for (unsigned i = 0; i < animatedMesh_->meshes ().size (); ++i)
+	if (animatedMesh_->graph ()[*edgeIt].scale != 1.)
+	  for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
 	    {
 	      BoneLengthShPtr_t boneLengthConstraint =
 		boost::make_shared<BoneLength> (animatedMesh_, i, *edgeIt);

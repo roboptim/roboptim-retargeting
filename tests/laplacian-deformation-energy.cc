@@ -1,7 +1,7 @@
 #include <boost/make_shared.hpp>
 #include <log4cxx/basicconfigurator.h>
 #include <roboptim/retargeting/laplacian-deformation-energy.hh>
-#include <roboptim/retargeting/interaction-mesh.hh>
+#include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 #define BOOST_TEST_MODULE laplacian_deformation_energy
 
@@ -19,39 +19,35 @@ BOOST_AUTO_TEST_CASE (simple)
     (log4cxx::Logger::getLogger
      ("roboptim.retargeting.tests.laplacian-deformation-energy"));
 
-  roboptim::retargeting::InteractionMeshShPtr_t mesh =
-    boost::make_shared<roboptim::retargeting::InteractionMesh> ();
+  roboptim::retargeting::AnimatedInteractionMeshShPtr_t mesh =
+    boost::make_shared<roboptim::retargeting::AnimatedInteractionMesh> ();
 
   // Add two vertices.
-  roboptim::retargeting::InteractionMesh::vertex_descriptor_t v0 =
+  roboptim::retargeting::AnimatedInteractionMesh::vertex_descriptor_t v0 =
     boost::add_vertex (mesh->graph ());
 
-  mesh->graph ()[v0].id = 0;
-  mesh->graph ()[v0].position[0] = 0.;
-  mesh->graph ()[v0].position[1] = 0.;
-  mesh->graph ()[v0].position[2] = 0.;
+  mesh->graph ()[v0].positions.resize (1);
+  mesh->graph ()[v0].positions[0][0] = 0.;
+  mesh->graph ()[v0].positions[0][1] = 0.;
+  mesh->graph ()[v0].positions[0][2] = 0.;
 
-  roboptim::retargeting::InteractionMesh::vertex_descriptor_t v1 =
+  roboptim::retargeting::AnimatedInteractionMesh::vertex_descriptor_t v1 =
     boost::add_vertex (mesh->graph ());
 
-  mesh->graph ()[v1].id = 1;
-  mesh->graph ()[v1].position[0] = 1.;
-  mesh->graph ()[v1].position[1] = 1.;
-  mesh->graph ()[v1].position[2] = 1.;
+  mesh->graph ()[v1].positions.resize (1);
+  mesh->graph ()[v1].positions[0][0] = 1.;
+  mesh->graph ()[v1].positions[0][1] = 1.;
+  mesh->graph ()[v1].positions[0][2] = 1.;
 
   // Link them using an edge.
   boost::add_edge (v0, v1, mesh->graph ());
 
   mesh->computeVertexWeights ();
 
-  roboptim::retargeting::AnimatedInteractionMeshShPtr_t animatedMesh=
-    boost::make_shared<roboptim::retargeting::AnimatedInteractionMesh> ();
-  animatedMesh->meshes ().push_back (mesh);
-
   roboptim::Function::argument_t x (2 * 3);
   for (unsigned i = 0; i < x.size (); ++i)
     x[i] = 0.;
-  roboptim::retargeting::LaplacianDeformationEnergy lde (animatedMesh);
+  roboptim::retargeting::LaplacianDeformationEnergy lde (mesh);
 
   LOG4CXX_INFO (logger, lde.inputSize ());
   LOG4CXX_INFO (logger, lde (x));

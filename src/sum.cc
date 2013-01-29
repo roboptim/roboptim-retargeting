@@ -33,5 +33,15 @@ namespace roboptim
       for (unsigned i = 0; i < functions_.size (); ++i)
 	gradient += functions_[i]->gradient (argument, functionId);
     }
+
+    void
+    Sum::impl_jacobian (jacobian_t& jacobian,
+			const argument_t& argument)
+      const throw ()
+    {
+      for (unsigned i = 0; i < functions_.size (); ++i)
+	jacobian += functions_[i]->jacobian (argument);
+    }
+
   } // end of namespace retargeting.
 } // end of namespace roboptim.

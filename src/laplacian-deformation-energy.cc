@@ -25,33 +25,33 @@ namespace roboptim
     {
       result.resize (1);
 
+      AnimatedInteractionMesh::vertex_iterator_t vertexIt;
+      AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
+      const unsigned& nVertices = animatedMesh_->numVertices ();
+
+      AnimatedInteractionMeshShPtr_t newAnimatedMesh =
+	AnimatedInteractionMesh::makeFromOptimizationVariables
+	(x, animatedMesh_);
+
       for (unsigned frameId = 0;
-	   frameId < animatedMesh_->meshes ().size (); ++frameId)
+	   frameId < animatedMesh_->numFrames (); ++frameId)
 	{
-	  InteractionMeshShPtr_t mesh = animatedMesh_->meshes ()[frameId];
-	  InteractionMesh::vertex_iterator_t vertexIt;
-	  InteractionMesh::vertex_iterator_t vertexEnd;
-
-	  long unsigned int nVertices = boost::num_vertices (mesh->graph ());
-
-	  InteractionMeshShPtr_t newMesh =
-	    InteractionMesh::makeFromOptimizationVariables
-	    (x.segment
-	     (frameId * nVertices * 3, nVertices * 3));
-
 	  unsigned vertexId = 0;
-	  boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh->graph ());
+	  boost::tie (vertexIt, vertexEnd) = boost::vertices
+	    (animatedMesh_->graph ());
 	  for (; vertexIt != vertexEnd; ++vertexIt)
 	    {
-	      LaplacianCoordinate lcOrigin (mesh, *vertexIt);
-	      LaplacianCoordinate lcNew (newMesh, *vertexIt);
+	      LaplacianCoordinate lcOrigin (animatedMesh_, *vertexIt, frameId);
+	      LaplacianCoordinate lcNew (newAnimatedMesh, *vertexIt, frameId);
 
-	      result[0] += (lcOrigin
-			    (mesh->optimizationVector ())
-			    - lcNew
-			    (x.segment
-			     (frameId * nVertices * 3, nVertices * 3))
-			    ).squaredNorm ();
+	      result[0] += 
+		(lcOrigin
+		 (animatedMesh_->makeOptimizationVectorOneFrame (frameId))
+		 - lcNew
+		 (x.segment
+		  (frameId * animatedMesh_->optimizationVectorSizeOneFrame (),
+		   animatedMesh_->optimizationVectorSizeOneFrame ()))
+		 ).squaredNorm ();
 	      ++vertexId;
 	    }
 	}

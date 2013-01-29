@@ -30,7 +30,6 @@ SET(HEADERS
   ${CSD}/include/roboptim/retargeting/animated-interaction-mesh.hh
   ${CSD}/include/roboptim/retargeting/bone-length.hh
   ${CSD}/include/roboptim/retargeting/collision.hh
-  ${CSD}/include/roboptim/retargeting/interaction-mesh.hh
   ${CSD}/include/roboptim/retargeting/laplacian-coordinate.hh
   ${CSD}/include/roboptim/retargeting/laplacian-deformation-energy.hh
   ${CSD}/include/roboptim/retargeting/position.hh

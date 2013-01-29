@@ -38,6 +38,9 @@ namespace roboptim
 			  const argument_t& argument,
 			  size_type functionId = 0)
 	const throw ();
+      void impl_jacobian (jacobian_t& jacobian,
+			  const argument_t& arg)
+	const throw ();
     private:
       std::vector<DifferentiableFunctionShPtr_t> functions_;
     };

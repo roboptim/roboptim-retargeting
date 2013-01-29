@@ -8,7 +8,6 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   animated-interaction-mesh.cc
   bone-length.cc
   collision.cc
-  interaction-mesh.cc
   laplacian-coordinate.cc
   laplacian-deformation-energy.cc
   position.cc

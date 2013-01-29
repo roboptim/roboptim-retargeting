@@ -3,7 +3,7 @@
 # include <log4cxx/logger.h>
 # include <roboptim/core/function.hh>
 
-# include <roboptim/retargeting/interaction-mesh.hh>
+# include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
 {
@@ -23,15 +23,17 @@ namespace roboptim
 	using roboptim::Function::size_type;
 
 	explicit LaplacianCoordinate
-	(InteractionMeshShPtr_t mesh,
-	 InteractionMesh::vertex_descriptor_t edge) throw ();
+	(AnimatedInteractionMeshShPtr_t mesh,
+	 AnimatedInteractionMesh::vertex_descriptor_t edge,
+	 unsigned frameId_) throw ();
 	virtual ~LaplacianCoordinate () throw ();
 	void impl_compute (result_t& result, const argument_t& x)
 	  const throw ();
       private:
 	static log4cxx::LoggerPtr logger;
-	InteractionMeshShPtr_t mesh_;
-	InteractionMesh::vertex_descriptor_t vertex_;
+	AnimatedInteractionMeshShPtr_t mesh_;
+	AnimatedInteractionMesh::vertex_descriptor_t vertex_;
+	unsigned frameId_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

@@ -27,24 +27,26 @@ namespace roboptim
       // vertex of each frame separately.
       result[0] = 0.;
 
+      const unsigned& numFrames = animatedMesh_->numFrames ();
+      const unsigned& numVertices = animatedMesh_->numVertices ();
+
       // We exclude first and last frame for which the contribution of
       // energy is zero.
       for (unsigned frame = 1;
-	   frame < animatedMesh_->meshes ().size () - 1; ++frame)
+	   frame < numFrames - 1; ++frame)
 	{
-	  InteractionMeshShPtr_t mesh = animatedMesh_->meshes ()[frame];
-	  InteractionMesh::vertex_iterator_t vertexIt;
-	  InteractionMesh::vertex_iterator_t vertexEnd;
+	  AnimatedInteractionMesh::vertex_iterator_t vertexIt;
+	  AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
 
-	  long unsigned nVertices = boost::num_vertices (mesh->graph ());
-	  boost::tie (vertexIt, vertexEnd) = boost::vertices (mesh->graph ());
-	  for (long unsigned vertex = 0; vertex < nVertices; ++vertex)
+	  boost::tie (vertexIt, vertexEnd) =
+	    boost::vertices (animatedMesh_->graph ());
+	  for (long unsigned vertex = 0; vertex < numVertices; ++vertex)
 	    {
-	      long unsigned variableId = frame * nVertices + vertex;
+	      long unsigned variableId = frame * numVertices + vertex;
 	      long unsigned variableIdPreviousFrame =
-		(frame - 1) * nVertices + vertex;
+		(frame - 1) * numVertices + vertex;
 	      long unsigned variableIdNextFrame =
-		(frame + 1) * nVertices + vertex;
+		(frame + 1) * numVertices + vertex;
 
 	      // Compute velocity from position by finite differentiation.
 	      double h = 1. / animatedMesh_->framerate ();

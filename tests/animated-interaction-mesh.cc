@@ -42,21 +42,19 @@ BOOST_AUTO_TEST_CASE (load_and_recreate)
     (x, animatedMesh);
 
   BOOST_CHECK_EQUAL
-    (animatedMesh->meshes ().size (), animatedMesh2->meshes ().size ());
+    (animatedMesh->numVertices (), animatedMesh2->numVertices ());
+  BOOST_CHECK_EQUAL
+    (animatedMesh->numFrames (), animatedMesh2->numFrames ());
 
-  for (unsigned i = 0; i < animatedMesh->meshes ().size (); ++i)
+  BOOST_CHECK_EQUAL
+    (boost::num_vertices (animatedMesh->graph ()),
+     boost::num_vertices (animatedMesh2->graph ()));
+  BOOST_CHECK_EQUAL
+    (boost::num_edges (animatedMesh->graph ()),
+     boost::num_edges (animatedMesh2->graph ()));
+
+  for (unsigned i = 0; i < animatedMesh->numFrames (); ++i)
     {
-      BOOST_CHECK_EQUAL
-	(boost::num_vertices
-	 (animatedMesh->meshes ()[0]->graph ()),
-	 boost::num_vertices
-	 (animatedMesh2->meshes ()[0]->graph ()));
-      BOOST_CHECK_EQUAL
-	(boost::num_edges
-	 (animatedMesh->meshes ()[0]->graph ()),
-	 boost::num_edges
-	 (animatedMesh2->meshes ()[0]->graph ()));
-
       output_test_stream stream;
       output_test_stream stream2;
       animatedMesh->writeGraphvizGraphs (stream, i);

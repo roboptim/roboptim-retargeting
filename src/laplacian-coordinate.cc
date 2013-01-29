@@ -9,13 +9,15 @@ namespace roboptim
     (log4cxx::Logger::getLogger("roboptim.retargeting.LaplacianCoordinate"));
 
     LaplacianCoordinate::LaplacianCoordinate
-    (InteractionMeshShPtr_t mesh,
-     InteractionMesh::vertex_descriptor_t vertex) throw ()
+    (AnimatedInteractionMeshShPtr_t mesh,
+     AnimatedInteractionMesh::vertex_descriptor_t vertex,
+     unsigned frameId) throw ()
       : roboptim::Function
-	(mesh->optimizationVectorSize (), 3,
+	(mesh->optimizationVectorSizeOneFrame (), 3,
 	 "laplacian coordinate"),
 	mesh_ (mesh),
-	vertex_ (vertex)
+	vertex_ (vertex),
+	frameId_ (frameId)
     {
       assert (!!mesh_);
     }
@@ -33,11 +35,11 @@ namespace roboptim
       const Vertex& vertex = mesh_->graph ()[vertex_];
 
       LOG4CXX_TRACE
-	(logger, "Vertex id: " << vertex.id);
+	(logger, "Vertex id: " << vertex_);
 
-      result[0] = x[vertex.id * 3 + 0];
-      result[1] = x[vertex.id * 3 + 1];
-      result[2] = x[vertex.id * 3 + 2];
+      result[0] = x[vertex_ * 3 + 0];
+      result[1] = x[vertex_ * 3 + 1];
+      result[2] = x[vertex_ * 3 + 2];
 
       LOG4CXX_TRACE (logger,
 		     "Euclidian position: "
@@ -45,8 +47,8 @@ namespace roboptim
 		     << result[1] << " "
 		     << result[2]);
 
-      InteractionMesh::out_edge_iterator_t edgeIt;
-      InteractionMesh::out_edge_iterator_t edgeEnd;
+      AnimatedInteractionMesh::out_edge_iterator_t edgeIt;
+      AnimatedInteractionMesh::out_edge_iterator_t edgeEnd;
       boost::tie(edgeIt, edgeEnd) =
 	boost::out_edges (vertex_, mesh_->graph ());
 
@@ -54,26 +56,25 @@ namespace roboptim
 	{
 	  const Edge& edge = mesh_->graph()[*edgeIt];
 
-	  InteractionMesh::vertex_descriptor_t source =
+	  AnimatedInteractionMesh::vertex_descriptor_t source =
 	    boost::source (*edgeIt, mesh_->graph ());
-	  InteractionMesh::vertex_descriptor_t target =
+	  AnimatedInteractionMesh::vertex_descriptor_t target =
 	    boost::target (*edgeIt, mesh_->graph ());
-	  const Vertex& neighbor = (vertex_ == source)
-	    ? mesh_->graph ()[target]
-	    : mesh_->graph ()[source];
+	  AnimatedInteractionMesh::vertex_descriptor_t
+	    neighborDesc = (vertex_ == source) ? target : source;
+	  const Vertex& neighbor = mesh_->graph ()[neighborDesc];
 
 	  LOG4CXX_TRACE
 	    (logger,
 	     "--- edge ---\n"
-	     << "Edge weight: " << edge.weight << "\n"
-	     << "Vertex id: " << neighbor.id << "\n"
+	     << "Edge weight: " << edge.weight[frameId_] << "\n"
+	     << "Vertex id: " << neighborDesc << "\n"
 	     << "Euclidian position: "
-	     << neighbor.position[0] << " "
-	     << neighbor.position[1] << " "
-	     << neighbor.position[2] << "\n"
-	     "w: " << edge.weight);
+	     << neighbor.positions[frameId_][0] << " "
+	     << neighbor.positions[frameId_][1] << " "
+	     << neighbor.positions[frameId_][2]);
 
-	  result -= neighbor.position * edge.weight;
+	  result -= neighbor.positions[frameId_] * edge.weight[frameId_];
 	}
     }
    } // end of namespace retargeting.
