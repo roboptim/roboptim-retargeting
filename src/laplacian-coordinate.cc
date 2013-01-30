@@ -1,6 +1,12 @@
 #include <cassert>
 #include "roboptim/retargeting/laplacian-coordinate.hh"
 
+// Remove trace logging in release.
+#ifdef NDEBUG
+# undef LOG4CXX_TRACE
+# define LOG4CXX_TRACE(logger, msg)
+#endif //!NDEBUG
+
 namespace roboptim
 {
   namespace retargeting

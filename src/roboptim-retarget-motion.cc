@@ -144,6 +144,12 @@ int main (int argc, char** argv)
 	}
     }
 
+#ifndef NDEBUG
+  LOG4CXX_WARN
+    (logger,
+     "you are running debug mode, optimization process will be *VERY* slow");
+#endif //!NDEBUG
+
   LOG4CXX_INFO (logger, "loading optimization problem...");
 
   // Retarget motion.
