@@ -13,6 +13,9 @@ namespace roboptim
 	(animatedMesh->optimizationVectorSize (),
 	 1, ""),
 	animatedMesh_ (animatedMesh),
+	animatedMeshLocal_
+	(AnimatedInteractionMesh::makeFromOptimizationVariables
+	 (animatedMesh_->state (), animatedMesh)),
 	frameId_ (frameId),
 	edgeId_ (edgeId)
     {}
@@ -35,18 +38,21 @@ namespace roboptim
       const Edge& edge = animatedMesh_->graph ()[edgeId_];
 
       const unsigned& nVertices = animatedMesh_->numVertices ();
-      //InteractionMeshShPtr_t newMesh =
-      //AnimatedInteractionMesh::makeFromOptimizationVariables
-      //(x.segment (frameId_ * nVertices * 3, nVertices * 3));
-      // const Vertex& sourceVertexNew =
-      // 	newMesh->graph ()[source];
-      // const Vertex& targetVertexNew =
-      // 	newMesh->graph ()[target];
 
-      // result[1] =
-      // 	(targetVertex.position - sourceVertex.position).squaredNorm ();
-      // result[1] -= edge.scale *
-      // 	(targetVertexNew.position - sourceVertexNew.position).squaredNorm ();
+      animatedMeshLocal_->state () = x;
+      animatedMeshLocal_->computeVertexWeights();
+
+      const Vertex& sourceVertexNew =
+      	animatedMeshLocal_->graph ()[source];
+      const Vertex& targetVertexNew =
+      	animatedMeshLocal_->graph ()[target];
+
+      result[1] =
+      	(targetVertex.positions[frameId_] - sourceVertex.positions[frameId_]
+	 ).squaredNorm ();
+      result[1] -= edge.scale *
+      	(targetVertexNew.positions[frameId_]
+	 - sourceVertexNew.positions[frameId_]).squaredNorm ();
     }
 
     void

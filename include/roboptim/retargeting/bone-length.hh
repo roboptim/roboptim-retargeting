@@ -28,6 +28,7 @@ namespace roboptim
 	const throw ();
     private:
       AnimatedInteractionMeshShPtr_t animatedMesh_;
+      AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       unsigned frameId_;
       AnimatedInteractionMesh::edge_descriptor_t edgeId_;
     };

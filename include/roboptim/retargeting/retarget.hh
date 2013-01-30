@@ -41,7 +41,8 @@ namespace roboptim
        bool enableBoneLength,
        bool enablePosition,
        bool enableCollision,
-       bool enableTorque);
+       bool enableTorque,
+       const std::string& solverName);
       virtual ~Retarget ();
       void solve ();
 
@@ -114,6 +115,8 @@ namespace roboptim
       std::vector<TorqueShPtr_t> torques_;
 
       GenericSolver::result_t result_;
+
+      std::string solverName_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

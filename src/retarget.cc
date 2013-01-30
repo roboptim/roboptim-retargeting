@@ -16,7 +16,8 @@ namespace roboptim
 			bool enableBoneLength,
 			bool enablePosition,
 			bool enableCollision,
-			bool enableTorque)
+			bool enableTorque,
+			const std::string& solverName)
       : animatedMesh_
 	(AnimatedInteractionMesh::loadAnimatedMesh
 	 (initialTrajectory, character)),
@@ -26,7 +27,8 @@ namespace roboptim
 	(boost::make_shared<AccelerationEnergy> (animatedMesh_)),
 	cost_ (),
 	problem_ (),
-	result_ ()
+	result_ (),
+	solverName_ (solverName)
     {
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
@@ -88,7 +90,7 @@ namespace roboptim
     void
     Retarget::solve ()
     {
-      roboptim::SolverFactory<solver_t> factory ("ipopt", *problem_);
+      roboptim::SolverFactory<solver_t> factory (solverName_, *problem_);
       solver_t& solver = factory ();
 
       // Set solver parameters.

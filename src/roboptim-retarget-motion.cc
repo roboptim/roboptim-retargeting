@@ -50,6 +50,7 @@ int main (int argc, char** argv)
   bool enablePosition;
   bool enableCollision;
   bool enableTorque;
+  std::string solverName;
 
   po::options_description general ("General options");
   general.add_options ()
@@ -59,6 +60,8 @@ int main (int argc, char** argv)
      "markers trajectory (YAML)")
     ("robot,r", po::value<std::string> (&characterFile),
      "robot description (YAML)")
+    ("solver,s", po::value<std::string> (&solverName)->default_value ("ipopt"),
+     "solver name (ipopt, cfsqp)")
     ("verbosity-level,l",
      po::value<std::string> (&verbosityLevel),
      "Verbosity level (WARN, DEBUG, TRACE)")
@@ -182,7 +185,8 @@ int main (int argc, char** argv)
      enableBoneLength,
      enablePosition,
      enableCollision,
-     enableTorque);
+     enableTorque,
+     solverName);
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
 
   LOG4CXX_DEBUG (logger,

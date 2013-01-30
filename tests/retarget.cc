@@ -30,7 +30,8 @@ BOOST_AUTO_TEST_CASE (simple)
      false,
      false,
      false,
-     false);
+     false,
+     "ipopt");
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
 
   LOG4CXX_INFO (logger,
