@@ -1,6 +1,9 @@
 #ifndef ROBOPTIM_RETARGETING_LAPLACIAN_COORDINATE_HH
 # define ROBOPTIM_RETARGETING_LAPLACIAN_COORDINATE_HH
 # include <log4cxx/logger.h>
+
+# include <boost/shared_ptr.hpp>
+
 # include <roboptim/core/function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
@@ -9,6 +12,8 @@ namespace roboptim
 {
   namespace retargeting
   {
+    class LaplacianCoordinate;
+    typedef boost::shared_ptr<LaplacianCoordinate> LaplacianCoordinateShPtr_t;
     /// \brief Laplacian Coordinates
     ///
     /// Compute the Laplacian coordinates of a node from a particular

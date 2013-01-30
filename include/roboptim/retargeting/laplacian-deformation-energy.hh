@@ -1,7 +1,9 @@
 #ifndef ROBOPTIM_RETARGETING_DEFORMATION_ENERGY_HH
 # define ROBOPTIM_RETARGETING_DEFORMATION_ENERGY_HH
+# include <vector>
 # include <roboptim/core/differentiable-function.hh>
 
+# include <roboptim/retargeting/laplacian-coordinate.hh>
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
@@ -31,6 +33,12 @@ namespace roboptim
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       /// \brief Current state of the mesh (during optimization process).
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
+      /// \brief Original laplacian coordinates.
+      std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> >
+      laplacianCoordinates_;
+      std::vector<LaplacianCoordinateShPtr_t> laplacianCoordinatesLocal_;
+
+      mutable Eigen::VectorXd buffer_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

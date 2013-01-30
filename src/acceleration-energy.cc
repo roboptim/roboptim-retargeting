@@ -68,7 +68,8 @@ namespace roboptim
      size_type i)
       const throw ()
     {
-      roboptim::FiniteDifferenceGradient<>
+      roboptim::FiniteDifferenceGradient<
+	finiteDifferenceGradientPolicies::Simple>
 	fdg (*this);
       fdg.gradient (gradient, x, i);
     }

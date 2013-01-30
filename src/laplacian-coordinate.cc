@@ -37,9 +37,7 @@ namespace roboptim
       LOG4CXX_TRACE
 	(logger, "Vertex id: " << vertex_);
 
-      result[0] = x[vertex_ * 3 + 0];
-      result[1] = x[vertex_ * 3 + 1];
-      result[2] = x[vertex_ * 3 + 2];
+      result = x.segment (vertex_ * 3, 3);
 
       LOG4CXX_TRACE (logger,
 		     "Euclidian position: "

@@ -1,3 +1,4 @@
+#include <boost/make_shared.hpp>
 #include <roboptim/core/finite-difference-gradient.hh>
 
 #include "roboptim/retargeting/laplacian-deformation-energy.hh"
@@ -15,8 +16,33 @@ namespace roboptim
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_
 	(AnimatedInteractionMesh::makeFromOptimizationVariables
-	 (animatedMesh->state (), animatedMesh_))
-    {}
+	 (animatedMesh->state (), animatedMesh_)),
+	laplacianCoordinates_ (),
+	laplacianCoordinatesLocal_ (),
+	buffer_ (3)
+    {
+      AnimatedInteractionMesh::vertex_iterator_t vertexIt;
+      AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
+
+      for (unsigned frameId = 0; frameId < animatedMesh_->numFrames ();
+	   ++frameId)
+	{
+	  boost::tie (vertexIt, vertexEnd) = boost::vertices
+	    (animatedMesh_->graph ());
+	  for (; vertexIt != vertexEnd; ++vertexIt)
+	    
+	    {
+	      laplacianCoordinates_.push_back
+		(LaplacianCoordinate
+		 (animatedMesh_, *vertexIt, frameId)
+		 (animatedMesh_->state ()));
+
+	      laplacianCoordinatesLocal_.push_back
+		(boost::make_shared<LaplacianCoordinate>
+		 (animatedMeshLocal_, *vertexIt, frameId));
+	    }
+	}
+    }
 
     LaplacianDeformationEnergy::~LaplacianDeformationEnergy () throw ()
     {}
@@ -35,26 +61,25 @@ namespace roboptim
       animatedMeshLocal_->state () = x;
       animatedMeshLocal_->computeVertexWeights();
 
+      result[0] = 0.;
+
       for (unsigned frameId = 0;
 	   frameId < animatedMesh_->numFrames (); ++frameId)
 	{
 	  unsigned vertexId = 0;
 	  boost::tie (vertexIt, vertexEnd) = boost::vertices
 	    (animatedMesh_->graph ());
-	  for (; vertexIt != vertexEnd; ++vertexIt)
+	  for (; vertexIt != vertexEnd; ++vertexIt, ++vertexId)
 	    {
-	      LaplacianCoordinate lcOrigin (animatedMesh_, *vertexIt, frameId);
-	      LaplacianCoordinate lcNew (animatedMeshLocal_, *vertexIt, frameId);
-
+	      (*laplacianCoordinatesLocal_[frameId * nVertices + vertexId])
+		(buffer_,
+		 x.segment
+		 (frameId * animatedMesh_->optimizationVectorSizeOneFrame (),
+		  animatedMesh_->optimizationVectorSizeOneFrame ()));
+		
 	      result[0] += 
-		(lcOrigin
-		 (animatedMesh_->makeOptimizationVectorOneFrame (frameId))
-		 - lcNew
-		 (x.segment
-		  (frameId * animatedMesh_->optimizationVectorSizeOneFrame (),
-		   animatedMesh_->optimizationVectorSizeOneFrame ()))
-		 ).squaredNorm ();
-	      ++vertexId;
+		(laplacianCoordinates_[frameId * nVertices + vertexId]
+		 - buffer_).squaredNorm ();
 	    }
 	}
 
@@ -68,7 +93,8 @@ namespace roboptim
      size_type i)
       const throw ()
     {
-      roboptim::FiniteDifferenceGradient<>
+      roboptim::FiniteDifferenceGradient<
+	finiteDifferenceGradientPolicies::Simple>
 	fdg (*this);
       fdg.gradient (gradient, x, i);
     }

@@ -160,11 +160,8 @@ int main (int argc, char** argv)
   LOG4CXX_INFO (logger, "done");
 
   // Check if the minimization has succeed.
-  if (retarget.result ().which () !=
-      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE
-      &&
-      retarget.result ().which () !=
-      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
+  if (retarget.result ().which () ==
+      roboptim::retargeting::Retarget::solver_t::SOLVER_ERROR)
     {
       std::cout << "No solution has been found. Failing..."
                 << std::endl
@@ -179,7 +176,7 @@ int main (int argc, char** argv)
 
   LOG4CXX_INFO (logger, "a solution has been found!");
 
-  if (retarget.result ().which () !=
+  if (retarget.result ().which () ==
       roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
     {
       const roboptim::Result& result =
