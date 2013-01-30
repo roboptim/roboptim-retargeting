@@ -332,7 +332,7 @@ namespace roboptim
 	{
 	  out << YAML::BeginSeq;
 	  Eigen::VectorXd x = makeOptimizationVectorOneFrame (frameId);
-	  for (unsigned i = 0; i < x.cols (); ++i)
+	  for (unsigned i = 0; i < x.size (); ++i)
 	    out << x[i];
 	  out << YAML::EndSeq;
 	}

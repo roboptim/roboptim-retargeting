@@ -161,9 +161,12 @@ int main (int argc, char** argv)
 
   // Check if the minimization has succeed.
   if (retarget.result ().which () !=
-      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE)
+      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE
+      &&
+      retarget.result ().which () !=
+      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
     {
-      std::cout << "A solution should have been found. Failing..."
+      std::cout << "No solution has been found. Failing..."
                 << std::endl
                 << boost::get<roboptim::SolverError>
 	(retarget.result ()).what ()
@@ -172,20 +175,32 @@ int main (int argc, char** argv)
     }
 
   // Get the result.
-  const roboptim::Result& result =
-    boost::get<roboptim::Result> (retarget.result ());
+  Eigen::VectorXd x;
 
-  LOG4CXX_INFO
-    (logger,
-     "a solution has been found, writing it to /tmp/result.yaml");
+  LOG4CXX_INFO (logger, "a solution has been found!");
 
+  if (retarget.result ().which () !=
+      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
+    {
+      const roboptim::Result& result =
+	boost::get<roboptim::ResultWithWarnings> (retarget.result ());
+      x = result.x;
+      LOG4CXX_WARN (logger, "solver warnings: " << result);
+    }
+  else
+    {
+      const roboptim::Result& result =
+	boost::get<roboptim::Result> (retarget.result ());
+      x = result.x;
+      LOG4CXX_WARN (logger, "result: " << result);
+    }
 
-  roboptim::retargeting::AnimatedInteractionMeshShPtr_t resultTrajectory =
-    roboptim::retargeting::
-    AnimatedInteractionMesh::makeFromOptimizationVariables
-    (result.x,
-     retarget.animatedMesh ());
-  resultTrajectory->writeTrajectory("/tmp/result.yaml");
+  const std::string filename ("/tmp/result.yaml");
 
-  LOG4CXX_INFO (logger, "trajectory writing succeeded, exiting");
+  retarget.animatedMesh ()->state () =x;
+  retarget.animatedMesh ()->computeVertexWeights ();
+  retarget.animatedMesh ()->writeTrajectory (filename);
+  LOG4CXX_INFO (logger, "trajectory written to: " << filename);
+
+  LOG4CXX_INFO (logger, "program succeeded, exiting");
 }
