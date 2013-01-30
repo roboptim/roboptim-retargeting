@@ -23,22 +23,23 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::retargeting::AnimatedInteractionMeshShPtr_t mesh =
     boost::make_shared<roboptim::retargeting::AnimatedInteractionMesh> ();
 
+  mesh->state ().resize (3 * 2);
+  mesh->state ().setZero ();
+  for (unsigned i = 3; i < 6; ++i)
+    mesh->state ()[i] = 1.;
+
   // Add two vertices.
   roboptim::retargeting::AnimatedInteractionMesh::vertex_descriptor_t v0 =
     boost::add_vertex (mesh->graph ());
 
-  mesh->graph ()[v0].positions.resize (1);
-  mesh->graph ()[v0].positions[0][0] = 0.;
-  mesh->graph ()[v0].positions[0][1] = 0.;
-  mesh->graph ()[v0].positions[0][2] = 0.;
-
+  mesh->graph ()[v0].positions.push_back
+    (roboptim::retargeting::Vertex::position_t (mesh->state (), 0, 3));
+  
   roboptim::retargeting::AnimatedInteractionMesh::vertex_descriptor_t v1 =
     boost::add_vertex (mesh->graph ());
-
-  mesh->graph ()[v1].positions.resize (1);
-  mesh->graph ()[v1].positions[0][0] = 1.;
-  mesh->graph ()[v1].positions[0][1] = 1.;
-  mesh->graph ()[v1].positions[0][2] = 1.;
+  
+  mesh->graph ()[v1].positions.push_back
+    (roboptim::retargeting::Vertex::position_t (mesh->state (), 3, 3));
 
   // Link them using an edge.
   boost::add_edge (v0, v1, mesh->graph ());

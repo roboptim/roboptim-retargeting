@@ -39,12 +39,14 @@ namespace roboptim
     /// in the optimization variables vector.
     struct Vertex
     {
+      typedef Eigen::VectorBlock<Eigen::VectorXd, 3> position_t;
+
       /// \brief Vertex label.
       std::string label;
 
       /// \brief Vertex position in Euclidian space at each frame.
-      std::vector<Eigen::Vector3d,
-		  Eigen::aligned_allocator<Eigen::Vector3d> > positions;
+      std::vector<position_t,
+		  Eigen::aligned_allocator<position_t> > positions;
     };
 
     /// \brief Links betweens nodes in the interactive mesh.
@@ -139,10 +141,34 @@ namespace roboptim
 	return graph_;
       }
 
-      Eigen::VectorXd
-      makeOptimizationVector () const;
-      Eigen::VectorXd
-      makeOptimizationVectorOneFrame (unsigned frameId) const;
+      const Eigen::VectorXd&
+      makeOptimizationVector () const
+      {
+	return state_;
+      }
+
+      Eigen::VectorBlock<const Eigen::VectorXd, Eigen::Dynamic>
+      makeOptimizationVectorOneFrame (unsigned frameId) const
+      {
+	return state_.segment (frameId * optimizationVectorSizeOneFrame (),
+			       optimizationVectorSizeOneFrame ());
+      }
+
+      /// \brief Access the interal vector directly.
+      ///
+      /// Warning: this API is unsafe, it is your responsibility to
+      /// update edges weights if you modify the state manually.
+      Eigen::VectorXd&
+      state ()
+      {
+	return state_;
+      }
+
+      const Eigen::VectorXd&
+      state () const
+      {
+	return state_;
+      }
 
       void writeGraphvizGraphs (std::ostream& out, unsigned id);
       void writeGraphvizGraphs (const std::string& path);
@@ -180,6 +206,9 @@ namespace roboptim
       unsigned numVertices_;
 
       /// \}
+
+      /// \brief Current mesh state.
+      Eigen::VectorXd state_;
 
       /// \brief Underlying Boost graph.
       graph_t graph_;

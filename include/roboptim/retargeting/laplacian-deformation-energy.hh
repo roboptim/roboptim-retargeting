@@ -27,7 +27,10 @@ namespace roboptim
 			  size_type functionId = 0)
 	const throw ();
     private:
+      /// \brief Original mesh.
       AnimatedInteractionMeshShPtr_t animatedMesh_;
+      /// \brief Current state of the mesh (during optimization process).
+      AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

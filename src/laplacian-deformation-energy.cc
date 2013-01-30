@@ -12,7 +12,10 @@ namespace roboptim
       : roboptim::DifferentiableFunction
 	(animatedMesh->optimizationVectorSize (),
 	 1, ""),
-	animatedMesh_ (animatedMesh)
+	animatedMesh_ (animatedMesh),
+	animatedMeshLocal_
+	(AnimatedInteractionMesh::makeFromOptimizationVariables
+	 (animatedMesh->state (), animatedMesh_))
     {}
 
     LaplacianDeformationEnergy::~LaplacianDeformationEnergy () throw ()
@@ -23,15 +26,14 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      result.resize (1);
+      assert (result.size () == 1);
 
       AnimatedInteractionMesh::vertex_iterator_t vertexIt;
       AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
       const unsigned& nVertices = animatedMesh_->numVertices ();
 
-      AnimatedInteractionMeshShPtr_t newAnimatedMesh =
-	AnimatedInteractionMesh::makeFromOptimizationVariables
-	(x, animatedMesh_);
+      animatedMeshLocal_->state () = x;
+      animatedMeshLocal_->computeVertexWeights();
 
       for (unsigned frameId = 0;
 	   frameId < animatedMesh_->numFrames (); ++frameId)
@@ -42,7 +44,7 @@ namespace roboptim
 	  for (; vertexIt != vertexEnd; ++vertexIt)
 	    {
 	      LaplacianCoordinate lcOrigin (animatedMesh_, *vertexIt, frameId);
-	      LaplacianCoordinate lcNew (newAnimatedMesh, *vertexIt, frameId);
+	      LaplacianCoordinate lcNew (animatedMeshLocal_, *vertexIt, frameId);
 
 	      result[0] += 
 		(lcOrigin

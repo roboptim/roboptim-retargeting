@@ -28,6 +28,7 @@ namespace roboptim
       :  framerate_ (),
 	 numFrames_ (),
 	 numVertices_ (),
+	 state_ (),
 	 graph_ ()
     {}
 
@@ -142,8 +143,14 @@ namespace roboptim
 
 	doc["numFrames"] >> animatedMesh->numFrames_;
 
+	// Compute number of vertices.
+	animatedMesh->numVertices_ = doc["partLabels"].size ();
+
+	// Resize state vector.
+	animatedMesh->state_.resize
+	  (animatedMesh->numFrames_ * animatedMesh->numVertices_ * 3);
+
 	// Add one vertex per label.
-	animatedMesh->numVertices_ = 0;
 	for (YAML::Iterator it = doc["partLabels"].begin ();
 	     it != doc["partLabels"].end (); ++it)
 	  {
@@ -153,12 +160,18 @@ namespace roboptim
 	    vertex_descriptor_t
 	      vertex = boost::add_vertex (animatedMesh->graph ());
 
-	    animatedMesh->numVertices_++;
 	    animatedMesh->graph ()[vertex].label = label;
-	    animatedMesh->graph ()[vertex].positions.resize
-	      (animatedMesh->numFrames_);
-	  }
 
+	    for (unsigned frameId = 0;
+		 frameId < animatedMesh->numFrames_; ++frameId)
+	      {
+		Eigen::VectorXd::Index offset =
+		  frameId * animatedMesh->numVertices_ * 3 + vertex;
+		animatedMesh->graph ()[vertex].positions.push_back
+		  (Vertex::position_t (animatedMesh->state_, offset, 3));
+	      }
+	  }
+	
 	unsigned frameId = 0;
 	for (YAML::Iterator it = doc["frames"].begin ();
 	     it != doc["frames"].end (); ++it)
@@ -258,6 +271,9 @@ namespace roboptim
       animatedMesh->numVertices_ = previousAnimatedMesh->numVertices_;
       animatedMesh->numFrames_ = previousAnimatedMesh->numFrames_;
 
+      // This is what changes.
+      animatedMesh->state_ = x;
+
       boost::copy_graph (previousAnimatedMesh->graph (),
 			 animatedMesh->graph_);
 
@@ -271,9 +287,12 @@ namespace roboptim
 	{
 	  for (unsigned frameId = 0;
 	       frameId < animatedMesh->numFrames_; ++frameId)
-	    animatedMesh->graph ()[*vertexIt].positions[frameId] =
-	      x.segment
-	      (frameId * animatedMesh->numVertices_ * 3 + vertexId * 3, 3);
+	    {
+	      Eigen::VectorXd::Index offset =
+		frameId * animatedMesh->numVertices_ * 3 + vertexId;
+	      animatedMesh->graph ()[*vertexIt].positions[frameId] =
+		Vertex::position_t (animatedMesh->state_, offset, 3);
+	    }
 	  ++vertexId;
 	}
 
@@ -324,49 +343,6 @@ namespace roboptim
       
       std::ofstream file (filename.c_str ());
       file << out.c_str ();
-    }
-
-    Eigen::VectorXd
-    AnimatedInteractionMesh::makeOptimizationVector () const
-    {
-      Eigen::VectorXd x (optimizationVectorSize ());
-      x.setZero ();
-      if (!numFrames_ || !numVertices_)
-	return x;
-
-      unsigned length = optimizationVectorSizeOneFrame ();
-      unsigned idx = 0;
-      for (unsigned i = 0; i < numFrames_; ++i)
-	{
-	  x.segment (idx, length) = makeOptimizationVectorOneFrame (i);
-	  idx += length;
-	}
-
-      return x;
-    }
-
-    Eigen::VectorXd
-    AnimatedInteractionMesh::makeOptimizationVectorOneFrame
-    (unsigned frameId) const
-    {
-      Eigen::VectorXd
-	x (optimizationVectorSizeOneFrame ());
-      x.setZero ();
-      if (!numVertices_)
-	return x;
-
-      unsigned idx = 0;
-
-      vertex_iterator_t vertexIt;
-      vertex_iterator_t vertexEnd;
-      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
-      for (; vertexIt != vertexEnd; ++vertexIt)
-	{
-	  x.segment (idx, 3) = graph ()[*vertexIt].positions[frameId];
-	  idx += 3;
-	}
-
-      return x;
     }
 
     void
