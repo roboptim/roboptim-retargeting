@@ -7,8 +7,8 @@
 
 #define BOOST_TEST_MODULE animated_interaction_mesh
 
-#include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "tests-config.h"
 
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE (load_and_recreate)
      ("roboptim.retargeting.tests.animated-interaction-mesh"));
 
   std::string trajectoryFile = TESTS_DATA_DIR;
-  trajectoryFile += "/data/dance_longer-markers.yaml";
+  trajectoryFile += "/data/dance_ten-frames.yaml";
 
   std::string characterFile = TESTS_DATA_DIR;
   characterFile += "/data/character-cgvu-hrp4c.yaml";
@@ -34,12 +34,16 @@ BOOST_AUTO_TEST_CASE (load_and_recreate)
     AnimatedInteractionMesh::loadAnimatedMesh
     (trajectoryFile, characterFile);
 
-  Eigen::Matrix<double, Eigen::Dynamic, 1> x =
-    animatedMesh->makeOptimizationVector ();
+  Eigen::VectorXd x = animatedMesh->makeOptimizationVector ();
 
   roboptim::retargeting::AnimatedInteractionMeshShPtr_t animatedMesh2 =
     AnimatedInteractionMesh::makeFromOptimizationVariables
     (x, animatedMesh);
+  Eigen::VectorXd x2 = animatedMesh2->makeOptimizationVector ();
+
+  BOOST_CHECK_EQUAL_COLLECTIONS
+    (&x[0], &x[x.size () - 1],
+     &x2[0], &x2[x2.size () - 1]);
 
   BOOST_CHECK_EQUAL
     (animatedMesh->numVertices (), animatedMesh2->numVertices ());

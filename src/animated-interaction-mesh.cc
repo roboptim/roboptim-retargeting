@@ -94,14 +94,11 @@ namespace roboptim
 	      continue;
 	    }
 
-	  vertex_descriptor_t source =
-	    itStartMarker - vertexBegin;
-	  vertex_descriptor_t target =
-	    itEndMarker - vertexEnd;
 	  edge_descriptor_t edge;
 	  bool ok;
 	  boost::tie (edge, ok) =
-	    boost::add_edge (source, target, animatedMesh->graph ());
+	    boost::add_edge (*itStartMarker, *itEndMarker,
+			     animatedMesh->graph ());
 	  if (!ok)
 	    LOG4CXX_WARN (logger, "failed to add edge");
 	  animatedMesh->graph ()[edge].scale = scale;
@@ -198,7 +195,6 @@ namespace roboptim
 	      }
 	    ++frameId;
 	  }
-	animatedMesh->computeVertexWeights ();
 
 	if (parser.GetNextDocument(doc))
 	  LOG4CXX_WARN (logger, "ignoring multiple documents in YAML file");
@@ -223,6 +219,7 @@ namespace roboptim
 	loadEdgesFromYaml (doc["extraMarkerEdges"], animatedMesh);
       }
 
+      animatedMesh->computeVertexWeights ();
       return animatedMesh;
     }
 
@@ -233,7 +230,7 @@ namespace roboptim
       boost::write_graphviz
 	(out, graph (),
 	 InteractionMeshGraphVertexWriter<graph_t> (graph (), i),
-	 InteractionMeshGraphEdgeWriter<graph_t> (graph ()));
+	 InteractionMeshGraphEdgeWriter<graph_t> (graph (), i));
 
     }
 
@@ -269,12 +266,15 @@ namespace roboptim
       vertex_iterator_t vertexEnd;
       boost::tie (vertexIt, vertexEnd) = boost::vertices
 	(animatedMesh->graph ());
+      unsigned vertexId = 0;
       for (; vertexIt != vertexEnd; ++vertexIt)
 	{
 	  for (unsigned frameId = 0;
-	       frameId < previousAnimatedMesh->numFrames_; ++frameId)
+	       frameId < animatedMesh->numFrames_; ++frameId)
 	    animatedMesh->graph ()[*vertexIt].positions[frameId] =
-	      x.segment (frameId * animatedMesh->numVertices_ * 3, 3);
+	      x.segment
+	      (frameId * animatedMesh->numVertices_ * 3 + vertexId * 3, 3);
+	  ++vertexId;
 	}
 
       // Update weights.
@@ -356,10 +356,13 @@ namespace roboptim
 	return x;
 
       unsigned idx = 0;
-      for (unsigned i = 0; i < numVertices_; ++i)
+
+      vertex_iterator_t vertexIt;
+      vertex_iterator_t vertexEnd;
+      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
+      for (; vertexIt != vertexEnd; ++vertexIt)
 	{
-	  vertex_descriptor_t vertex = i;
-	  x.segment (idx, 3) = graph ()[vertex].positions[frameId];
+	  x.segment (idx, 3) = graph ()[*vertexIt].positions[frameId];
 	  idx += 3;
 	}
 
@@ -393,9 +396,12 @@ namespace roboptim
 			    << "target position: "
 			    << target.positions[frameId][0] << " "
 			    << target.positions[frameId][1] << " "
-			    << target.positions[frameId][2])
+			    << target.positions[frameId][2]);
 
-		edge.weight[frameId] =
+	      if (edge.weight.size () != numFrames_)
+		edge.weight.resize (numFrames_);
+
+	      edge.weight[frameId] =
 		(source.positions[frameId] - target.positions[frameId]
 		 ).squaredNorm ();
 	      if (edge.weight[frameId] == 0.)
@@ -413,6 +419,18 @@ namespace roboptim
 		graph ()[*edgeIt].weight[frameId] /= weightSum;
 	    }
 	}
+    }
+
+    void
+    AnimatedInteractionMesh::recomputeCachedData ()
+    {
+      numVertices_ = boost::num_vertices (graph ());
+      numFrames_ = 0;
+      if (!numVertices_)
+	return;
+      vertex_descriptor_t v = 0;
+      numFrames_ = graph ()[v].positions.size ();
+      computeVertexWeights ();
     }
 
   } // end of namespace retargeting.

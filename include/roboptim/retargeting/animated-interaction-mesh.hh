@@ -154,6 +154,9 @@ namespace roboptim
       /// and should be recomputed.
       void computeVertexWeights ();
 
+      /// \brief Recompute cached data using graph.
+      void recomputeCachedData ();
+
     protected:
       vertex_iterator_t
       getVertexFromLabel (const std::string& label) const;
@@ -186,8 +189,10 @@ namespace roboptim
     class InteractionMeshGraphEdgeWriter
     {
     public:
-      InteractionMeshGraphEdgeWriter (Name name)
-	: name (name)
+      InteractionMeshGraphEdgeWriter (Name name,
+				      unsigned frameId)
+	: name (name),
+	  frameId (frameId)
       {}
 
       template <class Edge>
@@ -195,14 +200,19 @@ namespace roboptim
       operator() (std::ostream& out, const Edge& v) const
       {
 	out << "[label=\""
-	    << "weight: "
-	    << name[v].weight[0] //FIXME
-	    << ", scale: "
-	    << name[v].scale
-	    << "\"]";
+	    << "weight: ";
+	if (frameId < name[v].weight.size ())
+	  out << name[v].weight[frameId];
+	else
+	  out << "n/a";
+	out
+	  << ", scale: "
+	  << name[v].scale
+	  << "\"]";
       }
     private:
       Name name;
+      unsigned frameId;
     };
 
     template <class Name>
@@ -220,17 +230,19 @@ namespace roboptim
       operator() (std::ostream& out, const Vertex& v) const
       {
 	out << "[label=\""
-
 	    << "id: "
 	    << v
 	    << ", label: "
 	    << name[v].label
-	    << ", position: ["
+	    << ", position: [";
+	if (frameId < name[v].positions.size ())
+	  out
 	    << name[v].positions[frameId][0] << ", "
 	    << name[v].positions[frameId][1] << ", "
-	    << name[v].positions[frameId][2] << "]"
-
-	    << "\"]";
+	    << name[v].positions[frameId][2] << "]";
+	  else
+	    out << "n/a";
+	out << "\"]";
       }
     private:
       Name name;

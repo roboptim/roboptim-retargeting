@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE (simple)
   // Link them using an edge.
   boost::add_edge (v0, v1, mesh->graph ());
 
-  mesh->computeVertexWeights ();
+  mesh->recomputeCachedData ();
 
   roboptim::Function::argument_t x (2 * 3);
   for (unsigned i = 0; i < x.size (); ++i)
