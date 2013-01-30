@@ -37,7 +37,11 @@ namespace roboptim
 
       explicit Retarget
       (const std::string& initialTrajectory,
-       const std::string& character);
+       const std::string& character,
+       bool enableBoneLength,
+       bool enablePosition,
+       bool enableCollision,
+       bool enableTorque);
       virtual ~Retarget ();
       void solve ();
 

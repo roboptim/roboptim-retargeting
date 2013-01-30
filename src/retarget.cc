@@ -12,7 +12,11 @@ namespace roboptim
     (log4cxx::Logger::getLogger("roboptim.retargeting.Retarget"));
 
     Retarget::Retarget (const std::string& initialTrajectory,
-			const std::string& character)
+			const std::string& character,
+			bool enableBoneLength,
+			bool enablePosition,
+			bool enableCollision,
+			bool enableTorque)
       : animatedMesh_
 	(AnimatedInteractionMesh::loadAnimatedMesh
 	 (initialTrajectory, character)),
@@ -53,24 +57,28 @@ namespace roboptim
       // Add constraints to problem.
 
       // -- Bone length
-      // for (unsigned i = 0; i < boneLengths_.size (); ++i)
-      // 	problem_->addConstraint (boneLengths_[i],
-      // 				 roboptim::Function::makeInterval (0., 0.));
+      if (enableBoneLength)
+	for (unsigned i = 0; i < boneLengths_.size (); ++i)
+	  problem_->addConstraint (boneLengths_[i],
+				   roboptim::Function::makeInterval (0., 0.));
 
       // -- Position
-      for (unsigned i = 0; i < positions_.size (); ++i)
-	problem_->addConstraint (positions_[i],
-				 roboptim::Function::makeInterval (0., 0.));
+      if (enablePosition)
+	for (unsigned i = 0; i < positions_.size (); ++i)
+	  problem_->addConstraint (positions_[i],
+				   roboptim::Function::makeInterval (0., 0.));
 
       // -- Collision
-      for (unsigned i = 0; i < collisions_.size (); ++i)
-	problem_->addConstraint (collisions_[i],
-				 roboptim::Function::makeInterval (0., 0.));
+      if (enableCollision)
+	for (unsigned i = 0; i < collisions_.size (); ++i)
+	  problem_->addConstraint (collisions_[i],
+				   roboptim::Function::makeInterval (0., 0.));
 
       // -- Torque
-      for (unsigned i = 0; i < torques_.size (); ++i)
-	problem_->addConstraint (torques_[i],
-				 roboptim::Function::makeInterval (0., 0.));
+      if (enableTorque)
+	for (unsigned i = 0; i < torques_.size (); ++i)
+	  problem_->addConstraint (torques_[i],
+				   roboptim::Function::makeInterval (0., 0.));
     }
 
     Retarget::~Retarget ()

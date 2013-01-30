@@ -26,7 +26,11 @@ BOOST_AUTO_TEST_CASE (simple)
 
   roboptim::retargeting::Retarget retarget
     (trajectoryFile,
-     characterFile);
+     characterFile,
+     false,
+     false,
+     false,
+     false);
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
 
   LOG4CXX_INFO (logger,

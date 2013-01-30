@@ -46,9 +46,13 @@ int main (int argc, char** argv)
   std::string trajectoryFile;
   std::string characterFile;
   std::string verbosityLevel;
+  bool enableBoneLength;
+  bool enablePosition;
+  bool enableCollision;
+  bool enableTorque;
 
-  po::options_description desc ("Allowed options");
-  desc.add_options ()
+  po::options_description general ("General options");
+  general.add_options ()
     ("help,h", "produce help message")
     ("version,v", "print version string")
     ("trajectory,t", po::value<std::string> (&trajectoryFile),
@@ -59,6 +63,25 @@ int main (int argc, char** argv)
      po::value<std::string> (&verbosityLevel),
      "Verbosity level (WARN, DEBUG, TRACE)")
     ;
+
+  po::options_description optim ("Optimization problem options");
+  optim.add_options ()
+    ("enable-bone-length,B",
+     po::value<bool> (&enableBoneLength)->default_value (true),
+     "enable bone-length constraints")
+    ("enable-position,P",
+     po::value<bool> (&enablePosition)->default_value (true),
+     "enable positional constraints")
+    ("enable-collision,C",
+     po::value<bool> (&enableCollision)->default_value (true),
+     "enable collision constraints")
+    ("enable-torque,T",
+     po::value<bool> (&enableTorque)->default_value (true),
+     "enable torque constraints")
+    ;
+
+  po::options_description desc ("Allowed options");
+  desc.add (general).add (optim);
 
   po::variables_map vm;
   try
@@ -155,7 +178,11 @@ int main (int argc, char** argv)
   // Retarget motion.
   roboptim::retargeting::Retarget retarget
     (trajectoryFilePath.string (),
-     characterFilePath.string ());
+     characterFilePath.string (),
+     enableBoneLength,
+     enablePosition,
+     enableCollision,
+     enableTorque);
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
 
   LOG4CXX_DEBUG (logger,
