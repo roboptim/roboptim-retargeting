@@ -38,10 +38,15 @@ namespace roboptim
 	  for (; vertexIt != vertexEnd; ++vertexIt)
 	    
 	    {
+	      // Precompute original mesh laplacian coordinates.
 	      laplacianCoordinates_.push_back
 		(LaplacianCoordinate
 		 (animatedMesh_, *vertexIt, frameId)
-		 (animatedMesh_->state ()));
+		 (animatedMesh_->state ().segment
+		  (frameId *
+		   animatedMesh_->optimizationVectorSizeOneFrame (),
+		   animatedMesh_->optimizationVectorSizeOneFrame ())
+		  ));
 
 	      laplacianCoordinatesLocal_.push_back
 		(boost::make_shared<LaplacianCoordinate>
