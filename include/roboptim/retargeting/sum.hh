@@ -43,6 +43,9 @@ namespace roboptim
 	const throw ();
     private:
       std::vector<DifferentiableFunctionShPtr_t> functions_;
+      mutable result_t result_;
+      mutable gradient_t gradient_;
+      mutable jacobian_t jacobian_;
     };
 
   }  // end of namespace retargeting.

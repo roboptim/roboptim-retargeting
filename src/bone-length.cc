@@ -7,15 +7,14 @@ namespace roboptim
   {
     BoneLength::BoneLength
     (AnimatedInteractionMeshShPtr_t animatedMesh,
+     AnimatedInteractionMeshShPtr_t animatedMeshLocal,
      unsigned frameId,
      AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ()
       : roboptim::DifferentiableFunction
 	(animatedMesh->optimizationVectorSize (),
 	 1, ""),
 	animatedMesh_ (animatedMesh),
-	animatedMeshLocal_
-	(AnimatedInteractionMesh::makeFromOptimizationVariables
-	 (animatedMesh_->state (), animatedMesh)),
+	animatedMeshLocal_ (animatedMeshLocal),
 	frameId_ (frameId),
 	edgeId_ (edgeId)
     {}

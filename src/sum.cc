@@ -9,7 +9,11 @@ namespace roboptim
       : roboptim::DifferentiableFunction
 	(functions[0]->inputSize (),
 	 functions[0]->outputSize (), ""),
-	functions_ (functions)
+	functions_ (functions),
+	result_ (functions[0]->outputSize ()),
+	gradient_ (functions[0]->inputSize ()),
+	jacobian_ (functions[0]->inputSize (),
+		   functions[0]->outputSize ())
     {}
 
     Sum::~Sum () throw ()
@@ -21,7 +25,10 @@ namespace roboptim
       const throw ()
     {
       for (unsigned i = 0; i < functions_.size (); ++i)
-	result += (*functions_[i]) (x);
+	{
+	  (*functions_[i]) (result_, x);
+	  result += result_;
+	}
     }
 
     void
@@ -31,7 +38,10 @@ namespace roboptim
       const throw ()
     {
       for (unsigned i = 0; i < functions_.size (); ++i)
-	gradient += functions_[i]->gradient (argument, functionId);
+	{
+	  functions_[i]->gradient (gradient_, argument, functionId);
+	  gradient += gradient_;
+	}
     }
 
     void
@@ -40,7 +50,10 @@ namespace roboptim
       const throw ()
     {
       for (unsigned i = 0; i < functions_.size (); ++i)
-	jacobian += functions_[i]->jacobian (argument);
+	{
+	  functions_[i]->jacobian (jacobian, argument);
+	  jacobian += jacobian_;
+	}
     }
 
   } // end of namespace retargeting.

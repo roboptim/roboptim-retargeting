@@ -43,16 +43,23 @@ namespace roboptim
 
       // Create bone lengths constraints,
       // one per edge and per frame if the scale is different from 1.
+
+      AnimatedInteractionMeshShPtr_t animatedMeshLocal =
+	AnimatedInteractionMesh::makeFromOptimizationVariables
+	(animatedMesh_->state (), animatedMesh_);
+
       AnimatedInteractionMesh::edge_iterator_t edgeIt;
       AnimatedInteractionMesh::edge_iterator_t edgeEnd;
-      boost::tie (edgeIt, edgeEnd) =
-	boost::edges (animatedMesh_->graph ());
+      boost::tie (edgeIt, edgeEnd) = boost::edges (animatedMesh_->graph ());
       for (; edgeIt != edgeEnd; ++edgeIt)
 	if (animatedMesh_->graph ()[*edgeIt].scale != 1.)
 	  for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
 	    {
 	      BoneLengthShPtr_t boneLengthConstraint =
-		boost::make_shared<BoneLength> (animatedMesh_, i, *edgeIt);
+		boost::make_shared<BoneLength>
+		(animatedMesh_,
+		 animatedMeshLocal,
+		 i, *edgeIt);
 	      boneLengths_.push_back (boneLengthConstraint);
 	    }
 
@@ -60,9 +67,15 @@ namespace roboptim
 
       // -- Bone length
       if (enableBoneLength)
-	for (unsigned i = 0; i < boneLengths_.size (); ++i)
-	  problem_->addConstraint (boneLengths_[i],
-				   roboptim::Function::makeInterval (0., 0.));
+	{
+	  LOG4CXX_INFO (logger, "bone lengths constraints enabled");
+	  for (unsigned i = 0; i < boneLengths_.size (); ++i)
+	    problem_->addConstraint
+	      (boneLengths_[i],
+	       roboptim::Function::makeInterval (0., 0.));
+	}
+      else
+	LOG4CXX_INFO (logger, "bone lengths constraints disabled");
 
       // -- Position
       if (enablePosition)

@@ -26,11 +26,11 @@ namespace roboptim
     class Retarget
     {
     public:
-      typedef roboptim::Problem<DerivableFunction,
-				boost::mpl::vector<DerivableFunction> >
+      typedef roboptim::Problem<DifferentiableFunction,
+				boost::mpl::vector<DifferentiableFunction> >
       problem_t;
-      typedef roboptim::Solver<DerivableFunction,
-			       boost::mpl::vector<DerivableFunction> >
+      typedef roboptim::Solver<DifferentiableFunction,
+			       boost::mpl::vector<DifferentiableFunction> >
       solver_t;
       typedef boost::shared_ptr<problem_t>
       problemShPtr_t;

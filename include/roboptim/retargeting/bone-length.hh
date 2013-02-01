@@ -17,6 +17,7 @@ namespace roboptim
     public:
       explicit BoneLength
       (AnimatedInteractionMeshShPtr_t animatedMesh,
+       AnimatedInteractionMeshShPtr_t animatedMeshLocal,
        unsigned frameId,
        AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ();
       virtual ~BoneLength () throw ();

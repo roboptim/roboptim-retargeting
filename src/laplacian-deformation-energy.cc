@@ -63,6 +63,10 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       assert (result.size () == 1);
 
       AnimatedInteractionMesh::vertex_iterator_t vertexIt;
@@ -104,6 +108,10 @@ namespace roboptim
      size_type i)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       roboptim::FiniteDifferenceGradient<
 	finiteDifferenceGradientPolicies::Simple>
 	fdg (*this);

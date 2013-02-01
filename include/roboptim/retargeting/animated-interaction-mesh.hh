@@ -9,9 +9,11 @@
 # include <boost/graph/graph_traits.hpp>
 # include <boost/graph/adjacency_list.hpp>
 
-# include <Eigen/StdVector>
-
 # include <roboptim/core/function.hh>
+
+// Include this after roboptim::Function to import other Eigen
+// headers properly and preserver roboptim-core cpp symbols.
+# include <Eigen/StdVector>
 
 namespace YAML
 {

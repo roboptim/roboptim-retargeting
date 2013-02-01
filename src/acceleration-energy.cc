@@ -68,6 +68,10 @@ namespace roboptim
      size_type i)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       roboptim::FiniteDifferenceGradient<
 	finiteDifferenceGradientPolicies::Simple>
 	fdg (*this);
