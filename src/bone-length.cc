@@ -10,7 +10,7 @@ namespace roboptim
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
      unsigned frameId,
      AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ()
-      : roboptim::DifferentiableFunction
+      : roboptim::LinearFunction
 	(animatedMesh->optimizationVectorSize (),
 	 1, ""),
 	animatedMesh_ (animatedMesh),

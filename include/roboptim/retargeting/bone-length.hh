@@ -1,7 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_BONE_LENGTH_HH
 # define ROBOPTIM_RETARGETING_BONE_LENGTH_HH
 # include <boost/shared_ptr.hpp>
-# include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/linear-function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
@@ -12,7 +12,7 @@ namespace roboptim
     class BoneLength;
     typedef boost::shared_ptr<BoneLength> BoneLengthShPtr_t;
 
-    class BoneLength : public roboptim::DifferentiableFunction
+    class BoneLength : public roboptim::LinearFunction
     {
     public:
       explicit BoneLength

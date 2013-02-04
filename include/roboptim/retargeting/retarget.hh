@@ -4,7 +4,9 @@
 
 # include <boost/shared_ptr.hpp>
 
+# include <roboptim/core/differentiable-function.hh>
 # include <roboptim/core/generic-solver.hh>
+# include <roboptim/core/linear-function.hh>
 # include <roboptim/core/problem.hh>
 # include <roboptim/core/solver.hh>
 # include <roboptim/core/sum-of-c1-squares.hh>
@@ -26,11 +28,13 @@ namespace roboptim
     class Retarget
     {
     public:
-      typedef roboptim::Problem<DifferentiableFunction,
-				boost::mpl::vector<DifferentiableFunction> >
+      typedef roboptim::Problem<
+      DifferentiableFunction,
+      boost::mpl::vector<LinearFunction, DifferentiableFunction> >
       problem_t;
-      typedef roboptim::Solver<DifferentiableFunction,
-			       boost::mpl::vector<DifferentiableFunction> >
+      typedef roboptim::Solver<
+	DifferentiableFunction,
+	boost::mpl::vector<LinearFunction, DifferentiableFunction> >
       solver_t;
       typedef boost::shared_ptr<problem_t>
       problemShPtr_t;
