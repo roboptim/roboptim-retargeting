@@ -46,10 +46,10 @@ namespace roboptim
       const Vertex& targetVertexNew =
       	animatedMeshLocal_->graph ()[target];
 
-      result[1] =
+      result[0] =
       	(targetVertex.positions[frameId_] - sourceVertex.positions[frameId_]
 	 ).squaredNorm ();
-      result[1] -= edge.scale *
+      result[0] -= edge.scale *
       	(targetVertexNew.positions[frameId_]
 	 - sourceVertexNew.positions[frameId_]).squaredNorm ();
     }
@@ -61,6 +61,10 @@ namespace roboptim
      size_type i)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       roboptim::FiniteDifferenceGradient<
 	finiteDifferenceGradientPolicies::Simple>
 	fdg (*this);
