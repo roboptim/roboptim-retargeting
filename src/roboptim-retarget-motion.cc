@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 
-#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/program_options.hpp>
@@ -30,7 +29,6 @@ void version ()
 
 int main (int argc, char** argv)
 {
-  namespace fs = boost::filesystem;
   namespace po = boost::program_options;
 
   // Initialize logging system.
@@ -144,26 +142,26 @@ int main (int argc, char** argv)
     }
 
   // Resolve files.
-  fs::path dataDir (PKG_SHARE_DIR);
-  dataDir /= "data";
+  std::string dataDir (PKG_SHARE_DIR);
+  dataDir += "/data";
 
-  fs::path trajectoryFilePath (trajectoryFile);
-  fs::path characterFilePath (characterFile);
+  std::string trajectoryFilePath (trajectoryFile);
+  std::string characterFilePath (characterFile);
 
-  if (!fs::exists (trajectoryFilePath))
+  if (!std::ifstream (trajectoryFilePath.c_str ()))
     {
-      trajectoryFilePath = dataDir / trajectoryFilePath;
-      if (!fs::exists (trajectoryFilePath))
+      trajectoryFilePath = dataDir + "/" + trajectoryFilePath;
+      if (!std::ifstream (trajectoryFilePath.c_str ()))
 	{
 	  std::cerr << "trajectory file does not exist" << std::endl;
 	  return 2;
 	}
     }
 
-  if (!fs::exists (characterFilePath))
+  if (!std::ifstream (characterFilePath.c_str ()))
     {
-      characterFilePath = dataDir / characterFilePath;
-      if (!fs::exists (characterFilePath))
+      characterFilePath = dataDir + "/" + characterFilePath;
+      if (!std::ifstream (characterFilePath.c_str ()))
 	{
 	  std::cerr << "robot file does not exist" << std::endl;
 	  return 2;
@@ -180,8 +178,8 @@ int main (int argc, char** argv)
 
   // Retarget motion.
   roboptim::retargeting::Retarget retarget
-    (trajectoryFilePath.string (),
-     characterFilePath.string (),
+    (trajectoryFilePath,
+     characterFilePath,
      enableBoneLength,
      enablePosition,
      enableCollision,
