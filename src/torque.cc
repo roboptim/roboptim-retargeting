@@ -17,7 +17,7 @@ namespace roboptim
 
     void
     Torque::impl_compute
-    (result_t& result, const argument_t& x)
+    (result_t&, const argument_t&)
       const throw ()
     {
     }

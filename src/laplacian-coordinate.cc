@@ -38,8 +38,6 @@ namespace roboptim
       assert (result.size () == 3);
       assert (x.size () - vertex_ * 3 + 2 > 0);
 
-      const Vertex& vertex = mesh_->graph ()[vertex_];
-
       LOG4CXX_TRACE
 	(logger, "Vertex id: " << vertex_);
 

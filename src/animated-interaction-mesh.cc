@@ -150,7 +150,7 @@ namespace roboptim
 	doc["numFrames"] >> animatedMesh->numFrames_;
 
 	// Compute number of vertices.
-	animatedMesh->numVertices_ = doc["partLabels"].size ();
+	animatedMesh->numVertices_ = (unsigned int)doc["partLabels"].size ();
 
 	// Resize state vector.
 	animatedMesh->state_.resize
@@ -406,12 +406,12 @@ namespace roboptim
     void
     AnimatedInteractionMesh::recomputeCachedData ()
     {
-      numVertices_ = boost::num_vertices (graph ());
+      numVertices_ = (unsigned int)boost::num_vertices (graph ());
       numFrames_ = 0;
       if (!numVertices_)
 	return;
       vertex_descriptor_t v = 0;
-      numFrames_ = graph ()[v].positions.size ();
+      numFrames_ = (unsigned int)graph ()[v].positions.size ();
       computeVertexWeights ();
     }
 

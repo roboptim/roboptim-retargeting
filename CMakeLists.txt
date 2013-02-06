@@ -38,8 +38,6 @@ SET(HEADERS
   ${CSD}/include/roboptim/retargeting/torque.hh
   )
 
-SET(CXX_DISABLE_WERROR True)
-
 SETUP_PROJECT()
 
 # Add main library to pkg-config file.

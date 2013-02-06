@@ -36,8 +36,6 @@ namespace roboptim
       const Vertex& targetVertex = animatedMesh_->graph ()[target];
       const Edge& edge = animatedMesh_->graph ()[edgeId_];
 
-      const unsigned& nVertices = animatedMesh_->numVertices ();
-
       animatedMeshLocal_->state () = x;
       animatedMeshLocal_->computeVertexWeights();
 
