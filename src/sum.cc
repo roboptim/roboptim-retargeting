@@ -4,17 +4,29 @@ namespace roboptim
 {
   namespace retargeting
   {
+    static std::string
+    buildSumTitle (const std::vector<DifferentiableFunctionShPtr_t>& functions)
+    {
+      std::string title ("∑");
+      for (unsigned i = 0; i < functions.size (); ++i)
+	title += " " + functions[i]->getName ();
+      return title;
+    }
     Sum::Sum
     (const std::vector<DifferentiableFunctionShPtr_t>& functions) throw ()
       : roboptim::DifferentiableFunction
 	(functions[0]->inputSize (),
-	 functions[0]->outputSize (), ""),
+	 functions[0]->outputSize (), buildSumTitle (functions)),
 	functions_ (functions),
 	result_ (functions[0]->outputSize ()),
 	gradient_ (functions[0]->inputSize ()),
 	jacobian_ (functions[0]->inputSize (),
 		   functions[0]->outputSize ())
-    {}
+    {
+      result_.setZero ();
+      gradient_.setZero ();
+      jacobian_.setZero ();
+    }
 
     Sum::~Sum () throw ()
     {}
