@@ -30,6 +30,13 @@ namespace roboptim
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       AnimatedInteractionMesh::edge_descriptor_t edgeId_;
+      AnimatedInteractionMesh::vertex_descriptor_t source_;
+      AnimatedInteractionMesh::vertex_descriptor_t target_;
+      /// \brief Scale corresponding to the selected edgeId.
+      double scale_;
+      /// \brief Segment goal length.
+      /// I.e. alpha * |p1 - p2|
+      double goalLength_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

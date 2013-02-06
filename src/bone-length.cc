@@ -40,8 +40,20 @@ namespace roboptim
 	  % buildBoneLengthFunctionTitle (animatedMesh, edgeId)).str ()),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
-	edgeId_ (edgeId)
-    {}
+	edgeId_ (edgeId),
+	source_ (boost::source (edgeId_, animatedMesh_->graph ())),
+	target_ (boost::target (edgeId_, animatedMesh_->graph ())),
+	scale_ (animatedMesh->graph ()[edgeId].scale),
+	goalLength_ ()
+    {
+      const Vertex& sourceVertex = animatedMesh_->graph ()[source_];
+      const Vertex& targetVertex = animatedMesh_->graph ()[target_];
+
+      goalLength_ =
+	scale_ *
+	(targetVertex.positions[0]
+	 - sourceVertex.positions[0]).squaredNorm ();
+    }
 
     BoneLength::~BoneLength () throw ()
     {}
@@ -51,32 +63,19 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      AnimatedInteractionMesh::vertex_descriptor_t source =
-	boost::source (edgeId_, animatedMesh_->graph ());
-      AnimatedInteractionMesh::vertex_descriptor_t target =
-	boost::target (edgeId_, animatedMesh_->graph ());
-
-      const Vertex& sourceVertex = animatedMesh_->graph ()[source];
-      const Vertex& targetVertex = animatedMesh_->graph ()[target];
-      const Edge& edge = animatedMesh_->graph ()[edgeId_];
-
       animatedMeshLocal_->state () = x;
       animatedMeshLocal_->computeVertexWeights();
 
       const Vertex& sourceVertexNew =
-      	animatedMeshLocal_->graph ()[source];
+	animatedMeshLocal_->graph ()[source_];
       const Vertex& targetVertexNew =
-      	animatedMeshLocal_->graph ()[target];
+	animatedMeshLocal_->graph ()[target_];
 
       for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
-	{
-	  result[i] =
-	    (targetVertex.positions[i] - sourceVertex.positions[i]
-	     ).squaredNorm ();
-	  result[i] -= edge.scale *
+	result[i] =
 	    (targetVertexNew.positions[i]
-	     - sourceVertexNew.positions[i]).squaredNorm ();
-	}
+	     - sourceVertexNew.positions[i]).squaredNorm ()
+	  - goalLength_;
     }
 
     void
