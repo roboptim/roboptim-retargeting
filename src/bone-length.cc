@@ -21,10 +21,12 @@ namespace roboptim
 	[boost::target
 	 (edgeId,
 	  animatedMesh->graph ())].label;
+      const double& scale = animatedMesh->graph ()[edgeId].scale;
 
-      return (boost::format ("[%1%, %2%]")
+      return (boost::format ("edge id = [%1%, %2%], scale = %3%")
 	      % vertexSource
-	      % vertexDest).str ();
+	      % vertexDest
+	      % scale).str ();
     }
 
     BoneLength::BoneLength
@@ -34,7 +36,7 @@ namespace roboptim
       : roboptim::LinearFunction
 	(animatedMesh->optimizationVectorSize (),
 	 animatedMesh->numFrames (),
-	 (boost::format ("bone length (edge id = %1%)")
+	 (boost::format ("bone length (%1%)")
 	  % buildBoneLengthFunctionTitle (animatedMesh, edgeId)).str ()),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
