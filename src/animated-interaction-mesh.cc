@@ -320,7 +320,7 @@ namespace roboptim
 	<< YAML::BeginMap
 	<< YAML::Key << "type" << YAML::Value << "MultiVector3Seq"
 	<< YAML::Key << "content" << YAML::Value << "MarkerMotion"
-	<< YAML::Key << "framerate" << YAML::Value << framerate_
+	<< YAML::Key << "frameRate" << YAML::Value << framerate_
 	<< YAML::Key << "numFrames" << YAML::Value << numFrames_
 	<< YAML::Key << "partLabels" << YAML::Value
 	<< YAML::BeginSeq
