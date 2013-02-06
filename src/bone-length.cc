@@ -6,6 +6,27 @@ namespace roboptim
 {
   namespace retargeting
   {
+    static std::string
+    buildBoneLengthFunctionTitle
+    (AnimatedInteractionMeshShPtr_t animatedMesh,
+     AnimatedInteractionMesh::edge_descriptor_t edgeId)
+    {
+      std::string vertexSource =
+	animatedMesh->graph ()
+	[boost::source
+	 (edgeId,
+	  animatedMesh->graph ())].label;
+      std::string vertexDest =
+	animatedMesh->graph ()
+	[boost::target
+	 (edgeId,
+	  animatedMesh->graph ())].label;
+
+      return (boost::format ("[%1%, %2%]")
+	      % vertexSource
+	      % vertexDest).str ();
+    }
+
     BoneLength::BoneLength
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
@@ -13,7 +34,8 @@ namespace roboptim
       : roboptim::LinearFunction
 	(animatedMesh->optimizationVectorSize (),
 	 animatedMesh->numFrames (),
-	 (boost::format ("bone length (edge id = %1%") % edgeId).str ()),
+	 (boost::format ("bone length (edge id = %1%)")
+	  % buildBoneLengthFunctionTitle (animatedMesh, edgeId)).str ()),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
 	edgeId_ (edgeId)
