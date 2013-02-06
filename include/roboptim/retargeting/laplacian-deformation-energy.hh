@@ -1,7 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_DEFORMATION_ENERGY_HH
 # define ROBOPTIM_RETARGETING_DEFORMATION_ENERGY_HH
 # include <vector>
-# include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/linear-function.hh>
 
 # include <roboptim/retargeting/laplacian-coordinate.hh>
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
@@ -15,7 +15,7 @@ namespace roboptim
     typedef boost::shared_ptr<LaplacianDeformationEnergy>
     LaplacianDeformationEnergyShPtr_t;
 
-    class LaplacianDeformationEnergy : public roboptim::DifferentiableFunction
+    class LaplacianDeformationEnergy : public roboptim::LinearFunction
     {
     public:
       explicit LaplacianDeformationEnergy

@@ -1,4 +1,5 @@
 #include <cassert>
+#include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/laplacian-coordinate.hh"
 
 // Remove trace logging in release.
@@ -18,7 +19,7 @@ namespace roboptim
     (AnimatedInteractionMeshShPtr_t mesh,
      AnimatedInteractionMesh::vertex_descriptor_t vertex,
      unsigned frameId) throw ()
-      : roboptim::Function
+      : roboptim::LinearFunction
 	(mesh->optimizationVectorSizeOneFrame (), 3,
 	 "laplacian coordinate"),
 	mesh_ (mesh),
@@ -79,5 +80,22 @@ namespace roboptim
 	  result -= neighbor.positions[frameId_] * edge.weight[frameId_];
 	}
     }
+
+    void
+    LaplacianCoordinate::impl_gradient (gradient_t& gradient,
+					const argument_t& argument,
+					size_type functionId)
+      const throw ()
+    {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+      roboptim::FiniteDifferenceGradient<
+	finiteDifferenceGradientPolicies::Simple>
+	fdg (*this);
+      fdg.gradient (gradient, argument, functionId);
+    }
+
    } // end of namespace retargeting.
 } // end of namespace roboptim.

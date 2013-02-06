@@ -16,7 +16,7 @@ namespace roboptim
   {
     LaplacianDeformationEnergy::LaplacianDeformationEnergy
     (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
-      : roboptim::DifferentiableFunction
+      : roboptim::LinearFunction
 	(animatedMesh->optimizationVectorSize (),
 	 1,
 	 "laplacian deformation energy"),

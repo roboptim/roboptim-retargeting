@@ -4,7 +4,7 @@
 
 # include <boost/shared_ptr.hpp>
 
-# include <roboptim/core/function.hh>
+# include <roboptim/core/linear-function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
@@ -22,7 +22,7 @@ namespace roboptim
     /// \f[
     /// L(p_j) = p_j - \sum_{l \in N_j} w_l^j p_l
     /// \f]
-    class LaplacianCoordinate : public roboptim::Function
+    class LaplacianCoordinate : public roboptim::LinearFunction
       {
       public:
 	using roboptim::Function::size_type;
@@ -33,6 +33,10 @@ namespace roboptim
 	 unsigned frameId_) throw ();
 	virtual ~LaplacianCoordinate () throw ();
 	void impl_compute (result_t& result, const argument_t& x)
+	  const throw ();
+	void impl_gradient (gradient_t& gradient,
+			    const argument_t& argument,
+			    size_type functionId = 0)
 	  const throw ();
       private:
 	static log4cxx::LoggerPtr logger;
