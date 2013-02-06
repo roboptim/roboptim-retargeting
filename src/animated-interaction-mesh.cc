@@ -155,6 +155,7 @@ namespace roboptim
 	// Resize state vector.
 	animatedMesh->state_.resize
 	  (animatedMesh->numFrames_ * animatedMesh->numVertices_ * 3);
+	animatedMesh->state_.setZero ();
 
 	// Add one vertex per label.
 	for (YAML::Iterator it = doc["partLabels"].begin ();

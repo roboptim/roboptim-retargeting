@@ -27,6 +27,8 @@ namespace roboptim
 	laplacianCoordinatesLocal_ (),
 	buffer_ (3)
     {
+      buffer_.setZero ();
+
       AnimatedInteractionMesh::vertex_iterator_t vertexIt;
       AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
 
