@@ -1,3 +1,4 @@
+#include <boost/format.hpp>
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/bone-length.hh"
 
@@ -8,14 +9,13 @@ namespace roboptim
     BoneLength::BoneLength
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-     unsigned frameId,
      AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ()
       : roboptim::LinearFunction
 	(animatedMesh->optimizationVectorSize (),
-	 1, ""),
+	 animatedMesh->numFrames (),
+	 (boost::format ("bone length (edge id = %1%") % edgeId).str ()),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
-	frameId_ (frameId),
 	edgeId_ (edgeId)
     {}
 
@@ -44,12 +44,15 @@ namespace roboptim
       const Vertex& targetVertexNew =
       	animatedMeshLocal_->graph ()[target];
 
-      result[0] =
-      	(targetVertex.positions[frameId_] - sourceVertex.positions[frameId_]
-	 ).squaredNorm ();
-      result[0] -= edge.scale *
-      	(targetVertexNew.positions[frameId_]
-	 - sourceVertexNew.positions[frameId_]).squaredNorm ();
+      for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
+	{
+	  result[i] =
+	    (targetVertex.positions[i] - sourceVertex.positions[i]
+	     ).squaredNorm ();
+	  result[i] -= edge.scale *
+	    (targetVertexNew.positions[i]
+	     - sourceVertexNew.positions[i]).squaredNorm ();
+	}
     }
 
     void

@@ -18,7 +18,8 @@ namespace roboptim
     (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
       : roboptim::DifferentiableFunction
 	(animatedMesh->optimizationVectorSize (),
-	 1, ""),
+	 1,
+	 "laplacian deformation energy"),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_
 	(AnimatedInteractionMesh::makeFromOptimizationVariables

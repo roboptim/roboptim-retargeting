@@ -53,15 +53,12 @@ namespace roboptim
       boost::tie (edgeIt, edgeEnd) = boost::edges (animatedMesh_->graph ());
       for (; edgeIt != edgeEnd; ++edgeIt)
 	if (animatedMesh_->graph ()[*edgeIt].scale != 1.)
-	  for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
-	    {
-	      BoneLengthShPtr_t boneLengthConstraint =
-		boost::make_shared<BoneLength>
-		(animatedMesh_,
-		 animatedMeshLocal,
-		 i, *edgeIt);
-	      boneLengths_.push_back (boneLengthConstraint);
-	    }
+	  {
+	    BoneLengthShPtr_t boneLengthConstraint =
+	      boost::make_shared<BoneLength>
+	      (animatedMesh_, animatedMeshLocal, *edgeIt);
+	    boneLengths_.push_back (boneLengthConstraint);
+	  }
 
       // Add constraints to problem.
 
@@ -69,10 +66,19 @@ namespace roboptim
       if (enableBoneLength)
 	{
 	  LOG4CXX_INFO (logger, "bone lengths constraints enabled");
+
+	  Function::intervals_t intervals;
+	  problem_t::scales_t scales;
+	  for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
+	    {
+	      intervals.push_back (roboptim::Function::makeInterval (0., 0.));
+	      scales.push_back (1.);
+	    }
 	  for (unsigned i = 0; i < boneLengths_.size (); ++i)
 	    problem_->addConstraint
 	      (boost::static_pointer_cast<LinearFunction> (boneLengths_[i]),
-	       roboptim::Function::makeInterval (0., 0.));
+	       intervals,
+	       scales);
 	}
       else
 	LOG4CXX_INFO (logger, "bone lengths constraints disabled");
@@ -107,7 +113,7 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Set solver parameters.
-      solver.parameters ()["max-iterations"].value = 1;
+      solver.parameters ()["max-iterations"].value = 10;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
 

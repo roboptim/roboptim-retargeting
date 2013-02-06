@@ -18,7 +18,6 @@ namespace roboptim
       explicit BoneLength
       (AnimatedInteractionMeshShPtr_t animatedMesh,
        AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-       unsigned frameId,
        AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ();
       virtual ~BoneLength () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -30,7 +29,6 @@ namespace roboptim
     private:
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
-      unsigned frameId_;
       AnimatedInteractionMesh::edge_descriptor_t edgeId_;
     };
   } // end of namespace retargeting.
