@@ -26,6 +26,9 @@ namespace roboptim
 			  const argument_t& argument,
 			  size_type functionId = 0)
 	const throw ();
+      void impl_jacobian (jacobian_t& jacobian, const argument_t& arg)
+	const throw ();
+
     private:
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
