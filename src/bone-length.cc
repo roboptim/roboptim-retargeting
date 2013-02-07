@@ -82,39 +82,54 @@ namespace roboptim
     void
     computeGradient
     (Eigen::MatrixBase<U>& gradient,
-     const Eigen::MatrixBase<V>& arg,
+     const Eigen::MatrixBase<V>&,
      Function::size_type frameId,
-     AnimatedInteractionMeshShPtr_t animatedMesh_,
+     AnimatedInteractionMeshShPtr_t animatedMeshLocal,
      AnimatedInteractionMesh::vertex_descriptor_t source_,
      AnimatedInteractionMesh::vertex_descriptor_t target_)
     {
-      const unsigned& nVertices = animatedMesh_->numVertices ();
+      const unsigned oneFrameOffset = (unsigned)
+	animatedMeshLocal->optimizationVectorSizeOneFrame ();
+      const unsigned sourceOffset = (unsigned) source_;
+      const unsigned targetOffset = (unsigned) target_;
+
+      const Vertex& sourceVertexNew =
+	animatedMeshLocal->graph ()[source_];
+      const Vertex& targetVertexNew =
+	animatedMeshLocal->graph ()[target_];
+
       const double& sourceX =
-	arg[frameId * 3 * nVertices + source_ * 3 + 0];
+	sourceVertexNew.positions[frameId][0];
       const double& sourceY =
-	arg[frameId * 3 * nVertices + source_ * 3 + 1];
+	sourceVertexNew.positions[frameId][1];
       const double& sourceZ =
-	arg[frameId * 3 * nVertices + source_ * 3 + 2];
+	sourceVertexNew.positions[frameId][2];
       const double& targetX =
-	arg[frameId * 3 * nVertices + target_ * 3 + 0];
+	targetVertexNew.positions[frameId][0];
       const double& targetY =
-	arg[frameId * 3 * nVertices + target_ * 3 + 1];
+	targetVertexNew.positions[frameId][1];
       const double& targetZ =
-	arg[frameId * 3 * nVertices + target_ * 3 + 2];
+	targetVertexNew.positions[frameId][2];
 
       // derivative w.r.t x position
-      gradient(frameId * 3 * nVertices + source_ * 3 + 0, 0) = 2 * sourceX;
+      gradient(frameId * oneFrameOffset + sourceOffset * 3 + 0, 0) =
+	2 * sourceX;
       // derivative w.r.t y position
-      gradient(frameId * 3 * nVertices + source_ * 3 + 1, 0) = 2 * sourceY;
+      gradient(frameId * oneFrameOffset + sourceOffset * 3 + 1, 0) =
+	2 * sourceY;
       // derivative w.r.t z position
-      gradient(frameId * 3 * nVertices + source_ * 3 + 2, 0) = 2 * sourceZ;
+      gradient(frameId * oneFrameOffset + sourceOffset * 3 + 2, 0) =
+	2 * sourceZ;
 
       // derivative w.r.t x position
-      gradient(frameId * 3 * nVertices + target_ * 3 + 0, 0) = -2 * targetX;
+      gradient(frameId * oneFrameOffset + targetOffset * 3 + 0, 0) =
+	-2 * targetX;
       // derivative w.r.t y position
-      gradient(frameId * 3 * nVertices + target_ * 3 + 1, 0) = -2 * targetY;
+      gradient(frameId * oneFrameOffset + targetOffset * 3 + 1, 0) =
+	-2 * targetY;
       // derivative w.r.t z position
-      gradient(frameId * 3 * nVertices + target_ * 3 + 2, 0) = -2 * targetZ;
+      gradient(frameId * oneFrameOffset + targetOffset * 3 + 2, 0) =
+	-2 * targetZ;
     }
 
     void
@@ -124,7 +139,11 @@ namespace roboptim
      size_type frameId)
       const throw ()
     {
-      computeGradient (gradient, arg, frameId, animatedMesh_, source_, target_);
+      animatedMeshLocal_->state () = arg;
+      animatedMeshLocal_->computeVertexWeights();
+
+      computeGradient (gradient, arg, frameId, animatedMeshLocal_,
+		       source_, target_);
     }
 
     void
@@ -133,6 +152,9 @@ namespace roboptim
      const argument_t& arg)
       const throw ()
     {
+      animatedMeshLocal_->state () = arg;
+      animatedMeshLocal_->computeVertexWeights();
+
       jacobian.setZero ();
       for (unsigned frameId = 0 ;
 	   frameId < animatedMesh_->numFrames (); ++frameId)
@@ -140,7 +162,7 @@ namespace roboptim
 	  Eigen::Block<Eigen::MatrixXd> gradient =
 	    jacobian.block (frameId, 0, 1, jacobian.cols ());
 	  computeGradient
-	    (gradient, arg, frameId, animatedMesh_, source_, target_);
+	    (gradient, arg, frameId, animatedMeshLocal_, source_, target_);
 	}
     }
 

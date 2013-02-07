@@ -57,6 +57,18 @@ BOOST_AUTO_TEST_CASE (load_and_recreate)
     (boost::num_edges (animatedMesh->graph ()),
      boost::num_edges (animatedMesh2->graph ()));
 
+  BOOST_CHECK_EQUAL
+    (&animatedMesh->graph ()[0].positions[0][0],
+     &animatedMesh->state ()[0]);
+
+  BOOST_CHECK_EQUAL
+    (&animatedMesh->graph ()[0].positions[0][1],
+     &animatedMesh->state ()[1]);
+
+  BOOST_CHECK_EQUAL
+    (&animatedMesh->graph ()[0].positions[0][2],
+     &animatedMesh->state ()[2]);
+
   for (unsigned i = 0; i < animatedMesh->numFrames (); ++i)
     {
       output_test_stream stream;

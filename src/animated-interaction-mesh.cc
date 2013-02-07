@@ -173,7 +173,7 @@ namespace roboptim
 		 frameId < animatedMesh->numFrames_; ++frameId)
 	      {
 		Eigen::VectorXd::Index offset =
-		  frameId * animatedMesh->numVertices_ * 3 + vertex;
+		  frameId * animatedMesh->numVertices_ * 3 + vertex * 3;
 		animatedMesh->graph ()[vertex].positions.push_back
 		  (Vertex::position_t (animatedMesh->state_, offset, 3));
 	      }
@@ -290,18 +290,18 @@ namespace roboptim
       boost::tie (vertexIt, vertexEnd) = boost::vertices
 	(animatedMesh->graph ());
       unsigned vertexId = 0;
-      for (; vertexIt != vertexEnd; ++vertexIt)
-	{
-	  for (unsigned frameId = 0;
-	       frameId < animatedMesh->numFrames_; ++frameId)
-	    {
-	      Eigen::VectorXd::Index offset =
-		frameId * animatedMesh->numVertices_ * 3 + vertexId;
-	      animatedMesh->graph ()[*vertexIt].positions[frameId] =
-		Vertex::position_t (animatedMesh->state_, offset, 3);
-	    }
-	  ++vertexId;
-	}
+      for (; vertexIt != vertexEnd; ++vertexIt, ++vertexId)
+	for (unsigned frameId = 0;
+	     frameId < animatedMesh->numFrames_; ++frameId)
+	  {
+	    Eigen::VectorXd::Index offset =
+	      frameId * animatedMesh->numVertices_ * 3 + vertexId * 3;
+	    assert (offset <= animatedMesh->state ().size () - 3);
+
+	    // use placement new to map to the new state
+	    new (&animatedMesh->graph ()[*vertexIt].positions[frameId])
+	      Vertex::position_t (animatedMesh->state_, offset, 3);
+	  }
 
       // Update weights.
       animatedMesh->computeVertexWeights ();
@@ -325,7 +325,7 @@ namespace roboptim
 	<< YAML::Key << "numFrames" << YAML::Value << numFrames_
 	<< YAML::Key << "partLabels" << YAML::Value
 	<< YAML::BeginSeq
-	     ;
+	;
       boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
       for (; vertexIt != vertexEnd; ++vertexIt)
 	out << graph ()[*vertexIt].label;
