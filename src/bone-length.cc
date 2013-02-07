@@ -104,6 +104,7 @@ namespace roboptim
 	sourceVertexNew.positions[frameId][1];
       const double& sourceZ =
 	sourceVertexNew.positions[frameId][2];
+
       const double& targetX =
 	targetVertexNew.positions[frameId][0];
       const double& targetY =
@@ -113,23 +114,23 @@ namespace roboptim
 
       // derivative w.r.t x position
       gradient(frameId * oneFrameOffset + sourceOffset * 3 + 0, 0) =
-	2 * sourceX;
+	2 * (sourceX - targetX);
       // derivative w.r.t y position
       gradient(frameId * oneFrameOffset + sourceOffset * 3 + 1, 0) =
-	2 * sourceY;
+	2 * (sourceY - targetY);
       // derivative w.r.t z position
       gradient(frameId * oneFrameOffset + sourceOffset * 3 + 2, 0) =
-	2 * sourceZ;
+	2 * (sourceZ - targetZ);
 
       // derivative w.r.t x position
       gradient(frameId * oneFrameOffset + targetOffset * 3 + 0, 0) =
-	-2 * targetX;
+	-2 * (sourceX - targetX);
       // derivative w.r.t y position
       gradient(frameId * oneFrameOffset + targetOffset * 3 + 1, 0) =
-	-2 * targetY;
+	-2 * (sourceY - targetY);
       // derivative w.r.t z position
       gradient(frameId * oneFrameOffset + targetOffset * 3 + 2, 0) =
-	-2 * targetZ;
+	-2 * (sourceZ - targetZ);
     }
 
     void
