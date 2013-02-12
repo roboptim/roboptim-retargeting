@@ -25,6 +25,10 @@ namespace roboptim
 {
   namespace retargeting
   {
+    /// \brief Reshape motion to fit a robot model.
+    ///
+    /// Build the optimization problem and provide a method #solve ()
+    /// which looks for an optimal solution.
     class Retarget
     {
     public:
@@ -48,6 +52,8 @@ namespace roboptim
        bool enableTorque,
        const std::string& solverName);
       virtual ~Retarget ();
+
+      /// \brief Solve the underlying optimization problem.
       void solve ();
 
       AnimatedInteractionMeshShPtr_t animatedMesh ()

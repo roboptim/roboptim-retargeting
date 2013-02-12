@@ -10,6 +10,7 @@ namespace roboptim
     class Torque;
     typedef boost::shared_ptr<Torque> TorqueShPtr_t;
 
+    /// \brief Torque constraints (not yet implemented)
     class Torque : public roboptim::DifferentiableFunction
     {
     public:

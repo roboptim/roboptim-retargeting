@@ -14,6 +14,12 @@ namespace roboptim
     DifferentiableFunctionShPtr_t;
     typedef boost::shared_ptr<Sum> SumShPtr_t;
 
+    /// \brief Sum several RobOptim functions.
+    ///
+    /// \f[ sum_{(f_0, f_1, \cdots, f_i)}(x) = \sum_i f_i(x) \f]
+    ///
+    /// Associated jacobian:
+    /// \f[ \frac{\partial sum_{(f_0, f_1, \cdots, f_i)}}{\partial x}(x) = \sum_i \frac{\partial f_i}{\partial x}(x) \f]
     class Sum : public roboptim::DifferentiableFunction
     {
     public:

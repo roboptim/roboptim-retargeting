@@ -12,6 +12,13 @@ namespace roboptim
     class BoneLength;
     typedef boost::shared_ptr<BoneLength> BoneLengthShPtr_t;
 
+    /// \brief Bone length constraint.
+    ///
+    /// Compute segment length error w.r.t the goal robot model.
+    ///
+    /// \f[
+    /// C_B(V_i') = B_i V_i - l
+    /// \f]
     class BoneLength : public roboptim::LinearFunction
     {
     public:

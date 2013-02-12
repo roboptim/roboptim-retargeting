@@ -10,6 +10,7 @@ namespace roboptim
     class Position;
     typedef boost::shared_ptr<Position> PositionShPtr_t;
 
+    /// \brief Position constraint (not implemented)
     class Position : public roboptim::DifferentiableFunction
     {
     public:

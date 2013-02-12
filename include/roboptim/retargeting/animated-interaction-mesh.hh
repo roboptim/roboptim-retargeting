@@ -216,6 +216,7 @@ namespace roboptim
       graph_t graph_;
     };
 
+    /// \brief Write an edge using the Graphviz format.
     template <class Name>
     class InteractionMeshGraphEdgeWriter
     {
@@ -246,6 +247,7 @@ namespace roboptim
       unsigned frameId;
     };
 
+    /// \brief Write a vertex using the Graphviz format.
     template <class Name>
     class InteractionMeshGraphVertexWriter
     {

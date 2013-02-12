@@ -15,6 +15,11 @@ namespace roboptim
     typedef boost::shared_ptr<LaplacianDeformationEnergy>
     LaplacianDeformationEnergyShPtr_t;
 
+    /// \brief Compute that Laplacian Deformation Energy.
+    ///
+    /// \f[
+    /// E_L(V_{i}') = \sum_{j} \| \delta_{j} - L(p_{j}'^{i}) \|^{2}
+    /// \f]
     class LaplacianDeformationEnergy : public roboptim::LinearFunction
     {
     public:

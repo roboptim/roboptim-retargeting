@@ -10,6 +10,7 @@ namespace roboptim
     class Collision;
     typedef boost::shared_ptr<Collision> CollisionShPtr_t;
 
+    /// \brief Collision constraint (not implemented).
     class Collision : public roboptim::DifferentiableFunction
     {
     public:
