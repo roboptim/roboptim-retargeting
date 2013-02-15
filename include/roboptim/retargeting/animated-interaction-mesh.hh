@@ -28,7 +28,7 @@ namespace roboptim
     typedef boost::shared_ptr<AnimatedInteractionMesh>
     AnimatedInteractionMeshShPtr_t;
 
-    /// \brief Interaction mesh nodes (vertices)
+    /// \brief Robot body (vertex of the main graph)
     ///
     /// Contain both the vertex position in the Euclidian space
     /// and the vertex id.
@@ -51,11 +51,12 @@ namespace roboptim
 		  Eigen::aligned_allocator<position_t> > positions;
     };
 
-    /// \brief Links betweens nodes in the interactive mesh.
+    /// \brief Robot segment/link (edge of the the main graph)
     ///
     /// Contains each node weight to avoid useless recomputations.
     struct Edge
     {
+      //FIXME: remove?
       /// \brief Edge weight when computing Laplacian coordinates.
       std::vector<double> weight;
 
@@ -70,8 +71,7 @@ namespace roboptim
     class AnimatedInteractionMesh
     {
     public:
-      typedef std::vector<std::string> labelsVector_t;
-
+      /// \brief Graph used to store the robots segments.
       typedef boost::adjacency_list<boost::vecS,
 				    boost::vecS,
 				    boost::undirectedS,
@@ -91,6 +91,13 @@ namespace roboptim
       index_map_t;
       typedef boost::graph_traits <graph_t>::adjacency_iterator
       adjacency_iterator_t;
+
+      /// \brief Graph used to represent the interaction mesh.
+      typedef boost::adjacency_list
+      <boost::vecS,
+       boost::vecS,
+       boost::undirectedS> interaction_mesh_graph_t;
+
 
 
       explicit AnimatedInteractionMesh ();
@@ -185,13 +192,31 @@ namespace roboptim
       /// \brief Recompute cached data using graph.
       void recomputeCachedData ();
 
+      const std::vector<interaction_mesh_graph_t>&
+      interactionMeshes () const
+      {
+	return interactionMeshes_;
+      }
+
     protected:
       vertex_iterator_t
       getVertexFromLabel (const std::string& label) const;
 
+      vertex_iterator_t
+      getVertexFromPosition (unsigned frameId,
+			     double x, double y, double z) const;
+
       static void loadEdgesFromYaml
       (const YAML::Node& node, AnimatedInteractionMeshShPtr_t animatedMesh);
 
+      std::vector<interaction_mesh_graph_t>&
+      interactionMeshes ()
+      {
+	return interactionMeshes_;
+      }
+
+      void computeInteractionMeshes ();
+      void computeInteractionMesh (unsigned frameId);
 
     private:
       /// \brief Class logger.
@@ -212,8 +237,14 @@ namespace roboptim
       /// \brief Current mesh state.
       Eigen::VectorXd state_;
 
-      /// \brief Underlying Boost graph.
+      /// \brief Robots bodies and links.
+      ///
+      /// This graph represents the scene. Bodies are nodes
+      /// and vertices are robots segments.
       graph_t graph_;
+
+      /// \brief Interaction mesh (one graph per frame).
+      std::vector<interaction_mesh_graph_t> interactionMeshes_;
     };
 
     /// \brief Write an edge using the Graphviz format.

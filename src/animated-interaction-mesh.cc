@@ -8,6 +8,9 @@
 #include <boost/graph/copy.hpp>
 #include <boost/graph/graphviz.hpp>
 
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Triangulation_3.h>
+
 #include <log4cxx/logger.h>
 
 #include <yaml-cpp/iterator.h>
@@ -53,6 +56,23 @@ namespace roboptim
       return vertexIt;
     }
 
+    AnimatedInteractionMesh::vertex_iterator_t
+    AnimatedInteractionMesh::getVertexFromPosition (unsigned frameId,
+						    double x,
+						    double y,
+						    double z) const
+    {
+      vertex_iterator_t vertexIt;
+      vertex_iterator_t vertexEnd;
+      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
+      for (; vertexIt != vertexEnd; ++vertexIt)
+	if (graph ()[*vertexIt].positions[frameId][0] == x
+	    && graph ()[*vertexIt].positions[frameId][1] == y
+	    && graph ()[*vertexIt].positions[frameId][2] == z)
+	  return vertexIt;
+      return vertexIt;
+    }
+
     void
     AnimatedInteractionMesh::loadEdgesFromYaml
     (const YAML::Node& node,
@@ -63,7 +83,6 @@ namespace roboptim
       boost::tie (vertexBegin, vertexEnd) =
 	boost::vertices (animatedMesh->graph ());
 
-      typedef AnimatedInteractionMesh::labelsVector_t labelsVector_t;
       for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
 	{
 	  std::string startMarker, endMarker;
@@ -178,7 +197,7 @@ namespace roboptim
 		  (Vertex::position_t (animatedMesh->state_, offset, 3));
 	      }
 	  }
-	
+
 	unsigned frameId = 0;
 	for (YAML::Iterator it = doc["frames"].begin ();
 	     it != doc["frames"].end (); ++it)
@@ -305,7 +324,7 @@ namespace roboptim
 
       // Update weights.
       animatedMesh->computeVertexWeights ();
-      
+
       return animatedMesh;
     }
 
@@ -347,7 +366,7 @@ namespace roboptim
 	<< YAML::EndSeq
 	<< YAML::EndMap
 	;
-      
+
       std::ofstream file (filename.c_str ());
       file << out.c_str ();
     }
@@ -414,6 +433,82 @@ namespace roboptim
       vertex_descriptor_t v = 0;
       numFrames_ = (unsigned int)graph ()[v].positions.size ();
       computeVertexWeights ();
+    }
+
+    void
+    AnimatedInteractionMesh::computeInteractionMeshes ()
+    {
+      interactionMeshes_.resize (numFrames ());
+
+      for (unsigned i = 0; i < numFrames (); ++i)
+	computeInteractionMesh (i);
+    }
+
+    void
+    AnimatedInteractionMesh::computeInteractionMesh (unsigned frameId)
+    {
+      typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+
+      typedef CGAL::Triangulation_3<K>      Triangulation;
+
+      typedef Triangulation::Cell_handle    Cell_handle;
+      typedef Triangulation::Vertex_handle  Vertex_handle;
+      typedef Triangulation::Locate_type    Locate_type;
+      typedef Triangulation::Facet_circulator Facet_circulator;
+      typedef Triangulation::Point          Point;
+      typedef Triangulation::Triangle       Triangle;
+
+      std::vector<Point>  points (numVertices ());
+      vertex_iterator_t vertexIt;
+      vertex_iterator_t vertexEnd;
+      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
+      for (; vertexIt != vertexEnd; ++vertexIt)
+	points.push_back
+	  (Point
+	   (graph ()[*vertexIt].positions[frameId][0],
+	    graph ()[*vertexIt].positions[frameId][1],
+	    graph ()[*vertexIt].positions[frameId][2]));
+
+      Triangulation triangulation (points.begin (), points.end());
+
+      Triangulation::Finite_edges_iterator it =
+	triangulation.finite_edges_begin ();
+      Facet_circulator facetsEnd;
+      for (; it != triangulation.finite_edges_end (); ++it)
+	{
+	  Facet_circulator facets = facetsEnd =
+	    triangulation.incident_facets (*it);
+
+	  do
+	    {
+	      Triangle triangle = triangulation.triangle (*facets);
+	      for (unsigned i = 0; i < 3; ++i)
+		{
+		  vertex_descriptor_t source =
+		    *getVertexFromPosition
+		    (frameId,
+		     triangle[i][0],
+		     triangle[i][1],
+		     triangle[i][2]);
+
+		  // it is working because operator[i] access to i % 3
+		  vertex_descriptor_t target =
+		    *getVertexFromPosition
+		    (
+		     frameId,
+		     triangle[i + 1][0],
+		     triangle[i + 1][1],
+		     triangle[i + 1][2]);
+		  edge_descriptor_t edge;
+		  bool ok;
+		  boost::tie (edge, ok) =
+		    boost::add_edge
+		    (source, target, interactionMeshes_[frameId]);
+		}
+	      ++facets;
+	    }
+	  while (facets != facetsEnd);
+	}
     }
 
   } // end of namespace retargeting.

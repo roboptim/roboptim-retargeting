@@ -46,6 +46,16 @@ PKG_CONFIG_APPEND_LIBS(roboptim-retargeting)
 # Search for dependencies.
 SEARCH_FOR_BOOST()
 
+# Search for CGAL.
+FIND_PACKAGE(CGAL QUIET COMPONENTS Core)
+if (CGAL_FOUND)
+  INCLUDE(${CGAL_USE_FILE})
+  INCLUDE(CGAL_CreateSingleSourceCGALProgram)
+ELSE()
+    MESAGE(FATAL_ERROR
+      "This program requires the CGAL library, and will not be compiled.")
+ENDIF()
+
 ADD_REQUIRED_DEPENDENCY("roboptim-core >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt >= 0.5")
 ADD_REQUIRED_DEPENDENCY("yaml-cpp")
