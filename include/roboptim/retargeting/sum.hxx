@@ -1,22 +1,28 @@
-#include "roboptim/retargeting/sum.hh"
+#ifndef ROBOPTIM_RETARGET_SUM_HXX
+# define ROBOPTIM_RETARGET_SUM_HXX
 
 namespace roboptim
 {
   namespace retargeting
   {
-    static std::string
-    buildSumTitle (const std::vector<DifferentiableFunctionShPtr_t>& functions)
+    template <typename T>
+    std::string
+    buildSumTitle
+    (const std::vector<
+      typename Sum<T>::DifferentiableFunctionShPtr_t>& functions)
     {
       std::string title ("∑");
       for (unsigned i = 0; i < functions.size (); ++i)
 	title += " " + functions[i]->getName ();
       return title;
     }
-    Sum::Sum
+
+    template <typename T>
+    Sum<T>::Sum
     (const std::vector<DifferentiableFunctionShPtr_t>& functions) throw ()
-      : roboptim::DifferentiableFunction
+      : roboptim::GenericDifferentiableFunction<T>
 	(functions[0]->inputSize (),
-	 functions[0]->outputSize (), buildSumTitle (functions)),
+	 functions[0]->outputSize (), buildSumTitle<T> (functions)),
 	functions_ (functions),
 	result_ (functions[0]->outputSize ()),
 	gradient_ (functions[0]->inputSize ()),
@@ -28,11 +34,13 @@ namespace roboptim
       jacobian_.setZero ();
     }
 
-    Sum::~Sum () throw ()
+    template <typename T>
+    Sum<T>::~Sum () throw ()
     {}
 
+    template <typename T>
     void
-    Sum::impl_compute
+    Sum<T>::impl_compute
     (result_t& result, const argument_t& x)
       const throw ()
     {
@@ -43,10 +51,11 @@ namespace roboptim
 	}
     }
 
+    template <typename T>
     void
-    Sum::impl_gradient (gradient_t& gradient,
-			const argument_t& argument,
-			size_type functionId)
+    Sum<T>::impl_gradient (gradient_t& gradient,
+			   const argument_t& argument,
+			   size_type functionId)
       const throw ()
     {
       for (unsigned i = 0; i < functions_.size (); ++i)
@@ -56,8 +65,9 @@ namespace roboptim
 	}
     }
 
+    template <typename T>
     void
-    Sum::impl_jacobian (jacobian_t& jacobian,
+    Sum<T>::impl_jacobian (jacobian_t& jacobian,
 			const argument_t& argument)
       const throw ()
     {
@@ -70,3 +80,5 @@ namespace roboptim
 
   } // end of namespace retargeting.
 } // end of namespace roboptim.
+
+#endif //! ROBOPTIM_RETARGET_SUM_HXX

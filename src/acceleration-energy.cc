@@ -7,8 +7,8 @@ namespace roboptim
   {
     AccelerationEnergy::AccelerationEnergy
     (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
-      : roboptim::DifferentiableFunction
-	(animatedMesh->optimizationVectorSize (),
+      : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
+	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
 	 1, ""),
 	animatedMesh_ (animatedMesh)
     {}
@@ -73,8 +73,8 @@ namespace roboptim
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
       roboptim::GenericFiniteDifferenceGradient<
-	EigenMatrixDense,
-	finiteDifferenceGradientPolicies::Simple<EigenMatrixDense> >
+	EigenMatrixSparse,
+	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >
 	fdg (*this);
       fdg.gradient (gradient, x, i);
     }

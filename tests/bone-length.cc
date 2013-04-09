@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE (simple)
      animatedMeshLocal,
      edgeId);
 
-  Function::vector_t x (bl.inputSize ());
+  GenericFunction<EigenMatrixSparse>::vector_t x (bl.inputSize ());
 
   x.setZero ();
   std::cout << "zero: " << std::endl << bl (x) << std::endl;
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE (simple)
 	   {
 	     checkGradientAndThrow (bl, 0, x);
 	   }
-	 catch (BadGradient<EigenMatrixDense>& bg)
+	 catch (BadGradient<EigenMatrixSparse>& bg)
 	   {
 	     BOOST_TEST_MESSAGE (bg);
 	     throw;

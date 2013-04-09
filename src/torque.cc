@@ -7,7 +7,7 @@ namespace roboptim
   {
     Torque::Torque
     () throw ()
-      : roboptim::DifferentiableFunction
+      : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(1,
 	 1, "")
     {}
@@ -30,8 +30,8 @@ namespace roboptim
       const throw ()
     {
       roboptim::GenericFiniteDifferenceGradient<
-	EigenMatrixDense,
-	finiteDifferenceGradientPolicies::Simple<EigenMatrixDense> >
+	EigenMatrixSparse,
+	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >
 	fdg (*this);
       fdg.gradient (gradient, x, i);
     }

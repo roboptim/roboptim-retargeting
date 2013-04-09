@@ -11,7 +11,8 @@ namespace roboptim
     typedef boost::shared_ptr<Torque> TorqueShPtr_t;
 
     /// \brief Torque constraints (not yet implemented)
-    class Torque : public roboptim::DifferentiableFunction
+    class Torque :
+      public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
       explicit Torque () throw ();

@@ -32,13 +32,25 @@ namespace roboptim
     class Retarget
     {
     public:
+      typedef boost::shared_ptr<
+	typename roboptim::GenericDifferentiableFunction<
+	  EigenMatrixSparse> >
+      DifferentiableFunctionShPtr_t;
+      typedef boost::shared_ptr<Sum<EigenMatrixSparse> > SumShPtr_t;
+
       typedef roboptim::Problem<
-      DifferentiableFunction,
-      boost::mpl::vector<LinearFunction, DifferentiableFunction> >
+      GenericDifferentiableFunction<EigenMatrixSparse>,
+      boost::mpl::vector<
+	GenericLinearFunction<EigenMatrixSparse>,
+	GenericDifferentiableFunction<EigenMatrixSparse>
+	> >
       problem_t;
       typedef roboptim::Solver<
-	DifferentiableFunction,
-	boost::mpl::vector<LinearFunction, DifferentiableFunction> >
+	GenericDifferentiableFunction<EigenMatrixSparse>,
+	boost::mpl::vector<
+	  GenericLinearFunction<EigenMatrixSparse>,
+	  GenericDifferentiableFunction<EigenMatrixSparse>
+	  > >
       solver_t;
       typedef boost::shared_ptr<problem_t>
       problemShPtr_t;

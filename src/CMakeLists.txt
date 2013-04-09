@@ -12,7 +12,6 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   laplacian-deformation-energy.cc
   position.cc
   retarget.cc
-  sum.cc
   torque.cc
   yaml-helper.cc yaml-helper.hh
   )

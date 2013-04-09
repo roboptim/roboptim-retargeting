@@ -20,7 +20,8 @@ namespace roboptim
     /// \f[
     /// E_L(V_{i}') = \sum_{j} \| \delta_{j} - L(p_{j}'^{i}) \|^{2}
     /// \f]
-    class LaplacianDeformationEnergy : public roboptim::LinearFunction
+    class LaplacianDeformationEnergy
+      : public roboptim::GenericLinearFunction<EigenMatrixSparse>
     {
     public:
       explicit LaplacianDeformationEnergy
@@ -39,7 +40,8 @@ namespace roboptim
       /// \brief Current state of the mesh (during optimization process).
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       /// \brief Original laplacian coordinates.
-      std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> >
+      std::vector<Eigen::Vector3d,
+		  Eigen::aligned_allocator<Eigen::Vector3d> >
       laplacianCoordinates_;
       std::vector<LaplacianCoordinateShPtr_t> laplacianCoordinatesLocal_;
 

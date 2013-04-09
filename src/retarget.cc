@@ -33,7 +33,7 @@ namespace roboptim
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
       costs.push_back (costAcceleration_);
-      cost_ = boost::make_shared<Sum> (costs);
+      cost_ = boost::make_shared<Sum<EigenMatrixSparse> > (costs);
       problem_ = boost::make_shared<problem_t> (*cost_);
 
       // Use loaded animated interaction mesh to provide starting
@@ -76,7 +76,9 @@ namespace roboptim
 	    }
 	  for (unsigned i = 0; i < boneLengths_.size (); ++i)
 	    problem_->addConstraint
-	      (boost::static_pointer_cast<LinearFunction> (boneLengths_[i]),
+	      (boost::static_pointer_cast
+	       <GenericLinearFunction<EigenMatrixSparse> >
+	       (boneLengths_[i]),
 	       intervals,
 	       scales);
 	}
@@ -86,20 +88,23 @@ namespace roboptim
       // -- Position
       if (enablePosition)
 	for (unsigned i = 0; i < positions_.size (); ++i)
-	  problem_->addConstraint (positions_[i],
-				   roboptim::Function::makeInterval (0., 0.));
+	  problem_->addConstraint
+	    (positions_[i],
+	     roboptim::Function::makeInterval (0., 0.));
 
       // -- Collision
       if (enableCollision)
 	for (unsigned i = 0; i < collisions_.size (); ++i)
-	  problem_->addConstraint (collisions_[i],
-				   roboptim::Function::makeInterval (0., 0.));
+	  problem_->addConstraint
+	    (collisions_[i],
+	     roboptim::Function::makeInterval (0., 0.));
 
       // -- Torque
       if (enableTorque)
 	for (unsigned i = 0; i < torques_.size (); ++i)
-	  problem_->addConstraint (torques_[i],
-				   roboptim::Function::makeInterval (0., 0.));
+	  problem_->addConstraint
+	    (torques_[i],
+	     roboptim::Function::makeInterval (0., 0.));
     }
 
     Retarget::~Retarget ()

@@ -11,7 +11,8 @@ namespace roboptim
     typedef boost::shared_ptr<Collision> CollisionShPtr_t;
 
     /// \brief Collision constraint (not implemented).
-    class Collision : public roboptim::DifferentiableFunction
+    class Collision :
+      public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
       explicit Collision () throw ();

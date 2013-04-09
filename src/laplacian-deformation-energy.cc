@@ -16,7 +16,7 @@ namespace roboptim
   {
     LaplacianDeformationEnergy::LaplacianDeformationEnergy
     (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
-      : roboptim::LinearFunction
+      : roboptim::GenericLinearFunction<EigenMatrixSparse>
 	(animatedMesh->optimizationVectorSize (),
 	 1,
 	 "laplacian deformation energy"),
@@ -116,8 +116,8 @@ namespace roboptim
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
       roboptim::GenericFiniteDifferenceGradient<
-	EigenMatrixDense,
-	finiteDifferenceGradientPolicies::Simple<EigenMatrixDense> >
+	EigenMatrixSparse,
+	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >
 	fdg (*this);
 
       fdg.gradient (gradient, x, i);

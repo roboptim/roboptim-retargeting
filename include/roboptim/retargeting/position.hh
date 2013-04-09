@@ -11,7 +11,8 @@ namespace roboptim
     typedef boost::shared_ptr<Position> PositionShPtr_t;
 
     /// \brief Position constraint (not implemented)
-    class Position : public roboptim::DifferentiableFunction
+    class Position :
+      public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
       explicit Position () throw ();

@@ -30,7 +30,8 @@ namespace roboptim
   namespace retargeting
   {
     log4cxx::LoggerPtr AnimatedInteractionMesh::logger
-    (log4cxx::Logger::getLogger("roboptim.retargeting.AnimatedInteractionMesh"));
+    (log4cxx::Logger::getLogger
+     ("roboptim.retargeting.AnimatedInteractionMesh"));
 
     AnimatedInteractionMesh::AnimatedInteractionMesh ()
       :  framerate_ (),

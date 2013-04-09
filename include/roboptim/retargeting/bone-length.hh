@@ -19,7 +19,9 @@ namespace roboptim
     /// \f[
     /// C_B(V_i') = B_i V_i - l
     /// \f]
-    class BoneLength : public roboptim::LinearFunction
+    class BoneLength :
+      public roboptim::GenericLinearFunction<
+      roboptim::EigenMatrixSparse>
     {
     public:
       explicit BoneLength

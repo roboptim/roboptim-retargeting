@@ -58,7 +58,8 @@ int main (int argc, char** argv)
      "markers trajectory (YAML)")
     ("robot,r", po::value<std::string> (&characterFile),
      "robot description (YAML)")
-    ("solver,s", po::value<std::string> (&solverName)->default_value ("ipopt"),
+    ("solver,s", po::value<std::string>
+     (&solverName)->default_value ("ipopt-sparse"),
      "solver name (ipopt, cfsqp)")
     ("verbosity-level,l",
      po::value<std::string> (&verbosityLevel),

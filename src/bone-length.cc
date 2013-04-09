@@ -33,8 +33,8 @@ namespace roboptim
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
      AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ()
-      : roboptim::LinearFunction
-	(animatedMesh->optimizationVectorSize (),
+      : roboptim::GenericLinearFunction<EigenMatrixSparse>
+	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
 	 animatedMesh->numFrames (),
 	 (boost::format ("bone length (%1%)")
 	  % buildBoneLengthFunctionTitle (animatedMesh, edgeId)).str ()),
@@ -81,8 +81,8 @@ namespace roboptim
     template <typename U, typename V>
     void
     computeGradient
-    (Eigen::MatrixBase<U>& gradient,
-     const Eigen::MatrixBase<V>&,
+    (U& gradient,
+     const V&,
      Function::size_type frameId,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
      AnimatedInteractionMesh::vertex_descriptor_t source_,
@@ -113,23 +113,23 @@ namespace roboptim
 	targetVertexNew.positions[frameId][2];
 
       // derivative w.r.t x position
-      gradient(frameId * oneFrameOffset + sourceOffset * 3 + 0, 0) =
+      gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 0) =
 	2 * (sourceX - targetX);
       // derivative w.r.t y position
-      gradient(frameId * oneFrameOffset + sourceOffset * 3 + 1, 0) =
+      gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 1) =
 	2 * (sourceY - targetY);
       // derivative w.r.t z position
-      gradient(frameId * oneFrameOffset + sourceOffset * 3 + 2, 0) =
+      gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 2) =
 	2 * (sourceZ - targetZ);
 
       // derivative w.r.t x position
-      gradient(frameId * oneFrameOffset + targetOffset * 3 + 0, 0) =
+      gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 0) =
 	-2 * (sourceX - targetX);
       // derivative w.r.t y position
-      gradient(frameId * oneFrameOffset + targetOffset * 3 + 1, 0) =
+      gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 1) =
 	-2 * (sourceY - targetY);
       // derivative w.r.t z position
-      gradient(frameId * oneFrameOffset + targetOffset * 3 + 2, 0) =
+      gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 2) =
 	-2 * (sourceZ - targetZ);
     }
 
@@ -144,7 +144,7 @@ namespace roboptim
       animatedMeshLocal_->computeVertexWeights();
 
       computeGradient (gradient, arg, frameId, animatedMeshLocal_,
-		       source_, target_);
+      		       source_, target_);
     }
 
     void
@@ -160,10 +160,10 @@ namespace roboptim
       for (unsigned frameId = 0 ;
 	   frameId < animatedMesh_->numFrames (); ++frameId)
 	{
-	  Eigen::Block<Eigen::MatrixXd> gradient =
-	    jacobian.block (frameId, 0, 1, jacobian.cols ());
+	  gradient_t g = jacobian.middleRows (frameId, 1);
 	  computeGradient
-	    (gradient, arg, frameId, animatedMeshLocal_, source_, target_);
+	    (g, arg, frameId, animatedMeshLocal_, source_, target_);
+	  jacobian.middleRows (frameId, 1) = g;
 	}
     }
 

@@ -20,7 +20,8 @@ namespace roboptim
     /// E_A(V_{i-1}',V_i',V_{i+1}') = \frac{1}{2} \| V_{i-1}^2 + 2 V_i + V_{i+1}^2 \|^2
     /// \f]
 
-    class AccelerationEnergy : public roboptim::DifferentiableFunction
+    class AccelerationEnergy
+      : public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
       explicit AccelerationEnergy

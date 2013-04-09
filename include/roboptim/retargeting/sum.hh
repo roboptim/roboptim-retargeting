@@ -9,20 +9,24 @@ namespace roboptim
 {
   namespace retargeting
   {
-    class Sum;
-    typedef boost::shared_ptr<roboptim::DifferentiableFunction>
-    DifferentiableFunctionShPtr_t;
-    typedef boost::shared_ptr<Sum> SumShPtr_t;
-
     /// \brief Sum several RobOptim functions.
     ///
     /// \f[ sum_{(f_0, f_1, \cdots, f_i)}(x) = \sum_i f_i(x) \f]
     ///
     /// Associated jacobian:
     /// \f[ \frac{\partial sum_{(f_0, f_1, \cdots, f_i)}}{\partial x}(x) = \sum_i \frac{\partial f_i}{\partial x}(x) \f]
-    class Sum : public roboptim::DifferentiableFunction
+    template <typename T>
+    class Sum : public roboptim::GenericDifferentiableFunction<T>
     {
     public:
+      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+      (roboptim::GenericDifferentiableFunction<T>);
+
+      typedef boost::shared_ptr<
+      typename roboptim::GenericDifferentiableFunction<T> >
+      DifferentiableFunctionShPtr_t;
+      typedef boost::shared_ptr<Sum> SumShPtr_t;
+
       explicit Sum
       (const std::vector<DifferentiableFunctionShPtr_t>& functions) throw ();
       ~Sum () throw ();
@@ -57,4 +61,5 @@ namespace roboptim
   }  // end of namespace retargeting.
 } // end of namespace roboptim.
 
+# include <roboptim/retargeting/sum.hxx>
 #endif //! ROBOPTIM_RETARGET_SUM_HH
