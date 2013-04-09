@@ -140,6 +140,10 @@ namespace roboptim
      size_type frameId)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       animatedMeshLocal_->state () = arg;
       animatedMeshLocal_->computeVertexWeights();
 
@@ -153,6 +157,10 @@ namespace roboptim
      const argument_t& arg)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       animatedMeshLocal_->state () = arg;
       animatedMeshLocal_->computeVertexWeights();
 
@@ -160,7 +168,7 @@ namespace roboptim
       for (unsigned frameId = 0 ;
 	   frameId < animatedMesh_->numFrames (); ++frameId)
 	{
-	  gradient_t g = jacobian.middleRows (frameId, 1);
+	  gradient_t g (inputSize ());
 	  computeGradient
 	    (g, arg, frameId, animatedMeshLocal_, source_, target_);
 	  jacobian.middleRows (frameId, 1) = g;
