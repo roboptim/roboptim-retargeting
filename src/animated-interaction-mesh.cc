@@ -121,7 +121,7 @@ namespace roboptim
 	    }
 
 	  edge_descriptor_t edge;
-	  bool ok;
+	  bool ok = false;
 	  boost::tie (edge, ok) =
 	    boost::add_edge (*itStartMarker, *itEndMarker,
 			     animatedMesh->graph ());
@@ -450,12 +450,55 @@ namespace roboptim
     void
     AnimatedInteractionMesh::computeInteractionMesh (unsigned)
     {
+      vertex_iterator_t vertexIt;
+      vertex_iterator_t vertexEnd;
+
       tetgenio in, out;
       in.firstnumber = 0;
 
       in.numberofpoints = numVertices ();
       in.pointlist = new REAL[in.numberofpoints * 3];
-    }
 
+      for (unsigned frameId = 0; frameId < numFrames (); ++frameId)
+	{
+	  boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
+	  unsigned j = 0;
+	  for (; vertexIt != vertexEnd; ++vertexIt, ++j)
+	    {
+	      in.pointlist[j * 3 + 0] =
+		graph ()[*vertexIt].positions[frameId][0];
+	      in.pointlist[j * 3 + 1] =
+		graph ()[*vertexIt].positions[frameId][1];
+	      in.pointlist[j * 3 + 2] =
+		graph ()[*vertexIt].positions[frameId][2];
+	    }
+
+	  char switches[] = "zQ";
+	  tetrahedralize (switches, &in, &out);
+
+	  const int n = out.numberoftetrahedra;
+	  const int m = out.numberofcorners;
+	  for (int i = 0; i < n; ++i)
+	    {
+	      for (int j = 0; j < m - 1; ++j)
+		{
+		  for (int k = j + 1; k < m; ++k)
+		    {
+		      int index0 = out.tetrahedronlist[i * m + j];
+		      int index1 = out.tetrahedronlist[i * m + k];
+
+		      edge_descriptor_t edge;
+		      vertex_descriptor_t startMarker = index0; //FIXME:
+		      vertex_descriptor_t endMarker = index1; //FIXME:
+
+		      bool ok = false;
+		      boost::tie (edge, ok) =
+			boost::add_edge (startMarker, endMarker,
+					 interactionMeshes_[frameId]);
+		    }
+		}
+	    }
+	}
+    }
   } // end of namespace retargeting.
 } // end of namespace roboptim.
