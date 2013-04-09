@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE (simple)
 	   {
 	     checkGradientAndThrow (bl, 0, x);
 	   }
-	 catch (BadGradient& bg)
+	 catch (BadGradient<EigenMatrixDense>& bg)
 	   {
 	     BOOST_TEST_MESSAGE (bg);
 	     throw;

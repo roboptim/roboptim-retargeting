@@ -19,4 +19,4 @@ EXECUTE_PROCESS(
 
 INSTALL(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/man/man1/roboptim-retarget-motion.1.gz"
-  DESTINATION share/man/man1)
+  DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)

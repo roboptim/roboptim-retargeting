@@ -8,13 +8,12 @@
 #include <boost/graph/copy.hpp>
 #include <boost/graph/graphviz.hpp>
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Triangulation_3.h>
-
 #include <log4cxx/logger.h>
 
 #include <yaml-cpp/iterator.h>
 #include <yaml-cpp/yaml.h>
+
+#include <tetgen.h>
 
 #include "roboptim/retargeting/animated-interaction-mesh.hh"
 
@@ -258,6 +257,7 @@ namespace roboptim
 	loadEdgesFromYaml (doc["extraMarkerEdges"], animatedMesh);
       }
 
+      animatedMesh->computeInteractionMeshes ();
       animatedMesh->computeVertexWeights ();
       return animatedMesh;
     }
@@ -323,6 +323,7 @@ namespace roboptim
 	  }
 
       // Update weights.
+      animatedMesh->computeInteractionMeshes ();
       animatedMesh->computeVertexWeights ();
 
       return animatedMesh;
@@ -432,6 +433,7 @@ namespace roboptim
 	return;
       vertex_descriptor_t v = 0;
       numFrames_ = (unsigned int)graph ()[v].positions.size ();
+      computeInteractionMeshes ();
       computeVertexWeights ();
     }
 
@@ -445,70 +447,13 @@ namespace roboptim
     }
 
     void
-    AnimatedInteractionMesh::computeInteractionMesh (unsigned frameId)
+    AnimatedInteractionMesh::computeInteractionMesh (unsigned)
     {
-      typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+      tetgenio in, out;
+      in.firstnumber = 0;
 
-      typedef CGAL::Triangulation_3<K>      Triangulation;
-
-      typedef Triangulation::Cell_handle    Cell_handle;
-      typedef Triangulation::Vertex_handle  Vertex_handle;
-      typedef Triangulation::Locate_type    Locate_type;
-      typedef Triangulation::Facet_circulator Facet_circulator;
-      typedef Triangulation::Point          Point;
-      typedef Triangulation::Triangle       Triangle;
-
-      std::vector<Point>  points (numVertices ());
-      vertex_iterator_t vertexIt;
-      vertex_iterator_t vertexEnd;
-      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
-      for (; vertexIt != vertexEnd; ++vertexIt)
-	points.push_back
-	  (Point
-	   (graph ()[*vertexIt].positions[frameId][0],
-	    graph ()[*vertexIt].positions[frameId][1],
-	    graph ()[*vertexIt].positions[frameId][2]));
-
-      Triangulation triangulation (points.begin (), points.end());
-
-      Triangulation::Finite_edges_iterator it =
-	triangulation.finite_edges_begin ();
-      Facet_circulator facetsEnd;
-      for (; it != triangulation.finite_edges_end (); ++it)
-	{
-	  Facet_circulator facets = facetsEnd =
-	    triangulation.incident_facets (*it);
-
-	  do
-	    {
-	      Triangle triangle = triangulation.triangle (*facets);
-	      for (unsigned i = 0; i < 3; ++i)
-		{
-		  vertex_descriptor_t source =
-		    *getVertexFromPosition
-		    (frameId,
-		     triangle[i][0],
-		     triangle[i][1],
-		     triangle[i][2]);
-
-		  // it is working because operator[i] access to i % 3
-		  vertex_descriptor_t target =
-		    *getVertexFromPosition
-		    (
-		     frameId,
-		     triangle[i + 1][0],
-		     triangle[i + 1][1],
-		     triangle[i + 1][2]);
-		  edge_descriptor_t edge;
-		  bool ok;
-		  boost::tie (edge, ok) =
-		    boost::add_edge
-		    (source, target, interactionMeshes_[frameId]);
-		}
-	      ++facets;
-	    }
-	  while (facets != facetsEnd);
-	}
+      in.numberofpoints = numVertices ();
+      in.pointlist = new REAL[in.numberofpoints * 3];
     }
 
   } // end of namespace retargeting.

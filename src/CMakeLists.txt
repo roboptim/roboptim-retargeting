@@ -20,11 +20,13 @@ PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)
+TARGET_LINK_LIBRARIES(roboptim-retargeting tet)
 SET_TARGET_PROPERTIES(roboptim-retargeting PROPERTIES SOVERSION 0.0.0)
-INSTALL(TARGETS roboptim-retargeting DESTINATION lib)
+INSTALL(TARGETS roboptim-retargeting DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # Main binary.
 ADD_EXECUTABLE(roboptim-retarget-motion roboptim-retarget-motion)
 TARGET_LINK_LIBRARIES(roboptim-retarget-motion
   roboptim-retargeting ${Boost_LIBRARIES})
-INSTALL(TARGETS roboptim-retarget-motion DESTINATION bin)
+INSTALL(TARGETS roboptim-retarget-motion
+  DESTINATION ${CMAKE_INSTALL_BINDIR})
