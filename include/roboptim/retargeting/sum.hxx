@@ -68,7 +68,7 @@ namespace roboptim
     template <typename T>
     void
     Sum<T>::impl_jacobian (jacobian_t& jacobian,
-			const argument_t& argument)
+			   const argument_t& argument)
       const throw ()
     {
       for (unsigned i = 0; i < functions_.size (); ++i)

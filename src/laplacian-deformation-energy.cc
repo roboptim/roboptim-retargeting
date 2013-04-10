@@ -37,7 +37,7 @@ namespace roboptim
 	   ++frameId)
 	{
 	  boost::tie (vertexIt, vertexEnd) = boost::vertices
-	    (animatedMesh_->graph ());
+	    (animatedMesh_->interactionMeshes ()[frameId]);
 	  for (; vertexIt != vertexEnd; ++vertexIt)
 	    
 	    {
@@ -86,7 +86,7 @@ namespace roboptim
 	{
 	  unsigned vertexId = 0;
 	  boost::tie (vertexIt, vertexEnd) = boost::vertices
-	    (animatedMesh_->graph ());
+	    (animatedMesh_->interactionMeshes ()[frameId]);
 	  for (; vertexIt != vertexEnd; ++vertexIt, ++vertexId)
 	    {
 	      (*laplacianCoordinatesLocal_[frameId * nVertices + vertexId])

@@ -27,6 +27,7 @@ namespace roboptim
 	frameId_ (frameId)
     {
       assert (!!mesh_);
+      assert (frameId < mesh->numFrames ());
     }
 
     LaplacianCoordinate::~LaplacianCoordinate () throw ()
@@ -50,34 +51,39 @@ namespace roboptim
 		     << result[1] << " "
 		     << result[2]);
 
-      AnimatedInteractionMesh::out_edge_iterator_t edgeIt;
-      AnimatedInteractionMesh::out_edge_iterator_t edgeEnd;
+      AnimatedInteractionMesh::interaction_mesh_out_edge_iterator_t edgeIt;
+      AnimatedInteractionMesh::interaction_mesh_out_edge_iterator_t edgeEnd;
+
+      assert (mesh_->interactionMeshes ().size () > frameId_);
       boost::tie(edgeIt, edgeEnd) =
-	boost::out_edges (vertex_, mesh_->graph ());
+	boost::out_edges (vertex_, mesh_->interactionMeshes ()[frameId_]);
 
       for(; edgeIt != edgeEnd; ++edgeIt)
 	{
-	  const Edge& edge = mesh_->graph()[*edgeIt];
+	  const InteractionMeshEdge& edge =
+	    mesh_->interactionMeshes ()[frameId_][*edgeIt];
 
-	  AnimatedInteractionMesh::vertex_descriptor_t source =
-	    boost::source (*edgeIt, mesh_->graph ());
-	  AnimatedInteractionMesh::vertex_descriptor_t target =
-	    boost::target (*edgeIt, mesh_->graph ());
-	  AnimatedInteractionMesh::vertex_descriptor_t
+	  AnimatedInteractionMesh::interaction_mesh_vertex_descriptor_t source =
+	    boost::source (*edgeIt, mesh_->interactionMeshes ()[frameId_]);
+	  AnimatedInteractionMesh::interaction_mesh_vertex_descriptor_t target =
+	    boost::target (*edgeIt, mesh_->interactionMeshes ()[frameId_]);
+	  AnimatedInteractionMesh::interaction_mesh_vertex_descriptor_t
 	    neighborDesc = (vertex_ == source) ? target : source;
+	  const InteractionMeshVertex& interactiveMeshNeighbor =
+	    mesh_->interactionMeshes ()[frameId_][neighborDesc];
 	  const Vertex& neighbor = mesh_->graph ()[neighborDesc];
 
 	  LOG4CXX_TRACE
 	    (logger,
 	     "--- edge ---\n"
-	     << "Edge weight: " << edge.weight[frameId_] << "\n"
+	     << "Edge weight: " << edge.weight << "\n"
 	     << "Vertex id: " << neighborDesc << "\n"
 	     << "Euclidian position: "
 	     << neighbor.positions[frameId_][0] << " "
 	     << neighbor.positions[frameId_][1] << " "
 	     << neighbor.positions[frameId_][2]);
 
-	  result -= neighbor.positions[frameId_] * edge.weight[frameId_];
+	  result -= neighbor.positions[frameId_] * edge.weight;
 	}
     }
 

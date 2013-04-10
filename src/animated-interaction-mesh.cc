@@ -176,6 +176,9 @@ namespace roboptim
 	  (animatedMesh->numFrames_ * animatedMesh->numVertices_ * 3);
 	animatedMesh->state_.setZero ();
 
+	// Resize interaction mesh vector.
+	animatedMesh->interactionMeshes_.resize (animatedMesh->numFrames_);
+
 	// Add one vertex per label.
 	for (YAML::Iterator it = doc["partLabels"].begin ();
 	     it != doc["partLabels"].end (); ++it)
@@ -195,6 +198,12 @@ namespace roboptim
 		  frameId * animatedMesh->numVertices_ * 3 + vertex * 3;
 		animatedMesh->graph ()[vertex].positions.push_back
 		  (Vertex::position_t (animatedMesh->state_, offset, 3));
+
+		interaction_mesh_vertex_descriptor_t
+		  interactionMeshVertex =
+		  boost::add_vertex (animatedMesh->interactionMeshes_[frameId]);
+		animatedMesh->interactionMeshes_[frameId]
+		  [interactionMeshVertex].label = label;
 	      }
 	  }
 
@@ -376,20 +385,27 @@ namespace roboptim
     void
     AnimatedInteractionMesh::computeVertexWeights ()
     {
-      edge_iterator_t edgeIt;
-      edge_iterator_t edgeEnd;
+      interaction_mesh_edge_iterator_t edgeIt;
+      interaction_mesh_edge_iterator_t edgeEnd;
 
       for (unsigned frameId = 0; frameId < numFrames_; ++frameId)
 	{
 	  double weightSum = 0.;
-	  boost::tie (edgeIt, edgeEnd) = boost::edges (graph ());
+	  boost::tie (edgeIt, edgeEnd) =
+	    boost::edges (interactionMeshes ()[frameId]);
 	  for (; edgeIt != edgeEnd; ++edgeIt)
 	    {
-	      Edge& edge = graph ()[*edgeIt];
+	      InteractionMeshEdge& edge =
+		interactionMeshes ()[frameId][*edgeIt];
+
+	      //FIXME: make the assumpation both graph have the same
+	      // vertex order.
 	      const Vertex& source =
-		graph ()[boost::source (*edgeIt, graph ())];
+		graph ()
+		[boost::source (*edgeIt, interactionMeshes ()[frameId])];
 	      const Vertex& target =
-		graph ()[boost::target (*edgeIt, graph ())];
+		graph ()
+		[boost::target (*edgeIt, interactionMeshes ()[frameId])];
 
 	      LOG4CXX_TRACE(logger,
 			    "--- edge ---\n"
@@ -402,25 +418,24 @@ namespace roboptim
 			    << target.positions[frameId][1] << " "
 			    << target.positions[frameId][2]);
 
-	      if (edge.weight.size () != numFrames_)
-		edge.weight.resize (numFrames_);
-
-	      edge.weight[frameId] =
+	      edge.weight =
 		(source.positions[frameId] - target.positions[frameId]
 		 ).squaredNorm ();
-	      if (edge.weight[frameId] == 0.)
-		edge.weight[frameId] = 1.;
+	      if (edge.weight == 0.)
+		edge.weight = 1.;
 	      else
-		edge.weight[frameId] = 1. / edge.weight[frameId];
-	      weightSum += edge.weight[frameId];
+		edge.weight = 1. / edge.weight;
+	      weightSum += edge.weight;
 	    }
 
 	  // Normalize weights.
 	  if (weightSum > 0.)
 	    {
-	      boost::tie (edgeIt, edgeEnd) = boost::edges (graph ());
+	      boost::tie (edgeIt, edgeEnd) =
+		boost::edges (interactionMeshes ()[frameId]);
 	      for (; edgeIt != edgeEnd; ++edgeIt)
-		graph ()[*edgeIt].weight[frameId] /= weightSum;
+		interactionMeshes ()[frameId][*edgeIt].weight
+		  /= weightSum;
 	    }
 	}
     }
@@ -448,7 +463,7 @@ namespace roboptim
     }
 
     void
-    AnimatedInteractionMesh::computeInteractionMesh (unsigned)
+    AnimatedInteractionMesh::computeInteractionMesh (unsigned frameId)
     {
       vertex_iterator_t vertexIt;
       vertex_iterator_t vertexEnd;
@@ -459,43 +474,40 @@ namespace roboptim
       in.numberofpoints = numVertices ();
       in.pointlist = new REAL[in.numberofpoints * 3];
 
-      for (unsigned frameId = 0; frameId < numFrames (); ++frameId)
+      boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
+      unsigned j = 0;
+      for (; vertexIt != vertexEnd; ++vertexIt, ++j)
 	{
-	  boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
-	  unsigned j = 0;
-	  for (; vertexIt != vertexEnd; ++vertexIt, ++j)
-	    {
-	      in.pointlist[j * 3 + 0] =
-		graph ()[*vertexIt].positions[frameId][0];
-	      in.pointlist[j * 3 + 1] =
-		graph ()[*vertexIt].positions[frameId][1];
-	      in.pointlist[j * 3 + 2] =
-		graph ()[*vertexIt].positions[frameId][2];
-	    }
+	  in.pointlist[j * 3 + 0] =
+	    graph ()[*vertexIt].positions[frameId][0];
+	  in.pointlist[j * 3 + 1] =
+	    graph ()[*vertexIt].positions[frameId][1];
+	  in.pointlist[j * 3 + 2] =
+	    graph ()[*vertexIt].positions[frameId][2];
+	}
 
-	  char switches[] = "zQ";
-	  tetrahedralize (switches, &in, &out);
+      char switches[] = "zQ";
+      tetrahedralize (switches, &in, &out);
 
-	  const int n = out.numberoftetrahedra;
-	  const int m = out.numberofcorners;
-	  for (int i = 0; i < n; ++i)
+      const int n = out.numberoftetrahedra;
+      const int m = out.numberofcorners;
+      for (int i = 0; i < n; ++i)
+	{
+	  for (int j = 0; j < m - 1; ++j)
 	    {
-	      for (int j = 0; j < m - 1; ++j)
+	      for (int k = j + 1; k < m; ++k)
 		{
-		  for (int k = j + 1; k < m; ++k)
-		    {
-		      int index0 = out.tetrahedronlist[i * m + j];
-		      int index1 = out.tetrahedronlist[i * m + k];
+		  int index0 = out.tetrahedronlist[i * m + j];
+		  int index1 = out.tetrahedronlist[i * m + k];
 
-		      edge_descriptor_t edge;
-		      vertex_descriptor_t startMarker = index0; //FIXME:
-		      vertex_descriptor_t endMarker = index1; //FIXME:
+		  edge_descriptor_t edge;
+		  vertex_descriptor_t startMarker = index0; //FIXME:
+		  vertex_descriptor_t endMarker = index1; //FIXME:
 
-		      bool ok = false;
-		      boost::tie (edge, ok) =
-			boost::add_edge (startMarker, endMarker,
-					 interactionMeshes_[frameId]);
-		    }
+		  bool ok = false;
+		  boost::tie (edge, ok) =
+		    boost::add_edge (startMarker, endMarker,
+				     interactionMeshes_[frameId]);
 		}
 	    }
 	}

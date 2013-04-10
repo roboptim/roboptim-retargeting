@@ -56,15 +56,21 @@ namespace roboptim
     /// Contains each node weight to avoid useless recomputations.
     struct Edge
     {
-      //FIXME: remove?
-      /// \brief Edge weight when computing Laplacian coordinates.
-      std::vector<double> weight;
-
       /// \brief Scaling that should be applied to this edge during
       ///        retargeting.
       ///
       /// 1 means no change.
       double scale;
+    };
+
+    struct InteractionMeshVertex
+    {
+      std::string label;
+    };
+
+    struct InteractionMeshEdge
+    {
+      double weight;
     };
 
     /// \brief Stores a set of interaction mesh representing a motion.
@@ -96,9 +102,26 @@ namespace roboptim
       typedef boost::adjacency_list
       <boost::vecS,
        boost::vecS,
-       boost::undirectedS> interaction_mesh_graph_t;
+       boost::undirectedS,
+       InteractionMeshVertex,
+       InteractionMeshEdge> interaction_mesh_graph_t;
 
-
+      typedef boost::graph_traits<interaction_mesh_graph_t>::vertex_iterator
+      interaction_mesh_vertex_iterator_t;
+      typedef boost::graph_traits<interaction_mesh_graph_t>::edge_iterator
+      interaction_mesh_edge_iterator_t;
+      typedef boost::graph_traits<interaction_mesh_graph_t>::out_edge_iterator
+      interaction_mesh_out_edge_iterator_t;
+      typedef boost::graph_traits<interaction_mesh_graph_t>::edge_descriptor
+      interaction_mesh_edge_descriptor_t;
+      typedef boost::graph_traits<interaction_mesh_graph_t>::vertex_descriptor
+      interaction_mesh_vertex_descriptor_t;
+      typedef boost::property_map<
+	interaction_mesh_graph_t, boost::vertex_index_t>::type
+      interaction_mesh_index_map_t;
+      typedef boost::graph_traits <
+	interaction_mesh_graph_t>::adjacency_iterator
+      interaction_mesh_adjacency_iterator_t;
 
       explicit AnimatedInteractionMesh ();
       ~AnimatedInteractionMesh ();
@@ -198,6 +221,12 @@ namespace roboptim
 	return interactionMeshes_;
       }
 
+      std::vector<interaction_mesh_graph_t>&
+      interactionMeshes ()
+      {
+	return interactionMeshes_;
+      }
+
     protected:
       vertex_iterator_t
       getVertexFromLabel (const std::string& label) const;
@@ -209,11 +238,6 @@ namespace roboptim
       static void loadEdgesFromYaml
       (const YAML::Node& node, AnimatedInteractionMeshShPtr_t animatedMesh);
 
-      std::vector<interaction_mesh_graph_t>&
-      interactionMeshes ()
-      {
-	return interactionMeshes_;
-      }
 
       void computeInteractionMeshes ();
       void computeInteractionMesh (unsigned frameId);
@@ -263,15 +287,9 @@ namespace roboptim
       operator() (std::ostream& out, const Edge& v) const
       {
 	out << "[label=\""
-	    << "weight: ";
-	if (frameId < name[v].weight.size ())
-	  out << name[v].weight[frameId];
-	else
-	  out << "n/a";
-	out
-	  << ", scale: "
-	  << name[v].scale
-	  << "\"]";
+	    << ", scale: "
+	    << name[v].scale
+	    << "\"]";
       }
     private:
       Name name;
