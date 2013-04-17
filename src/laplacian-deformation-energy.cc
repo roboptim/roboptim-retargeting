@@ -77,7 +77,8 @@ namespace roboptim
       const unsigned& nVertices = animatedMesh_->numVertices ();
 
       animatedMeshLocal_->state () = x;
-      animatedMeshLocal_->computeVertexWeights();
+      animatedMeshLocal_->computeInteractionMeshes ();
+      animatedMeshLocal_->computeVertexWeights ();
 
       result[0] = 0.;
 

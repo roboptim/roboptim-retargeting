@@ -278,9 +278,21 @@ namespace roboptim
     {
       boost::write_graphviz
 	(out, graph (),
-	 InteractionMeshGraphVertexWriter<graph_t> (graph (), i),
-	 InteractionMeshGraphEdgeWriter<graph_t> (graph (), i));
+	 GraphVertexWriter<graph_t> (graph (), i),
+	 GraphEdgeWriter<graph_t> (graph (), i));
 
+    }
+
+    void
+    AnimatedInteractionMesh::writeGraphvizInteractionMeshGraphs
+    (std::ostream& out, unsigned i)
+    {
+      boost::write_graphviz
+      	(out, interactionMeshes ()[i],
+      	 InteractionMeshGraphVertexWriter<interaction_mesh_graph_t>
+      	 (interactionMeshes ()[i]),
+      	 InteractionMeshGraphEdgeWriter<interaction_mesh_graph_t>
+      	 (interactionMeshes ()[i]));
     }
 
     void
@@ -292,6 +304,11 @@ namespace roboptim
 	    ((boost::format ("%1%/graph_%2%.dot")
 	      % path % i).str().c_str ());
 	  writeGraphvizGraphs (graphvizFile, i);
+
+	  std::ofstream graphvizFile2
+	    ((boost::format ("%1%/graph_im_%2%.dot")
+	      % path % i).str().c_str ());
+	  writeGraphvizInteractionMeshGraphs (graphvizFile2, i);
 	}
     }
 
@@ -306,6 +323,8 @@ namespace roboptim
       animatedMesh->framerate_ = previousAnimatedMesh->framerate_;
       animatedMesh->numVertices_ = previousAnimatedMesh->numVertices_;
       animatedMesh->numFrames_ = previousAnimatedMesh->numFrames_;
+      animatedMesh->interactionMeshes_ =
+	previousAnimatedMesh->interactionMeshes_;
 
       // This is what changes.
       animatedMesh->state_ = x;
@@ -446,7 +465,7 @@ namespace roboptim
       numVertices_ = (unsigned int)boost::num_vertices (graph ());
       numFrames_ = 0;
       if (!numVertices_)
-	return;
+	throw std::runtime_error ("no vertices in graph");
       vertex_descriptor_t v = 0;
       numFrames_ = (unsigned int)graph ()[v].positions.size ();
       computeInteractionMeshes ();
@@ -456,8 +475,6 @@ namespace roboptim
     void
     AnimatedInteractionMesh::computeInteractionMeshes ()
     {
-      interactionMeshes_.resize (numFrames ());
-
       for (unsigned i = 0; i < numFrames (); ++i)
 	computeInteractionMesh (i);
     }
@@ -465,6 +482,22 @@ namespace roboptim
     void
     AnimatedInteractionMesh::computeInteractionMesh (unsigned frameId)
     {
+      assert (frameId < interactionMeshes_.size ());
+      assert (boost::num_vertices (interactionMeshes_[frameId])
+	      == boost::num_vertices (graph ()));
+
+      // Remove edges.
+      {
+	interaction_mesh_edge_iterator_t ei, ei_end, next;
+	boost::tie (ei, ei_end) =
+	  boost::edges (interactionMeshes_[frameId]);
+	for (next = ei; ei != ei_end; ei = next)
+	  {
+	    ++next;
+	    boost::remove_edge (*ei, interactionMeshes_[frameId]);
+	  }
+      }
+
       vertex_iterator_t vertexIt;
       vertex_iterator_t vertexEnd;
 
@@ -500,9 +533,11 @@ namespace roboptim
 		  int index0 = out.tetrahedronlist[i * m + j];
 		  int index1 = out.tetrahedronlist[i * m + k];
 
-		  edge_descriptor_t edge;
-		  vertex_descriptor_t startMarker = index0; //FIXME:
-		  vertex_descriptor_t endMarker = index1; //FIXME:
+		  interaction_mesh_edge_descriptor_t edge;
+		  interaction_mesh_vertex_descriptor_t startMarker =
+		    index0; //FIXME:
+		  interaction_mesh_vertex_descriptor_t endMarker =
+		    index1; //FIXME:
 
 		  bool ok = false;
 		  boost::tie (edge, ok) =

@@ -203,6 +203,8 @@ namespace roboptim
       }
 
       void writeGraphvizGraphs (std::ostream& out, unsigned id);
+      void writeGraphvizInteractionMeshGraphs
+      (std::ostream& out, unsigned id);
       void writeGraphvizGraphs (const std::string& path);
       void writeTrajectory (const std::string& filename);
 
@@ -227,6 +229,9 @@ namespace roboptim
 	return interactionMeshes_;
       }
 
+      void computeInteractionMeshes ();
+      void computeInteractionMesh (unsigned frameId);
+
     protected:
       vertex_iterator_t
       getVertexFromLabel (const std::string& label) const;
@@ -237,10 +242,6 @@ namespace roboptim
 
       static void loadEdgesFromYaml
       (const YAML::Node& node, AnimatedInteractionMeshShPtr_t animatedMesh);
-
-
-      void computeInteractionMeshes ();
-      void computeInteractionMesh (unsigned frameId);
 
     private:
       /// \brief Class logger.
@@ -273,11 +274,10 @@ namespace roboptim
 
     /// \brief Write an edge using the Graphviz format.
     template <class Name>
-    class InteractionMeshGraphEdgeWriter
+    class GraphEdgeWriter
     {
     public:
-      InteractionMeshGraphEdgeWriter (Name name,
-				      unsigned frameId)
+      GraphEdgeWriter (Name name, unsigned frameId)
 	: name (name),
 	  frameId (frameId)
       {}
@@ -298,11 +298,10 @@ namespace roboptim
 
     /// \brief Write a vertex using the Graphviz format.
     template <class Name>
-    class InteractionMeshGraphVertexWriter
+    class GraphVertexWriter
     {
     public:
-      InteractionMeshGraphVertexWriter (Name name,
-					unsigned frameId)
+      GraphVertexWriter (Name name, unsigned frameId)
 	: name (name),
 	  frameId (frameId)
       {}
@@ -329,6 +328,51 @@ namespace roboptim
     private:
       Name name;
       unsigned frameId;
+    };
+
+
+    /// \brief Write an edge using the Graphviz format.
+    template <class Name>
+    class InteractionMeshGraphEdgeWriter
+    {
+    public:
+      InteractionMeshGraphEdgeWriter (Name name)
+	: name (name)
+      {}
+
+      template <class Edge>
+      void
+      operator() (std::ostream& out, const Edge& v) const
+      {
+	out << "[label=\""
+	    << ", weight: "
+	    << name[v].weight
+	    << "\"]";
+      }
+    private:
+      Name name;
+    };
+
+    /// \brief Write a vertex using the Graphviz format.
+    template <class Name>
+    class InteractionMeshGraphVertexWriter
+    {
+    public:
+      InteractionMeshGraphVertexWriter (Name name)
+	: name (name)
+      {}
+
+      template <class Vertex>
+      void
+      operator() (std::ostream& out, const Vertex& v) const
+      {
+	out << "[label=\""
+	    << "label: "
+	    << name[v].label;
+	out << "\"]";
+      }
+    private:
+      Name name;
     };
 
   } // end of namespace retargeting.
