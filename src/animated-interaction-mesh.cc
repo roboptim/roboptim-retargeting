@@ -373,6 +373,7 @@ namespace roboptim
 	<< YAML::Key << "frameRate" << YAML::Value << framerate_
 	<< YAML::Key << "numFrames" << YAML::Value << numFrames_
 	<< YAML::Key << "partLabels" << YAML::Value
+	<< YAML::Flow
 	<< YAML::BeginSeq
 	;
       boost::tie (vertexIt, vertexEnd) = boost::vertices (graph ());
@@ -382,11 +383,12 @@ namespace roboptim
 	<< YAML::EndSeq
 	<< YAML::Key << "numParts" << YAML::Value << numVertices_
 	<< YAML::Key << "frames" << YAML::Value
+	<< YAML::Flow
 	<< YAML::BeginSeq
 	;
       for (unsigned frameId = 0; frameId < numFrames_; ++frameId)
 	{
-	  out << YAML::BeginSeq;
+	  out << YAML::Flow << YAML::BeginSeq;
 	  Eigen::VectorXd x = makeOptimizationVectorOneFrame (frameId);
 	  for (unsigned i = 0; i < x.size (); ++i)
 	    out << x[i];

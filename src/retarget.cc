@@ -74,7 +74,7 @@ namespace roboptim
 	      intervals.push_back (roboptim::Function::makeInterval (0., 0.));
 	      scales.push_back (1.);
 	    }
-	  for (unsigned i = 0; i < boneLengths_.size (); ++i)
+	  for (unsigned i = 0; i < 1; ++i)
 	    problem_->addConstraint
 	      (boost::static_pointer_cast
 	       <GenericLinearFunction<EigenMatrixSparse> >
@@ -121,6 +121,7 @@ namespace roboptim
       solver.parameters ()["max-iterations"].value = 100;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
+      solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
 
       LOG4CXX_INFO (logger, "Solver:\n" << solver);
       LOG4CXX_DEBUG(logger, "start solving...");

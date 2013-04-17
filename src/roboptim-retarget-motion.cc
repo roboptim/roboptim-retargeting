@@ -195,10 +195,27 @@ int main (int argc, char** argv)
   retarget.solve ();
   LOG4CXX_INFO (logger, "done");
 
+  // Get the result.
+  Eigen::VectorXd x;
+
+  const std::string filename ("/tmp/result.yaml");
+
   // Check if the minimization has succeed.
   if (retarget.result ().which () ==
       roboptim::retargeting::Retarget::solver_t::SOLVER_ERROR)
     {
+      const roboptim::SolverError& result =
+	boost::get<roboptim::SolverError> (retarget.result ());
+
+      if (result.lastState ())
+	{
+	  retarget.animatedMesh ()->state () = result.lastState ()->x;
+	  retarget.animatedMesh ()->computeVertexWeights ();
+	  retarget.animatedMesh ()->writeTrajectory (filename);
+	  LOG4CXX_INFO (logger, "last state: " << result);
+	  LOG4CXX_INFO (logger, "trajectory written to: " << filename);
+	}
+
       std::cout << "No solution has been found. Failing..."
                 << std::endl
                 << boost::get<roboptim::SolverError>
@@ -206,9 +223,6 @@ int main (int argc, char** argv)
                 << std::endl;
       return 10;
     }
-
-  // Get the result.
-  Eigen::VectorXd x;
 
   LOG4CXX_INFO (logger, "a solution has been found!");
 
@@ -228,9 +242,7 @@ int main (int argc, char** argv)
       LOG4CXX_WARN (logger, "result: " << result);
     }
 
-  const std::string filename ("/tmp/result.yaml");
-
-  retarget.animatedMesh ()->state () =x;
+  retarget.animatedMesh ()->state () = x;
   retarget.animatedMesh ()->computeVertexWeights ();
   retarget.animatedMesh ()->writeTrajectory (filename);
   LOG4CXX_INFO (logger, "trajectory written to: " << filename);

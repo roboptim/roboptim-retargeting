@@ -50,9 +50,12 @@ namespace roboptim
       const Vertex& targetVertex = animatedMesh_->graph ()[target_];
 
       goalLength_ =
-	scale_ *
+	.5 * scale_ *
 	(targetVertex.positions[0]
 	 - sourceVertex.positions[0]).squaredNorm ();
+
+      std::cout << scale_ << std::endl;
+      std::cout << goalLength_ << std::endl;
     }
 
     BoneLength::~BoneLength () throw ()
@@ -73,8 +76,9 @@ namespace roboptim
 
       for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
 	result[i] =
-	    (targetVertexNew.positions[i]
-	     - sourceVertexNew.positions[i]).squaredNorm ()
+	  (.5 *
+	   (targetVertexNew.positions[i]
+	    - sourceVertexNew.positions[i]).squaredNorm ())
 	  - goalLength_;
     }
 
@@ -114,23 +118,23 @@ namespace roboptim
 
       // derivative w.r.t x position
       gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 0) =
-	2 * (sourceX - targetX);
+	(sourceX - targetX);
       // derivative w.r.t y position
       gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 1) =
-	2 * (sourceY - targetY);
+	(sourceY - targetY);
       // derivative w.r.t z position
       gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 2) =
-	2 * (sourceZ - targetZ);
+	(sourceZ - targetZ);
 
       // derivative w.r.t x position
       gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 0) =
-	-2 * (sourceX - targetX);
+	(targetX - sourceX);
       // derivative w.r.t y position
       gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 1) =
-	-2 * (sourceY - targetY);
+	(targetY - sourceY);
       // derivative w.r.t z position
       gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 2) =
-	-2 * (sourceZ - targetZ);
+	(targetZ - sourceZ);
     }
 
     void
