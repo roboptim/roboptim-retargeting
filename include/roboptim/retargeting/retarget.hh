@@ -134,7 +134,7 @@ namespace roboptim
       std::vector<BoneLengthShPtr_t> boneLengths_;
       std::vector<PositionShPtr_t> positions_;
       std::vector<CollisionShPtr_t> collisions_;
-      std::vector<TorqueShPtr_t> torques_;
+      TorqueShPtr_t torque_;
 
       GenericSolver::result_t result_;
 

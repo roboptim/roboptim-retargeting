@@ -3,6 +3,8 @@
 # include <boost/shared_ptr.hpp>
 # include <roboptim/core/differentiable-function.hh>
 
+# include <roboptim/retargeting/animated-interaction-mesh.hh>
+
 namespace roboptim
 {
   namespace retargeting
@@ -15,7 +17,9 @@ namespace roboptim
       public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
-      explicit Torque () throw ();
+      explicit Torque (AnimatedInteractionMeshShPtr_t animatedMesh,
+		       AnimatedInteractionMeshShPtr_t animatedMeshLocal)
+	throw ();
       virtual ~Torque () throw ();
       void impl_compute (result_t& result, const argument_t& x)
 	const throw ();
@@ -24,6 +28,8 @@ namespace roboptim
 			  size_type functionId = 0)
 	const throw ();
     private:
+      AnimatedInteractionMeshShPtr_t animatedMesh_;
+      AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

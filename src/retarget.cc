@@ -60,6 +60,12 @@ namespace roboptim
 	    boneLengths_.push_back (boneLengthConstraint);
 	  }
 
+      // Create position constraints.
+      //FIXME:
+
+      // Create torque constraints.
+      torque_ = boost::make_shared<Torque> (animatedMesh_, animatedMeshLocal);
+
       // Add constraints to problem.
 
       // -- Bone length
@@ -88,9 +94,22 @@ namespace roboptim
       // -- Position
       if (enablePosition)
 	for (unsigned i = 0; i < positions_.size (); ++i)
-	  problem_->addConstraint
-	    (positions_[i],
-	     roboptim::Function::makeInterval (0., 0.));
+	  {
+	    LOG4CXX_INFO (logger, "position constraints enabled");
+
+	    Function::intervals_t intervals;
+	    problem_t::scales_t scales;
+	    for (unsigned j = 0; j < positions_[i]->outputSize (); ++j)
+	      {
+		intervals.push_back (roboptim::Function::makeInterval (0., 0.));
+		scales.push_back (1.);
+	      }
+
+	    problem_->addConstraint
+	      (boost::static_pointer_cast
+	       <GenericLinearFunction<EigenMatrixSparse> > (positions_[i]),
+	       intervals, scales);
+	  }
 
       // -- Collision
       if (enableCollision)
@@ -101,10 +120,22 @@ namespace roboptim
 
       // -- Torque
       if (enableTorque)
-	for (unsigned i = 0; i < torques_.size (); ++i)
+	{
+	  LOG4CXX_INFO (logger, "torque constraints enabled");
+
+	  Function::intervals_t intervals;
+	  problem_t::scales_t scales;
+	  for (unsigned i = 0; i < torque_->outputSize (); ++i)
+	    {
+	      intervals.push_back (roboptim::Function::makeInterval (0., 0.));
+	      scales.push_back (1.);
+	    }
+
 	  problem_->addConstraint
-	    (torques_[i],
-	     roboptim::Function::makeInterval (0., 0.));
+	    (boost::static_pointer_cast
+	     <GenericDifferentiableFunction<EigenMatrixSparse> >
+	     (torque_), intervals, scales);
+	}
     }
 
     Retarget::~Retarget ()

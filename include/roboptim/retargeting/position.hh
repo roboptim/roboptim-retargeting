@@ -1,7 +1,9 @@
 #ifndef ROBOPTIM_RETARGETING_POSITION_HH
 # define ROBOPTIM_RETARGETING_POSITION_HH
 # include <boost/shared_ptr.hpp>
-# include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/linear-function.hh>
+
+# include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
 {
@@ -12,10 +14,14 @@ namespace roboptim
 
     /// \brief Position constraint (not implemented)
     class Position :
-      public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
+      public roboptim::GenericLinearFunction<EigenMatrixSparse>
     {
     public:
-      explicit Position () throw ();
+      explicit Position
+      (AnimatedInteractionMeshShPtr_t animatedMesh,
+       AnimatedInteractionMeshShPtr_t animatedMeshLocal,
+       AnimatedInteractionMesh::vertex_descriptor_t vertexId,
+       const Vertex::position_t& position) throw ();
       virtual ~Position () throw ();
       void impl_compute (result_t& result, const argument_t& x)
 	const throw ();
@@ -24,6 +30,10 @@ namespace roboptim
 			  size_type functionId = 0)
 	const throw ();
     private:
+      AnimatedInteractionMeshShPtr_t animatedMesh_;
+      AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
+      AnimatedInteractionMesh::vertex_descriptor_t vertexId_;
+      Vertex::position_t position_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
