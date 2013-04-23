@@ -3,14 +3,13 @@
 
 #include <metapod/models/simple_humanoid/simple_humanoid.hh>
 
-// FIXME: please vomit here.
-#include <metapod/models/simple_humanoid/simple_humanoid.cc>
+#include "model/hrp4g2.hh"
 
 #include <metapod/tools/print.hh>
 #include <metapod/algos/rnea.hh>
 
 // Define which robot to use.
-typedef metapod::simple_humanoid robot_t;
+typedef metapod::hrp4g2 robot_t;
 
 namespace roboptim
 {

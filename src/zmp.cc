@@ -1,13 +1,13 @@
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/zmp.hh"
 
-#include <metapod/models/simple_humanoid/simple_humanoid.hh>
+#include "model/hrp4g2.hh"
 
 #include <metapod/tools/print.hh>
 #include <metapod/algos/rnea.hh>
 
 // Define which robot to use.
-typedef metapod::simple_humanoid robot_t;
+typedef metapod::hrp4g2 robot_t;
 
 namespace roboptim
 {
@@ -80,9 +80,9 @@ namespace roboptim
 	  // Express root spatial resultant force in world frame.
 	  // BODY is the floating base link, WAIST is the floating joint.
 	  metapod::Spatial::Force af =
-	    boost::fusion::at_c<metapod::simple_humanoid::WAIST_LINK0>
+	    boost::fusion::at_c<0>
 	    (robot.nodes).body.iX0.applyInv
-	    (boost::fusion::at_c<metapod::simple_humanoid::WAIST_LINK0>
+	    (boost::fusion::at_c<0>
 	     (robot.nodes).joint.f);
 
 	  if (af.f()[2])

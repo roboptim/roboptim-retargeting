@@ -13,7 +13,10 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   position.cc
   retarget.cc
   torque.cc
+  zmp.cc
   yaml-helper.cc yaml-helper.hh
+
+  model/hrp4g2.cc model/hrp4g2.hh
   )
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
