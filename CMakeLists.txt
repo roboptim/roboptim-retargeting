@@ -18,7 +18,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/boost.cmake)
-INCLUDE(cmake/cpack.cmake)
+INCLUDE(cmake/ros.cmake)
 
 SET(PROJECT_NAME roboptim-retargeting)
 SET(PROJECT_DESCRIPTION "RobOptim retargeting")
@@ -64,6 +64,10 @@ ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt >= 0.5")
 ADD_REQUIRED_DEPENDENCY("yaml-cpp")
 ADD_REQUIRED_DEPENDENCY("liblog4cxx >= 0.10.0")
 ADD_REQUIRED_DEPENDENCY("metapod")
+
+ADD_ROSPACK_DEPENDENCY("urdf_interface")
+ADD_ROSPACK_DEPENDENCY("urdf_parser")
+ADD_ROSPACK_DEPENDENCY("roscpp")
 
 HEADER_INSTALL("${HEADERS}")
 

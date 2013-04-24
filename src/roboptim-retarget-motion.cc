@@ -43,6 +43,7 @@ int main (int argc, char** argv)
   // Parse options.
   std::string trajectoryFile;
   std::string characterFile;
+  std::string modelFile;
   std::string verbosityLevel;
   bool enableBoneLength;
   bool enablePosition;
@@ -54,6 +55,8 @@ int main (int argc, char** argv)
   general.add_options ()
     ("help,h", "produce help message")
     ("version,v", "print version string")
+    ("model,m", po::value<std::string> (&modelFile),
+     "robot model file (URDF)")
     ("trajectory,t", po::value<std::string> (&trajectoryFile),
      "markers trajectory (YAML)")
     ("robot,r", po::value<std::string> (&characterFile),
@@ -141,6 +144,12 @@ int main (int argc, char** argv)
       help (desc);
       return 1;
     }
+  if (!modelFile.empty () && modelFile.empty ())
+    {
+      std::cout << "URDF model file is missing" << std::endl;
+      help (desc);
+      return 1;
+    }
 
   // Resolve files.
   std::string dataDir (PKG_SHARE_DIR);
@@ -148,6 +157,7 @@ int main (int argc, char** argv)
 
   std::string trajectoryFilePath (trajectoryFile);
   std::string characterFilePath (characterFile);
+  std::string modelFilePath (modelFile);
 
   if (!std::ifstream (trajectoryFilePath.c_str ()))
     {
@@ -169,6 +179,16 @@ int main (int argc, char** argv)
 	}
     }
 
+  if (!std::ifstream (modelFilePath.c_str ()))
+    {
+      modelFilePath = dataDir + "/" + modelFilePath;
+      if (!std::ifstream (modelFilePath.c_str ()))
+	{
+	  std::cerr << "URDF model file does not exist" << std::endl;
+	  return 2;
+	}
+    }
+
 #ifndef NDEBUG
   LOG4CXX_WARN
     (logger,
@@ -181,6 +201,7 @@ int main (int argc, char** argv)
   roboptim::retargeting::Retarget retarget
     (trajectoryFilePath,
      characterFilePath,
+     modelFilePath,
      enableBoneLength,
      enablePosition,
      enableCollision,

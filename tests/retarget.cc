@@ -27,6 +27,7 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::retargeting::Retarget retarget
     (trajectoryFile,
      characterFile,
+     "",
      false,
      false,
      false,

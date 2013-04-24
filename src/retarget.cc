@@ -1,5 +1,7 @@
 #include <boost/make_shared.hpp>
 
+#include <urdf_parser/urdf_parser.h>
+
 #include <roboptim/core/solver-factory.hh>
 
 #include "roboptim/retargeting/retarget.hh"
@@ -13,6 +15,7 @@ namespace roboptim
 
     Retarget::Retarget (const std::string& initialTrajectory,
 			const std::string& character,
+			const std::string& model,
 			bool enableBoneLength,
 			bool enablePosition,
 			bool enableCollision,
@@ -28,7 +31,8 @@ namespace roboptim
 	cost_ (),
 	problem_ (),
 	result_ (),
-	solverName_ (solverName)
+	solverName_ (solverName),
+	model_ (urdf::parseURDF (model))
     {
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
@@ -64,7 +68,8 @@ namespace roboptim
       //FIXME:
 
       // Create torque constraints.
-      torque_ = boost::make_shared<Torque> (animatedMesh_, animatedMeshLocal);
+      torque_ = boost::make_shared<Torque>
+	(model_, animatedMesh_, animatedMeshLocal);
 
       // Add constraints to problem.
 

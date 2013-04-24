@@ -16,11 +16,13 @@ namespace roboptim
   namespace retargeting
   {
     Torque::Torque
-    (AnimatedInteractionMeshShPtr_t animatedMesh,
+    (boost::shared_ptr<urdf::ModelInterface> model,
+     AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal) throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
 	 animatedMeshLocal_->numFrames () * robot_t::NBDOF, "torque"),
+	model_ (model),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal)
     {}

@@ -4,6 +4,8 @@
 
 # include <boost/shared_ptr.hpp>
 
+# include <urdf_interface/model.h>
+
 # include <roboptim/core/differentiable-function.hh>
 # include <roboptim/core/generic-solver.hh>
 # include <roboptim/core/linear-function.hh>
@@ -58,6 +60,7 @@ namespace roboptim
       explicit Retarget
       (const std::string& initialTrajectory,
        const std::string& character,
+       const std::string& model,
        bool enableBoneLength,
        bool enablePosition,
        bool enableCollision,
@@ -139,6 +142,8 @@ namespace roboptim
       GenericSolver::result_t result_;
 
       std::string solverName_;
+      
+      boost::shared_ptr<urdf::ModelInterface> model_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
