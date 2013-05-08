@@ -33,6 +33,8 @@ namespace roboptim
       boost::shared_ptr<urdf::ModelInterface> model_;
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
+      std::vector<unsigned> consideredDofs_;
+      Function::intervals_t torqueLimits_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
