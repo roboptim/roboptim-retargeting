@@ -8,6 +8,7 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   animated-interaction-mesh.cc
   bone-length.cc
   collision.cc
+  inverse-kinematics.cc
   laplacian-coordinate.cc
   laplacian-deformation-energy.cc
   position.cc
@@ -22,10 +23,13 @@ PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)
+ROSPACK_USE_DEPENDENCY(roboptim-retargeting colladadom)
 ROSPACK_USE_DEPENDENCY(roboptim-retargeting urdf_interface)
 ROSPACK_USE_DEPENDENCY(roboptim-retargeting urdf_parser)
 ROSPACK_USE_DEPENDENCY(roboptim-retargeting roscpp)
 TARGET_LINK_LIBRARIES(roboptim-retargeting tet)
+TARGET_LINK_LIBRARIES(roboptim-retargeting rbdl)
+TARGET_LINK_LIBRARIES(roboptim-retargeting rbdl_urdfreader)
 SET_TARGET_PROPERTIES(roboptim-retargeting PROPERTIES SOVERSION 0.0.0)
 INSTALL(TARGETS roboptim-retargeting DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
