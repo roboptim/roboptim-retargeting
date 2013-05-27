@@ -47,10 +47,35 @@ BOOST_AUTO_TEST_CASE (simple)
     urdf::parseURDF (xmlString);
   InverseKinematics ik (urdfPath, model);
 
-  InverseKinematics::argument_t x (ik.inputSize ());
-  x.setZero ();
+  // Reference configuration.
+  InverseKinematics::argument_t q (model->joints_.size ());
+  q.setZero ();
 
-  InverseKinematics::result_t res = ik (x);
+  std::cout << "q: " << q << std::endl;
 
-  std::cout << res << std::endl;
+  // Compute associated body position.
+  InverseKinematics::argument_t bodyPositions (ik.inputSize ());
+  bodyPositions.setZero ();
+
+  RigidBodyDynamics::Math::Vector3d zero =
+    RigidBodyDynamics::Math::Vector3d::Zero ();
+
+  for (std::size_t bodyId = 0; bodyId < model->links_.size (); ++bodyId)
+    {
+      bodyPositions.segment (3 * bodyId, 3) =
+	RigidBodyDynamics::CalcBaseToBodyCoordinates
+	(ik.rbdlModel (), q, bodyId, zero);
+    }
+
+  std::cout << "body positions: " << bodyPositions << std::endl;
+
+  // Solver IK.
+  InverseKinematics::result_t qIk = ik (bodyPositions);
+
+  std::cout << "configuration (from ik): " << qIk << std::endl;
+
+  for (std::size_t i = 0; i < q.size (); ++i)
+    {
+      BOOST_CHECK_CLOSE (1. + q[i], 1. + qIk[i], 1e1);
+    }
 }

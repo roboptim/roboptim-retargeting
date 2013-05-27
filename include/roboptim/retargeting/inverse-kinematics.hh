@@ -37,6 +37,15 @@ namespace roboptim
 			  const argument_t& argument,
 			  size_type functionId = 0)
 	const throw ();
+
+      const RigidBodyDynamics::Model& rbdlModel () const
+      {
+	return rbdlModel_;
+      }
+      RigidBodyDynamics::Model& rbdlModel ()
+      {
+	return rbdlModel_;
+      }
     private:
       boost::shared_ptr<urdf::ModelInterface> model_;
       mutable RigidBodyDynamics::Model rbdlModel_;

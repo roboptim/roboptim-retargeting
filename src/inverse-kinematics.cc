@@ -30,7 +30,7 @@ namespace roboptim
 
       // load the URDF model using RBDL
       if (!RigidBodyDynamics::Addons::read_urdf_model
-	  (filename.c_str (), &rbdlModel_, true))
+	  (filename.c_str (), &rbdlModel_, false))
 	assert (false && "RBDL failed to load the URDF model");
 
       for (unsigned i = 0; i < model->links_.size (); ++i)
@@ -51,12 +51,16 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       for (unsigned i = 0; i < targetPositions_.size (); ++i)
 	targetPositions_[i] = x.segment (i * 3, 3);
 
       if (!RigidBodyDynamics::InverseKinematics
 	  (rbdlModel_, Qinit_, bodyIds_, bodyPoints_, targetPositions_,
-	   result, 1e-12, 0.9, 50))
+	   result, 1e-12, 0.01, 200))
 	throw std::runtime_error ("IK failed");
     }
 
@@ -67,6 +71,10 @@ namespace roboptim
      size_type i)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       roboptim::GenericFiniteDifferenceGradient<
 	EigenMatrixDense,
 	finiteDifferenceGradientPolicies::Simple<EigenMatrixDense> >
