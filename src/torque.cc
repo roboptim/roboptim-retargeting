@@ -1,5 +1,10 @@
+#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
+#define EIGEN_RUNTIME_NO_MALLOC
+#include <rbdl/rbdl.h>
+
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/include/fold.hpp>
+#include <boost/make_shared.hpp>
 
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/torque.hh"
@@ -64,7 +69,8 @@ namespace roboptim
     Torque::Torque
     (boost::shared_ptr<urdf::ModelInterface> model,
      AnimatedInteractionMeshShPtr_t animatedMesh,
-     AnimatedInteractionMeshShPtr_t animatedMeshLocal) throw ()
+     AnimatedInteractionMeshShPtr_t animatedMeshLocal,
+     boost::shared_ptr<InverseKinematics> ik) throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
 	 animatedMeshLocal_->numFrames () * robot_t::NBDOF, "torque"),
@@ -72,7 +78,8 @@ namespace roboptim
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
 	consideredDofs_ (sizeof (consideredDofsNames)),
-	torqueLimits_ (sizeof (consideredDofsNames))
+	torqueLimits_ (sizeof (consideredDofsNames)),
+	ik_ (ik)
     {
 
       for (unsigned i = 0; i < sizeof (consideredDofsNames); ++i)
@@ -117,25 +124,34 @@ namespace roboptim
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames ();
 	   ++frameId)
 	{
-	for (unsigned dofId = 0; dofId < robot_t::NBDOF; ++dofId)
-	  {
-	    // 1. which segment are related to this dof?
-	    AnimatedInteractionMesh::vertex_descriptor_t segment1  = 0;
-	    AnimatedInteractionMesh::vertex_descriptor_t segment2  = 0;
+	  //FIXME: compute body expected body positions.
+	  argument_t bodyPositions;
 
-	    // 2. get segment positions
-	    const Vertex::position_t& segment1Position =
-	      animatedMeshLocal_->graph ()[segment1].positions[frameId];
-	    const Vertex::position_t& segment2Position =
-	      animatedMeshLocal_->graph ()[segment2].positions[frameId];
+	  for (unsigned bodyId = 0; bodyId < model_->links_.size (); ++bodyId)
+	    {
+	      bodyPositions.segment (bodyId, 3).setZero ();
+	    }
 
-	    // 3. identify articular value
-	    q[frameId][dofId] =
-	      std::asin
-	      (segment1Position.cross (segment2Position)[0]
-	       / segment1Position.norm ()
-	       / segment2Position.norm ());
-	  }
+	  q[frameId] = (*ik_) (bodyPositions);
+	// for (unsigned dofId = 0; dofId < robot_t::NBDOF; ++dofId)
+	//   {
+	//     // 1. which segment are related to this dof?
+	//     AnimatedInteractionMesh::vertex_descriptor_t segment1  = 0;
+	//     AnimatedInteractionMesh::vertex_descriptor_t segment2  = 0;
+
+	//     // 2. get segment positions
+	//     const Vertex::position_t& segment1Position =
+	//       animatedMeshLocal_->graph ()[segment1].positions[frameId];
+	//     const Vertex::position_t& segment2Position =
+	//       animatedMeshLocal_->graph ()[segment2].positions[frameId];
+
+	//     // 3. identify articular value
+	//     q[frameId][dofId] =
+	//       std::asin
+	//       (segment1Position.cross (segment2Position)[0]
+	//        / segment1Position.norm ()
+	//        / segment2Position.norm ());
+	//   }
 	}
 
       // Fill dq with frameId = 0 to n - 1.

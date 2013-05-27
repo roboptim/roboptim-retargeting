@@ -1,9 +1,14 @@
+#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
+#define EIGEN_RUNTIME_NO_MALLOC
+#include <rbdl/rbdl.h>
+
 #include <boost/make_shared.hpp>
 
 #include <urdf_parser/urdf_parser.h>
 
 #include <roboptim/core/solver-factory.hh>
 
+#include "roboptim/retargeting/inverse-kinematics.hh"
 #include "roboptim/retargeting/retarget.hh"
 
 namespace roboptim
@@ -68,8 +73,10 @@ namespace roboptim
       //FIXME:
 
       // Create torque constraints.
+      boost::shared_ptr<InverseKinematics> ik =
+	boost::make_shared<InverseKinematics> (model, model_);
       torque_ = boost::make_shared<Torque>
-	(model_, animatedMesh_, animatedMeshLocal);
+	(model_, animatedMesh_, animatedMeshLocal, ik);
 
       // Add constraints to problem.
 

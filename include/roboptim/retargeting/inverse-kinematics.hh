@@ -1,5 +1,12 @@
 #ifndef ROBOPTIM_RETARGETING_INVERSE_KINEMATICS_HH
 # define ROBOPTIM_RETARGETING_INVERSE_KINEMATICS_HH
+# define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
+# define EIGEN_RUNTIME_NO_MALLOC
+# include <rbdl/rbdl.h>
+# include <rbdl/Kinematics.h>
+# include <rbdl/addons/urdfreader/rbdl_urdfreader.h>
+
+
 # include <boost/shared_ptr.hpp>
 # include <urdf_interface/model.h>
 # include <rbdl/Model.h>

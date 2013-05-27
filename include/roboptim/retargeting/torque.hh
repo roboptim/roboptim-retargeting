@@ -5,6 +5,7 @@
 # include <roboptim/core/differentiable-function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
+# include <roboptim/retargeting/inverse-kinematics.hh>
 
 namespace roboptim
 {
@@ -20,7 +21,8 @@ namespace roboptim
     public:
       explicit Torque (boost::shared_ptr<urdf::ModelInterface> model,
 		       AnimatedInteractionMeshShPtr_t animatedMesh,
-		       AnimatedInteractionMeshShPtr_t animatedMeshLocal)
+		       AnimatedInteractionMeshShPtr_t animatedMeshLocal,
+		       boost::shared_ptr<InverseKinematics> ik)
 	throw ();
       virtual ~Torque () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -35,6 +37,7 @@ namespace roboptim
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       std::vector<unsigned> consideredDofs_;
       Function::intervals_t torqueLimits_;
+      boost::shared_ptr<InverseKinematics> ik_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

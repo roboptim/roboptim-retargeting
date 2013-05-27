@@ -32,4 +32,4 @@ ROBOPTIM_RETARGETING_TEST(laplacian-coordinate)
 ROBOPTIM_RETARGETING_TEST(laplacian-deformation-energy)
 ROBOPTIM_RETARGETING_TEST(animated-interaction-mesh)
 ROBOPTIM_RETARGETING_TEST(retarget)
-
+ROBOPTIM_RETARGETING_TEST(inverse-kinematics)

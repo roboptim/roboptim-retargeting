@@ -26,10 +26,12 @@ namespace roboptim
 	targetPositions_ (model->links_.size ()),
 	Qinit_ (model->joints_.size ())
     {
+      rbdlModel_.Init ();
+
       // load the URDF model using RBDL
       if (!RigidBodyDynamics::Addons::read_urdf_model
 	  (filename.c_str (), &rbdlModel_, true))
-	throw std::runtime_error ("RBDL failed to load the URDF model");
+	assert (false && "RBDL failed to load the URDF model");
 
       for (unsigned i = 0; i < model->links_.size (); ++i)
 	{

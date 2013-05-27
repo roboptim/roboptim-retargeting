@@ -1,3 +1,7 @@
+#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
+#define EIGEN_RUNTIME_NO_MALLOC
+#include <rbdl/rbdl.h>
+
 #include <iostream>
 #include <string>
 
