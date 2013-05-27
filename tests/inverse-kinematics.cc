@@ -10,6 +10,8 @@
 
 #include <roboptim/core/finite-difference-gradient.hh>
 #include <roboptim/retargeting/inverse-kinematics.hh>
+#include <roboptim/core/visualization/gnuplot.hh>
+#include <roboptim/core/visualization/gnuplot-commands.hh>
 
 #define BOOST_TEST_MODULE inverse_kinematics
 
@@ -78,4 +80,24 @@ BOOST_AUTO_TEST_CASE (simple)
     {
       BOOST_CHECK_CLOSE (1. + q[i], 1. + qIk[i], 1e1);
     }
+
+  roboptim::visualization::Gnuplot gp =
+    roboptim::visualization::Gnuplot::make_interactive_gnuplot ();
+
+  std::ofstream f ("/tmp/body-positions.gp");
+  f << gp << std::endl
+	    << "splot '-' w labels p ls 9\n";
+
+  typedef std::map<std::string, boost::shared_ptr<urdf::Link> >::const_iterator
+    iter_t;
+
+  iter_t it = model->links_.begin ();
+  for (std::size_t bodyId = 0; bodyId < model->links_.size (); ++bodyId, ++it)
+    {
+      f << bodyPositions[bodyId * 3 + 0] << " "
+	<< bodyPositions[bodyId * 3 + 1] << " "
+	<< bodyPositions[bodyId * 3 + 2] << " "
+	<< "\"" << it->second->name << "\"\n";
+    }
+  f << "e" << std::endl;
 }
