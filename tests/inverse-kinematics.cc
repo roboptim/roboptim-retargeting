@@ -25,6 +25,17 @@ using boost::test_tools::output_test_stream;
 using namespace roboptim;
 using namespace roboptim::retargeting;
 
+typedef std::map<std::string, boost::shared_ptr<urdf::Link> >::const_iterator
+iter_t;
+typedef std::map<std::string, boost::shared_ptr<urdf::Joint> >::const_iterator
+joint_iter_t;
+
+
+static double deg2rad (double x)
+{
+  return x * M_PI / 360.;
+}
+
 BOOST_AUTO_TEST_CASE (simple)
 {
   std::string urdfPath
@@ -53,6 +64,15 @@ BOOST_AUTO_TEST_CASE (simple)
   InverseKinematics::argument_t q (model->joints_.size ());
   q.setZero ();
 
+  q <<
+    0., 0., deg2rad (-25.), deg2rad (50.), deg2rad (-25.), 0., 0.,
+    0., 0., deg2rad (-25.), deg2rad (50.), deg2rad (-25.), 0., 0.,
+    0., 0., 0.,
+    0., 0., 0.,
+    deg2rad (-1.), deg2rad (1.), 0., 0., 0., deg2rad (-1.), deg2rad (1.), deg2rad (-1.),
+    deg2rad (5.), deg2rad (-10.), 0., deg2rad (-15.), 0.,  deg2rad (10.),  deg2rad (1.), 0.,
+    deg2rad (5.), deg2rad (10.), 0., deg2rad (-15.), 0., deg2rad (-10.), deg2rad (-1.), 0.;
+
   std::cout << "q: " << q << std::endl;
 
   // Compute associated body position.
@@ -74,10 +94,22 @@ BOOST_AUTO_TEST_CASE (simple)
   // Solver IK.
   InverseKinematics::result_t qIk = ik (bodyPositions);
 
+  // checking models consistency
+  iter_t it = model->links_.begin ();
+  for (std::size_t bodyId = 0; bodyId < model->links_.size (); ++bodyId, ++it)
+    {
+      BOOST_CHECK_EQUAL (it->second->name,
+			 ik.rbdlModel ().GetBodyName (bodyId));
+    }
+
+
   std::cout << "configuration (from ik): " << qIk << std::endl;
 
-  for (std::size_t i = 0; i < q.size (); ++i)
+  joint_iter_t itJoint = model->joints_.begin ();
+  for (std::size_t i = 0; i < q.size (); ++i, ++itJoint)
     {
+      std::cout << "jointId: " << i
+		<< " " << itJoint->second->name << std::endl;
       BOOST_CHECK_CLOSE (1. + q[i], 1. + qIk[i], 1e1);
     }
 
@@ -88,10 +120,7 @@ BOOST_AUTO_TEST_CASE (simple)
   f << gp << std::endl
 	    << "splot '-' w labels p ls 9\n";
 
-  typedef std::map<std::string, boost::shared_ptr<urdf::Link> >::const_iterator
-    iter_t;
-
-  iter_t it = model->links_.begin ();
+  it = model->links_.begin ();
   for (std::size_t bodyId = 0; bodyId < model->links_.size (); ++bodyId, ++it)
     {
       f << bodyPositions[bodyId * 3 + 0] << " "
