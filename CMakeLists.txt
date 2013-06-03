@@ -49,16 +49,6 @@ PKG_CONFIG_APPEND_LIBS(roboptim-retargeting)
 # Search for dependencies.
 SEARCH_FOR_BOOST()
 
-# Search for CGAL.
-FIND_PACKAGE(CGAL QUIET COMPONENTS Core)
-if (CGAL_FOUND)
-  INCLUDE(${CGAL_USE_FILE})
-  INCLUDE(CGAL_CreateSingleSourceCGALProgram)
-ELSE()
-    MESAGE(FATAL_ERROR
-      "This program requires the CGAL library, and will not be compiled.")
-ENDIF()
-
 ADD_REQUIRED_DEPENDENCY("roboptim-core >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt >= 0.5")
 ADD_REQUIRED_DEPENDENCY("yaml-cpp")
@@ -73,6 +63,11 @@ ADD_ROSPACK_DEPENDENCY("roscpp")
 # Crude hack for RBDL
 INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_INSTALL_PREFIX}/include/rbdl")
 LINK_DIRECTORIES("${CMAKE_INSTALL_PREFIX}/lib")
+
+# OpenHRP
+INCLUDE_DIRECTORIES(SYSTEM
+  /home/moulard/profiles/default-x86_64-linux-ubuntu-12.04.1/install/unstable/include/OpenHRP-3.1)
+
 
 HEADER_INSTALL("${HEADERS}")
 

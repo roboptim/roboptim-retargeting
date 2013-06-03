@@ -73,8 +73,10 @@ namespace roboptim
       //FIXME:
 
       // Create torque constraints.
+      std::string modelOpenHrp
+	("/home/moulard/HRP4C-release/HRP4Cmain.wrl");
       boost::shared_ptr<InverseKinematics> ik =
-	boost::make_shared<InverseKinematics> (model, model_);
+	InverseKinematics::create (modelOpenHrp);
       torque_ = boost::make_shared<Torque>
 	(model_, animatedMesh_, animatedMeshLocal, ik);
 

@@ -4,6 +4,10 @@
 #include <rbdl/Kinematics.h>
 #include <rbdl/addons/urdfreader/rbdl_urdfreader.h>
 
+#include <hrpModel/ModelLoaderUtil.h>
+#include <hrpModel/Link.h>
+
+
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/inverse-kinematics.hh"
 
@@ -13,34 +17,16 @@ namespace roboptim
   namespace retargeting
   {
     InverseKinematics::InverseKinematics
-    (const std::string& filename,
-     boost::shared_ptr<urdf::ModelInterface> model)
+    (const hrp::BodyPtr& model)
       throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixDense>
-	(model->links_.size () * 3,
-	 model->joints_.size (), "inverse kinematics"),
+	(model->numLinks () * 3,
+	 model->numJoints (), "inverse kinematics"),
 	model_ (model),
-	rbdlModel_ (),
-	bodyIds_ (model->links_.size ()),
-	bodyPoints_ (model->links_.size ()),
-	targetPositions_ (model->links_.size ()),
-	Qinit_ (model->joints_.size ())
+	Qinit_ ()
     {
-      rbdlModel_.Init ();
-
-      // load the URDF model using RBDL
-      if (!RigidBodyDynamics::Addons::read_urdf_model
-	  (filename.c_str (), &rbdlModel_, false))
-	assert (false && "RBDL failed to load the URDF model");
-
-      for (unsigned i = 0; i < model->links_.size (); ++i)
-	{
-	  bodyIds_[i] = i;
-	  bodyPoints_[i].setZero ();
-	  targetPositions_[i].setZero ();
-	}
-
       // FIXME: initialize Qinit to half-sitting?
+      Qinit_.resize (model_->numJoints());
     }
 
     InverseKinematics::~InverseKinematics () throw ()
@@ -55,13 +41,13 @@ namespace roboptim
       Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-      for (unsigned i = 0; i < targetPositions_.size (); ++i)
-	targetPositions_[i] = x.segment (i * 3, 3);
+      // for (unsigned i = 0; i < targetPositions_.size (); ++i)
+      // 	targetPositions_[i] = x.segment (i * 3, 3);
 
-      if (!RigidBodyDynamics::InverseKinematics
-	  (rbdlModel_, Qinit_, bodyIds_, bodyPoints_, targetPositions_,
-	   result, 1e-12, 0.01, 200))
-	throw std::runtime_error ("IK failed");
+      // if (!RigidBodyDynamics::InverseKinematics
+      // 	  (rbdlModel_, Qinit_, bodyIds_, bodyPoints_, targetPositions_,
+      // 	   result, 1e-12, 0.01, 200))
+      // 	throw std::runtime_error ("IK failed");
     }
 
     void

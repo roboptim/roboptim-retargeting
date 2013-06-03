@@ -1,17 +1,12 @@
 #ifndef ROBOPTIM_RETARGETING_INVERSE_KINEMATICS_HH
 # define ROBOPTIM_RETARGETING_INVERSE_KINEMATICS_HH
-# define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-# define EIGEN_RUNTIME_NO_MALLOC
-# include <rbdl/rbdl.h>
-# include <rbdl/Kinematics.h>
-# include <rbdl/addons/urdfreader/rbdl_urdfreader.h>
+# include <boost/make_shared.hpp>
 
+# include <hrpModel/ModelLoaderUtil.h>
+# include <hrpModel/Link.h>
 
 # include <boost/shared_ptr.hpp>
-# include <urdf_interface/model.h>
-# include <rbdl/Model.h>
 # include <roboptim/core/differentiable-function.hh>
-
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 namespace roboptim
@@ -26,9 +21,19 @@ namespace roboptim
       public roboptim::GenericDifferentiableFunction<EigenMatrixDense>
     {
     public:
+      static boost::shared_ptr<InverseKinematics>
+      create (const std::string& filename)
+      {
+	hrp::BodyPtr model = boost::make_shared<hrp::Body> ();
+	char* argv[] = {"foo"};
+	int argc = 1;
+	hrp::loadBodyFromModelLoader (model, filename.c_str (), argc, argv);
+	model->calcForwardKinematics ();
+	return boost::make_shared<InverseKinematics> (model);
+      }
+
       explicit InverseKinematics
-      (const std::string& filename,
-       boost::shared_ptr<urdf::ModelInterface> model)
+      (const hrp::BodyPtr& body)
 	throw ();
       virtual ~InverseKinematics () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -38,21 +43,17 @@ namespace roboptim
 			  size_type functionId = 0)
 	const throw ();
 
-      const RigidBodyDynamics::Model& rbdlModel () const
+      const hrp::BodyPtr& model () const
       {
-	return rbdlModel_;
+	return model_;
       }
-      RigidBodyDynamics::Model& rbdlModel ()
+      hrp::BodyPtr& model ()
       {
-	return rbdlModel_;
+	return model_;
       }
     private:
-      boost::shared_ptr<urdf::ModelInterface> model_;
-      mutable RigidBodyDynamics::Model rbdlModel_;
-      std::vector<unsigned> bodyIds_;
-      std::vector<RigidBodyDynamics::Math::Vector3d> bodyPoints_;
-      mutable std::vector<RigidBodyDynamics::Math::Vector3d> targetPositions_;
-      mutable RigidBodyDynamics::Math::VectorNd Qinit_;
+      mutable hrp::BodyPtr model_;
+      mutable Eigen::VectorXd Qinit_;
 
     public:
       EIGEN_MAKE_ALIGNED_OPERATOR_NEW
