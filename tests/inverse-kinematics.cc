@@ -25,7 +25,7 @@ static double deg2rad (double x)
 BOOST_AUTO_TEST_CASE (simple)
 {
   std::string hrpModel
-    ("/home/moulard/HRP4C-release/HRP4Cmain.wrl");
+    ("/home/moulard/HRP4C-release/HRP4Cg2main.wrl");
 
   configureLog4cxx ();
 
@@ -50,9 +50,26 @@ BOOST_AUTO_TEST_CASE (simple)
 
   std::cout << "q: " << q << std::endl;
 
+  // Set the configuration.
+  for (std::size_t jointId = 0; jointId < ik->model ()->numJoints (); ++jointId)
+    {
+      hrp::Link *link = ik->model ()->joint (jointId);
+      if (link)
+	link->q = q[jointId];
+    }
+  ik->model ()->calcForwardKinematics();
+
+
   // Compute associated body position.
   InverseKinematics::argument_t bodyPositions (ik->inputSize ());
   bodyPositions.setZero ();
+
+  for (std::size_t linkId = 0; linkId < ik->model ()->numLinks (); ++linkId)
+    {
+      hrp::Link *link = ik->model ()->link (linkId);
+      assert (link);
+      bodyPositions.segment (linkId * 3, 3) = link->p;
+    }
 
   Eigen::Vector3d zero = Eigen::Vector3d::Zero ();
 
@@ -76,4 +93,11 @@ BOOST_AUTO_TEST_CASE (simple)
 	<< "\"" << (*it)->name << "\"\n";
     }
   f << "e" << std::endl;
+
+  std::cout << "q (after ik); " << qIk << std::endl;
+
+  for (std::size_t jointId = 0; jointId < qIk.size (); ++jointId)
+    {
+      BOOST_CHECK_CLOSE (1. + q[jointId], 1. + qIk[jointId], 5.);
+    }
 }

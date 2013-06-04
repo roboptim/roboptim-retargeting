@@ -1,15 +1,10 @@
-#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-#define EIGEN_RUNTIME_NO_MALLOC
-#include <rbdl/rbdl.h>
-#include <rbdl/Kinematics.h>
-#include <rbdl/addons/urdfreader/rbdl_urdfreader.h>
+#include <roboptim/core/finite-difference-gradient.hh>
+#include "roboptim/retargeting/inverse-kinematics.hh"
 
 #include <hrpModel/ModelLoaderUtil.h>
 #include <hrpModel/Link.h>
+#include <hrpModel/JointPath.h>
 
-
-#include <roboptim/core/finite-difference-gradient.hh>
-#include "roboptim/retargeting/inverse-kinematics.hh"
 
 
 namespace roboptim
@@ -41,13 +36,27 @@ namespace roboptim
       Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-      // for (unsigned i = 0; i < targetPositions_.size (); ++i)
-      // 	targetPositions_[i] = x.segment (i * 3, 3);
+      result.setZero ();
 
-      // if (!RigidBodyDynamics::InverseKinematics
-      // 	  (rbdlModel_, Qinit_, bodyIds_, bodyPoints_, targetPositions_,
-      // 	   result, 1e-12, 0.01, 200))
-      // 	throw std::runtime_error ("IK failed");
+      for (std::size_t linkId = 0; linkId < model_->numLinks (); ++linkId)
+	{
+	  hrp::Link* link = model_->link (linkId);
+	  assert (link && "invalid link");
+
+	  link->p = x.segment(linkId * 3, 3);
+
+	  hrp::Link* baseLink = link->parent;
+
+	  if (!baseLink)
+	    continue;
+
+	  hrp::JointPathPtr jointPath =
+	    model_->getJointPath(baseLink, link);
+	  assert (jointPath && "invalid joint path");
+	  jointPath->calcInverseKinematics
+	    (baseLink->p, baseLink->R, link->p, link->R);
+	  result[linkId - 1] = jointPath->joint (0)->q;
+	}
     }
 
     void
