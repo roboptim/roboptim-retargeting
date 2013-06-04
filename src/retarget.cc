@@ -74,11 +74,11 @@ namespace roboptim
 
       // Create torque constraints.
       std::string modelOpenHrp
-	("/home/moulard/HRP4C-release/HRP4Cmain.wrl");
+	("/home/moulard/HRP4C-release/HRP4Cg2main.wrl");
       boost::shared_ptr<InverseKinematics> ik =
 	InverseKinematics::create (modelOpenHrp);
       torque_ = boost::make_shared<Torque>
-	(model_, animatedMesh_, animatedMeshLocal, ik);
+	(animatedMesh_, animatedMeshLocal, ik);
 
       // Add constraints to problem.
 

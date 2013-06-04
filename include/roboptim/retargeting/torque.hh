@@ -1,7 +1,6 @@
 #ifndef ROBOPTIM_RETARGETING_TORQUE_HH
 # define ROBOPTIM_RETARGETING_TORQUE_HH
 # include <boost/shared_ptr.hpp>
-# include <urdf_interface/model.h>
 # include <roboptim/core/differentiable-function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
@@ -19,8 +18,7 @@ namespace roboptim
       public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
-      explicit Torque (boost::shared_ptr<urdf::ModelInterface> model,
-		       AnimatedInteractionMeshShPtr_t animatedMesh,
+      explicit Torque (AnimatedInteractionMeshShPtr_t animatedMesh,
 		       AnimatedInteractionMeshShPtr_t animatedMeshLocal,
 		       boost::shared_ptr<InverseKinematics> ik)
 	throw ();
@@ -32,7 +30,6 @@ namespace roboptim
 			  size_type functionId = 0)
 	const throw ();
     private:
-      boost::shared_ptr<urdf::ModelInterface> model_;
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       std::vector<unsigned> consideredDofs_;

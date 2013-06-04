@@ -232,7 +232,6 @@ namespace roboptim
       void computeInteractionMeshes ();
       void computeInteractionMesh (unsigned frameId);
 
-    protected:
       vertex_iterator_t
       getVertexFromLabel (const std::string& label) const;
 
@@ -240,6 +239,7 @@ namespace roboptim
       getVertexFromPosition (unsigned frameId,
 			     double x, double y, double z) const;
 
+    protected:
       static void loadEdgesFromYaml
       (const YAML::Node& node, AnimatedInteractionMeshShPtr_t animatedMesh);
 

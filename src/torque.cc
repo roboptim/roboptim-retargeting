@@ -1,7 +1,3 @@
-#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-#define EIGEN_RUNTIME_NO_MALLOC
-#include <rbdl/rbdl.h>
-
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/include/fold.hpp>
 #include <boost/make_shared.hpp>
@@ -15,6 +11,8 @@
 
 #include <metapod/tools/print.hh>
 #include <metapod/algos/rnea.hh>
+
+#include <hrpModel/Link.h>
 
 // Define which robot to use.
 typedef metapod::hrp4g2 robot_t;
@@ -53,54 +51,93 @@ namespace roboptim
       }
     } // end of anonymous namespace.
 
-      //FIXME: for now edit the code here to change the joints.
-    static const char* consideredDofsNames[] =
-      {
-	"L_HIP_Y",
-	"L_HIP_P",
-	"L_HIP_R",
+    struct LinkInfo
+    {
+      std::string associatedMarker;
+      Eigen::Vector3d offset;
+    };
+    std::map<std::string, LinkInfo> linkInfo_;
 
-	"R_HIP_Y",
-	"R_HIP_P",
-	"R_HIP_R",
-	0
-      };
+# define DECLARE_LINK_MAPPING(LINK_NAME, MARKER, OFFSET)		\
+    do									\
+      {									\
+	LinkInfo link;							\
+	link.associatedMarker = MARKER;					\
+	link.offset = OFFSET;						\
+	linkInfo_[LINK_NAME] = link;					\
+      }									\
+    while (0)								\
 
     Torque::Torque
-    (boost::shared_ptr<urdf::ModelInterface> model,
-     AnimatedInteractionMeshShPtr_t animatedMesh,
+    (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
      boost::shared_ptr<InverseKinematics> ik) throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
 	 animatedMeshLocal_->numFrames () * robot_t::NBDOF, "torque"),
-	model_ (model),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
-	consideredDofs_ (sizeof (consideredDofsNames)),
-	torqueLimits_ (sizeof (consideredDofsNames)),
+	torqueLimits_ (robot_t::NBDOF),
 	ik_ (ik)
     {
+      DECLARE_LINK_MAPPING("BODY", "Hip", Eigen::Vector3d::Zero ());
 
-      for (unsigned i = 0; i < sizeof (consideredDofsNames); ++i)
-	{
-	  consideredDofs_[i] = getJointId (consideredDofsNames[i]);
+      DECLARE_LINK_MAPPING("R_HIP_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HIP_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_KNEE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_ANKLE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_ANKLE_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_TOE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
 
-	  boost::shared_ptr<const urdf::Joint> joint =
-	    model_->getJoint (consideredDofsNames[i]);
-	  if (!joint)
-	    throw std::runtime_error ("joint lookup failed in URDF model");
-	  boost::shared_ptr<const urdf::JointLimits> limits =
-	    joint->limits;
-	  if (!limits)
-	    throw std::runtime_error ("missing limit in URDF model");
-	  torqueLimits_[i] = std::make_pair (-limits->effort, limits->effort);
-	}
+      DECLARE_LINK_MAPPING("L_HIP_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HIP_L_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_KNEE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_ANKLE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_ANKLE_L_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_TOE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
 
-      // Associate DOFs with segments.
-      std::map<std::pair<std::string, std::string>, std::string> map;
+      DECLARE_LINK_MAPPING("CHEST_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEST_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEST_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
 
-      map[std::make_pair ("a", "b")] = "c";
+      DECLARE_LINK_MAPPING("NECK_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("NECK_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("NECK_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("EYEBROW_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYELID_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYE_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("MOUTH_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("LOWERLIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("UPPERLIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEEK_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("R_SHOULDER_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_SHOULDER_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_SHOULDER_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("R_ELBOW_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("R_WRIST_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_WRIST_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("R_HAND_J0_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HAND_J1_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("L_SHOULDER_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_SHOULDER_L_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_SHOULDER_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("L_ELBOW_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("L_WRIST_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_WRIST_L_LINK", "Hip", Eigen::Vector3d::Zero ());
+
+      DECLARE_LINK_MAPPING("L_HAND_J0_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HAND_J1_LINK", "Hip", Eigen::Vector3d::Zero ());
     }
 
     Torque::~Torque () throw ()
@@ -124,34 +161,22 @@ namespace roboptim
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames ();
 	   ++frameId)
 	{
-	  //FIXME: compute body expected body positions.
 	  argument_t bodyPositions;
 
-	  for (unsigned bodyId = 0; bodyId < model_->links_.size (); ++bodyId)
+	  for (std::size_t linkId = 0; linkId < ik_->model ()->numLinks ();
+	       ++linkId)
 	    {
-	      bodyPositions.segment (bodyId, 3).setZero ();
+	      hrp::Link* link = ik_->model ()->link (linkId);
+	      bodyPositions.segment (linkId, 3) =
+		animatedMeshLocal_->graph ()
+		[*animatedMeshLocal_->getVertexFromLabel
+		 (linkInfo_[link->name].associatedMarker)].positions[frameId];
+
+	      bodyPositions.segment (linkId, 3) +=
+		linkInfo_[link->name].offset;
 	    }
 
 	  q[frameId] = (*ik_) (bodyPositions);
-	// for (unsigned dofId = 0; dofId < robot_t::NBDOF; ++dofId)
-	//   {
-	//     // 1. which segment are related to this dof?
-	//     AnimatedInteractionMesh::vertex_descriptor_t segment1  = 0;
-	//     AnimatedInteractionMesh::vertex_descriptor_t segment2  = 0;
-
-	//     // 2. get segment positions
-	//     const Vertex::position_t& segment1Position =
-	//       animatedMeshLocal_->graph ()[segment1].positions[frameId];
-	//     const Vertex::position_t& segment2Position =
-	//       animatedMeshLocal_->graph ()[segment2].positions[frameId];
-
-	//     // 3. identify articular value
-	//     q[frameId][dofId] =
-	//       std::asin
-	//       (segment1Position.cross (segment2Position)[0]
-	//        / segment1Position.norm ()
-	//        / segment2Position.norm ());
-	//   }
 	}
 
       // Fill dq with frameId = 0 to n - 1.
