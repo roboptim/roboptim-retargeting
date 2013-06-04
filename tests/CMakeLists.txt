@@ -11,11 +11,6 @@ MACRO(ROBOPTIM_RETARGETING_TEST NAME)
   # Link against Boost.
   TARGET_LINK_LIBRARIES(${NAME} ${Boost_LIBRARIES})
 
-  # Link againsts ROS.
-  ROSPACK_USE_DEPENDENCY(${NAME} urdf_interface)
-  ROSPACK_USE_DEPENDENCY(${NAME} urdf_parser)
-  ROSPACK_USE_DEPENDENCY(${NAME} roscpp)
-
   # roboptim-core
   PKG_CONFIG_USE_DEPENDENCY(${NAME} roboptim-core)
 

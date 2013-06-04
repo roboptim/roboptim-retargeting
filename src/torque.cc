@@ -74,7 +74,7 @@ namespace roboptim
      boost::shared_ptr<InverseKinematics> ik) throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
-	 animatedMeshLocal_->numFrames () * robot_t::NBDOF, "torque"),
+	 animatedMesh->numFrames () * robot_t::NBDOF, "torque"),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
 	torqueLimits_ (robot_t::NBDOF),
@@ -167,12 +167,12 @@ namespace roboptim
 	       ++linkId)
 	    {
 	      hrp::Link* link = ik_->model ()->link (linkId);
-	      bodyPositions.segment (linkId, 3) =
+	      bodyPositions.segment (linkId * 3, 3) =
 		animatedMeshLocal_->graph ()
 		[*animatedMeshLocal_->getVertexFromLabel
 		 (linkInfo_[link->name].associatedMarker)].positions[frameId];
 
-	      bodyPositions.segment (linkId, 3) +=
+	      bodyPositions.segment (linkId * 3, 3) +=
 		linkInfo_[link->name].offset;
 	    }
 

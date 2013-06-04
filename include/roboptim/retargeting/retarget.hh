@@ -1,14 +1,8 @@
-#ifndef ROBOPTIM_RETARGETING_RETARGET_HH
-# define ROBOPTIM_RETARGETING_RETARGET_HH
-# define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-# define EIGEN_RUNTIME_NO_MALLOC
-# include <rbdl/rbdl.h>
-
+#ifndef ROBOPTIM_RETARGETING_RETARGETING_HH
+# define ROBOPTIM_RETARGETING_RETARGETING_HH
 # include <string>
 
 # include <boost/shared_ptr.hpp>
-
-# include <urdf_interface/model.h>
 
 # include <roboptim/core/differentiable-function.hh>
 # include <roboptim/core/generic-solver.hh>
@@ -146,8 +140,6 @@ namespace roboptim
       GenericSolver::result_t result_;
 
       std::string solverName_;
-      
-      boost::shared_ptr<urdf::ModelInterface> model_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

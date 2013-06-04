@@ -1,10 +1,4 @@
-#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-#define EIGEN_RUNTIME_NO_MALLOC
-#include <rbdl/rbdl.h>
-
 #include <boost/make_shared.hpp>
-
-#include <urdf_parser/urdf_parser.h>
 
 #include <roboptim/core/solver-factory.hh>
 
@@ -36,8 +30,7 @@ namespace roboptim
 	cost_ (),
 	problem_ (),
 	result_ (),
-	solverName_ (solverName),
-	model_ (urdf::parseURDF (model))
+	solverName_ (solverName)
     {
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);

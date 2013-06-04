@@ -23,13 +23,7 @@ PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)
-ROSPACK_USE_DEPENDENCY(roboptim-retargeting colladadom)
-ROSPACK_USE_DEPENDENCY(roboptim-retargeting urdf_interface)
-ROSPACK_USE_DEPENDENCY(roboptim-retargeting urdf_parser)
-ROSPACK_USE_DEPENDENCY(roboptim-retargeting roscpp)
 TARGET_LINK_LIBRARIES(roboptim-retargeting tet)
-TARGET_LINK_LIBRARIES(roboptim-retargeting rbdl)
-TARGET_LINK_LIBRARIES(roboptim-retargeting rbdl_urdfreader)
 TARGET_LINK_LIBRARIES(roboptim-retargeting hrpModel-3.1)
 TARGET_LINK_LIBRARIES(roboptim-retargeting omniORB4)
 TARGET_LINK_LIBRARIES(roboptim-retargeting omnithread)
@@ -38,8 +32,6 @@ INSTALL(TARGETS roboptim-retargeting DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # Main binary.
 ADD_EXECUTABLE(roboptim-retarget-motion roboptim-retarget-motion)
-ROSPACK_USE_DEPENDENCY(roboptim-retarget-motion urdf_interface)
-ROSPACK_USE_DEPENDENCY(roboptim-retarget-motion roscpp)
 TARGET_LINK_LIBRARIES(roboptim-retarget-motion
   roboptim-retargeting ${Boost_LIBRARIES})
 INSTALL(TARGETS roboptim-retarget-motion
