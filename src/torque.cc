@@ -80,64 +80,64 @@ namespace roboptim
 	torqueLimits_ (robot_t::NBDOF),
 	ik_ (ik)
     {
-      DECLARE_LINK_MAPPING("BODY", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("WAIST", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("R_HIP_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_HIP_R_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_HIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_KNEE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_ANKLE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_ANKLE_R_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_TOE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HIP_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HIP_R_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HIP_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_KNEE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_ANKLE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_ANKLE_R_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_TOE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("L_HIP_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_HIP_L_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_HIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_KNEE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_ANKLE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_ANKLE_L_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_TOE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HIP_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HIP_L_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HIP_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_KNEE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_ANKLE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_ANKLE_L_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_TOE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("CHEST_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("CHEST_R_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("CHEST_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEST_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEST_R_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEST_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("NECK_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("NECK_R_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("NECK_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("NECK_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("NECK_R_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("NECK_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("EYEBROW_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("EYELID_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("EYE_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("EYE_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("MOUTH_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("LOWERLIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("UPPERLIP_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("CHEEK_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYEBROW_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYELID_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYE_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("EYE_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("MOUTH_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("LOWERLIP_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("UPPERLIP_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("CHEEK_P_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("R_SHOULDER_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_SHOULDER_R_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_SHOULDER_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_SHOULDER_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_SHOULDER_R_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_SHOULDER_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("R_ELBOW_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_ELBOW_P_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("R_WRIST_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_WRIST_R_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_WRIST_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_WRIST_R_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("R_HAND_J0_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("R_HAND_J1_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HAND_J0_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("R_HAND_J1_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("L_SHOULDER_P_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_SHOULDER_L_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_SHOULDER_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_SHOULDER_P_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_SHOULDER_L_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_SHOULDER_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("L_ELBOW_P_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_ELBOW_P_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("L_WRIST_Y_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_WRIST_L_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_WRIST_Y_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_WRIST_L_LINK", "Chest", Eigen::Vector3d::Zero ());
 
-      DECLARE_LINK_MAPPING("L_HAND_J0_LINK", "Hip", Eigen::Vector3d::Zero ());
-      DECLARE_LINK_MAPPING("L_HAND_J1_LINK", "Hip", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HAND_J0_LINK", "Chest", Eigen::Vector3d::Zero ());
+      DECLARE_LINK_MAPPING("L_HAND_J1_LINK", "Chest", Eigen::Vector3d::Zero ());
     }
 
     Torque::~Torque () throw ()
@@ -148,6 +148,10 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       animatedMeshLocal_->state () = x;
       animatedMeshLocal_->computeVertexWeights();
 
@@ -161,16 +165,29 @@ namespace roboptim
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames ();
 	   ++frameId)
 	{
-	  argument_t bodyPositions;
+	  argument_t bodyPositions (ik_->model ()->numLinks () * 3);
 
 	  for (std::size_t linkId = 0; linkId < ik_->model ()->numLinks ();
 	       ++linkId)
 	    {
 	      hrp::Link* link = ik_->model ()->link (linkId);
+	      std::cout << link->name << std::endl;
+
+	      std::string markerName =
+		linkInfo_[link->name].associatedMarker;
+	      assert (!markerName.empty ());
+
+	      AnimatedInteractionMesh::vertex_iterator_t vertex =
+		animatedMeshLocal_->getVertexFromLabel (markerName);
+
+	      AnimatedInteractionMesh::vertex_iterator_t vertexIt;
+	      AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
+	      boost::tie (vertexIt, vertexEnd) =
+		boost::vertices (animatedMeshLocal_->graph ());
+	      assert (vertex != vertexEnd);
+
 	      bodyPositions.segment (linkId * 3, 3) =
-		animatedMeshLocal_->graph ()
-		[*animatedMeshLocal_->getVertexFromLabel
-		 (linkInfo_[link->name].associatedMarker)].positions[frameId];
+		animatedMeshLocal_->graph ()[*vertex].positions[frameId];
 
 	      bodyPositions.segment (linkId * 3, 3) +=
 		linkInfo_[link->name].offset;
@@ -225,6 +242,10 @@ namespace roboptim
      size_type i)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       roboptim::GenericFiniteDifferenceGradient<
 	EigenMatrixSparse,
 	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >
