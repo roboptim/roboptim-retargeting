@@ -388,10 +388,16 @@ namespace roboptim
 	;
       for (unsigned frameId = 0; frameId < numFrames_; ++frameId)
 	{
-	  out << YAML::Flow << YAML::BeginSeq;
+	  out << YAML::BeginSeq << YAML::Flow;
 	  Eigen::VectorXd x = makeOptimizationVectorOneFrame (frameId);
-	  for (unsigned i = 0; i < x.size (); ++i)
-	    out << x[i];
+	  for (unsigned i = 0; i < x.size (); i += 3)
+	    {
+	      out << YAML::BeginSeq;
+	      out << x[i + 0];
+	      out << x[i + 1];
+	      out << x[i + 2];
+	      out << YAML::EndSeq;
+	    }
 	  out << YAML::EndSeq;
 	}
       out
