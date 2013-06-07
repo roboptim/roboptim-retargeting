@@ -123,6 +123,11 @@ namespace roboptim
 	return result_;
       }
 
+      TorqueShPtr_t torqueConstraint ()
+      {
+	return torque_;
+      }
+
     private:
       static log4cxx::LoggerPtr logger;
 

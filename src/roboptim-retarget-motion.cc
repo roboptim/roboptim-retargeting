@@ -8,6 +8,8 @@
 #include <log4cxx/logger.h>
 #include <log4cxx/xml/domconfigurator.h>
 
+#include <roboptim/core/visualization/gnuplot.hh>
+
 #include <roboptim/retargeting/retarget.hh>
 
 #include <roboptim/retargeting/config.hh>
@@ -25,6 +27,40 @@ void version ()
 {
   std::cout << "roboptim-retarget-motion v "
 	    << ROBOPTIM_RETARGETING_VERSION << std::endl;
+}
+
+void traceProblem (roboptim::retargeting::Retarget& retarget,
+		   const std::string& suffix)
+{
+  std::string dirname = "/tmp";
+
+  hrp::BodyPtr model =
+    retarget.torqueConstraint ()->ik ()->model ();
+
+  for (std::size_t jointId = 0; jointId < model->numJoints (); ++jointId)
+    {
+      hrp::Link* joint = model->joint (jointId);
+      std::string torqueFilename =
+	(boost::format ("%1%/torque-%2%-%3%.gp")
+	 % dirname % joint->name % suffix).str ();
+
+      std::ofstream out (torqueFilename.c_str ());
+      roboptim::visualization::Gnuplot gp =
+	roboptim::visualization::Gnuplot::make_gnuplot ();
+
+      roboptim::Function::result_t tau =
+	(*retarget.torqueConstraint ()) (retarget.animatedMesh ()->state ());
+
+      out << gp << "\n"
+	  << "plot '-'\n";
+      for (unsigned frameId = 0;
+	   frameId < retarget.animatedMesh ()->numFrames ();
+	   ++frameId)
+	{
+	  out << frameId << " " << tau[frameId] << "\n";
+	}
+      out << "e\n";
+    }
 }
 
 int main (int argc, char** argv)
@@ -208,6 +244,7 @@ int main (int argc, char** argv)
      enableTorque,
      solverName);
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
+  traceProblem (retarget, "before");
 
   LOG4CXX_DEBUG (logger,
 		"Problem:\n" << *retarget.problem ());
@@ -267,6 +304,8 @@ int main (int argc, char** argv)
   retarget.animatedMesh ()->computeVertexWeights ();
   retarget.animatedMesh ()->writeTrajectory (filename);
   LOG4CXX_INFO (logger, "trajectory written to: " << filename);
+
+  traceProblem (retarget, "after");
 
   LOG4CXX_INFO (logger, "program succeeded, exiting");
 }
