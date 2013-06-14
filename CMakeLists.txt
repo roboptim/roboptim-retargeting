@@ -55,14 +55,7 @@ ADD_REQUIRED_DEPENDENCY("yaml-cpp")
 ADD_REQUIRED_DEPENDENCY("liblog4cxx >= 0.10.0")
 ADD_REQUIRED_DEPENDENCY("metapod")
 
-# Crude hack for RBDL
-INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_INSTALL_PREFIX}/include/rbdl")
-LINK_DIRECTORIES("${CMAKE_INSTALL_PREFIX}/lib")
-
-# OpenHRP
-INCLUDE_DIRECTORIES(SYSTEM
-  /home/moulard/profiles/default-x86_64-linux-ubuntu-12.04.1/install/unstable/include/OpenHRP-3.1)
-
+ADD_REQUIRED_DEPENDENCY("choreonoid")
 
 HEADER_INSTALL("${HEADERS}")
 

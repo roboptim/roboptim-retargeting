@@ -1,10 +1,10 @@
 #ifndef ROBOPTIM_RETARGETING_TORQUE_HH
 # define ROBOPTIM_RETARGETING_TORQUE_HH
 # include <boost/shared_ptr.hpp>
+# include <cnoid/Body>
 # include <roboptim/core/differentiable-function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
-# include <roboptim/retargeting/inverse-kinematics.hh>
 
 namespace roboptim
 {
@@ -20,7 +20,7 @@ namespace roboptim
     public:
       explicit Torque (AnimatedInteractionMeshShPtr_t animatedMesh,
 		       AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-		       boost::shared_ptr<InverseKinematics> ik)
+		       cnoid::BodyPtr model)
 	throw ();
       virtual ~Torque () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -29,17 +29,12 @@ namespace roboptim
 			  const argument_t& argument,
 			  size_type functionId = 0)
 	const throw ();
-
-      boost::shared_ptr<InverseKinematics> ik ()
-      {
-	return ik_;
-      }
     private:
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       std::vector<unsigned> consideredDofs_;
       Function::intervals_t torqueLimits_;
-      boost::shared_ptr<InverseKinematics> ik_;
+      cnoid::BodyPtr model_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

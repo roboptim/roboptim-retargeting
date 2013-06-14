@@ -8,7 +8,6 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   animated-interaction-mesh.cc
   bone-length.cc
   collision.cc
-  inverse-kinematics.cc
   laplacian-coordinate.cc
   laplacian-deformation-energy.cc
   position.cc
@@ -23,15 +22,15 @@ PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting choreonoid)
 TARGET_LINK_LIBRARIES(roboptim-retargeting tet)
-TARGET_LINK_LIBRARIES(roboptim-retargeting hrpModel-3.1)
-TARGET_LINK_LIBRARIES(roboptim-retargeting omniORB4)
-TARGET_LINK_LIBRARIES(roboptim-retargeting omnithread)
+
 SET_TARGET_PROPERTIES(roboptim-retargeting PROPERTIES SOVERSION 0.0.0)
 INSTALL(TARGETS roboptim-retargeting DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # Main binary.
 ADD_EXECUTABLE(roboptim-retarget-motion roboptim-retarget-motion)
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion choreonoid)
 TARGET_LINK_LIBRARIES(roboptim-retarget-motion
   roboptim-retargeting ${Boost_LIBRARIES})
 INSTALL(TARGETS roboptim-retarget-motion

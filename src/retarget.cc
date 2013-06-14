@@ -1,8 +1,6 @@
 #include <boost/make_shared.hpp>
-
 #include <roboptim/core/solver-factory.hh>
-
-#include "roboptim/retargeting/inverse-kinematics.hh"
+#include <cnoid/BodyLoader>
 #include "roboptim/retargeting/retarget.hh"
 
 namespace roboptim
@@ -66,12 +64,14 @@ namespace roboptim
       //FIXME:
 
       // Create torque constraints.
-      std::string modelOpenHrp
+      std::string modelFilename
 	("/home/moulard/HRP4C-release/HRP4Cg2main.wrl");
-      boost::shared_ptr<InverseKinematics> ik =
-	InverseKinematics::create (modelOpenHrp);
+
+      cnoid::BodyLoader loader;
+      cnoid::BodyPtr modelCnoid = loader.load (modelFilename);
+
       torque_ = boost::make_shared<Torque>
-	(animatedMesh_, animatedMeshLocal, ik);
+	(animatedMesh_, animatedMeshLocal, modelCnoid);
 
       // Add constraints to problem.
 
