@@ -13,7 +13,7 @@ namespace roboptim
   namespace retargeting
   {
     class ZMP;
-    typedef boost::shared_ptr<ZMP> TorqueShPtr_t;
+    typedef boost::shared_ptr<ZMP> ZmpShPtr_t;
 
     /// \brief ZMP constraints (not yet implemented)
     class ZMP :

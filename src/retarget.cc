@@ -17,6 +17,7 @@ namespace roboptim
 			bool enablePosition,
 			bool enableCollision,
 			bool enableTorque,
+			bool enableZmp,
 			const std::string& solverName)
       : animatedMesh_
 	(AnimatedInteractionMesh::loadAnimatedMesh
@@ -27,6 +28,11 @@ namespace roboptim
 	(boost::make_shared<AccelerationEnergy> (animatedMesh_)),
 	cost_ (),
 	problem_ (),
+	boneLengths_ (),
+	positions_ (),
+	collisions_ (),
+	torque_ (),
+	zmp_ (),
 	result_ (),
 	solverName_ (solverName)
     {
@@ -148,6 +154,26 @@ namespace roboptim
 	    (boost::static_pointer_cast
 	     <GenericDifferentiableFunction<EigenMatrixSparse> >
 	     (torque_), intervals, scales);
+	}
+
+      // -- ZMP
+      if (enableZmp)
+	{
+	  LOG4CXX_INFO (logger, "zmp constraints enabled");
+
+	  Function::intervals_t intervals;
+	  problem_t::scales_t scales;
+	  for (unsigned i = 0; i < zmp_->outputSize (); ++i)
+	    {
+	      //FIXME:
+	      intervals.push_back (roboptim::Function::makeInterval (-1., 1.));
+	      scales.push_back (1.);
+	    }
+
+	  problem_->addConstraint
+	    (boost::static_pointer_cast
+	     <GenericDifferentiableFunction<EigenMatrixSparse> >
+	     (zmp_), intervals, scales);
 	}
     }
 

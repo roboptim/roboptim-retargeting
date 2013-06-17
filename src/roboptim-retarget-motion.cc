@@ -85,6 +85,7 @@ int main (int argc, char** argv)
   bool enablePosition;
   bool enableCollision;
   bool enableTorque;
+  bool enableZmp;
   std::string solverName;
 
   po::options_description general ("General options");
@@ -119,6 +120,9 @@ int main (int argc, char** argv)
     ("enable-torque,T",
      po::value<bool> (&enableTorque)->default_value (true),
      "enable torque constraints")
+    ("enable-zmp,Z",
+     po::value<bool> (&enableZmp)->default_value (true),
+     "enable ZMP constraints")
     ;
 
   po::options_description desc ("Allowed options");
@@ -242,6 +246,7 @@ int main (int argc, char** argv)
      enablePosition,
      enableCollision,
      enableTorque,
+     enableZmp,
      solverName);
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
   //traceProblem (retarget, "before");

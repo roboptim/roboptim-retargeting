@@ -20,6 +20,7 @@
 # include <roboptim/retargeting/position.hh>
 # include <roboptim/retargeting/collision.hh>
 # include <roboptim/retargeting/torque.hh>
+# include <roboptim/retargeting/zmp.hh>
 
 namespace roboptim
 {
@@ -63,6 +64,7 @@ namespace roboptim
        bool enablePosition,
        bool enableCollision,
        bool enableTorque,
+       bool enableZmp,
        const std::string& solverName);
       virtual ~Retarget ();
 
@@ -141,6 +143,7 @@ namespace roboptim
       std::vector<PositionShPtr_t> positions_;
       std::vector<CollisionShPtr_t> collisions_;
       TorqueShPtr_t torque_;
+      ZmpShPtr_t zmp_;
 
       GenericSolver::result_t result_;
 
