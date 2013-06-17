@@ -85,6 +85,9 @@ namespace roboptim
       torque_ = boost::make_shared<Torque>
 	(animatedMesh_, animatedMeshLocal, modelCnoid, mocapMotion);
 
+      zmp_ = boost::make_shared<ZMP>
+	(animatedMesh_, animatedMeshLocal, modelCnoid, mocapMotion);
+
       // Add constraints to problem.
 
       // -- Bone length
