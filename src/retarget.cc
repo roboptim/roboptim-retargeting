@@ -66,9 +66,13 @@ namespace roboptim
       // Create torque constraints.
       std::string modelFilename
 	("/home/moulard/HRP4C-release/HRP4Cg2main.wrl");
+      std::string modelFilenameYaml
+	("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
 
       cnoid::BodyLoader loader;
-      cnoid::BodyPtr modelCnoid = loader.load (modelFilename);
+      cnoid::BodyPtr modelCnoid = loader.load (modelFilenameYaml);
+      if (!modelCnoid)
+	throw std::runtime_error ("failed to load model");
       cnoid::MarkerMotionPtr mocapMotion (new cnoid::MarkerMotion);
       mocapMotion->loadStdYAMLformat (initialTrajectory);
 

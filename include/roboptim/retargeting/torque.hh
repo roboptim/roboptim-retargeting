@@ -7,6 +7,7 @@
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
 # include <cnoid/extplugin/MocapPlugin/MarkerMotion.h>
+# include <cnoid/src/MocapPlugin/MarkerToBodyMotionConverter.h>
 
 namespace roboptim
 {
@@ -39,6 +40,7 @@ namespace roboptim
       Function::intervals_t torqueLimits_;
       cnoid::BodyPtr model_;
       mutable cnoid::MarkerMotionPtr mocapMotion_;
+      mutable cnoid::MarkerToBodyMotionConverter converter_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

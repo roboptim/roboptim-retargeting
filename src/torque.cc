@@ -14,7 +14,6 @@
 
 #include <cnoid/Body>
 #include <cnoid/BodyMotion>
-#include <cnoid/src/MocapPlugin/MarkerToBodyMotionConverter.h>
 
 // Define which robot to use.
 typedef metapod::hrp4g2 robot_t;
@@ -64,8 +63,16 @@ namespace roboptim
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
 	torqueLimits_ (robot_t::NBDOF),
-	mocapMotion_ (mocapMotion)
+	model_ (model),
+	mocapMotion_ (mocapMotion),
+	converter_ ()
     {
+      if (!model)
+	throw std::runtime_error ("invalid model");
+      if (!mocapMotion)
+	throw std::runtime_error ("invalid mocap motion object");
+
+
       torqueLimits_[0] = std::make_pair (-63.55, 63.55); // R_HIP_Y
       torqueLimits_[1] = std::make_pair (-186.21, 186.21); // R_HIP_R
       torqueLimits_[2] = std::make_pair (-95.18, 95.18); // R_HIP_P
@@ -133,17 +140,15 @@ namespace roboptim
       std::vector<robot_t::confVector> ddq (animatedMeshLocal_->numFrames ());
 
       // Compute q from segment positions.
-      cnoid::MarkerToBodyMotionConverter converter;
-
       for (std::size_t frameId = 0;
 	   frameId < mocapMotion_->numFrames (); ++frameId)
 	for (std::size_t markerId = 0;
-	     markerId < mocapMotion_->numMarkers(); markerId)
+	     markerId < mocapMotion_->numMarkers(); ++markerId)
 	  mocapMotion_->frame (frameId)[markerId] =
 	    x.segment (frameId * mocapMotion_->numMarkers() + markerId, 3);
 
       cnoid::BodyMotion robotMotion;
-      if (!converter.convert (*mocapMotion_, model_, robotMotion))
+      if (!converter_.convert (*mocapMotion_, model_, robotMotion))
 	throw std::runtime_error ("failed to convert motion");
 
       for (std::size_t frameId = 0;
@@ -152,7 +157,7 @@ namespace roboptim
 	  const cnoid::MultiValueSeq::Frame& frame =
 	    robotMotion.jointPosSeq ()->frame (frameId);
 	  for (std::size_t jointId = 0; jointId < frame.size (); ++jointId)
-	    q[frameId][robot_t::NBDOF + jointId] = frame[jointId];
+	    q[frameId][jointId] = frame[jointId];
 	}
 
       // Fill dq with frameId = 0 to n - 1.
