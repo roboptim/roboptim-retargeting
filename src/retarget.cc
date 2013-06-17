@@ -69,9 +69,11 @@ namespace roboptim
 
       cnoid::BodyLoader loader;
       cnoid::BodyPtr modelCnoid = loader.load (modelFilename);
+      cnoid::MarkerMotionPtr mocapMotion (new cnoid::MarkerMotion);
+      mocapMotion->loadStdYAMLformat (initialTrajectory);
 
       torque_ = boost::make_shared<Torque>
-	(animatedMesh_, animatedMeshLocal, modelCnoid);
+	(animatedMesh_, animatedMeshLocal, modelCnoid, mocapMotion);
 
       // Add constraints to problem.
 

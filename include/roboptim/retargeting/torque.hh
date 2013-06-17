@@ -6,6 +6,8 @@
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
+# include <cnoid/extplugin/MocapPlugin/MarkerMotion.h>
+
 namespace roboptim
 {
   namespace retargeting
@@ -20,7 +22,8 @@ namespace roboptim
     public:
       explicit Torque (AnimatedInteractionMeshShPtr_t animatedMesh,
 		       AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-		       cnoid::BodyPtr model)
+		       cnoid::BodyPtr model,
+		       cnoid::MarkerMotionPtr mocapMotion)
 	throw ();
       virtual ~Torque () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -35,6 +38,7 @@ namespace roboptim
       std::vector<unsigned> consideredDofs_;
       Function::intervals_t torqueLimits_;
       cnoid::BodyPtr model_;
+      mutable cnoid::MarkerMotionPtr mocapMotion_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

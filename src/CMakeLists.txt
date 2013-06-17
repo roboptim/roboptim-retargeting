@@ -23,6 +23,10 @@ PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting choreonoid)
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting choreonoid-body-plugin)
+TARGET_LINK_LIBRARIES(roboptim-retargeting
+  blas lapack
+  CnoidBody CnoidMocapPlugin)
 TARGET_LINK_LIBRARIES(roboptim-retargeting tet)
 
 SET_TARGET_PROPERTIES(roboptim-retargeting PROPERTIES SOVERSION 0.0.0)
@@ -33,5 +37,12 @@ ADD_EXECUTABLE(roboptim-retarget-motion roboptim-retarget-motion)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion choreonoid)
 TARGET_LINK_LIBRARIES(roboptim-retarget-motion
   roboptim-retargeting ${Boost_LIBRARIES})
+
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion choreonoid)
+
+# Misc.
+TARGET_LINK_LIBRARIES(roboptim-retarget-motion
+  blas lapack)
+
 INSTALL(TARGETS roboptim-retarget-motion
   DESTINATION ${CMAKE_INSTALL_BINDIR})

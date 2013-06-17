@@ -12,6 +12,10 @@
 #include <metapod/tools/print.hh>
 #include <metapod/algos/rnea.hh>
 
+#include <cnoid/Body>
+#include <cnoid/BodyMotion>
+#include <cnoid/src/MocapPlugin/MarkerToBodyMotionConverter.h>
+
 // Define which robot to use.
 typedef metapod::hrp4g2 robot_t;
 
@@ -52,13 +56,15 @@ namespace roboptim
     Torque::Torque
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-     cnoid::BodyPtr model) throw ()
+     cnoid::BodyPtr model,
+     cnoid::MarkerMotionPtr mocapMotion) throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
 	 animatedMesh->numFrames () * robot_t::NBDOF, "torque"),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
-	torqueLimits_ (robot_t::NBDOF)
+	torqueLimits_ (robot_t::NBDOF),
+	mocapMotion_ (mocapMotion)
     {
       torqueLimits_[0] = std::make_pair (-63.55, 63.55); // R_HIP_Y
       torqueLimits_[1] = std::make_pair (-186.21, 186.21); // R_HIP_R
@@ -127,7 +133,27 @@ namespace roboptim
       std::vector<robot_t::confVector> ddq (animatedMeshLocal_->numFrames ());
 
       // Compute q from segment positions.
-      //FIXME:
+      cnoid::MarkerToBodyMotionConverter converter;
+
+      for (std::size_t frameId = 0;
+	   frameId < mocapMotion_->numFrames (); ++frameId)
+	for (std::size_t markerId = 0;
+	     markerId < mocapMotion_->numMarkers(); markerId)
+	  mocapMotion_->frame (frameId)[markerId] =
+	    x.segment (frameId * mocapMotion_->numMarkers() + markerId, 3);
+
+      cnoid::BodyMotion robotMotion;
+      if (!converter.convert (*mocapMotion_, model_, robotMotion))
+	throw std::runtime_error ("failed to convert motion");
+
+      for (std::size_t frameId = 0;
+	   frameId < robotMotion.jointPosSeq ()->numFrames (); ++frameId)
+	{
+	  const cnoid::MultiValueSeq::Frame& frame =
+	    robotMotion.jointPosSeq ()->frame (frameId);
+	  for (std::size_t jointId = 0; jointId < frame.size (); ++jointId)
+	    q[frameId][robot_t::NBDOF + jointId] = frame[jointId];
+	}
 
       // Fill dq with frameId = 0 to n - 1.
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames () - 1;
