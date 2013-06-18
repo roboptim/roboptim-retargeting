@@ -46,3 +46,11 @@ TARGET_LINK_LIBRARIES(roboptim-retarget-motion
 
 INSTALL(TARGETS roboptim-retarget-motion
   DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Choreonoid plug-in.
+ADD_LIBRARY(CnoidRoboptimRetargeting MODULE
+  choreonoid/roboptim-retargeting-plugin.cc)
+PKG_CONFIG_USE_DEPENDENCY(CnoidRoboptimRetargeting choreonoid)
+TARGET_LINK_LIBRARIES(CnoidRoboptimRetargeting roboptim-retargeting)
+INSTALL(TARGETS CnoidRoboptimRetargeting
+  DESTINATION ${CHOREONOID_PLUGINDIR})

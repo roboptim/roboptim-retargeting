@@ -26,6 +26,8 @@ SET(PROJECT_URL "http://github.com/thomas-moulard/roboptim-retargeting")
 
 SET(CXX_DISABLE_WERROR 1)
 
+SET(PKG_CONFIG_ADDITIONAL_VARIABLES plugindir ${PKG_CONFIG_ADDITIONAL_VARIABLES})
+
 SET(CSD ${CMAKE_SOURCE_DIR})
 SET(HEADERS
   ${CSD}/include/roboptim/retargeting/acceleration-energy.hh

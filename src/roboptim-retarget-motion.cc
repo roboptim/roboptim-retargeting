@@ -279,8 +279,6 @@ int main (int argc, char** argv)
 	  LOG4CXX_INFO (logger, "trajectory written to: " << filename);
 	}
 
-      //traceProblem (retarget, "after");
-
       std::cout << "No solution has been found. Failing..."
                 << std::endl
                 << boost::get<roboptim::SolverError>
