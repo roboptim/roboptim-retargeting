@@ -5,10 +5,11 @@
 #include <roboptim/retargeting/retarget.hh>
 
 #include <cnoid/ItemTreeView>
-#include <cnoid/RootItem>
-#include <cnoid/Plugin>
+#include <cnoid/LazyCaller>
 #include <cnoid/MenuManager>
 #include <cnoid/MessageView>
+#include <cnoid/Plugin>
+#include <cnoid/RootItem>
 
 #include <cnoid/src/MocapPlugin/MarkerMotionItem.h>
 
@@ -93,7 +94,13 @@ private:
 
     cnoid::MarkerMotionItemPtr resultItem = new cnoid::MarkerMotionItem ();
     resultItem->setName("roboptim-retargeting-result");
-    cnoid::ItemTreeView::instance()->rootItem ()->addChildItem (resultItem);
+
+    // ask main thread to add the item.
+    cnoid::callLater
+      (boost::bind (&cnoid::RootItem::addChildItem,
+		    cnoid::ItemTreeView::instance()->rootItem (),
+		    resultItem,
+		    false));
 
     // Get the result.
     Eigen::VectorXd x;
