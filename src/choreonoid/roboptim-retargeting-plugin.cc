@@ -1,4 +1,6 @@
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 
 #include <roboptim/retargeting/retarget.hh>
 
@@ -19,7 +21,8 @@ class RoboptimRetargetingPlugin : public cnoid::Plugin
 {
 public:
   explicit RoboptimRetargetingPlugin ()
-    : Plugin("RoboptimRetargeting")
+    : Plugin("RoboptimRetargeting"),
+      thread_ ()
   {
 
   }
@@ -41,16 +44,23 @@ public:
 private:
   void menuCb ()
   {
-    cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - start");
+    if (thread_)
+      {
+	cnoid::MessageView::mainInstance ()->putln
+	  ("Roboptim Retargeting - thread already launched, ignoring command");
+	return;
+      }
 
-    // Should be done in a thread.
-    buildProblemAndOptimize ();
-
-    cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - end");
+    cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - launching thread");
+    thread_ = boost::make_shared<boost::thread>
+      (boost::bind (&RoboptimRetargetingPlugin::buildProblemAndOptimize, this));
   }
 
   void buildProblemAndOptimize ()
   {
+    cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - start");
+
+
     log4cxx::LoggerPtr logger
       (log4cxx::Logger::getLogger
        ("roboptim.retargeting.choreonoid"));
@@ -78,6 +88,8 @@ private:
        enableTorque,
        enableZmp,
        solverName);
+
+    retarget.solve ();
 
     cnoid::MarkerMotionItemPtr resultItem = new cnoid::MarkerMotionItem ();
     resultItem->setName("roboptim-retargeting-result");
@@ -146,7 +158,11 @@ private:
 	   markerId < retarget.animatedMesh ()->numVertices (); ++markerId)
       resultItem->seq ()->frame (frameId)[markerId] =
 	x.segment (frameId * retarget.animatedMesh ()->optimizationVectorSizeOneFrame () + markerId, 3);
+
+    cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - end");
   }
+
+  boost::shared_ptr<boost::thread> thread_;
 };
 
 CNOID_IMPLEMENT_PLUGIN_ENTRY (RoboptimRetargetingPlugin)

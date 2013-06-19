@@ -51,6 +51,7 @@ INSTALL(TARGETS roboptim-retarget-motion
 ADD_LIBRARY(CnoidRoboptimRetargeting MODULE
   choreonoid/roboptim-retargeting-plugin.cc)
 PKG_CONFIG_USE_DEPENDENCY(CnoidRoboptimRetargeting choreonoid)
-TARGET_LINK_LIBRARIES(CnoidRoboptimRetargeting roboptim-retargeting)
+TARGET_LINK_LIBRARIES(CnoidRoboptimRetargeting
+  roboptim-retargeting ${Boost_LIBRARIES})
 INSTALL(TARGETS CnoidRoboptimRetargeting
   DESTINATION ${CHOREONOID_PLUGINDIR})
