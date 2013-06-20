@@ -30,9 +30,17 @@ BOOST_AUTO_TEST_CASE (simple)
   std::string characterFile = TESTS_DATA_DIR;
   characterFile += "/data/character-cgvu-hrp4c.yaml";
 
+  // Loading character.
+  cnoid::CharacterPtr character (new cnoid::Character ());
+  character->load (characterFile, std::cout);
+
+  // Loading marker motion.
+  cnoid::MarkerMotionPtr markerMotion (new cnoid::MarkerMotion ());
+  markerMotion->loadStdYAMLformat (trajectoryFile);
+
   roboptim::retargeting::AnimatedInteractionMeshShPtr_t animatedMesh =
     AnimatedInteractionMesh::loadAnimatedMesh
-    (trajectoryFile, characterFile);
+    (markerMotion, character);
 
   AnimatedInteractionMeshShPtr_t animatedMeshLocal =
     AnimatedInteractionMesh::makeFromOptimizationVariables

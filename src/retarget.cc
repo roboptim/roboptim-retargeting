@@ -1,6 +1,8 @@
 #include <boost/make_shared.hpp>
 #include <roboptim/core/solver-factory.hh>
-#include <cnoid/BodyLoader>
+
+#include <cnoid/Body>
+
 #include "roboptim/retargeting/retarget.hh"
 
 namespace roboptim
@@ -10,9 +12,9 @@ namespace roboptim
     log4cxx::LoggerPtr Retarget::logger
     (log4cxx::Logger::getLogger("roboptim.retargeting.Retarget"));
 
-    Retarget::Retarget (const std::string& initialTrajectory,
-			const std::string& character,
-			const std::string& model,
+    Retarget::Retarget (cnoid::MarkerMotionPtr markerMotion,
+			cnoid::CharacterPtr character,
+			cnoid::BodyPtr body,
 			bool enableBoneLength,
 			bool enablePosition,
 			bool enableCollision,
@@ -21,7 +23,7 @@ namespace roboptim
 			const std::string& solverName)
       : animatedMesh_
 	(AnimatedInteractionMesh::loadAnimatedMesh
-	 (initialTrajectory, character)),
+	 (markerMotion, character)),
 	costLaplacian_
 	(boost::make_shared<LaplacianDeformationEnergy> (animatedMesh_)),
 	costAcceleration_
@@ -70,23 +72,11 @@ namespace roboptim
       //FIXME:
 
       // Create torque constraints.
-      std::string modelFilename
-	("/home/moulard/HRP4C-release/HRP4Cg2main.wrl");
-      std::string modelFilenameYaml
-	("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
-
-      cnoid::BodyLoader loader;
-      cnoid::BodyPtr modelCnoid = loader.load (modelFilenameYaml);
-      if (!modelCnoid)
-	throw std::runtime_error ("failed to load model");
-      cnoid::MarkerMotionPtr mocapMotion (new cnoid::MarkerMotion);
-      mocapMotion->loadStdYAMLformat (initialTrajectory);
-
       torque_ = boost::make_shared<Torque>
-	(animatedMesh_, animatedMeshLocal, modelCnoid, mocapMotion);
+	(animatedMesh_, animatedMeshLocal, body, markerMotion);
 
       zmp_ = boost::make_shared<ZMP>
-	(animatedMesh_, animatedMeshLocal, modelCnoid, mocapMotion);
+	(animatedMesh_, animatedMeshLocal, body, markerMotion);
 
       // Add constraints to problem.
 
@@ -191,7 +181,7 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Set solver parameters.
-      solver.parameters ()["max-iterations"].value = 100;
+      solver.parameters ()["max-iterations"].value = 1;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";

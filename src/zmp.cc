@@ -23,7 +23,7 @@ namespace roboptim
      cnoid::MarkerMotionPtr mocapMotion) throw ()
       : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
-	 animatedMeshLocal_->numFrames () * 2, "ZMP"),
+	 animatedMesh->numFrames () * 2, "ZMP"),
 	animatedMesh_ (animatedMesh),
 	animatedMeshLocal_ (animatedMeshLocal),
 	model_ (model),

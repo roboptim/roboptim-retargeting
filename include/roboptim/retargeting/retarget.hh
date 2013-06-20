@@ -22,6 +22,9 @@
 # include <roboptim/retargeting/torque.hh>
 # include <roboptim/retargeting/zmp.hh>
 
+# include <cnoid/Body>
+# include <cnoid/src/MocapPlugin/MarkerMotion.h>
+
 namespace roboptim
 {
   namespace retargeting
@@ -57,9 +60,9 @@ namespace roboptim
       problemShPtr_t;
 
       explicit Retarget
-      (const std::string& initialTrajectory,
-       const std::string& character,
-       const std::string& model,
+      (cnoid::MarkerMotionPtr markerMotion,
+       cnoid::CharacterPtr character,
+       cnoid::BodyPtr body,
        bool enableBoneLength,
        bool enablePosition,
        bool enableCollision,

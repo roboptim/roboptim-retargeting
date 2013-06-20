@@ -13,6 +13,9 @@
 #include <roboptim/retargeting/retarget.hh>
 
 #include <roboptim/retargeting/config.hh>
+
+#include <cnoid/BodyLoader>
+
 #include "directories.hh"
 
 void help (const boost::program_options::options_description& desc)
@@ -224,7 +227,7 @@ int main (int argc, char** argv)
       modelFilePath = dataDir + "/" + modelFilePath;
       if (!std::ifstream (modelFilePath.c_str ()))
 	{
-	  std::cerr << "URDF model file does not exist" << std::endl;
+	  std::cerr << "YAML model file does not exist" << std::endl;
 	  return 2;
 	}
     }
@@ -237,11 +240,25 @@ int main (int argc, char** argv)
 
   LOG4CXX_INFO (logger, "loading optimization problem...");
 
+  // Loading robot.
+  cnoid::BodyLoader loader;
+  cnoid::BodyPtr body = loader.load (modelFilePath);
+  if (!body)
+    throw std::runtime_error ("failed to load model");
+
+  // Loading character.
+  cnoid::CharacterPtr character (new cnoid::Character ());
+  character->load (characterFilePath, std::cout);
+
+  // Loading marker motion.
+  cnoid::MarkerMotionPtr markerMotion (new cnoid::MarkerMotion ());
+  markerMotion->loadStdYAMLformat (trajectoryFilePath);
+
   // Retarget motion.
   roboptim::retargeting::Retarget retarget
-    (trajectoryFilePath,
-     characterFilePath,
-     modelFilePath,
+    (markerMotion,
+     character,
+     body,
      enableBoneLength,
      enablePosition,
      enableCollision,

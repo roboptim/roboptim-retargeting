@@ -7,6 +7,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
+#include <cnoid/BodyLoader>
+
 #include "tests-config.h"
 
 using boost::test_tools::output_test_stream;
@@ -24,10 +26,25 @@ BOOST_AUTO_TEST_CASE (simple)
   std::string characterFile = TESTS_DATA_DIR;
   characterFile += "/data/character-cgvu-hrp4c.yaml";
 
+  // Loading character.
+  cnoid::CharacterPtr character (new cnoid::Character ());
+  character->load (characterFile, std::cout);
+
+  // Loading marker motion.
+  cnoid::MarkerMotionPtr markerMotion (new cnoid::MarkerMotion ());
+  markerMotion->loadStdYAMLformat (trajectoryFile);
+
+  // Loading robot.
+  cnoid::BodyLoader loader;
+  cnoid::BodyPtr body = loader.load ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+  if (!body)
+    throw std::runtime_error ("failed to load model");
+
+
   roboptim::retargeting::Retarget retarget
-    (trajectoryFile,
-     characterFile,
-     "",
+    (markerMotion,
+     character,
+     body,
      false,
      false,
      false,

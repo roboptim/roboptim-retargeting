@@ -133,122 +133,84 @@ namespace roboptim
 
     AnimatedInteractionMeshShPtr_t
     AnimatedInteractionMesh::loadAnimatedMesh
-    (const std::string& trajectoryFile,
-     const std::string& characterFile)
+    (cnoid::MarkerMotionPtr markerMotion,
+     cnoid::CharacterPtr character)
     {
-      LOG4CXX_INFO
-	(logger,
-	 "loading animated mesh from files: "
-	 << trajectoryFile << " (trajectory) "
-	 << characterFile << " (character)");
-
       AnimatedInteractionMeshShPtr_t animatedMesh =
 	boost::make_shared<AnimatedInteractionMesh> ();
 
-      // Parse trajectory file.
-      {
-	std::ifstream fin (trajectoryFile.c_str ());
-	if (!fin.good ())
-	  throw std::runtime_error ("bad stream");
-	YAML::Parser parser (fin);
+      // Copy marker motion.
+      animatedMesh->framerate_ = markerMotion->frameRate ();
+      animatedMesh->numFrames_ = markerMotion->numFrames ();
+      animatedMesh->numVertices_ = markerMotion->numParts ();
 
-	YAML::Node doc;
+      std::cout << "frame rate: " << animatedMesh->framerate_ << std::endl;
+      std::cout << "num frame: " << animatedMesh->numFrames_ << std::endl;
+      std::cout << "num vertices: " << animatedMesh->numVertices_ << std::endl;
 
-	if (!parser.GetNextDocument (doc))
-	  throw std::runtime_error ("empty document");
+      // Resize state vector.
+      animatedMesh->state_.resize
+	(animatedMesh->numFrames_ * animatedMesh->numVertices_ * 3);
+      animatedMesh->state_.setZero ();
+      std::cout << "state size: " << animatedMesh->state_.size () << std::endl;
 
-	checkNodeType (doc, YAML::NodeType::Map);
+      // Resize interaction mesh vector.
+      animatedMesh->interactionMeshes_.resize (animatedMesh->numFrames_);
 
-	std::string type;
-	doc["type"] >> type;
-	if (type != "MultiVector3Seq")
-	  throw std::runtime_error ("bad content");
-	// content
-	doc["frameRate"] >> animatedMesh->framerate_;
+      std::cout << "interaction mesh size: " << animatedMesh->interactionMeshes_.size () << std::endl;
 
-	doc["numFrames"] >> animatedMesh->numFrames_;
+      for (int partId = 0; partId < animatedMesh->numVertices_; ++partId)
+	{
+	  std::string label = markerMotion->markerLabel (partId);
 
-	// Compute number of vertices.
-	animatedMesh->numVertices_ = (unsigned int)doc["partLabels"].size ();
+	  vertex_descriptor_t
+	    vertex = boost::add_vertex (animatedMesh->graph ());
 
-	// Resize state vector.
-	animatedMesh->state_.resize
-	  (animatedMesh->numFrames_ * animatedMesh->numVertices_ * 3);
-	animatedMesh->state_.setZero ();
+	  animatedMesh->graph ()[vertex].label = label;
 
-	// Resize interaction mesh vector.
-	animatedMesh->interactionMeshes_.resize (animatedMesh->numFrames_);
-
-	// Add one vertex per label.
-	for (YAML::Iterator it = doc["partLabels"].begin ();
-	     it != doc["partLabels"].end (); ++it)
-	  {
-	    std::string label;
-	    *it >> label;
-
-	    vertex_descriptor_t
-	      vertex = boost::add_vertex (animatedMesh->graph ());
-
-	    animatedMesh->graph ()[vertex].label = label;
-
-	    for (unsigned frameId = 0;
+	  for (unsigned frameId = 0;
 		 frameId < animatedMesh->numFrames_; ++frameId)
-	      {
-		Eigen::VectorXd::Index offset =
-		  frameId * animatedMesh->numVertices_ * 3 + vertex * 3;
-		animatedMesh->graph ()[vertex].positions.push_back
-		  (Vertex::position_t (animatedMesh->state_, offset, 3));
+	    {
+	      Eigen::VectorXd::Index offset =
+		frameId * animatedMesh->numVertices_ * 3 + vertex * 3;
+	      animatedMesh->graph ()[vertex].positions.push_back
+		(Vertex::position_t (animatedMesh->state_, offset, 3));
 
-		interaction_mesh_vertex_descriptor_t
-		  interactionMeshVertex =
-		  boost::add_vertex (animatedMesh->interactionMeshes_[frameId]);
-		animatedMesh->interactionMeshes_[frameId]
-		  [interactionMeshVertex].label = label;
-	      }
-	  }
+	      interaction_mesh_vertex_descriptor_t
+		interactionMeshVertex =
+		boost::add_vertex (animatedMesh->interactionMeshes_[frameId]);
+	      animatedMesh->interactionMeshes_[frameId]
+		[interactionMeshVertex].label = label;
+	    }
+	}
 
-	unsigned frameId = 0;
-	for (YAML::Iterator it = doc["frames"].begin ();
-	     it != doc["frames"].end (); ++it)
-	  {
-	    const YAML::Node& node = *it;
-	    checkNodeType (node, YAML::NodeType::Sequence);
+      for (int frameId = 0; frameId < animatedMesh->numFrames_; ++frameId)
+	{
+	  if (frameId >= animatedMesh->numFrames_)
+	    throw std::runtime_error
+	      ("announced number of frames do not match data");
 
-	    if (frameId >= animatedMesh->numFrames_)
-	      throw std::runtime_error
-		("announced number of frames do not match data");
+	  // Iterate over vertices.
+	  vertex_descriptor_t vertex = 0;
 
-	    // Iterate over vertices.
-	    vertex_descriptor_t vertex = 0;
-	    for(YAML::Iterator it = node.begin (); it != node.end (); ++it)
-	      {
-		const YAML::Node& vertexNode = *it;
-
-		checkNodeType (vertexNode, YAML::NodeType::Sequence);
-
-		if (vertex >=
-		    animatedMesh->numVertices_)
-		  throw std::runtime_error
-		    ("announced number of vertices do not match data");
-
-		double x = 0., y = 0., z = 0.;
-		vertexNode[0] >> x;
-		vertexNode[1] >> y;
-		vertexNode[2] >> z;
-
-		animatedMesh->graph ()[vertex].positions[frameId][0] = x;
-		animatedMesh->graph ()[vertex].positions[frameId][1] = y;
-		animatedMesh->graph ()[vertex].positions[frameId][2] = z;
-		++vertex;
-	      }
-	    ++frameId;
-	  }
-
-	if (parser.GetNextDocument(doc))
-	  LOG4CXX_WARN (logger, "ignoring multiple documents in YAML file");
-      }
+	  for (int partId = 0; partId < animatedMesh->numVertices_; ++partId)
+	    {
+	      if (vertex >=
+		  animatedMesh->numVertices_)
+		throw std::runtime_error
+		  ("announced number of vertices do not match data");
+	      animatedMesh->graph ()[vertex].positions[frameId] =
+		markerMotion->frame (frameId)[partId];
+	      ++vertex;
+	    }
+	  ++frameId;
+	}
 
       // Parse character file.
+      std::string characterFile
+	("/home/moulard/profiles/default-x86_64-linux-ubuntu-12.04.1/"
+	 "src/unstable/aist/choreonoid/ext/MocapPlugin/TestData/"
+	 "character-cmu-hrp4c.yaml");
       {
 	std::ifstream fin (characterFile.c_str ());
 	if (!fin.good ())

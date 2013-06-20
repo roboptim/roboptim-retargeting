@@ -15,6 +15,9 @@
 // headers properly and preserver roboptim-core cpp symbols.
 # include <Eigen/StdVector>
 
+#include <cnoid/extplugin/MocapPlugin/Character.h>
+#include <cnoid/extplugin/MocapPlugin/MarkerMotion.h>
+
 namespace YAML
 {
   class Node;
@@ -127,8 +130,8 @@ namespace roboptim
       ~AnimatedInteractionMesh ();
 
       static AnimatedInteractionMeshShPtr_t loadAnimatedMesh
-      (const std::string& trajectoryFile,
-       const std::string& characterFile);
+      (cnoid::MarkerMotionPtr markerMotion,
+       cnoid::CharacterPtr character);
 
       static AnimatedInteractionMeshShPtr_t makeFromOptimizationVariables
       (const Eigen::Matrix<double, Eigen::Dynamic, 1>& x,

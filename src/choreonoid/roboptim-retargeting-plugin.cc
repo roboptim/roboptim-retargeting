@@ -1,9 +1,13 @@
+#include <sstream>
+
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
 #include <roboptim/retargeting/retarget.hh>
 
+#include <cnoid/BodyItem>
+#include <cnoid/ItemList>
 #include <cnoid/ItemTreeView>
 #include <cnoid/LazyCaller>
 #include <cnoid/MenuManager>
@@ -11,6 +15,7 @@
 #include <cnoid/Plugin>
 #include <cnoid/RootItem>
 
+#include <cnoid/src/MocapPlugin/CharacterItem.h>
 #include <cnoid/src/MocapPlugin/MarkerMotionItem.h>
 
 #include <log4cxx/logger.h>
@@ -23,6 +28,7 @@ class RoboptimRetargetingPlugin : public cnoid::Plugin
 public:
   explicit RoboptimRetargetingPlugin ()
     : Plugin("RoboptimRetargeting"),
+      menuItem_ (),
       thread_ ()
   {
 
@@ -35,9 +41,9 @@ public:
     log4cxxConfigurationFile += "/log4cxx.xml";
     log4cxx::xml::DOMConfigurator::configure (log4cxxConfigurationFile);
 
-    cnoid::Action* menuItem = menuManager ().
-      setPath ("/Filters").addItem ("Roboptim Retargeting");
-    menuItem->sigTriggered ().connect
+    menuItem_ =
+      menuManager ().setPath ("/Filters").addItem ("Roboptim Retargeting");
+    menuItem_->sigTriggered ().connect
       (boost::bind (&RoboptimRetargetingPlugin::menuCb, this));
     return true;
   }
@@ -52,26 +58,73 @@ private:
 	return;
       }
 
+    cnoid::BodyPtr body;
+    cnoid::CharacterPtr character;
+    cnoid::MarkerMotionPtr markerMotion;
+
+    cnoid::ItemList<cnoid::Item> selected =
+      cnoid::ItemTreeView::instance()->selectedItems<cnoid::Item>();
+    cnoid::ItemList<cnoid::BodyItem> bodyItems = selected;
+
+    for (int i = 0; i < bodyItems.size (); ++i)
+      {
+	cnoid::BodyItem* bodyItem = bodyItems.get (i);
+	if (bodyItem->body ())
+	  body = bodyItem->body ();
+
+	for (int j = 0; j < selected.size (); ++j)
+	  {
+	    cnoid::MarkerMotionItem* markerMotionItem =
+	      dynamic_cast<cnoid::MarkerMotionItem*> (selected.get (j));
+	    if (markerMotionItem && markerMotionItem->motion ())
+	      {
+		markerMotion = markerMotionItem->motion ();
+		character = markerMotionItem->character ();
+	      }
+	  }
+      }
+
+    if (!body)
+      {
+	cnoid::MessageView::mainInstance ()->putln
+	  ("no robot model item is selected");
+	return;
+      }
+
+    if (!markerMotion)
+      {
+	cnoid::MessageView::mainInstance ()->putln
+	  ("no marker motion is selected");
+	return;
+      }
+
+    if (!character)
+      {
+	cnoid::MessageView::mainInstance ()->putln
+	  ("no character attached to marker motion");
+	return;
+      }
+
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - launching thread");
     thread_ = boost::make_shared<boost::thread>
-      (boost::bind (&RoboptimRetargetingPlugin::buildProblemAndOptimize, this));
+      (boost::bind (&RoboptimRetargetingPlugin::buildProblemAndOptimize,
+		    this, body, character, markerMotion));
+
+    if (menuItem_ && thread_)
+      menuItem_->setEnabled (false);
   }
 
-  void buildProblemAndOptimize ()
+  void buildProblemAndOptimize (cnoid::BodyPtr body,
+				cnoid::CharacterPtr character,
+				cnoid::MarkerMotionPtr markerMotion)
   {
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - start");
-
 
     log4cxx::LoggerPtr logger
       (log4cxx::Logger::getLogger
        ("roboptim.retargeting.choreonoid"));
 
-    std::string trajectoryFilePath ("/home/moulard/29_07-markers-hrp4c.yaml");
-    std::string characterFilePath
-      ("/home/moulard/profiles/default-x86_64-linux-ubuntu-12.04.1/src/unstable/"
-       "aist/choreonoid/ext/MocapPlugin/TestData/character-cmu-hrp4c.yaml");
-    std::string modelFilePath ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
-    bool enableBoneLength = true;
+    bool enableBoneLength = false;
     bool enablePosition = false;
     bool enableCollision = false;
     bool enableTorque = false;
@@ -80,9 +133,9 @@ private:
 
     // Retarget motion.
     roboptim::retargeting::Retarget retarget
-      (trajectoryFilePath,
-       characterFilePath,
-       modelFilePath,
+      (markerMotion,
+       character,
+       body,
        enableBoneLength,
        enablePosition,
        enableCollision,
@@ -124,11 +177,15 @@ private:
 	    LOG4CXX_INFO (logger, "trajectory written to: " << filename);
 	  }
 
-	std::cout << "No solution has been found. Failing..."
-		  << std::endl
-		  << boost::get<roboptim::SolverError>
-	  (retarget.result ()).what ()
-		  << std::endl;
+	std::stringstream ss;
+	ss << "No solution has been found. Failing..."
+	   << std::endl
+	   << boost::get<roboptim::SolverError>
+	  (retarget.result ()).what ();
+	cnoid::MessageView::mainInstance ()->putln (ss.str ());
+
+	if (menuItem_)
+	  menuItem_->setEnabled (true);
 	return;
       }
 
@@ -167,8 +224,11 @@ private:
 	x.segment (frameId * retarget.animatedMesh ()->optimizationVectorSizeOneFrame () + markerId, 3);
 
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - end");
+    if (menuItem_)
+      menuItem_->setEnabled (true);
   }
 
+  cnoid::Action* menuItem_;
   boost::shared_ptr<boost::thread> thread_;
 };
 

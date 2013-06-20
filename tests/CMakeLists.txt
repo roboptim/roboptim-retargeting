@@ -24,7 +24,8 @@ MACRO(ROBOPTIM_RETARGETING_TEST NAME)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid-body-plugin)
 
   # Misc.
-  TARGET_LINK_LIBRARIES(${NAME} blas lapack)
+  TARGET_LINK_LIBRARIES(${NAME} blas lapack
+    CnoidBody CnoidMocap CnoidMocapPlugin)
 ENDMACRO()
 
 SET(TESTS_DATA_DIR "${CMAKE_SOURCE_DIR}/share/roboptim/retargeting")
