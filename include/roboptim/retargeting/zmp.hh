@@ -5,7 +5,7 @@
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
-# include <cnoid/extplugin/MocapPlugin/MarkerMotion.h>
+# include <cnoid/ext/MocapPlugin/MarkerMotion.h>
 # include <cnoid/src/MocapPlugin/MarkerToBodyMotionConverter.h>
 
 namespace roboptim

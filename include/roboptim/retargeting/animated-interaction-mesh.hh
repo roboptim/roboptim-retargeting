@@ -15,8 +15,8 @@
 // headers properly and preserver roboptim-core cpp symbols.
 # include <Eigen/StdVector>
 
-#include <cnoid/extplugin/MocapPlugin/Character.h>
-#include <cnoid/extplugin/MocapPlugin/MarkerMotion.h>
+#include <cnoid/ext/MocapPlugin/Character.h>
+#include <cnoid/ext/MocapPlugin/MarkerMotion.h>
 
 namespace YAML
 {

@@ -145,15 +145,13 @@ private:
 
     retarget.solve ();
 
-    cnoid::MarkerMotionItemPtr resultItem = new cnoid::MarkerMotionItem ();
+    cnoid::MarkerMotionItemPtr resultItem =
+      new cnoid::MarkerMotionItem ();
     resultItem->setName("roboptim-retargeting-result");
-
-    // ask main thread to add the item.
-    cnoid::callLater
-      (boost::bind (&cnoid::RootItem::addChildItem,
-		    cnoid::ItemTreeView::instance()->rootItem (),
-		    resultItem,
-		    false));
+    resultItem->seq ()->copySeqProperties (*markerMotion);
+    resultItem->seq ()->setDimension
+      (retarget.animatedMesh ()->numFrames (),
+       retarget.animatedMesh ()->numVertices ());
 
     // Get the result.
     Eigen::VectorXd x;
@@ -222,6 +220,12 @@ private:
 	   markerId < retarget.animatedMesh ()->numVertices (); ++markerId)
       resultItem->seq ()->frame (frameId)[markerId] =
 	x.segment (frameId * retarget.animatedMesh ()->optimizationVectorSizeOneFrame () + markerId, 3);
+
+    cnoid::callSynchronously
+      (boost::bind (&cnoid::RootItem::addChildItem,
+		    cnoid::ItemTreeView::instance()->rootItem (),
+		    resultItem,
+		    false));
 
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - end");
     if (menuItem_)
