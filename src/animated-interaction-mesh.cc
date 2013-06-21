@@ -490,7 +490,14 @@ namespace roboptim
 	}
 
       char switches[] = "zQ";
-      tetrahedralize (switches, &in, &out);
+      try
+	{
+	  tetrahedralize (switches, &in, &out);
+	}
+      catch (const int&)
+	{
+	  return; //FIXME:
+	}
 
       const int n = out.numberoftetrahedra;
       const int m = out.numberofcorners;

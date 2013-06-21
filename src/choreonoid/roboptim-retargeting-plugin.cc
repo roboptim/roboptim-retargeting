@@ -165,15 +165,7 @@ private:
       {
 	const roboptim::SolverError& result =
 	  boost::get<roboptim::SolverError> (retarget.result ());
-
-	if (result.lastState ())
-	  {
-	    retarget.animatedMesh ()->state () = result.lastState ()->x;
-	    retarget.animatedMesh ()->computeVertexWeights ();
-	    retarget.animatedMesh ()->writeTrajectory (filename);
-	    LOG4CXX_INFO (logger, "last state: " << result);
-	    LOG4CXX_INFO (logger, "trajectory written to: " << filename);
-	  }
+	x = result.lastState ()->x;
 
 	std::stringstream ss;
 	ss << "No solution has been found. Failing..."
@@ -181,15 +173,8 @@ private:
 	   << boost::get<roboptim::SolverError>
 	  (retarget.result ()).what ();
 	cnoid::MessageView::mainInstance ()->putln (ss.str ());
-
-	if (menuItem_)
-	  menuItem_->setEnabled (true);
-	return;
       }
-
-    LOG4CXX_INFO (logger, "a solution has been found!");
-
-    if (retarget.result ().which () ==
+    else if (retarget.result ().which () ==
 	roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
       {
 	const roboptim::Result& result =
@@ -197,12 +182,21 @@ private:
 	x = result.x;
 	LOG4CXX_WARN (logger, "solver warnings: " << result);
       }
-    else
+    else if (retarget.result ().which () ==
+	     roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE)
       {
 	const roboptim::Result& result =
 	  boost::get<roboptim::Result> (retarget.result ());
 	x = result.x;
 	LOG4CXX_WARN (logger, "result: " << result);
+      }
+    else
+      {
+	cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - failed");
+	if (menuItem_)
+	  menuItem_->setEnabled (true);
+	thread_.reset (); // yeah suicide time.
+	return;
       }
 
 
@@ -230,6 +224,7 @@ private:
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - end");
     if (menuItem_)
       menuItem_->setEnabled (true);
+    thread_.reset (); // yeah suicide time.
   }
 
   cnoid::Action* menuItem_;
