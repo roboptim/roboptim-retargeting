@@ -148,8 +148,6 @@ private:
 
     retarget.solve ();
 
-    //cnoid::CharacterItemPtr
-
     cnoid::MarkerMotionItemPtr resultItem =
       boost::dynamic_pointer_cast<cnoid::MarkerMotionItem>
       (markerMotionItem->duplicate ());
@@ -202,7 +200,6 @@ private:
 	return;
       }
 
-
     retarget.animatedMesh ()->state () = x;
     retarget.animatedMesh ()->computeVertexWeights ();
     retarget.animatedMesh ()->writeTrajectory (filename);
@@ -216,7 +213,9 @@ private:
       for (std::size_t markerId = 0;
 	   markerId < retarget.animatedMesh ()->numVertices (); ++markerId)
       resultItem->seq ()->frame (frameId)[markerId] =
-	x.segment (frameId * retarget.animatedMesh ()->optimizationVectorSizeOneFrame () + markerId, 3);
+	x.segment<3>
+	(frameId * retarget.animatedMesh ()->optimizationVectorSizeOneFrame ()
+	 + markerId * 3);
 
     cnoid::callSynchronously
       (boost::bind (&cnoid::RootItem::addChildItem,
