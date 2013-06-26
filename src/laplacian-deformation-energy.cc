@@ -39,12 +39,9 @@ namespace roboptim
       mesh->update ();
 
       m = mesh->numActiveVertices ();
-      std::cout << " output size = "
-		<< animatedMesh->optimizationVectorSize () << std::endl;
-      std::cout << " m = " << m << std::endl;
       m3 = m * 3;
       morphedMarkerMotions.resize (mesh->numMotions ());
-      
+
       characterInfos.resize(1);
       CharacterInfo& chara = characterInfos[0];
       if(!chara.org){
@@ -267,14 +264,14 @@ void LaplacianDeformationEnergy::extractBones()
       assert (result.size () == 1);
 
       // update interaction mesh.
-      // for (int frameId = 0; frameId < markerMotion_->numFrames (); ++frameId)
-      // 	{
-      // 	  cnoid::MarkerMotion::Frame frame = markerMotion_->frame (frameId);
-      // 	  for (int partId = 0; partId < markerMotion_->numParts (); ++partId)
-      // 	    frame[partId] =
-      // 	      x.segment (frameId * markerMotion_->numParts () * 3 + partId, 3);
-      // 	}
-      // mesh->update ();
+      for (int frameId = 0; frameId < markerMotion_->numFrames (); ++frameId)
+	{
+	  cnoid::MarkerMotion::Frame frame = markerMotion_->frame (frameId);
+	  for (int partId = 0; partId < markerMotion_->numParts (); ++partId)
+	    frame[partId] =
+	      x.segment<3> (frameId * markerMotion_->numParts () * 3 + partId * 3);
+	}
+      mesh->update ();
 
       // compute laplacian deformation energy.
       for (int currentFrame = 0; currentFrame < m; ++currentFrame)
@@ -292,8 +289,7 @@ void LaplacianDeformationEnergy::extractBones()
 	    //Vi.segment<3>(i * 3) = Vi_frames[index.motionIndex][index.markerIndex];
 	  }
 	  bi = Mi * Vi;
-	  
-	  //std::cout << Mi * x + bi << std::endl;
+
 	  double tmp = (Mi * x + bi).norm ();
 	  result[0] += tmp * tmp;
 	}

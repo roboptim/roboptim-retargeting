@@ -53,9 +53,6 @@ namespace roboptim
 	.5 * scale_ *
 	(targetVertex.positions[0]
 	 - sourceVertex.positions[0]).squaredNorm ();
-
-      std::cout << scale_ << std::endl;
-      std::cout << goalLength_ << std::endl;
     }
 
     BoneLength::~BoneLength () throw ()
@@ -66,7 +63,6 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      std::cout << "FOO" << std::endl;
       animatedMeshLocal_->state () = x;
       animatedMeshLocal_->computeVertexWeights();
 
