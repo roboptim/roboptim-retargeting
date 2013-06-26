@@ -63,7 +63,7 @@ private:
 
     cnoid::BodyPtr body;
     cnoid::CharacterPtr character;
-    cnoid::MarkerMotionPtr markerMotion;
+    cnoid::MarkerMotionItemPtr markerMotionItem;
 
     cnoid::ItemList<cnoid::Item> selected =
       cnoid::ItemTreeView::instance()->selectedItems<cnoid::Item>();
@@ -77,11 +77,11 @@ private:
 
 	for (int j = 0; j < selected.size (); ++j)
 	  {
-	    cnoid::MarkerMotionItem* markerMotionItem =
+	    cnoid::MarkerMotionItem* markerMotionItemTmp =
 	      dynamic_cast<cnoid::MarkerMotionItem*> (selected.get (j));
-	    if (markerMotionItem && markerMotionItem->motion ())
+	    if (markerMotionItemTmp)
 	      {
-		markerMotion = markerMotionItem->motion ();
+		markerMotionItem = markerMotionItemTmp;
 		character = markerMotionItem->character ();
 	      }
 	  }
@@ -94,7 +94,7 @@ private:
 	return;
       }
 
-    if (!markerMotion)
+    if (!markerMotionItem)
       {
 	cnoid::MessageView::mainInstance ()->putln
 	  ("no marker motion is selected");
@@ -111,7 +111,7 @@ private:
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - launching thread");
     thread_ = boost::make_shared<boost::thread>
       (boost::bind (&RoboptimRetargetingPlugin::buildProblemAndOptimize,
-		    this, body, character, markerMotion));
+		    this, body, character, markerMotionItem));
 
     if (menuItem_ && thread_)
       menuItem_->setEnabled (false);
@@ -119,7 +119,7 @@ private:
 
   void buildProblemAndOptimize (cnoid::BodyPtr body,
 				cnoid::CharacterPtr character,
-				cnoid::MarkerMotionPtr markerMotion)
+				cnoid::MarkerMotionItemPtr markerMotionItem)
   {
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - start");
 
@@ -136,7 +136,7 @@ private:
 
     // Retarget motion.
     roboptim::retargeting::Retarget retarget
-      (markerMotion,
+      (markerMotionItem->motion (),
        character,
        body,
        enableBoneLength,
@@ -148,23 +148,13 @@ private:
 
     retarget.solve ();
 
-    // cnoid::MarkerMotionItemPtr resultItem =
-    //   new cnoid::MarkerMotionItem ();
+    //cnoid::CharacterItemPtr
+
     cnoid::MarkerMotionItemPtr resultItem =
-      new cnoid::MarkerMotionItem ();
+      boost::dynamic_pointer_cast<cnoid::MarkerMotionItem>
+      (markerMotionItem->duplicate ());
 
-    resultItem->character_ = character;
     resultItem->setName("roboptim-retargeting-result");
-    resultItem->seq ()->copySeqProperties (*markerMotion);
-    resultItem->seq ()->setDimension
-      (retarget.animatedMesh ()->numFrames (),
-       retarget.animatedMesh ()->numVertices ());
-
-    // FIXME : why no edges here.
-    // check operation order in MarkerMotionItem.cpp ::initialize.
-
-    //FIXME: why
-    //std::cout << "FOOOOO" << resultItem->seq ()->partLabel(0) << std::endl;
 
     // Get the result.
     Eigen::VectorXd x;
