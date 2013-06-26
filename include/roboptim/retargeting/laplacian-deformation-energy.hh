@@ -50,6 +50,12 @@ namespace roboptim
 
       void initVariables ();
       void extractBones ();
+      void initFrame(int frame) const;
+      void setLaplacianMatrixOfFrame(cnoid::MarkerIMesh::Frame neighborsList) const;
+      void clear ();
+      void setInteractionMesh(cnoid::MarkerIMeshPtr mesh);
+      void setCharacterPair
+      (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal);
 
       const cnoid::Vector3& orgVertexOfActiveIndex(int activeIndex) const
       {
@@ -67,8 +73,8 @@ namespace roboptim
 
       mutable cnoid::MarkerIMeshPtr mesh;
 
-      std::vector<cnoid::MarkerMotion::Frame> Vi0_frames; // original positions
-      std::vector<cnoid::MarkerMotion::Frame> Vi_frames;  // current (morphed) positions
+      mutable std::vector<cnoid::MarkerMotion::Frame> Vi0_frames; // original positions
+      mutable std::vector<cnoid::MarkerMotion::Frame> Vi_frames;  // current (morphed) positions
 
 
       // key: active vertex index of a vertex of an edge
@@ -84,7 +90,9 @@ namespace roboptim
       mutable std::vector<cnoid::MatrixXd> MtM;
       double laplacianWeightPowerHalf;
       bool doUpdateLaplacianCoordinateConstantEveryFrame;
-
+      mutable bool firstIter;
+      bool isSingleFrameMode;
+      mutable int currentFrame;
 
         /**
            Index1 should be smaller than index2 to sequentially insert the coefficients

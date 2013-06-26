@@ -27,114 +27,82 @@ namespace roboptim
 	(AnimatedInteractionMesh::makeFromOptimizationVariables
 	 (animatedMesh->state (), animatedMesh_)),
 	buffer_ (3),
-	markerMotion_ (originalMarkerMotion),
+	markerMotion_ (),
 	mesh (new cnoid::MarkerIMesh ())
     {
+      doExcludeBoneEdgesFromLaplacianCoordinate = true;
+      isSingleFrameMode = false;
+      clear();
+      //accTermWeight = 0.0001;
+
       buffer_.setZero ();
 
       laplacianWeightPowerHalf = 1. / 2.;
 
-      markerMotion_->copySeqProperties (*originalMarkerMotion);
-      mesh->addMotion (originalMarkerMotion, character);
-      mesh->update ();
+      cnoid::MarkerIMeshPtr meshPtr (new cnoid::MarkerIMesh ());
+      meshPtr->addMotion (originalMarkerMotion, character);
+      meshPtr->update ();
+      setInteractionMesh (meshPtr);
 
-      m = mesh->numActiveVertices ();
-      m3 = m * 3;
-      morphedMarkerMotions.resize (mesh->numMotions ());
+      setCharacterPair (0, character, character);
 
-      characterInfos.resize(1);
-      CharacterInfo& chara = characterInfos[0];
-      if(!chara.org){
-	chara.org = character;
-	chara.goal = character;
-      }
+      //initAccTermInfo();
+      extractBones();
+      initVariables();
 
-
-      extractBones ();
-      initVariables ();
-
-      doExcludeBoneEdgesFromLaplacianCoordinate = true;
-
-      for (int frame = 0; frame < markerMotion_->numFrames (); ++frame)
-	for(int i=0; i < mesh->numMotions(); ++i)
-	  {
-	    cnoid::MarkerMotionPtr motion = mesh->motion(i);
-	    const int maxFrame = motion->numFrames() - 1;
-	    cnoid::MarkerMotion::Frame orgFrame =
-	      motion->frame(std::min(frame, maxFrame));
-	    Vi0_frames.push_back(orgFrame);
-	    cnoid::MarkerMotion::Frame morphedFrame =
-	      morphedMarkerMotions[i]->frame(std::min(frame, maxFrame));
-	    Vi_frames.push_back(morphedFrame);
-	  }
-
-
-
-      for (int frameId = 0; frameId < m; ++frameId)
-	{
-	  cnoid::MatrixXd& Mi = M[frameId];
-	  Mi.resize (m3, m3);
-	  Mi.setZero ();
-	  cnoid::VectorXd& bi = b[frameId];
-	  bi.resize (m3);
-
-	  std::vector<int> validNeighbors;
-	  cnoid::MarkerIMesh::Frame neighborsList = mesh->frame (frameId);
-	  for (int activeMarkerIndex = 0;
-	       activeMarkerIndex < m; ++activeMarkerIndex)
-	    {
-	      const cnoid::MarkerIMesh::NeighborList& neighbors =
-		neighborsList[activeMarkerIndex];
-	      const std::set<int>& boneCounterparts =
-		this->boneEdgeMap[activeMarkerIndex];
-	      validNeighbors.clear ();
-
-	      for (int k = 0; k < neighbors.size (); ++k)
-		{
-		  int l = neighbors[k];
-		  if (boneCounterparts.find(l) == boneCounterparts.end())
-		    {
-		      // check if the edge is bone
-		      validNeighbors.push_back(l);
-		    }
-		}
-
-	      const cnoid::Vector3& pj =
-		orgVertexOfActiveIndex (activeMarkerIndex);
-	      const int j3 = activeMarkerIndex * 3;
-	      Eigen::Block<cnoid::MatrixXd> a = Mi.block(j3, 0, 3, m3);
-	      cnoid::VectorXd::FixedSegmentReturnType<3>::Type bij = bi.segment<3>(j3);
-	      bij.setZero();
-	      if(!validNeighbors.empty())
-		{
-		  double wn = 1.0 / validNeighbors.size ();
-		  for (int k=0; k < validNeighbors.size (); ++k)
-		    {
-		      int l = validNeighbors[k];
-		      const cnoid::Vector3& pl = orgVertexOfGlobalIndex(l);
-		      const double w =
-			wn * 1.0 / pow((pj - pl).squaredNorm(), laplacianWeightPowerHalf);
-		      bij += w * pj;
-		      const int l_active = mesh->globalToActiveIndex(l);
-		      if(l_active >= 0)
-			{
-			  for(int s=0; s < 3; ++s){
-			    a(s, l_active * 3 + s) = -w;
-			  }
-			  bij -= w * pl;
-			}
-		      for(int s=0; s < 3; ++s){
-			a(s, j3 + s) +=  w;
-			// Can .diagonal() be used here?
-		      }
-		    }
-		}
-	    }
-	}
+      firstIter = true;
     }
 
     LaplacianDeformationEnergy::~LaplacianDeformationEnergy () throw ()
     {}
+
+void
+LaplacianDeformationEnergy::setCharacterPair
+(int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)
+{
+    if(mesh && motionIndex < mesh->numMotions()){
+        if(motionIndex >= characterInfos.size()){
+            characterInfos.resize(motionIndex + 1);
+        }
+        CharacterInfo& chara = characterInfos[motionIndex];
+        if(!chara.org){
+            chara.org = org;
+            chara.goal = goal;
+        }
+    }
+}
+
+
+void LaplacianDeformationEnergy::setInteractionMesh(cnoid::MarkerIMeshPtr mesh)
+{
+    this->mesh = mesh;
+    m = mesh->numActiveVertices();
+    m3 = m * 3;
+    //constraintInfoSeq.resize(isSingleFrameMode ? 1 : mesh->numFrames());
+
+    morphedMarkerMotions.resize(mesh->numMotions());
+}
+
+
+void LaplacianDeformationEnergy::clear()
+{
+    mesh.reset();
+    numAllBones = 0;
+    characterInfos.clear();
+    //constraintInfoSeq.clear();
+    //message.clear();
+    doUpdateLaplacianCoordinateConstantEveryFrame = true;
+    
+    // just for releasing memories
+    morphedMarkerMotions.clear();
+    boneEdgeMap.clear();
+    Vi0_frames.clear();
+    Vi_frames.clear();
+    M.clear();
+    MtM.clear();
+    //H.clear();
+}
+
 
 void LaplacianDeformationEnergy::initVariables()
 {
@@ -250,6 +218,75 @@ void LaplacianDeformationEnergy::extractBones()
 }
 
 
+void LaplacianDeformationEnergy::initFrame(int frame) const
+{
+    Vi0_frames.clear();
+    Vi_frames.clear();
+    const int morphedFrameIndex = isSingleFrameMode ? 0 : frame;
+
+    for(int i=0; i < mesh->numMotions(); ++i){
+        cnoid::MarkerMotionPtr motion = mesh->motion(i);
+        const int maxFrame = motion->numFrames() - 1;
+        cnoid::MarkerMotion::Frame orgFrame = motion->frame(std::min(frame, maxFrame));
+        Vi0_frames.push_back(orgFrame);
+        cnoid::MarkerMotion::Frame morphedFrame =
+            morphedMarkerMotions[i]->frame(std::min(morphedFrameIndex, maxFrame));
+        Vi_frames.push_back(morphedFrame);
+    }
+}
+
+void LaplacianDeformationEnergy::setLaplacianMatrixOfFrame(cnoid::MarkerIMesh::Frame neighborsList) const
+{
+    cnoid::MatrixXd& Mi = M[currentFrame];
+    Mi.resize(m3, m3);
+    Mi.setZero();
+    cnoid::VectorXd& bi = b[currentFrame];
+    bi.resize(m3);
+    
+    std::vector<int> validNeighbors;
+    
+    for(int activeMarkerIndex=0; activeMarkerIndex < m; ++activeMarkerIndex){
+        const cnoid::MarkerIMesh::NeighborList& neighbors = neighborsList[activeMarkerIndex];
+        const std::set<int>& boneCounterparts = boneEdgeMap[activeMarkerIndex];
+        validNeighbors.clear();
+        for(int k=0; k < neighbors.size(); ++k){
+            int l = neighbors[k];
+            if(boneCounterparts.find(l) == boneCounterparts.end()){ // check if the edge is bone
+                validNeighbors.push_back(l);
+            }
+        }
+        const cnoid::Vector3& pj = orgVertexOfActiveIndex(activeMarkerIndex);
+        const int j3 = activeMarkerIndex * 3;
+        Eigen::Block<cnoid::MatrixXd> a = Mi.block(j3, 0, 3, m3);
+        cnoid::VectorXd::FixedSegmentReturnType<3>::Type bij = bi.segment<3>(j3);
+        bij.setZero();
+        if(!validNeighbors.empty()){
+            double wn = 1.0 / validNeighbors.size();
+            for(int k=0; k < validNeighbors.size(); ++k){
+                int l = validNeighbors[k];
+                const cnoid::Vector3& pl = orgVertexOfGlobalIndex(l);
+                const double w = wn * 1.0 / pow((pj - pl).squaredNorm(), laplacianWeightPowerHalf);
+                bij += w * pj;
+                const int l_active = mesh->globalToActiveIndex(l);
+                if(l_active >= 0){
+                    for(int s=0; s < 3; ++s){
+                        a(s, l_active * 3 + s) = -w;
+                    }
+                    bij -= w * pl;
+                }
+                for(int s=0; s < 3; ++s){
+                    a(s, j3 + s) +=  w;
+                    // Can .diagonal() be used here?
+                }
+            }
+        }
+    }
+
+    MtM[currentFrame] = Mi.transpose() * Mi;
+}
+
+
+
     void
     LaplacianDeformationEnergy::impl_compute
     (result_t& result, const argument_t& x)
@@ -263,38 +300,54 @@ void LaplacianDeformationEnergy::extractBones()
 
       assert (result.size () == 1);
 
-      // update interaction mesh.
-      for (int frameId = 0; frameId < markerMotion_->numFrames (); ++frameId)
-	{
-	  cnoid::MarkerMotion::Frame frame = markerMotion_->frame (frameId);
-	  for (int partId = 0; partId < markerMotion_->numParts (); ++partId)
-	    frame[partId] =
-	      x.segment<3> (frameId * markerMotion_->numParts () * 3 + partId * 3);
+      int numFrames = mesh->numFrames ();
+      int targetFrame = 0; //targetSingleFrame
+
+        for(currentFrame=0; currentFrame < numFrames; ++currentFrame){
+
+            if(isSingleFrameMode){
+                if(firstIter){
+                    initFrame(targetFrame);
+                }
+            } else {
+                targetFrame = currentFrame;
+                initFrame(targetFrame);
+            }
+
+            // deformation energy
+            if(firstIter){
+                setLaplacianMatrixOfFrame(mesh->frame(targetFrame));
+
+            } else if(doUpdateLaplacianCoordinateConstantEveryFrame){
+                cnoid::MatrixXd& Mi = M[currentFrame];
+                cnoid::VectorXd& bi = b[currentFrame];
+                cnoid::VectorXd Vi(m3);
+                int index = 0;
+                for(int i=0; i < m; ++i){
+                    const cnoid::MarkerIMesh::LocalIndex& lindex = mesh->activeToLocalIndex(i);
+                    const cnoid::Vector3& v = Vi_frames[lindex.motionIndex][lindex.markerIndex];
+                    Vi[index++] = v[0];
+                    Vi[index++] = v[1];
+                    Vi[index++] = v[2];
+                    //Vi.segment<3>(i * 3) = Vi_frames[index.motionIndex][index.markerIndex];
+                }
+                bi = Mi * Vi;
+	    }
+
+	  //FIXME: replace x by segment x for this frame
+	    cnoid::MatrixXd& Mi = M[currentFrame];
+	    cnoid::VectorXd& bi = b[currentFrame];
+	  double tmp1 = x.transpose () * Mi.transpose () * Mi * x;
+	  double tmp2 = bi.transpose () * Mi * x;
+	  double tmp3 = bi.transpose () * bi;
+
+	  std::cout << "frame " << currentFrame << ": " << tmp1 << std::endl;
+
+	  result[0] += (tmp1 / 2.) - tmp2 + (tmp3 / 2.);
+
 	}
-      mesh->update ();
 
-      // compute laplacian deformation energy.
-      for (int currentFrame = 0; currentFrame < m; ++currentFrame)
-	{
-	  cnoid::MatrixXd& Mi = M[currentFrame];
-	  cnoid::VectorXd& bi = b[currentFrame];
-	  cnoid::VectorXd Vi(m3);
-	  int index = 0;
-	  for(int i=0; i < m; ++i){
-	    const cnoid::MarkerIMesh::LocalIndex& lindex = mesh->activeToLocalIndex(i);
-	    const cnoid::Vector3& v = Vi_frames[lindex.motionIndex][lindex.markerIndex];
-	    Vi[index++] = v[0];
-	    Vi[index++] = v[1];
-	    Vi[index++] = v[2];
-	    //Vi.segment<3>(i * 3) = Vi_frames[index.motionIndex][index.markerIndex];
-	  }
-	  bi = Mi * Vi;
-
-	  double tmp = (Mi * x + bi).norm ();
-	  result[0] += tmp * tmp;
-	}
-
-      result[0] *= .5;
+	firstIter = false;
     }
 
     void
