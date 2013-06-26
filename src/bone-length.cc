@@ -66,6 +66,7 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+      std::cout << "FOO" << std::endl;
       animatedMeshLocal_->state () = x;
       animatedMeshLocal_->computeVertexWeights();
 

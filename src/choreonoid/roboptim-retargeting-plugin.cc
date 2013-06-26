@@ -16,7 +16,10 @@
 #include <cnoid/RootItem>
 
 #include <cnoid/src/MocapPlugin/CharacterItem.h>
+
+#define private public
 #include <cnoid/src/MocapPlugin/MarkerMotionItem.h>
+#undef private
 
 #include <log4cxx/logger.h>
 #include <log4cxx/xml/domconfigurator.h>
@@ -145,13 +148,23 @@ private:
 
     retarget.solve ();
 
+    // cnoid::MarkerMotionItemPtr resultItem =
+    //   new cnoid::MarkerMotionItem ();
     cnoid::MarkerMotionItemPtr resultItem =
       new cnoid::MarkerMotionItem ();
+
+    resultItem->character_ = character;
     resultItem->setName("roboptim-retargeting-result");
     resultItem->seq ()->copySeqProperties (*markerMotion);
     resultItem->seq ()->setDimension
       (retarget.animatedMesh ()->numFrames (),
        retarget.animatedMesh ()->numVertices ());
+
+    // FIXME : why no edges here.
+    // check operation order in MarkerMotionItem.cpp ::initialize.
+
+    //FIXME: why
+    //std::cout << "FOOOOO" << resultItem->seq ()->partLabel(0) << std::endl;
 
     // Get the result.
     Eigen::VectorXd x;
