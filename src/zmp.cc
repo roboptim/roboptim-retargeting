@@ -43,7 +43,7 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      std::cout << "ABCD" << std::endl;
+      std::cout << "ABCD\n";
       //animatedMeshLocal_->state () = x;
 
       // Compute q from segment positions.
@@ -57,14 +57,26 @@ namespace roboptim
       if (!converter_.convert (*mocapMotion_, model_, robotMotion))
 	throw std::runtime_error ("failed to convert motion");
 
+      //std::cout << "x: " << x << std::endl;
+
       for (std::size_t frameId = 0;
 	   frameId < robotMotion.jointPosSeq ()->numFrames (); ++frameId)
 	{
 	  const cnoid::MultiValueSeq::Frame& frame =
 	    robotMotion.jointPosSeq ()->frame (frameId);
 	  for (std::size_t jointId = 0; jointId < frame.size (); ++jointId)
-	    q[frameId][jointId] = frame[jointId];
+	    {
+	      if (std::isnan (frame[jointId]))
+		{
+		  result.setZero ();
+		  std::cout << "nan found\n";
+		  return;
+		}
+	      q[frameId][jointId] = frame[jointId];
+	    }
 	}
+
+      //std::cout << "q: " << q << std::endl;
 
       // Fill dq with frameId = 0 to n - 1.
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames () - 1;
@@ -119,7 +131,8 @@ namespace roboptim
 	  result[frameId * 2 + 1] =   af.n()[0] / af.f()[2];
 	}
 
-      std::cout << result << std::endl;
+
+      //std::cout << result << std::endl;
     }
 
     void

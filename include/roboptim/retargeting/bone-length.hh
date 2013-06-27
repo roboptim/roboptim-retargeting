@@ -5,6 +5,8 @@
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
+# include <cnoid/ext/MocapPlugin/MarkerIMesh.h>
+
 namespace roboptim
 {
   namespace retargeting
@@ -49,6 +51,39 @@ namespace roboptim
       /// \brief Segment goal length.
       /// I.e. alpha * |p1 - p2|
       double goalLength_;
+
+
+
+
+        /**
+           Index1 should be smaller than index2 to sequentially insert the coefficients
+           of the bone length constraints into the sparse matrix.
+        */
+        struct Bone
+        {
+            int localMarkerIndex1;
+            int localMarkerIndex2;
+            int activeVertexIndex1;
+            int activeVertexIndex2;
+            boost::optional<double> goalLength;
+        };
+
+      struct CharacterInfo
+      {
+	cnoid::CharacterPtr org;
+	cnoid::CharacterPtr goal;
+	std::vector<Bone> bones;
+      };
+      std::vector<CharacterInfo> characterInfos;
+
+      void setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha);
+
+      mutable cnoid::MarkerIMeshPtr mesh;
+
+      mutable std::vector<cnoid::MarkerMotion::Frame> Vi0_frames; // original positions
+      mutable std::vector<cnoid::MarkerMotion::Frame> Vi_frames;  // current (morphed) positions
+
+      mutable cnoid::VectorXd hi;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

@@ -44,11 +44,15 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+      result.setZero ();
+      result_.setZero ();
       for (unsigned i = 0; i < functions_.size (); ++i)
 	{
 	  (*functions_[i]) (result_, x);
 	  result += result_;
 	}
+
+      std::cout << "SUM" << result << std::endl;
     }
 
     template <typename T>

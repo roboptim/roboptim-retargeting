@@ -121,6 +121,25 @@ namespace roboptim
       torqueLimits_[41] = std::make_pair (-6.33, 6.33); // L_WRIST_R
       torqueLimits_[42] = std::make_pair (-0.77, 0.77); // L_HAND_J0
       torqueLimits_[43] = std::make_pair (-1.16, 1.16); // L_HAND_J1
+
+
+
+      torqueLimits_[17] = std::make_pair (-Function::infinity(), Function::infinity()); // NECK_Y
+      torqueLimits_[18] = std::make_pair (-Function::infinity(), Function::infinity()); // NECK_R
+      torqueLimits_[19] = std::make_pair (-Function::infinity(), Function::infinity()); // NECK_P
+      torqueLimits_[20] = std::make_pair (-Function::infinity(), Function::infinity()); // EYEBROW_P
+      torqueLimits_[21] = std::make_pair (-Function::infinity(), Function::infinity()); // EYELID_P
+      torqueLimits_[22] = std::make_pair (-Function::infinity(), Function::infinity()); // EYE_P
+      torqueLimits_[23] = std::make_pair (-Function::infinity(), Function::infinity()); // EYE_Y
+      torqueLimits_[24] = std::make_pair (-Function::infinity(), Function::infinity()); // MOUTH_P
+      torqueLimits_[25] = std::make_pair (-Function::infinity(), Function::infinity()); // LOWERLIP_P
+      torqueLimits_[26] = std::make_pair (-Function::infinity(), Function::infinity()); // UPPERLIP_P
+      torqueLimits_[27] = std::make_pair (-Function::infinity(), Function::infinity()); // CHEEK_P
+      torqueLimits_[34] = std::make_pair (-Function::infinity(), Function::infinity()); // R_HAND_J0
+      torqueLimits_[35] = std::make_pair (-Function::infinity(), Function::infinity()); // R_HAND_J1
+      torqueLimits_[42] = std::make_pair (-Function::infinity(), Function::infinity()); // L_HAND_J0
+      torqueLimits_[43] = std::make_pair (-Function::infinity(), Function::infinity()); // L_HAND_J1
+
     }
 
     Torque::~Torque () throw ()
@@ -134,6 +153,8 @@ namespace roboptim
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
       Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+      std::cout << "EFGH\n";
 
       // animatedMeshLocal_->state () = x;
       // animatedMeshLocal_->computeVertexWeights();
@@ -149,14 +170,26 @@ namespace roboptim
       if (!converter_.convert (*mocapMotion_, model_, robotMotion))
 	throw std::runtime_error ("failed to convert motion");
 
+      //std::cout << "x: " << x << std::endl;
+
       for (std::size_t frameId = 0;
 	   frameId < robotMotion.jointPosSeq ()->numFrames (); ++frameId)
 	{
 	  const cnoid::MultiValueSeq::Frame& frame =
 	    robotMotion.jointPosSeq ()->frame (frameId);
 	  for (std::size_t jointId = 0; jointId < frame.size (); ++jointId)
-	    q[frameId][jointId] = frame[jointId];
+	    {
+	      if (std::isnan (frame[jointId]))
+		{
+		  result.setZero ();
+		  std::cout << "nan found\n";
+		  return;
+		}
+	      q[frameId][jointId] = frame[jointId];
+	    }
 	}
+
+      //std::cout << "q: " << q << std::endl;
 
       // Fill dq with frameId = 0 to n - 1.
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames () - 1;
@@ -194,6 +227,8 @@ namespace roboptim
 	  result.segment
 	    (frameId * robot_t::NBDOF, robot_t::NBDOF) = torques;
 	}
+
+      //std::cout << result << std::endl;
     }
 
     void

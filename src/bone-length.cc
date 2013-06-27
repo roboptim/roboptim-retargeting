@@ -58,6 +58,71 @@ namespace roboptim
     BoneLength::~BoneLength () throw ()
     {}
 
+void
+BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha)
+{
+    int globalBoneIndex = 0;
+    
+    for(size_t motionIndex=0; motionIndex < characterInfos.size(); ++motionIndex){
+
+        CharacterInfo& chara = characterInfos[motionIndex];
+        if(chara.org){
+            const cnoid::MarkerMotion::Frame& Vi0_frame = Vi0_frames[motionIndex];
+            const int numBones = chara.bones.size();
+            for(int j=0; j < numBones; ++j){
+                const Bone& bone = chara.bones[j];
+                cnoid::MarkerMotionPtr motion = mesh->motion(motionIndex);
+
+                // Set desired bone length in this morph step
+                const cnoid::Vector3& pe1_0 = Vi0_frame[bone.localMarkerIndex1];
+                const cnoid::Vector3& pe2_0 = Vi0_frame[bone.localMarkerIndex2];
+                double lgoal = (pe2_0 - pe1_0).norm(); // set original length first
+                if(bone.goalLength){
+                    lgoal = alpha * (*bone.goalLength) + (1.0 - alpha) * lgoal;
+                }
+                
+                const cnoid::MarkerMotion::Frame& Vi_frame = Vi_frames[motionIndex];
+                const cnoid::Vector3& pe1 = Vi_frame[bone.localMarkerIndex1];
+                const cnoid::Vector3& pe2 = Vi_frame[bone.localMarkerIndex2];
+
+                const double lcurrent = (pe1 - pe2).norm();
+
+                double a;
+                if(fabs(lcurrent) < 1.0e-6){
+                    a = 0.0; // to make the following coefficient zero
+                } else {
+                    a = lgoal / lcurrent;
+                }
+
+                hi(globalBoneIndex) = (lgoal - lcurrent);
+
+                cnoid::Vector3 dl;
+                if(fabs(lcurrent) < 1.0e-6){
+                    dl.setZero();
+                } else {
+                    dl = (1.0 / lcurrent) * (pe1 - pe2);
+                }
+
+                Hi.startVec(globalBoneIndex);
+                
+                int offset = bone.activeVertexIndex1 * 3;
+                for(int j=0; j < 3; ++j){
+                    Hi.insertBack(globalBoneIndex, offset + j) = dl[j];
+                    hi(globalBoneIndex) += dl[j] * pe1[j];
+                }
+                offset = bone.activeVertexIndex2 * 3;
+                for(int j=0; j < 3; ++j){
+                    Hi.insertBack(globalBoneIndex, offset + j) = -dl[j];
+                    hi(globalBoneIndex) -= dl[j] * pe2[j];
+                }
+                
+                ++globalBoneIndex;
+            }
+        }
+    }
+}
+
+
     void
     BoneLength::impl_compute
     (result_t& result, const argument_t& x)

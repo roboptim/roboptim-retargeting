@@ -147,10 +147,10 @@ private:
       (log4cxx::Logger::getLogger
        ("roboptim.retargeting.choreonoid"));
 
-    bool enableBoneLength = true;
+    bool enableBoneLength = false;
     bool enablePosition = false;
     bool enableCollision = false;
-    bool enableTorque = false;
+    bool enableTorque = true;
     bool enableZmp = false;
     std::string solverName = "ipopt-sparse";
 

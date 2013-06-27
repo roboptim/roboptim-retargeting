@@ -43,8 +43,8 @@ namespace roboptim
       markerIMesh->addMotion (originalMarkerMotion, character);
       markerIMesh->update ();
 
-      std::cout << "marker num frames: " << originalMarkerMotion->numFrames () << std::endl;
-      std::cout << "marker num frames: " << markerIMesh->numFrames () << std::endl;
+      std::cout << "marker num frames: " << originalMarkerMotion->numFrames () << "\n";
+      std::cout << "marker num frames: " << markerIMesh->numFrames () << "\n";
 
       setInteractionMesh (markerIMesh);
 
@@ -96,7 +96,7 @@ void LaplacianDeformationEnergy::clear()
     //constraintInfoSeq.clear();
     //message.clear();
     doUpdateLaplacianCoordinateConstantEveryFrame = true;
-    
+
     // just for releasing memories
     morphedMarkerMotions.clear();
     boneEdgeMap.clear();
@@ -246,9 +246,9 @@ void LaplacianDeformationEnergy::setLaplacianMatrixOfFrame(cnoid::MarkerIMesh::F
     Mi.setZero();
     cnoid::VectorXd& bi = b[currentFrame];
     bi.resize(m3);
-    
+
     std::vector<int> validNeighbors;
-    
+
     for(int activeMarkerIndex=0; activeMarkerIndex < m; ++activeMarkerIndex){
         const cnoid::MarkerIMesh::NeighborList& neighbors = neighborsList[activeMarkerIndex];
         const std::set<int>& boneCounterparts = boneEdgeMap[activeMarkerIndex];
@@ -386,8 +386,7 @@ void LaplacianDeformationEnergy::copySolution() const
 	    */
 		    << "tmp1: " << tmp1 << "\n\n"
 		    << "tmp2: " << tmp2 << "\n\n"
-		    << "tmp3: " << tmp3 << "\n"
-		    << std::endl;
+		    << "tmp3: " << tmp3 << "\n\n";
 
 	  result[0] += (tmp1 / 2.) + tmp2 + (tmp3 / 2.);
 
@@ -395,7 +394,7 @@ void LaplacianDeformationEnergy::copySolution() const
 
 	copySolution ();
 
-	std::cout << "final result " << result[0] << std::endl;
+	std::cout << "final result " << result[0] << "\n";
 	firstIter = false;
     }
 

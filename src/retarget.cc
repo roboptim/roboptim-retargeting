@@ -48,8 +48,8 @@ namespace roboptim
 
       // Use loaded animated interaction mesh to provide starting
       // point.
-      problem_->startingPoint () =
-	animatedMesh_->makeOptimizationVector ();
+      // problem_->startingPoint () =
+      // 	animatedMesh_->makeOptimizationVector ();
 
       // Create bone lengths constraints,
       // one per edge and per frame if the scale is different from 1.
@@ -141,7 +141,10 @@ namespace roboptim
 	  problem_t::scales_t scales;
 	  for (unsigned i = 0; i < torque_->outputSize (); ++i)
 	    {
-	      intervals.push_back (roboptim::Function::makeInterval (0., 0.));
+	      intervals.push_back
+		(roboptim::Function::makeInterval
+		 (torqueConstraint ()->torqueLimits_[i].first,
+		  torqueConstraint ()->torqueLimits_[i].second));
 	      scales.push_back (1.);
 	    }
 

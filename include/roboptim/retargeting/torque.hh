@@ -41,7 +41,7 @@ namespace roboptim
 			  const argument_t& argument,
 			  size_type functionId = 0)
 	const throw ();
-    private:
+      //private:
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       AnimatedInteractionMeshShPtr_t animatedMeshLocal_;
       std::vector<unsigned> consideredDofs_;
