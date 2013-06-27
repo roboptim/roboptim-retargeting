@@ -259,6 +259,7 @@ int main (int argc, char** argv)
     (markerMotion,
      character,
      body,
+     cnoid::MarkerIMeshPtr (new cnoid::MarkerIMesh ()),
      enableBoneLength,
      enablePosition,
      enableCollision,

@@ -65,7 +65,12 @@ namespace roboptim
 	torqueLimits_ (robot_t::NBDOF),
 	model_ (model),
 	mocapMotion_ (mocapMotion),
-	converter_ ()
+	converter_ (),
+	q (animatedMeshLocal_->numFrames ()),
+	dq (animatedMeshLocal_->numFrames ()),
+	ddq (animatedMeshLocal_->numFrames ()),
+	robotMotion (),
+	robot ()
     {
       if (!model)
 	throw std::runtime_error ("invalid model");
@@ -130,14 +135,8 @@ namespace roboptim
       Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-      animatedMeshLocal_->state () = x;
-      animatedMeshLocal_->computeVertexWeights();
-
-      robot_t robot;
-
-      std::vector<robot_t::confVector> q (animatedMeshLocal_->numFrames ());
-      std::vector<robot_t::confVector> dq (animatedMeshLocal_->numFrames ());
-      std::vector<robot_t::confVector> ddq (animatedMeshLocal_->numFrames ());
+      // animatedMeshLocal_->state () = x;
+      // animatedMeshLocal_->computeVertexWeights();
 
       // Compute q from segment positions.
       for (std::size_t frameId = 0;
@@ -147,7 +146,6 @@ namespace roboptim
 	  mocapMotion_->frame (frameId)[markerId] =
 	    x.segment (frameId * mocapMotion_->numMarkers() + markerId, 3);
 
-      cnoid::BodyMotion robotMotion;
       if (!converter_.convert (*mocapMotion_, model_, robotMotion))
 	throw std::runtime_error ("failed to convert motion");
 
@@ -182,11 +180,10 @@ namespace roboptim
 	       - q[frameId - 1][dofId])
 	      / (animatedMeshLocal_->framerate ()
 		 * animatedMeshLocal_->framerate ());
-	  dq[frameId][0] = 0.;
-	  dq[frameId][animatedMeshLocal_->numFrames () - 1] = 0.;
+	  ddq[frameId][0] = 0.;
+	  ddq[frameId][animatedMeshLocal_->numFrames () - 1] = 0.;
 	}
 
-      robot_t::confVector torques;
       for (unsigned frameId = 1; frameId < animatedMeshLocal_->numFrames () - 1;
 	   ++frameId)
 	{

@@ -15,6 +15,7 @@ namespace roboptim
     Retarget::Retarget (cnoid::MarkerMotionPtr markerMotion,
 			cnoid::CharacterPtr character,
 			cnoid::BodyPtr body,
+			cnoid::MarkerIMeshPtr markerIMesh,
 			bool enableBoneLength,
 			bool enablePosition,
 			bool enableCollision,
@@ -25,7 +26,8 @@ namespace roboptim
 	(AnimatedInteractionMesh::loadAnimatedMesh
 	 (markerMotion, character)),
 	costLaplacian_
-	(boost::make_shared<LaplacianDeformationEnergy> (animatedMesh_, markerMotion, character)),
+	(boost::make_shared<LaplacianDeformationEnergy>
+	 (animatedMesh_, markerMotion, character, markerIMesh)),
 	costAcceleration_
 	(boost::make_shared<AccelerationEnergy> (animatedMesh_)),
 	cost_ (),
@@ -40,7 +42,7 @@ namespace roboptim
     {
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
-      costs.push_back (costAcceleration_);
+      //costs.push_back (costAcceleration_);
       cost_ = boost::make_shared<Sum<EigenMatrixSparse> > (costs);
       problem_ = boost::make_shared<problem_t> (*cost_);
 
@@ -159,7 +161,7 @@ namespace roboptim
 	  for (unsigned i = 0; i < zmp_->outputSize (); ++i)
 	    {
 	      //FIXME:
-	      intervals.push_back (roboptim::Function::makeInterval (-1., 1.));
+	      intervals.push_back (roboptim::Function::makeInterval (-.1, .1));
 	      scales.push_back (1.);
 	    }
 
@@ -180,7 +182,8 @@ namespace roboptim
 	  for (int partId = 0;
 	       partId < markerMotion->numParts (); ++partId)
 		 x.segment<3>
-		 (frameId * markerMotion->numParts () * 3 + partId * 3) = frame[idx++];
+		 (frameId * markerMotion->numParts () * 3 + partId * 3) =
+		   frame[idx++];
 	}
 
       problem_->startingPoint () = x;

@@ -45,6 +45,7 @@ BOOST_AUTO_TEST_CASE (simple)
     (markerMotion,
      character,
      body,
+     cnoid::MarkerIMeshPtr (new cnoid::MarkerIMesh ()),
      false,
      false,
      false,

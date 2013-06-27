@@ -21,6 +21,8 @@
 #include <cnoid/src/MocapPlugin/MarkerMotionItem.h>
 #undef private
 
+#include <cnoid/src/MocapPlugin/MarkerIMeshItem.h>
+
 #include <log4cxx/logger.h>
 #include <log4cxx/xml/domconfigurator.h>
 
@@ -64,6 +66,7 @@ private:
     cnoid::BodyPtr body;
     cnoid::CharacterPtr character;
     cnoid::MarkerMotionItemPtr markerMotionItem;
+    cnoid::MarkerIMeshItemPtr markerIMeshItem;
 
     cnoid::ItemList<cnoid::Item> selected =
       cnoid::ItemTreeView::instance()->selectedItems<cnoid::Item>();
@@ -84,6 +87,13 @@ private:
 		markerMotionItem = markerMotionItemTmp;
 		character = markerMotionItem->character ();
 	      }
+	    else
+	      {
+		cnoid::MarkerIMeshItem* markerIMeshItemTmp =
+		  dynamic_cast<cnoid::MarkerIMeshItem*> (selected.get (j));
+		if (markerIMeshItemTmp)
+		  markerIMeshItem = markerIMeshItemTmp;
+	      }
 	  }
       }
 
@@ -101,6 +111,13 @@ private:
 	return;
       }
 
+    if (!markerIMeshItem)
+      {
+	cnoid::MessageView::mainInstance ()->putln
+	  ("no marker imesh is selected");
+	return;
+      }
+
     if (!character)
       {
 	cnoid::MessageView::mainInstance ()->putln
@@ -108,10 +125,12 @@ private:
 	return;
       }
 
-    cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - launching thread");
+    cnoid::MessageView::mainInstance ()->putln
+      ("Roboptim Retargeting - launching thread");
     thread_ = boost::make_shared<boost::thread>
       (boost::bind (&RoboptimRetargetingPlugin::buildProblemAndOptimize,
-		    this, body, character, markerMotionItem));
+		    this, body, character, markerMotionItem,
+		    markerIMeshItem->mesh ()));
 
     if (menuItem_ && thread_)
       menuItem_->setEnabled (false);
@@ -119,7 +138,8 @@ private:
 
   void buildProblemAndOptimize (cnoid::BodyPtr body,
 				cnoid::CharacterPtr character,
-				cnoid::MarkerMotionItemPtr markerMotionItem)
+				cnoid::MarkerMotionItemPtr markerMotionItem,
+				cnoid::MarkerIMeshPtr mesh)
   {
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - start");
 
@@ -139,6 +159,7 @@ private:
       (markerMotionItem->motion (),
        character,
        body,
+       mesh,
        enableBoneLength,
        enablePosition,
        enableCollision,

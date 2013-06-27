@@ -29,7 +29,8 @@ namespace roboptim
       explicit LaplacianDeformationEnergy
       (AnimatedInteractionMeshShPtr_t mesh,
        cnoid::MarkerMotionPtr originalMarkerMotion,
-       cnoid::CharacterPtr character) throw ();
+       cnoid::CharacterPtr character,
+       cnoid::MarkerIMeshPtr markerIMesh) throw ();
 
       virtual ~LaplacianDeformationEnergy () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -56,6 +57,7 @@ namespace roboptim
       void setInteractionMesh(cnoid::MarkerIMeshPtr mesh);
       void setCharacterPair
       (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal);
+      void copySolution() const;
 
       const cnoid::Vector3& orgVertexOfActiveIndex(int activeIndex) const
       {
@@ -93,6 +95,7 @@ namespace roboptim
       mutable bool firstIter;
       bool isSingleFrameMode;
       mutable int currentFrame;
+      mutable cnoid::VectorXd x; // solution
 
         /**
            Index1 should be smaller than index2 to sequentially insert the coefficients

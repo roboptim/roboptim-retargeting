@@ -63,6 +63,7 @@ namespace roboptim
       (cnoid::MarkerMotionPtr markerMotion,
        cnoid::CharacterPtr character,
        cnoid::BodyPtr body,
+       cnoid::MarkerIMeshPtr markerIMesh,
        bool enableBoneLength,
        bool enablePosition,
        bool enableCollision,

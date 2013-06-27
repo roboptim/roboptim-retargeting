@@ -60,7 +60,7 @@ namespace roboptim
 
       result[0] = .5 * result[0] * result[0];
 
-      result[0] *= 0.2; // weight on acceleration, should not be here.
+      result[0] *= 1e-6; // weight on acceleration, should not be here.
     }
 
     void

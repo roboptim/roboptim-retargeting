@@ -9,6 +9,14 @@
 # include <cnoid/ext/MocapPlugin/MarkerMotion.h>
 # include <cnoid/src/MocapPlugin/MarkerToBodyMotionConverter.h>
 
+# include <cnoid/BodyMotion>
+
+#include "model/hrp4g2.hh"
+
+// Define which robot to use.
+typedef metapod::hrp4g2 robot_t;
+
+
 namespace roboptim
 {
   namespace retargeting
@@ -41,6 +49,13 @@ namespace roboptim
       cnoid::BodyPtr model_;
       mutable cnoid::MarkerMotionPtr mocapMotion_;
       mutable cnoid::MarkerToBodyMotionConverter converter_;
+
+      mutable std::vector<robot_t::confVector> q;
+      mutable std::vector<robot_t::confVector> dq;
+      mutable std::vector<robot_t::confVector> ddq;
+      mutable cnoid::BodyMotion robotMotion;
+      mutable robot_t robot;
+      mutable robot_t::confVector torques;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

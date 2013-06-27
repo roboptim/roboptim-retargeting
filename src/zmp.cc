@@ -1,21 +1,17 @@
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/zmp.hh"
 
-#include "model/hrp4g2.hh"
-
 #include <metapod/tools/print.hh>
 #include <metapod/algos/rnea.hh>
 
 #include <cnoid/Body>
 #include <cnoid/BodyMotion>
 
-// Define which robot to use.
-typedef metapod::hrp4g2 robot_t;
-
 namespace roboptim
 {
   namespace retargeting
   {
+
     ZMP::ZMP
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
@@ -28,8 +24,15 @@ namespace roboptim
 	animatedMeshLocal_ (animatedMeshLocal),
 	model_ (model),
 	mocapMotion_ (mocapMotion),
-	converter_ ()
-    {}
+	converter_ (),
+	q (animatedMeshLocal_->numFrames ()),
+	dq (animatedMeshLocal_->numFrames ()),
+	ddq (animatedMeshLocal_->numFrames ()),
+	robotMotion (),
+	robot ()
+    {
+      std::cout << "ABCD CTOR" << std::endl;
+    }
 
     ZMP::~ZMP () throw ()
     {}
@@ -40,14 +43,8 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      animatedMeshLocal_->state () = x;
-      animatedMeshLocal_->computeVertexWeights();
-
-      robot_t robot;
-
-      std::vector<robot_t::confVector> q (animatedMeshLocal_->numFrames ());
-      std::vector<robot_t::confVector> dq (animatedMeshLocal_->numFrames ());
-      std::vector<robot_t::confVector> ddq (animatedMeshLocal_->numFrames ());
+      std::cout << "ABCD" << std::endl;
+      //animatedMeshLocal_->state () = x;
 
       // Compute q from segment positions.
       for (std::size_t frameId = 0;
@@ -57,7 +54,6 @@ namespace roboptim
 	  mocapMotion_->frame (frameId)[markerId] =
 	    x.segment (frameId * mocapMotion_->numMarkers() + markerId, 3);
 
-      cnoid::BodyMotion robotMotion;
       if (!converter_.convert (*mocapMotion_, model_, robotMotion))
 	throw std::runtime_error ("failed to convert motion");
 
@@ -92,11 +88,10 @@ namespace roboptim
 	       - q[frameId - 1][dofId])
 	      / (animatedMeshLocal_->framerate ()
 		 * animatedMeshLocal_->framerate ());
-	  dq[frameId][0] = 0.;
-	  dq[frameId][animatedMeshLocal_->numFrames () - 1] = 0.;
+	  ddq[frameId][0] = 0.;
+	  ddq[frameId][animatedMeshLocal_->numFrames () - 1] = 0.;
 	}
 
-      robot_t::confVector torques;
       for (unsigned frameId = 0; frameId < animatedMeshLocal_->numFrames ();
 	   ++frameId)
 	{
@@ -112,7 +107,7 @@ namespace roboptim
 	    (boost::fusion::at_c<0>
 	     (robot.nodes).joint.f);
 
-	  if (af.f()[2])
+	  if (!af.f()[2])
 	    {
 	      result[frameId * 2 + 0] = 0.;
 	      result[frameId * 2 + 1] = 0.;
@@ -123,6 +118,8 @@ namespace roboptim
 	  result[frameId * 2 + 0] = - af.n()[1] / af.f()[2];
 	  result[frameId * 2 + 1] =   af.n()[0] / af.f()[2];
 	}
+
+      std::cout << result << std::endl;
     }
 
     void
