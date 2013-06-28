@@ -148,10 +148,10 @@ private:
        ("roboptim.retargeting.choreonoid"));
 
     bool enableBoneLength = true;
-    bool enablePosition = false;
+    bool enablePosition = true;
     bool enableCollision = false;
     bool enableTorque = false;
-    bool enableZmp = false;
+    bool enableZmp = true;
     std::string solverName = "ipopt-sparse";
 
     // Retarget motion.

@@ -14,7 +14,7 @@ namespace roboptim
      double alpha,
      double weight) throw ()
       : roboptim::GenericLinearFunction<EigenMatrixSparse>
-	(1,
+	(markerIMesh->numFrames() * markerIMesh->numActiveVertices() * 3,
 	 markerIMesh->numFrames() * 3,
 	 "position"),
 	activeVertexIndex
@@ -33,6 +33,8 @@ namespace roboptim
       initVariables();
 
       firstIter = true;
+
+      std::cout << "POSITION:" << pos << std::endl;
     }
 
     Position::~Position () throw ()
@@ -187,6 +189,7 @@ void Position::initFrame(int frame) const
 
       copySolution ();
       firstIter = false;
+      std::cout << "POSITION RESULT: " << result  << std::endl;
     }
 
     void

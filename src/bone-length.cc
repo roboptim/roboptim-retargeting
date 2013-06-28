@@ -310,7 +310,7 @@ void BoneLength::initFrame(int frame) const
     {
       this->x = x;
 
-      double alpha = 1.;
+      double alpha = 0.;
 
       int numFrames = mesh->numFrames ();
       int targetFrame = 0; //targetSingleFrame
@@ -341,6 +341,7 @@ void BoneLength::initFrame(int frame) const
 
       copySolution ();
       firstIter = false;
+      std::cout << "BL RESULT: " << result << std::endl;
     }
 
     void
