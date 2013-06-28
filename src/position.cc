@@ -190,7 +190,7 @@ void Position::initFrame(int frame) const
 
       copySolution ();
       firstIter = false;
-      std::cout << "POSITION RESULT: " << result  << std::endl;
+      //std::cout << "POSITION RESULT: " << result  << std::endl;
     }
 
     void

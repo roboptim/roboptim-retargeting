@@ -42,8 +42,8 @@ namespace roboptim
 
       laplacianWeightPowerHalf = 1. / 2.;
 
-      std::cout << "marker num frames: " << originalMarkerMotion->numFrames () << "\n";
-      std::cout << "marker num frames: " << markerIMesh->numFrames () << "\n";
+      //std::cout << "marker num frames: " << originalMarkerMotion->numFrames () << "\n";
+      //std::cout << "marker num frames: " << markerIMesh->numFrames () << "\n";
 
       setInteractionMesh (markerIMesh);
 
@@ -155,20 +155,20 @@ void LaplacianDeformationEnergy::initVariables()
 
 void LaplacianDeformationEnergy::extractBones()
 {
-  std::cout << "EXTRACT BONES" << std::endl;
+  //std::cout << "EXTRACT BONES" << std::endl;
     boneEdgeMap.clear();
 
     for(size_t i=0; i < characterInfos->size(); ++i){
-      std::cout << "chara" << std::endl;
+      //std::cout << "chara" << std::endl;
       CharacterInfo& chara = (*characterInfos)[i];
         chara.bones.clear();
         if(chara.org){
-	  std::cout << "chara ok" << std::endl;
+	  //std::cout << "chara ok" << std::endl;
             const cnoid::MarkerMotionPtr& motion = mesh->motion(i);
             const int vertexIndexOffset = mesh->globalVertexIndexOffset(i);
             const int numBones = chara.org->numMarkerEdges();
             for(int j=0; j < numBones; ++j){
-	      std::cout << "bone" << std::endl;
+	      //std::cout << "bone" << std::endl;
                 const cnoid::Character::Edge& orgEdge = chara.org->markerEdge(j);
                 int pe1LocalIndex = motion->markerIndex(orgEdge.label[0]);
                 int pe2LocalIndex = motion->markerIndex(orgEdge.label[1]);
@@ -194,7 +194,7 @@ void LaplacianDeformationEnergy::extractBones()
                         }
                         chara.bones.push_back(bone);
                         ++numAllBones;
-			std::cout << "-+=+=+=+=+=+=+=+=+=++=+=+" << std::endl;
+			//std::cout << "-+=+=+=+=+=+=+=+=+=++=+=+" << std::endl;
 
                         if(doExcludeBoneEdgesFromLaplacianCoordinate){
                             boneEdgeMap[pe1ActiveIndex].insert(pe2GlobalIndex);
@@ -366,15 +366,15 @@ void LaplacianDeformationEnergy::copySolution() const
 	  double tmp2 = bi.transpose () * Mi * xi;
 	  double tmp3 = bi.transpose () * bi;
 
-	  std::cout << "frame " << currentFrame << ":\n\n"
+	  //std::cout << "frame " << currentFrame << ":\n\n"
 	    /*
 		    << "x:" << x << "\n\n"
 		    << "Mi:" << Mi << "\n\n"
 		    << "bi:" << bi << "\n\n"
-	    */
 		    << "tmp1: " << tmp1 << "\n\n"
 		    << "tmp2: " << tmp2 << "\n\n"
 		    << "tmp3: " << tmp3 << "\n\n";
+	    */
 
 	  result[0] += (tmp1 / 2.) + tmp2 + (tmp3 / 2.);
 
@@ -382,7 +382,7 @@ void LaplacianDeformationEnergy::copySolution() const
 
 	copySolution ();
 
-	std::cout << "final result " << result[0] << "\n";
+	//std::cout << "final result " << result[0] << "\n";
 	firstIter = false;
     }
 

@@ -65,20 +65,20 @@ namespace roboptim
 
 void BoneLength::extractBones()
 {
-  std::cout <<"BL EXTRACT BONES" << std::endl;
+  //std::cout <<"BL EXTRACT BONES" << std::endl;
     boneEdgeMap.clear();
 
     for(size_t i=0; i < characterInfos->size(); ++i){
-	  std::cout <<"BL CHARA" << std::endl;
+	  //std::cout <<"BL CHARA" << std::endl;
       CharacterInfo& chara = (*characterInfos)[i];
         chara.bones.clear();
         if(chara.org){
-	  std::cout <<"BL CHARA OK" << std::endl;
+	  //std::cout <<"BL CHARA OK" << std::endl;
             const cnoid::MarkerMotionPtr& motion = mesh->motion(i);
             const int vertexIndexOffset = mesh->globalVertexIndexOffset(i);
             const int numBones = chara.org->numMarkerEdges();
             for(int j=0; j < numBones; ++j){
-	      std::cout <<"BL BONE" << std::endl;
+	      //std::cout <<"BL BONE" << std::endl;
                 const cnoid::Character::Edge& orgEdge = chara.org->markerEdge(j);
                 int pe1LocalIndex = motion->markerIndex(orgEdge.label[0]);
                 int pe2LocalIndex = motion->markerIndex(orgEdge.label[1]);
@@ -342,7 +342,7 @@ void BoneLength::initFrame(int frame) const
 
       copySolution ();
       firstIter = false;
-      std::cout << "BL RESULT: " << result << std::endl;
+      //std::cout << "BL RESULT: " << result << std::endl;
     }
 
     void

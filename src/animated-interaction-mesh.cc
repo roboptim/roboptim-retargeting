@@ -144,20 +144,20 @@ namespace roboptim
       animatedMesh->numFrames_ = markerMotion->numFrames ();
       animatedMesh->numVertices_ = markerMotion->numParts ();
 
-      std::cout << "frame rate: " << animatedMesh->framerate_ << std::endl;
-      std::cout << "num frame: " << animatedMesh->numFrames_ << std::endl;
-      std::cout << "num vertices: " << animatedMesh->numVertices_ << std::endl;
+      //std::cout << "frame rate: " << animatedMesh->framerate_ << std::endl;
+      //std::cout << "num frame: " << animatedMesh->numFrames_ << std::endl;
+      //std::cout << "num vertices: " << animatedMesh->numVertices_ << std::endl;
 
       // Resize state vector.
       animatedMesh->state_.resize
 	(animatedMesh->numFrames_ * animatedMesh->numVertices_ * 3);
       animatedMesh->state_.setZero ();
-      std::cout << "state size: " << animatedMesh->state_.size () << std::endl;
+      //std::cout << "state size: " << animatedMesh->state_.size () << std::endl;
 
       // Resize interaction mesh vector.
       animatedMesh->interactionMeshes_.resize (animatedMesh->numFrames_);
 
-      std::cout << "interaction mesh size: " << animatedMesh->interactionMeshes_.size () << std::endl;
+      //std::cout << "interaction mesh size: " << animatedMesh->interactionMeshes_.size () << std::endl;
 
       for (int partId = 0; partId < animatedMesh->numVertices_; ++partId)
 	{
