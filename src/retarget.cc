@@ -22,17 +22,18 @@ namespace roboptim
 			bool enableTorque,
 			bool enableZmp,
 			const std::string& solverName)
-      : animatedMesh_
+      : characterInfos (new std::vector<CharacterInfo> ()),
+	mesh (markerIMesh),
+	animatedMesh_
 	(AnimatedInteractionMesh::loadAnimatedMesh
 	 (markerMotion, character)),
-	costLaplacian_
-	(boost::make_shared<LaplacianDeformationEnergy>
-	 (animatedMesh_, markerMotion, character, markerIMesh)),
+	costLaplacian_ (),
 	costAcceleration_
-	(boost::make_shared<AccelerationEnergy> (animatedMesh_)),
+	(AccelerationEnergyShPtr_t
+	 (new AccelerationEnergy (animatedMesh_))),
 	cost_ (),
 	problem_ (),
-	boneLengths_ (),
+	boneLength_ (),
 	positions_ (),
 	collisions_ (),
 	torque_ (),
@@ -40,6 +41,16 @@ namespace roboptim
 	result_ (),
 	solverName_ (solverName)
     {
+      markerIMesh->addMotion (markerMotion, character);
+      markerIMesh->update ();
+
+      setCharacterPair (0, character, character);
+
+      costLaplacian_ = LaplacianDeformationEnergyShPtr_t
+	(new LaplacianDeformationEnergy
+	 (animatedMesh_, markerMotion, character, markerIMesh,
+	  characterInfos));
+
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
       //costs.push_back (costAcceleration_);
@@ -51,24 +62,21 @@ namespace roboptim
       // problem_->startingPoint () =
       // 	animatedMesh_->makeOptimizationVector ();
 
-      // Create bone lengths constraints,
-      // one per edge and per frame if the scale is different from 1.
 
       AnimatedInteractionMeshShPtr_t animatedMeshLocal =
 	AnimatedInteractionMesh::makeFromOptimizationVariables
 	(animatedMesh_->state (), animatedMesh_);
 
-      AnimatedInteractionMesh::edge_iterator_t edgeIt;
-      AnimatedInteractionMesh::edge_iterator_t edgeEnd;
-      boost::tie (edgeIt, edgeEnd) = boost::edges (animatedMesh_->graph ());
-      for (; edgeIt != edgeEnd; ++edgeIt)
-	if (animatedMesh_->graph ()[*edgeIt].scale != 1.)
-	  {
-	    BoneLengthShPtr_t boneLengthConstraint =
-	      boost::make_shared<BoneLength>
-	      (animatedMesh_, animatedMeshLocal, *edgeIt);
-	    boneLengths_.push_back (boneLengthConstraint);
-	  }
+
+      // Create bone lengths constraint,
+      int numAllBones = costLaplacian_->numAllBones;
+      std::cout << "NUM ALL BONES: " << numAllBones << std::endl;
+      int numFrames = mesh->numFrames ();
+      AnimatedInteractionMesh::edge_descriptor_t it;
+      boneLength_ = BoneLengthShPtr_t
+	(new BoneLength
+	 (animatedMesh_, animatedMeshLocal, it,
+	  markerIMesh, characterInfos, numAllBones));
 
       // Create position constraints.
       //FIXME:
@@ -89,18 +97,17 @@ namespace roboptim
 
 	  Function::intervals_t intervals;
 	  problem_t::scales_t scales;
-	  for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
+	  for (unsigned i = 0; i < numAllBones * numFrames; ++i)
 	    {
 	      intervals.push_back (roboptim::Function::makeInterval (0., 0.));
 	      scales.push_back (1.);
 	    }
-	  for (unsigned i = 0; i < 1; ++i)
-	    problem_->addConstraint
-	      (boost::static_pointer_cast
-	       <GenericLinearFunction<EigenMatrixSparse> >
-	       (boneLengths_[i]),
-	       intervals,
-	       scales);
+	  problem_->addConstraint
+	    (boost::static_pointer_cast
+	     <GenericLinearFunction<EigenMatrixSparse> >
+	     (boneLength_),
+	     intervals,
+	     scales);
 	}
       else
 	LOG4CXX_INFO (logger, "bone lengths constraints disabled");
@@ -195,6 +202,23 @@ namespace roboptim
     Retarget::~Retarget ()
     {
     }
+
+    void
+    Retarget::setCharacterPair
+    (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)
+    {
+      if(mesh && motionIndex < mesh->numMotions()){
+        if(motionIndex >= characterInfos->size()){
+	  characterInfos->resize(motionIndex + 1);
+        }
+        CharacterInfo& chara = (*characterInfos)[motionIndex];
+        if(!chara.org){
+	  chara.org = org;
+	  chara.goal = goal;
+        }
+      }
+    }
+
 
     void
     Retarget::solve ()

@@ -134,8 +134,15 @@ namespace roboptim
 	return torque_;
       }
 
+      void setCharacterPair
+      (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal);
+
+
     private:
       static log4cxx::LoggerPtr logger;
+
+      boost::shared_ptr<std::vector<CharacterInfo> > characterInfos;
+      cnoid::MarkerIMeshPtr mesh;
 
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       LaplacianDeformationEnergyShPtr_t costLaplacian_;
@@ -143,7 +150,7 @@ namespace roboptim
       SumShPtr_t cost_;
       problemShPtr_t problem_;
 
-      std::vector<BoneLengthShPtr_t> boneLengths_;
+      BoneLengthShPtr_t boneLength_;
       std::vector<PositionShPtr_t> positions_;
       std::vector<CollisionShPtr_t> collisions_;
       TorqueShPtr_t torque_;

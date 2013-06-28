@@ -3,6 +3,7 @@
 # include <vector>
 # include <roboptim/core/linear-function.hh>
 
+# include <roboptim/retargeting/bone.hh>
 # include <roboptim/retargeting/laplacian-coordinate.hh>
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
 
@@ -30,7 +31,8 @@ namespace roboptim
       (AnimatedInteractionMeshShPtr_t mesh,
        cnoid::MarkerMotionPtr originalMarkerMotion,
        cnoid::CharacterPtr character,
-       cnoid::MarkerIMeshPtr markerIMesh) throw ();
+       cnoid::MarkerIMeshPtr markerIMesh,
+       boost::shared_ptr<std::vector<CharacterInfo> > characterInfos) throw ();
 
       virtual ~LaplacianDeformationEnergy () throw ();
       void impl_compute (result_t& result, const argument_t& x)
@@ -39,7 +41,7 @@ namespace roboptim
 			  const argument_t& argument,
 			  size_type functionId = 0)
 	const throw ();
-    private:
+      //private:
       /// \brief Original mesh.
       AnimatedInteractionMeshShPtr_t animatedMesh_;
       /// \brief Current state of the mesh (during optimization process).
@@ -55,8 +57,6 @@ namespace roboptim
       void setLaplacianMatrixOfFrame(cnoid::MarkerIMesh::Frame neighborsList) const;
       void clear ();
       void setInteractionMesh(cnoid::MarkerIMeshPtr mesh);
-      void setCharacterPair
-      (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal);
       void copySolution() const;
 
       const cnoid::Vector3& orgVertexOfActiveIndex(int activeIndex) const
@@ -97,28 +97,9 @@ namespace roboptim
       mutable int currentFrame;
       mutable cnoid::VectorXd x; // solution
 
-        /**
-           Index1 should be smaller than index2 to sequentially insert the coefficients
-           of the bone length constraints into the sparse matrix.
-        */
-        struct Bone
-        {
-            int localMarkerIndex1;
-            int localMarkerIndex2;
-            int activeVertexIndex1;
-            int activeVertexIndex2;
-            boost::optional<double> goalLength;
-        };
+      boost::shared_ptr<std::vector<CharacterInfo> > characterInfos;
 
-      struct CharacterInfo
-      {
-	cnoid::CharacterPtr org;
-	cnoid::CharacterPtr goal;
-	std::vector<Bone> bones;
-      };
-      std::vector<CharacterInfo> characterInfos;
-
-        bool doExcludeBoneEdgesFromLaplacianCoordinate;
+      bool doExcludeBoneEdgesFromLaplacianCoordinate;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

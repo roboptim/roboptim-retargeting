@@ -11,17 +11,17 @@ namespace roboptim
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMesh::edge_descriptor_t edgeId)
     {
-      std::string vertexSource =
-	animatedMesh->graph ()
-	[boost::source
-	 (edgeId,
-	  animatedMesh->graph ())].label;
-      std::string vertexDest =
-	animatedMesh->graph ()
-	[boost::target
-	 (edgeId,
-	  animatedMesh->graph ())].label;
-      const double& scale = animatedMesh->graph ()[edgeId].scale;
+      std::string vertexSource = "";
+	// animatedMesh->graph ()
+	// [boost::source
+	//  (edgeId,
+	//   animatedMesh->graph ())].label;
+      std::string vertexDest = "";
+	// animatedMesh->graph ()
+	// [boost::target
+	//  (edgeId,
+	//   animatedMesh->graph ())].label;
+      const double& scale = 1.;//animatedMesh->graph ()[edgeId].scale;
 
       return (boost::format ("edge id = [%1%, %2%], scale = %3%")
 	      % vertexSource
@@ -32,40 +32,174 @@ namespace roboptim
     BoneLength::BoneLength
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-     AnimatedInteractionMesh::edge_descriptor_t edgeId) throw ()
+     AnimatedInteractionMesh::edge_descriptor_t edgeId,
+     cnoid::MarkerIMeshPtr markerIMesh,
+     boost::shared_ptr<std::vector<CharacterInfo> > characterInfosTmp,
+     int numAllBones) throw ()
       : roboptim::GenericLinearFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
-	 animatedMesh->numFrames (),
-	 (boost::format ("bone length (%1%)")
-	  % buildBoneLengthFunctionTitle (animatedMesh, edgeId)).str ()),
-	animatedMesh_ (animatedMesh),
-	animatedMeshLocal_ (animatedMeshLocal),
-	edgeId_ (edgeId),
-	source_ (boost::source (edgeId_, animatedMesh_->graph ())),
-	target_ (boost::target (edgeId_, animatedMesh_->graph ())),
-	scale_ (animatedMesh->graph ()[edgeId].scale),
-	goalLength_ ()
+	 numAllBones * 1,
+	 "bone length"),
+	animatedMesh_ (),
+	animatedMeshLocal_ (),
+	edgeId_ (),
+	source_ (),
+	target_ (),
+	scale_ (),
+	goalLength_ (),
+	characterInfos (characterInfosTmp),
+	numAllBones (0)
     {
-      const Vertex& sourceVertex = animatedMesh_->graph ()[source_];
-      const Vertex& targetVertex = animatedMesh_->graph ()[target_];
+      isSingleFrameMode = false;
 
-      goalLength_ =
-	.5 * scale_ *
-	(targetVertex.positions[0]
-	 - sourceVertex.positions[0]).squaredNorm ();
+      setInteractionMesh (markerIMesh);
+      
+      extractBones();
+      initVariables();
+
+      firstIter = true;
     }
 
     BoneLength::~BoneLength () throw ()
     {}
 
+void BoneLength::extractBones()
+{
+  std::cout <<"BL EXTRACT BONES" << std::endl;
+    boneEdgeMap.clear();
+
+    for(size_t i=0; i < characterInfos->size(); ++i){
+	  std::cout <<"BL CHARA" << std::endl;
+      CharacterInfo& chara = (*characterInfos)[i];
+        chara.bones.clear();
+        if(chara.org){
+	  std::cout <<"BL CHARA OK" << std::endl;
+            const cnoid::MarkerMotionPtr& motion = mesh->motion(i);
+            const int vertexIndexOffset = mesh->globalVertexIndexOffset(i);
+            const int numBones = chara.org->numMarkerEdges();
+            for(int j=0; j < numBones; ++j){
+	      std::cout <<"BL BONE" << std::endl;
+                const cnoid::Character::Edge& orgEdge = chara.org->markerEdge(j);
+                int pe1LocalIndex = motion->markerIndex(orgEdge.label[0]);
+                int pe2LocalIndex = motion->markerIndex(orgEdge.label[1]);
+
+                if(pe1LocalIndex > pe2LocalIndex){
+                    std::swap(pe1LocalIndex, pe2LocalIndex); // sort
+                }
+                const int pe1GlobalIndex = vertexIndexOffset + pe1LocalIndex;
+                const int pe1ActiveIndex = mesh->globalToActiveIndex(pe1GlobalIndex);
+                if(pe1ActiveIndex >= 0){
+                    const int pe2GlobalIndex = vertexIndexOffset + pe2LocalIndex;
+                    const int pe2ActiveIndex = mesh->globalToActiveIndex(pe2GlobalIndex);
+                    if(pe2ActiveIndex >= 0){
+                        Bone bone;
+                        bone.localMarkerIndex1 = pe1LocalIndex;
+                        bone.localMarkerIndex2 = pe2LocalIndex;
+                        bone.activeVertexIndex1 = pe1ActiveIndex;
+                        bone.activeVertexIndex2 = pe2ActiveIndex;
+
+                        if(chara.goal){
+                            const cnoid::Character::Edge& goalEdge = chara.goal->markerEdge(j);
+                            bone.goalLength = goalEdge.length;
+                        }
+                        chara.bones.push_back(bone);
+                        ++numAllBones;
+
+                        if(/*doExcludeBoneEdgesFromLaplacianCoordinate*/true){
+                            boneEdgeMap[pe1ActiveIndex].insert(pe2GlobalIndex);
+                            boneEdgeMap[pe2ActiveIndex].insert(pe1GlobalIndex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void BoneLength::initVariables()
+{
+  bool isSingleFrameMode = false;
+    int n = isSingleFrameMode ? 1 : mesh->numFrames();
+    int m3n = m3 * n;
+
+    // M.resize(n);
+    // b.resize(n);
+    // MtM.resize(n);
+    H.resize(n);
+
+    // investigating the numbers of soft / hard constraints
+    // int totalSoftConstraintSize = 0;
+    // int totalHardConstraintSize = 0;
+    // int frame, end;
+    // if(isSingleFrameMode){
+    //     frame = 0;
+    //     end = 1;
+    // } else {
+    //     frame = 0;
+    //     end = constraintInfoSeq.size();
+    // }
+    // while(frame < end){
+    //     ConstraintInfo& cinfo = constraintInfoSeq[frame++];
+    //     cinfo.globalHardConstraintIndex = totalHardConstraintSize;
+    //     totalSoftConstraintSize += cinfo.softPositionalConstraintSize();
+    //     totalHardConstraintSize += numAllBones + cinfo.hardPositionalConstraintSize();
+    // }
+
+    const int size = m3n; // + totalHardConstraintSize;
+    //A.resize(size, size);
+    //y.resize(size);
+    //x.resize(size);
+
+    for(size_t i=0; i < morphedMarkerMotions.size(); ++i){
+        cnoid::MarkerMotionPtr org = mesh->motion(i);
+        cnoid::MarkerMotionPtr& morphed = morphedMarkerMotions[i];
+        if(!morphed){
+            morphed.reset(new cnoid::MarkerMotion());
+        }
+        morphed->copySeqProperties(*org);
+
+        int numMorphedFrames;
+        int orgFrameBegin = 0;
+        if(isSingleFrameMode){
+            numMorphedFrames = 1;
+            //orgFrameBegin = targetSingleFrame;
+        } else if(mesh->numLocalActiveVertices(i) > 0){
+            numMorphedFrames = mesh->numFrames();
+        } else {
+            numMorphedFrames = org->numFrames();
+        }
+        morphed->setDimension(numMorphedFrames, org->numMarkers());
+
+        for(int j = 0; j < numMorphedFrames; ++j){
+            int orgFrameIndex = std::min(j + orgFrameBegin, org->numFrames() - 1);
+            cnoid::MarkerMotion::Frame orgFrame = org->frame(orgFrameIndex);
+            cnoid::MarkerMotion::Frame morphedFrame = morphed->frame(j);
+            std::copy(orgFrame.begin(), orgFrame.end(), morphedFrame.begin());
+        }
+    }
+}
+
+
+void BoneLength::setInteractionMesh(cnoid::MarkerIMeshPtr mesh)
+{
+    this->mesh = mesh;
+    m = mesh->numActiveVertices();
+    m3 = m * 3;
+    //constraintInfoSeq.resize(isSingleFrameMode ? 1 : mesh->numFrames());
+
+    morphedMarkerMotions.resize(mesh->numMotions());
+}
+
+
 void
-BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha)
+BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha) const
 {
     int globalBoneIndex = 0;
-    
-    for(size_t motionIndex=0; motionIndex < characterInfos.size(); ++motionIndex){
 
-        CharacterInfo& chara = characterInfos[motionIndex];
+    for(size_t motionIndex=0; motionIndex < characterInfos->size(); ++motionIndex){
+
+      CharacterInfo& chara = (*characterInfos)[motionIndex];
         if(chara.org){
             const cnoid::MarkerMotion::Frame& Vi0_frame = Vi0_frames[motionIndex];
             const int numBones = chara.bones.size();
@@ -80,7 +214,7 @@ BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha)
                 if(bone.goalLength){
                     lgoal = alpha * (*bone.goalLength) + (1.0 - alpha) * lgoal;
                 }
-                
+
                 const cnoid::MarkerMotion::Frame& Vi_frame = Vi_frames[motionIndex];
                 const cnoid::Vector3& pe1 = Vi_frame[bone.localMarkerIndex1];
                 const cnoid::Vector3& pe2 = Vi_frame[bone.localMarkerIndex2];
@@ -104,7 +238,7 @@ BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha)
                 }
 
                 Hi.startVec(globalBoneIndex);
-                
+
                 int offset = bone.activeVertexIndex1 * 3;
                 for(int j=0; j < 3; ++j){
                     Hi.insertBack(globalBoneIndex, offset + j) = dl[j];
@@ -115,7 +249,7 @@ BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha)
                     Hi.insertBack(globalBoneIndex, offset + j) = -dl[j];
                     hi(globalBoneIndex) -= dl[j] * pe2[j];
                 }
-                
+
                 ++globalBoneIndex;
             }
         }
@@ -123,123 +257,117 @@ BoneLength::setBoneLengthMatrixAndVectorOfFrame(matrix_t& Hi, double alpha)
 }
 
 
+void BoneLength::copySolution() const
+{
+    int numAllFrames = isSingleFrameMode ? 1 : mesh->numFrames();
+    for(size_t i=0; i < morphedMarkerMotions.size(); ++i){
+        cnoid::MarkerMotionPtr morphed = morphedMarkerMotions[i];
+        int index = 0;
+        const std::vector<int>& localToActiveIndexMap = mesh->localToActiveIndexMap(i);
+        cnoid::MarkerMotionPtr orgMotion = mesh->motion(i);
+        const int orgMaxFrame = orgMotion->numFrames() - 1;
+        const int n = std::min(numAllFrames, morphed->numFrames());
+        for(int j=0; j < n; ++j){
+            cnoid::MarkerMotion::Frame morphedFrame = morphed->frame(j);
+            const int frameOffset = m3 * j;
+            const cnoid::MarkerMotion::Frame orgFrame = orgMotion->frame(std::min(j, orgMaxFrame));
+            for(int k=0; k < morphedFrame.size(); ++k){
+                const int activeIndex = localToActiveIndexMap[k];
+                if(activeIndex >= 0){
+                    morphedFrame[k] = x.segment<3>(frameOffset + activeIndex * 3);
+                } else {
+                    morphedFrame[k] = orgFrame[k];
+                }
+            }
+        }
+    }
+}
+
+
+void BoneLength::initFrame(int frame) const
+{
+    Vi0_frames.clear();
+    Vi_frames.clear();
+    const int morphedFrameIndex = isSingleFrameMode ? 0 : frame;
+
+    for(int i=0; i < mesh->numMotions(); ++i){
+        cnoid::MarkerMotionPtr motion = mesh->motion(i);
+        const int maxFrame = motion->numFrames() - 1;
+        cnoid::MarkerMotion::Frame orgFrame = motion->frame(std::min(frame, maxFrame));
+        Vi0_frames.push_back(orgFrame);
+        cnoid::MarkerMotion::Frame morphedFrame =
+            morphedMarkerMotions[i]->frame(std::min(morphedFrameIndex, maxFrame));
+        Vi_frames.push_back(morphedFrame);
+    }
+}
+
+
+
     void
     BoneLength::impl_compute
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      animatedMeshLocal_->state () = x;
-      animatedMeshLocal_->computeVertexWeights();
+      this->x = x;
 
-      const Vertex& sourceVertexNew =
-	animatedMeshLocal_->graph ()[source_];
-      const Vertex& targetVertexNew =
-	animatedMeshLocal_->graph ()[target_];
+      double alpha = 1.;
 
-      for (unsigned i = 0; i < animatedMesh_->numFrames (); ++i)
-	result[i] =
-	  (.5 *
-	   (targetVertexNew.positions[i]
-	    - sourceVertexNew.positions[i]).squaredNorm ())
-	  - goalLength_;
-    }
+      int numFrames = mesh->numFrames ();
+      int targetFrame = 0; //targetSingleFrame
 
-    template <typename U, typename V>
-    void
-    computeGradient
-    (U& gradient,
-     const V&,
-     Function::size_type frameId,
-     AnimatedInteractionMeshShPtr_t animatedMeshLocal,
-     AnimatedInteractionMesh::vertex_descriptor_t source_,
-     AnimatedInteractionMesh::vertex_descriptor_t target_)
-    {
-      const unsigned oneFrameOffset = (unsigned)
-	animatedMeshLocal->optimizationVectorSizeOneFrame ();
-      const unsigned sourceOffset = (unsigned) source_;
-      const unsigned targetOffset = (unsigned) target_;
 
-      const Vertex& sourceVertexNew =
-	animatedMeshLocal->graph ()[source_];
-      const Vertex& targetVertexNew =
-	animatedMeshLocal->graph ()[target_];
+      for(currentFrame=0; currentFrame < numFrames; ++currentFrame){
 
-      const double& sourceX =
-	sourceVertexNew.positions[frameId][0];
-      const double& sourceY =
-	sourceVertexNew.positions[frameId][1];
-      const double& sourceZ =
-	sourceVertexNew.positions[frameId][2];
+	if(isSingleFrameMode){
+	  if(firstIter){
+	    initFrame(targetFrame);
+	  }
+	} else {
+	  targetFrame = currentFrame;
+	  initFrame(targetFrame);
+	}
 
-      const double& targetX =
-	targetVertexNew.positions[frameId][0];
-      const double& targetY =
-	targetVertexNew.positions[frameId][1];
-      const double& targetZ =
-	targetVertexNew.positions[frameId][2];
+	matrix_t& Hi = H[currentFrame];
+	Hi.resize(numAllBones, m3); // resize() makes Hi zero, too.
+	hi.resize(numAllBones);
 
-      // derivative w.r.t x position
-      gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 0) =
-	(sourceX - targetX);
-      // derivative w.r.t y position
-      gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 1) =
-	(sourceY - targetY);
-      // derivative w.r.t z position
-      gradient.insert (frameId * oneFrameOffset + sourceOffset * 3 + 2) =
-	(sourceZ - targetZ);
+	if (numAllBones > 0)
+	  setBoneLengthMatrixAndVectorOfFrame (Hi, alpha);
 
-      // derivative w.r.t x position
-      gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 0) =
-	(targetX - sourceX);
-      // derivative w.r.t y position
-      gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 1) =
-	(targetY - sourceY);
-      // derivative w.r.t z position
-      gradient.insert (frameId * oneFrameOffset + targetOffset * 3 + 2) =
-	(targetZ - sourceZ);
+	Hi.finalize ();
+
+	result = Hi * x - hi;
+      }
+
+      firstIter = false;
     }
 
     void
     BoneLength::impl_gradient
     (gradient_t& gradient,
-     const argument_t& arg,
-     size_type frameId)
+     const argument_t& x,
+     size_type i)
       const throw ()
     {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
       Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-      animatedMeshLocal_->state () = arg;
-      animatedMeshLocal_->computeVertexWeights();
+      roboptim::GenericFiniteDifferenceGradient<
+	EigenMatrixSparse,
+	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >
+	fdg (*this);
 
-      computeGradient (gradient, arg, frameId, animatedMeshLocal_,
-      		       source_, target_);
+      fdg.gradient (gradient, x, i);
     }
 
-    void
-    BoneLength::impl_jacobian
-    (jacobian_t& jacobian,
-     const argument_t& arg)
-      const throw ()
-    {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-      Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-      animatedMeshLocal_->state () = arg;
-      animatedMeshLocal_->computeVertexWeights();
-
-      jacobian.setZero ();
-      for (unsigned frameId = 0 ;
-	   frameId < animatedMesh_->numFrames (); ++frameId)
-	{
-	  gradient_t g (inputSize ());
-	  computeGradient
-	    (g, arg, frameId, animatedMeshLocal_, source_, target_);
-	  jacobian.middleRows (frameId, 1) = g;
-	}
-    }
+    // void
+    // BoneLength::impl_jacobian
+    // (jacobian_t& jacobian,
+    //  const argument_t& arg)
+    //   const throw ()
+    // {
+    // }
 
   } // end of namespace retargeting.
 } // end of namespace roboptim.

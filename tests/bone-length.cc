@@ -1,4 +1,5 @@
 #include <roboptim/core/finite-difference-gradient.hh>
+#include <roboptim/retargeting/bone.hh>
 #include <roboptim/retargeting/bone-length.hh>
 #include <roboptim/retargeting/animated-interaction-mesh.hh>
 
@@ -53,10 +54,15 @@ BOOST_AUTO_TEST_CASE (simple)
 
   AnimatedInteractionMesh::edge_descriptor_t edgeId = *edgeIt;
 
+  boost::shared_ptr<std::vector<CharacterInfo> > characterInfos
+    (new std::vector<CharacterInfo> ());
+
   BoneLength bl
     (animatedMesh,
      animatedMeshLocal,
-     edgeId);
+     edgeId,
+     cnoid::MarkerIMeshPtr (new cnoid::MarkerIMesh ()),
+     characterInfos, 0); //FIXME:
 
   GenericFunction<EigenMatrixSparse>::vector_t x (bl.inputSize ());
 

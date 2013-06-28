@@ -18,7 +18,8 @@ namespace roboptim
     (AnimatedInteractionMeshShPtr_t animatedMesh,
      cnoid::MarkerMotionPtr originalMarkerMotion,
      cnoid::CharacterPtr character,
-     cnoid::MarkerIMeshPtr markerIMesh) throw ()
+     cnoid::MarkerIMeshPtr markerIMesh,
+     boost::shared_ptr<std::vector<CharacterInfo> > characterInfos) throw ()
       : roboptim::GenericLinearFunction<EigenMatrixSparse>
 	(animatedMesh->optimizationVectorSize (),
 	 1,
@@ -29,7 +30,8 @@ namespace roboptim
 	 (animatedMesh->state (), animatedMesh_)),
 	buffer_ (3),
 	markerMotion_ (),
-	mesh ()
+	mesh (),
+	characterInfos (characterInfos)
     {
       doExcludeBoneEdgesFromLaplacianCoordinate = true;
       isSingleFrameMode = false;
@@ -40,15 +42,10 @@ namespace roboptim
 
       laplacianWeightPowerHalf = 1. / 2.;
 
-      markerIMesh->addMotion (originalMarkerMotion, character);
-      markerIMesh->update ();
-
       std::cout << "marker num frames: " << originalMarkerMotion->numFrames () << "\n";
       std::cout << "marker num frames: " << markerIMesh->numFrames () << "\n";
 
       setInteractionMesh (markerIMesh);
-
-      setCharacterPair (0, character, character);
 
       //initAccTermInfo();
       extractBones();
@@ -59,22 +56,6 @@ namespace roboptim
 
     LaplacianDeformationEnergy::~LaplacianDeformationEnergy () throw ()
     {}
-
-void
-LaplacianDeformationEnergy::setCharacterPair
-(int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)
-{
-    if(mesh && motionIndex < mesh->numMotions()){
-        if(motionIndex >= characterInfos.size()){
-            characterInfos.resize(motionIndex + 1);
-        }
-        CharacterInfo& chara = characterInfos[motionIndex];
-        if(!chara.org){
-            chara.org = org;
-            chara.goal = goal;
-        }
-    }
-}
 
 
 void LaplacianDeformationEnergy::setInteractionMesh(cnoid::MarkerIMeshPtr mesh)
@@ -92,7 +73,7 @@ void LaplacianDeformationEnergy::clear()
 {
     mesh.reset();
     numAllBones = 0;
-    characterInfos.clear();
+    //characterInfos.clear();
     //constraintInfoSeq.clear();
     //message.clear();
     doUpdateLaplacianCoordinateConstantEveryFrame = true;
@@ -174,16 +155,20 @@ void LaplacianDeformationEnergy::initVariables()
 
 void LaplacianDeformationEnergy::extractBones()
 {
+  std::cout << "EXTRACT BONES" << std::endl;
     boneEdgeMap.clear();
 
-    for(size_t i=0; i < characterInfos.size(); ++i){
-        CharacterInfo& chara = characterInfos[i];
+    for(size_t i=0; i < characterInfos->size(); ++i){
+      std::cout << "chara" << std::endl;
+      CharacterInfo& chara = (*characterInfos)[i];
         chara.bones.clear();
         if(chara.org){
+	  std::cout << "chara ok" << std::endl;
             const cnoid::MarkerMotionPtr& motion = mesh->motion(i);
             const int vertexIndexOffset = mesh->globalVertexIndexOffset(i);
             const int numBones = chara.org->numMarkerEdges();
             for(int j=0; j < numBones; ++j){
+	      std::cout << "bone" << std::endl;
                 const cnoid::Character::Edge& orgEdge = chara.org->markerEdge(j);
                 int pe1LocalIndex = motion->markerIndex(orgEdge.label[0]);
                 int pe2LocalIndex = motion->markerIndex(orgEdge.label[1]);
@@ -209,6 +194,7 @@ void LaplacianDeformationEnergy::extractBones()
                         }
                         chara.bones.push_back(bone);
                         ++numAllBones;
+			std::cout << "-+=+=+=+=+=+=+=+=+=++=+=+" << std::endl;
 
                         if(doExcludeBoneEdgesFromLaplacianCoordinate){
                             boneEdgeMap[pe1ActiveIndex].insert(pe2GlobalIndex);

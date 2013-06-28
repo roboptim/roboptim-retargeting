@@ -32,6 +32,7 @@ SET(CSD ${CMAKE_SOURCE_DIR})
 SET(HEADERS
   ${CSD}/include/roboptim/retargeting/acceleration-energy.hh
   ${CSD}/include/roboptim/retargeting/animated-interaction-mesh.hh
+  ${CSD}/include/roboptim/retargeting/bone.hh
   ${CSD}/include/roboptim/retargeting/bone-length.hh
   ${CSD}/include/roboptim/retargeting/collision.hh
   ${CSD}/include/roboptim/retargeting/laplacian-coordinate.hh
