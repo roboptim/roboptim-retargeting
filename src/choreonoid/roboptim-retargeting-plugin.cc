@@ -151,7 +151,7 @@ private:
     bool enablePosition = true;
     bool enableCollision = false;
     bool enableTorque = false;
-    bool enableZmp = true;
+    bool enableZmp = false;
     std::string solverName = "ipopt-sparse";
 
     // Retarget motion.

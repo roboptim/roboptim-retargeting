@@ -38,7 +38,7 @@ namespace roboptim
      int numAllBones) throw ()
       : roboptim::GenericLinearFunction<EigenMatrixSparse>
 	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
-	 numAllBones * 1,
+	 numAllBones * markerIMesh->numFrames (),
 	 "bone length"),
 	animatedMesh_ (),
 	animatedMeshLocal_ (),
@@ -336,7 +336,8 @@ void BoneLength::initFrame(int frame) const
 
 	Hi.finalize ();
 
-	result = Hi * x - hi;
+	result.segment (currentFrame * numAllBones, numAllBones) =
+	  Hi * x - hi;
       }
 
       copySolution ();

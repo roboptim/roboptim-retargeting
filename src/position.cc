@@ -184,7 +184,7 @@ void Position::initFrame(int frame) const
 
 	Hi.finalize ();
 
-	result = Hi * x - hi;
+	result.segment (currentFrame * 3, 3) = Hi * x - hi;
       }
 
       copySolution ();
