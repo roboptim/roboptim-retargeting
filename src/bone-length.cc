@@ -337,7 +337,7 @@ void BoneLength::initFrame(int frame) const
 	Hi.finalize ();
 
 	result.segment (currentFrame * numAllBones, numAllBones) =
-	  Hi * x - hi;
+	  Hi * x.segment (currentFrame * m3, m3) - hi;
       }
 
       copySolution ();

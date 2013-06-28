@@ -180,11 +180,12 @@ void Position::initFrame(int frame) const
 	hi.resize(3);
 
 	setPositionalConstraintMatrixAndVectorsOfFrame
-	  (Hi, hi, currentFrame * 3, alpha);
+	  (Hi, hi, 0, alpha);
 
 	Hi.finalize ();
 
-	result.segment (currentFrame * 3, 3) = Hi * x - hi;
+	result.segment (currentFrame * 3, 3) =
+	  Hi * x.segment (currentFrame * m3, m3) - hi;
       }
 
       copySolution ();

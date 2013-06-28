@@ -323,6 +323,7 @@ void LaplacianDeformationEnergy::copySolution() const
       int targetFrame = 0; //targetSingleFrame
 
         for(currentFrame=0; currentFrame < numFrames; ++currentFrame){
+	  const argument_t& xi = x.segment (currentFrame * m3, m3);
 
             if(isSingleFrameMode){
                 if(firstIter){
@@ -352,7 +353,7 @@ void LaplacianDeformationEnergy::copySolution() const
                 // }
 
 		//FIXME: equivalent to previous code apparently.
-		Vi = x.segment (currentFrame * m3, m3);
+		Vi = xi;
 
                 bi = Mi * Vi;
 	    }
@@ -360,8 +361,9 @@ void LaplacianDeformationEnergy::copySolution() const
 	  //FIXME: replace x by segment x for this frame
 	    cnoid::MatrixXd& Mi = M[currentFrame];
 	    cnoid::VectorXd& bi = b[currentFrame];
-	  double tmp1 = x.transpose () * MtM[currentFrame] * x;
-	  double tmp2 = bi.transpose () * Mi * x;
+
+	  double tmp1 = xi.transpose () * MtM[currentFrame] * xi;
+	  double tmp2 = bi.transpose () * Mi * xi;
 	  double tmp3 = bi.transpose () * bi;
 
 	  std::cout << "frame " << currentFrame << ":\n\n"
