@@ -154,7 +154,7 @@ namespace roboptim
       Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-      std::cout << "EFGH\n";
+      //std::cout << "EFGH\n";
 
       // animatedMeshLocal_->state () = x;
       // animatedMeshLocal_->computeVertexWeights();

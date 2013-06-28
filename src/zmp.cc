@@ -31,7 +31,7 @@ namespace roboptim
 	robotMotion (),
 	robot ()
     {
-      std::cout << "ABCD CTOR" << std::endl;
+      //std::cout << "ABCD CTOR" << std::endl;
     }
 
     ZMP::~ZMP () throw ()
@@ -43,7 +43,7 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      std::cout << "ABCD\n";
+      //std::cout << "ABCD\n";
       //animatedMeshLocal_->state () = x;
 
       // Compute q from segment positions.
