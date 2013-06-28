@@ -1,3 +1,6 @@
+#include <fstream>
+#include <boost/format.hpp>
+
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/include/fold.hpp>
 #include <boost/make_shared.hpp>
@@ -22,6 +25,29 @@ namespace roboptim
 {
   namespace retargeting
   {
+    void plotQTorque (const std::vector<Torque::robot_t::confVector>& q,
+		      const std::vector<Torque::robot_t::confVector>& dq,
+		      const std::vector<Torque::robot_t::confVector>& ddq)
+    {
+      static int id = 0;
+      
+      std::string filename = (boost::format ("/tmp/torque-ik-%1%.dat") % id++).str ();
+      std::ofstream file (filename.c_str ());
+
+      for (std::size_t frameId = 0; frameId < q.size (); ++frameId)
+	{
+	  for (std::size_t qId = 0; qId < q[frameId].size (); ++qId)
+	    {
+	      file
+		<< q[frameId][qId] << " "
+		<< dq[frameId][qId] << " " 
+		<< ddq[frameId][qId] << " ";
+	    }
+	  file << "\n";
+	}
+    }
+
+
     namespace
     {
       struct getJointIdVisitor
@@ -229,6 +255,7 @@ namespace roboptim
 	}
 
       //std::cout << result << std::endl;
+      plotQTorque (q, dq, ddq);
     }
 
     void

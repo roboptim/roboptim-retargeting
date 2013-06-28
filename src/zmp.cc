@@ -1,3 +1,6 @@
+#include <fstream>
+#include <boost/format.hpp>
+
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/zmp.hh"
 
@@ -11,6 +14,28 @@ namespace roboptim
 {
   namespace retargeting
   {
+    void plotQ (const std::vector<ZMP::robot_t::confVector>& q,
+		       const std::vector<ZMP::robot_t::confVector>& dq,
+		       const std::vector<ZMP::robot_t::confVector>& ddq)
+    {
+      static int id = 0;
+      std::cout << "writing " << id << std::endl;
+      std::string filename = (boost::format ("/tmp/zmp-ik-%1%.dat") % id++).str ();
+      std::ofstream file (filename.c_str ());
+
+      for (std::size_t frameId = 0; frameId < q.size (); ++frameId)
+	{
+	  for (std::size_t qId = 0; qId < q[frameId].size (); ++qId)
+	    {
+	      file
+		<< q[frameId][qId] << " "
+		<< dq[frameId][qId] << " "
+		<< ddq[frameId][qId] << " ";
+	    }
+	  file << "\n";
+	}
+    }
+
 
     ZMP::ZMP
     (AnimatedInteractionMeshShPtr_t animatedMesh,
@@ -131,7 +156,7 @@ namespace roboptim
 	  result[frameId * 2 + 1] =   af.n()[0] / af.f()[2];
 	}
 
-
+      plotQ (q, dq, ddq);
       //std::cout << result << std::endl;
     }
 

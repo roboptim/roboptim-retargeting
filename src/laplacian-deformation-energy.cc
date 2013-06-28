@@ -21,7 +21,7 @@ namespace roboptim
      cnoid::MarkerIMeshPtr markerIMesh,
      boost::shared_ptr<std::vector<CharacterInfo> > characterInfos) throw ()
       : roboptim::GenericLinearFunction<EigenMatrixSparse>
-	(animatedMesh->optimizationVectorSize (),
+	(markerIMesh->numFrames () * markerIMesh->numActiveVertices () * 3,
 	 1,
 	 "laplacian deformation energy"),
 	animatedMesh_ (animatedMesh),

@@ -12,10 +12,6 @@
 
 #include "model/hrp4g2.hh"
 
-// Define which robot to use.
-typedef metapod::hrp4g2 robot_t;
-
-
 namespace roboptim
 {
   namespace retargeting
@@ -28,6 +24,9 @@ namespace roboptim
       public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
     {
     public:
+      // Define which robot to use.
+      typedef metapod::hrp4g2 robot_t;
+
       explicit ZMP (AnimatedInteractionMeshShPtr_t animatedMesh,
 		    AnimatedInteractionMeshShPtr_t animatedMeshLocal,
 		    cnoid::BodyPtr model,

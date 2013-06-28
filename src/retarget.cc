@@ -62,6 +62,24 @@ namespace roboptim
       // point.
       // problem_->startingPoint () =
       // 	animatedMesh_->makeOptimizationVector ();
+      // Set the starting point.
+      std::cout << "PROBLEM INPUT SIZE: " << problem_->function ().inputSize () << "\n";
+      cnoid::VectorXd x (problem_->function ().inputSize ());
+
+      for (int frameId = 0;
+	   frameId < markerMotion->numFrames (); ++frameId)
+	{
+	  cnoid::MarkerMotion::Frame frame = markerMotion->frame (frameId);
+	  for (int partId = 0;
+	       partId < markerMotion->numParts (); ++partId)
+		 x.segment<3>
+		 (frameId * markerMotion->numParts () * 3 + partId * 3) =
+		   frame[partId];
+	}
+
+      problem_->startingPoint () = x;
+      std::cout << (*problem_->startingPoint ()) << std::endl;
+
 
 
       AnimatedInteractionMeshShPtr_t animatedMeshLocal =
@@ -190,23 +208,6 @@ namespace roboptim
 	     <GenericDifferentiableFunction<EigenMatrixSparse> >
 	     (zmp_), intervals, scales);
 	}
-
-      // Set the starting point.
-      cnoid::VectorXd x (problem_->function ().inputSize ());
-
-      for (int frameId = 0;
-	   frameId < markerMotion->numFrames (); ++frameId)
-	{
-	  cnoid::MarkerMotion::Frame frame = markerMotion->frame (frameId);
-	  int idx = 0;
-	  for (int partId = 0;
-	       partId < markerMotion->numParts (); ++partId)
-		 x.segment<3>
-		 (frameId * markerMotion->numParts () * 3 + partId * 3) =
-		   frame[idx++];
-	}
-
-      problem_->startingPoint () = x;
     }
 
     Retarget::~Retarget ()

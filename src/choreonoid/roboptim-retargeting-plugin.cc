@@ -151,8 +151,9 @@ private:
     bool enablePosition = true;
     bool enableCollision = false;
     bool enableTorque = false;
-    bool enableZmp = false;
+    bool enableZmp = true;
     std::string solverName = "ipopt-sparse";
+    //std::string solverName = "nag-nlp-sparse";
 
     // Retarget motion.
     roboptim::retargeting::Retarget retarget
@@ -168,7 +169,18 @@ private:
        solverName,
        markerMotionItem);
 
-    retarget.solve ();
+    try
+      {
+	retarget.solve ();
+      }
+    catch (std::runtime_error& e)
+      {
+	cnoid::MessageView::mainInstance ()->putln (e.what ());
+	if (menuItem_)
+	  menuItem_->setEnabled (true);
+	thread_.reset ();
+	return;
+      }
 
     cnoid::MarkerMotionItemPtr resultItem =
       boost::dynamic_pointer_cast<cnoid::MarkerMotionItem>
