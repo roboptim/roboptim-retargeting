@@ -24,6 +24,7 @@
 
 # include <cnoid/Body>
 # include <cnoid/src/MocapPlugin/MarkerMotion.h>
+# include <cnoid/src/MocapPlugin/MarkerMotionItem.h>
 
 namespace roboptim
 {
@@ -69,7 +70,8 @@ namespace roboptim
        bool enableCollision,
        bool enableTorque,
        bool enableZmp,
-       const std::string& solverName);
+       const std::string& solverName,
+       cnoid::MarkerMotionItemPtr markerMotionItem);
       virtual ~Retarget ();
 
       /// \brief Solve the underlying optimization problem.

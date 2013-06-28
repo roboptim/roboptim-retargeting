@@ -165,7 +165,8 @@ private:
        enableCollision,
        enableTorque,
        enableZmp,
-       solverName);
+       solverName,
+       markerMotionItem);
 
     retarget.solve ();
 

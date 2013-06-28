@@ -339,6 +339,7 @@ void BoneLength::initFrame(int frame) const
 	result = Hi * x - hi;
       }
 
+      copySolution ();
       firstIter = false;
     }
 

@@ -265,7 +265,8 @@ int main (int argc, char** argv)
      enableCollision,
      enableTorque,
      enableZmp,
-     solverName);
+     solverName,
+     0);
   retarget.animatedMesh ()->writeGraphvizGraphs ("/tmp");
   //traceProblem (retarget, "before");
 

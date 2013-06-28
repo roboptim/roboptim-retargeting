@@ -21,7 +21,8 @@ namespace roboptim
 			bool enableCollision,
 			bool enableTorque,
 			bool enableZmp,
-			const std::string& solverName)
+			const std::string& solverName,
+			cnoid::MarkerMotionItemPtr markerMotionItem)
       : characterInfos (new std::vector<CharacterInfo> ()),
 	mesh (markerIMesh),
 	animatedMesh_
@@ -79,7 +80,16 @@ namespace roboptim
 	  markerIMesh, characterInfos, numAllBones));
 
       // Create position constraints.
-      //FIXME:
+      int leftAnkle = markerMotion->markerIndex("LeftAnkle");
+      const cnoid::Vector3& p = markerMotionItem->currentMarkerPosition(leftAnkle);
+      positions_.push_back
+	(PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false, 1.)));
+
+      int rightAnkle = markerMotion->markerIndex("RightAnkle");
+      const cnoid::Vector3& p2 = markerMotionItem->currentMarkerPosition(rightAnkle);
+      positions_.push_back
+	(PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false, 1.)));
+
 
       // Create torque constraints.
       torque_ = boost::make_shared<Torque>
