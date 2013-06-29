@@ -94,19 +94,18 @@ namespace roboptim
       AnimatedInteractionMesh::edge_descriptor_t it;
       boneLength_ = BoneLengthShPtr_t
 	(new BoneLength
-	 (animatedMesh_, animatedMeshLocal, it,
-	  markerIMesh, characterInfos, numAllBones));
+	 (markerIMesh, characterInfos, numAllBones));
 
       // Create position constraints.
       int leftAnkle = markerMotion->markerIndex("LeftAnkle");
       const cnoid::Vector3& p = markerMotionItem->currentMarkerPosition(leftAnkle);
       positions_.push_back
-	(PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false, 1.)));
+	(PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false, 1., numAllBones)));
 
       int rightAnkle = markerMotion->markerIndex("RightAnkle");
       const cnoid::Vector3& p2 = markerMotionItem->currentMarkerPosition(rightAnkle);
       positions_.push_back
-	(PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false, 1.)));
+	(PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false, 1., numAllBones)));
 
 
       // Create torque constraints.

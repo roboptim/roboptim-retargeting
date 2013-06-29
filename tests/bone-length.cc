@@ -58,10 +58,7 @@ BOOST_AUTO_TEST_CASE (simple)
     (new std::vector<CharacterInfo> ());
 
   BoneLength bl
-    (animatedMesh,
-     animatedMeshLocal,
-     edgeId,
-     cnoid::MarkerIMeshPtr (new cnoid::MarkerIMesh ()),
+    (cnoid::MarkerIMeshPtr (new cnoid::MarkerIMesh ()),
      characterInfos, 0); //FIXME:
 
   GenericFunction<EigenMatrixSparse>::vector_t x (bl.inputSize ());

@@ -38,7 +38,7 @@ namespace roboptim
     {
     public:
       typedef boost::shared_ptr<
-	typename roboptim::GenericDifferentiableFunction<
+	roboptim::GenericDifferentiableFunction<
 	  EigenMatrixSparse> >
       DifferentiableFunctionShPtr_t;
       typedef boost::shared_ptr<Sum<EigenMatrixSparse> > SumShPtr_t;

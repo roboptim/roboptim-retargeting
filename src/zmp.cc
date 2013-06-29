@@ -68,7 +68,7 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
-      std::cout << x << std::endl;
+      //std::cout << x << std::endl;
       //std::cout << "ABCD\n";
       //animatedMeshLocal_->state () = x;
 
@@ -157,7 +157,7 @@ namespace roboptim
 	  result[frameId * 2 + 1] =   af.n()[0] / af.f()[2];
 	}
 
-      plotQ (q, dq, ddq);
+      //plotQ (q, dq, ddq);
       //std::cout << result << std::endl;
     }
 
@@ -168,6 +168,10 @@ namespace roboptim
      size_type i)
       const throw ()
     {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+      Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
       roboptim::GenericFiniteDifferenceGradient<
 	EigenMatrixSparse,
 	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >

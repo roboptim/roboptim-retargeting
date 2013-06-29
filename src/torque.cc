@@ -255,7 +255,7 @@ namespace roboptim
 	}
 
       //std::cout << result << std::endl;
-      plotQTorque (q, dq, ddq);
+      //plotQTorque (q, dq, ddq);
     }
 
     void

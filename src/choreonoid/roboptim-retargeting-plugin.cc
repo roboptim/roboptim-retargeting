@@ -200,7 +200,10 @@ private:
       {
 	const roboptim::SolverError& result =
 	  boost::get<roboptim::SolverError> (retarget.result ());
-	x = result.lastState ()->x;
+	if (result.lastState ())
+	  x = result.lastState ()->x;
+	else
+	  x.setZero ();
 
 	std::stringstream ss;
 	ss << "No solution has been found. Failing..."
@@ -228,6 +231,15 @@ private:
     else
       {
 	cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - failed");
+	if (menuItem_)
+	  menuItem_->setEnabled (true);
+	thread_.reset (); // yeah suicide time.
+	return;
+      }
+
+    if (x.size () == 0)
+      {
+	cnoid::MessageView::mainInstance ()->putln ("Roboptim Retargeting - end");
 	if (menuItem_)
 	  menuItem_->setEnabled (true);
 	thread_.reset (); // yeah suicide time.
