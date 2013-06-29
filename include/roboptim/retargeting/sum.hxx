@@ -26,8 +26,8 @@ namespace roboptim
 	functions_ (functions),
 	result_ (functions[0]->outputSize ()),
 	gradient_ (functions[0]->inputSize ()),
-	jacobian_ (functions[0]->inputSize (),
-		   functions[0]->outputSize ())
+	jacobian_ (functions[0]->outputSize (),
+		   functions[0]->inputSize ())
     {
       result_.setZero ();
       gradient_.setZero ();
@@ -77,7 +77,7 @@ namespace roboptim
     {
       for (unsigned i = 0; i < functions_.size (); ++i)
 	{
-	  functions_[i]->jacobian (jacobian, argument);
+	  functions_[i]->jacobian (jacobian_, argument);
 	  jacobian += jacobian_;
 	}
     }

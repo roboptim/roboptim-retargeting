@@ -152,8 +152,8 @@ private:
     bool enableCollision = false;
     bool enableTorque = false;
     bool enableZmp = true;
-    std::string solverName = "ipopt-sparse";
-    //std::string solverName = "nag-nlp-sparse";
+    //std::string solverName = "ipopt-sparse";
+    std::string solverName = "nag-nlp-sparse";
 
     // Retarget motion.
     roboptim::retargeting::Retarget retarget

@@ -242,6 +242,7 @@ namespace roboptim
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
+      solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
 
       LOG4CXX_INFO (logger, "Solver:\n" << solver);
       LOG4CXX_DEBUG(logger, "start solving...");

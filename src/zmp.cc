@@ -68,6 +68,7 @@ namespace roboptim
     (result_t& result, const argument_t& x)
       const throw ()
     {
+      std::cout << x << std::endl;
       //std::cout << "ABCD\n";
       //animatedMeshLocal_->state () = x;
 
