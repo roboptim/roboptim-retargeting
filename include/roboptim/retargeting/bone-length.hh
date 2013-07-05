@@ -32,44 +32,6 @@ namespace roboptim
        boost::shared_ptr<std::vector<CharacterInfo> > characterInfos,
        int numAllBones) throw ();
       virtual ~BoneLength () throw ();
-
-      // void impl_compute (result_t& result, const argument_t& x)
-      // 	const throw ();
-      // void impl_gradient (gradient_t& gradient,
-      // 			  const argument_t& argument,
-      // 			  size_type functionId = 0)
-      // 	const throw ();
-      // void impl_jacobian (jacobian_t& jacobian, const argument_t& arg)
-      // 	const throw ();
-
-    private:
-      void initVariables();
-      void extractBones();
-      void setInteractionMesh(cnoid::MarkerIMeshPtr mesh);
-      void setBoneLengthMatrixAndVectorOfFrame(double alpha);
-      void initFrame(int frame);
-      void copySolution();
-
-      boost::shared_ptr<std::vector<CharacterInfo> > characterInfos;
-
-      cnoid::MarkerIMeshPtr mesh;
-
-      std::vector<cnoid::MarkerMotionPtr> morphedMarkerMotions;
-
-      std::vector<cnoid::MarkerMotion::Frame> Vi0_frames; // original positions
-      std::vector<cnoid::MarkerMotion::Frame> Vi_frames;  // current (morphed) positions
-
-      // key: active vertex index of a vertex of an edge
-      // value: global vertex index of the other vertex of the edge
-      std::map<int, std::set<int> > boneEdgeMap;
-
-      int currentFrame;
-      cnoid::VectorXd x; // solution
-
-      int m;  // the number of "active" vertices
-      int m3; // the number of all the active vertex elements (m * 3)
-      int m3n; // m3 * number of frames;
-      int numAllBones; // the number of "active" bones
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

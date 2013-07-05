@@ -131,7 +131,7 @@ namespace roboptim
 	    }
 	  problem_->addConstraint
 	    (boost::static_pointer_cast
-	     <GenericLinearFunction<EigenMatrixSparse> >
+	     <GenericNumericLinearFunction<EigenMatrixSparse> >
 	     (boneLength_),
 	     intervals,
 	     scales);
@@ -155,7 +155,7 @@ namespace roboptim
 
 	    problem_->addConstraint
 	      (boost::static_pointer_cast
-	       <GenericLinearFunction<EigenMatrixSparse> > (positions_[i]),
+	       <GenericNumericLinearFunction<EigenMatrixSparse> > (positions_[i]),
 	       intervals, scales);
 	  }
 
@@ -237,7 +237,7 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Set solver parameters.
-      solver.parameters ()["max-iterations"].value = 1;
+      solver.parameters ()["max-iterations"].value = 100;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";

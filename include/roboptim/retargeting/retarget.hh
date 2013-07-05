@@ -43,20 +43,24 @@ namespace roboptim
       DifferentiableFunctionShPtr_t;
       typedef boost::shared_ptr<Sum<EigenMatrixSparse> > SumShPtr_t;
 
-      typedef roboptim::Problem<
-      GenericDifferentiableFunction<EigenMatrixSparse>,
-      boost::mpl::vector<
-	GenericLinearFunction<EigenMatrixSparse>,
-	GenericDifferentiableFunction<EigenMatrixSparse>
-	> >
-      problem_t;
       typedef roboptim::Solver<
+
+	GenericDifferentiableFunction<EigenMatrixSparse>,
+	boost::mpl::vector<
+	  GenericNumericLinearFunction<EigenMatrixSparse>,
+	  GenericDifferentiableFunction<EigenMatrixSparse> >
+
+	/*
 	GenericDifferentiableFunction<EigenMatrixSparse>,
 	boost::mpl::vector<
 	  GenericLinearFunction<EigenMatrixSparse>,
 	  GenericDifferentiableFunction<EigenMatrixSparse>
-	  > >
+	  >
+	*/
+	  >
       solver_t;
+      typedef typename solver_t::problem_t problem_t;
+
       typedef boost::shared_ptr<problem_t>
       problemShPtr_t;
 
