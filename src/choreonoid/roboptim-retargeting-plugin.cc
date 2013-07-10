@@ -147,8 +147,8 @@ private:
       (log4cxx::Logger::getLogger
        ("roboptim.retargeting.choreonoid"));
 
-    bool enableBoneLength = false;
-    bool enablePosition = true;
+    bool enableBoneLength = true;
+    bool enablePosition = false;
     bool enableCollision = false;
     bool enableTorque = false;
     bool enableZmp = false;

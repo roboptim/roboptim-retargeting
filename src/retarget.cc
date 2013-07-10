@@ -217,18 +217,20 @@ namespace roboptim
     Retarget::setCharacterPair
     (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)
     {
-      if(mesh && motionIndex < mesh->numMotions()){
-        if(motionIndex >= characterInfos->size()){
-	  characterInfos->resize(motionIndex + 1);
-        }
-        CharacterInfo& chara = (*characterInfos)[motionIndex];
-        if(!chara.org){
-	  chara.org = org;
-	  chara.goal = goal;
-        }
-      }
+      if(mesh && motionIndex < mesh->numMotions())
+	{
+	  if(motionIndex >= characterInfos->size())
+	    {
+	      characterInfos->resize(motionIndex + 1);
+	    }
+	  CharacterInfo& chara = (*characterInfos)[motionIndex];
+	  if(!chara.org)
+	    {
+	      chara.org = org;
+	      chara.goal = goal;
+	    }
+	}
     }
-
 
     void
     Retarget::solve ()
