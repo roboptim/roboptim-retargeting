@@ -100,12 +100,12 @@ namespace roboptim
       int leftAnkle = markerMotion->markerIndex("LeftAnkle");
       const cnoid::Vector3& p = markerMotionItem->currentMarkerPosition(leftAnkle);
       positions_.push_back
-	(PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false, 1., numAllBones)));
+	(PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false)));
 
       int rightAnkle = markerMotion->markerIndex("RightAnkle");
       const cnoid::Vector3& p2 = markerMotionItem->currentMarkerPosition(rightAnkle);
       positions_.push_back
-	(PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false, 1., numAllBones)));
+	(PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false)));
 
 
       // Create torque constraints.
@@ -124,7 +124,7 @@ namespace roboptim
 
 	  Function::intervals_t intervals;
 	  problem_t::scales_t scales;
-	  for (unsigned i = 0; i < numAllBones * numFrames; ++i)
+	  for (int i = 0; i < numAllBones * numFrames; ++i)
 	    {
 	      intervals.push_back (roboptim::Function::makeInterval (0., 0.));
 	      scales.push_back (1.);
@@ -147,7 +147,7 @@ namespace roboptim
 
 	    Function::intervals_t intervals;
 	    problem_t::scales_t scales;
-	    for (unsigned j = 0; j < positions_[i]->outputSize (); ++j)
+	    for (Function::size_type j = 0; j < positions_[i]->outputSize (); ++j)
 	      {
 		intervals.push_back (roboptim::Function::makeInterval (0., 0.));
 		scales.push_back (1.);
@@ -173,7 +173,7 @@ namespace roboptim
 
 	  Function::intervals_t intervals;
 	  problem_t::scales_t scales;
-	  for (unsigned i = 0; i < torque_->outputSize (); ++i)
+	  for (Function::size_type i = 0; i < torque_->outputSize (); ++i)
 	    {
 	      intervals.push_back
 		(roboptim::Function::makeInterval
@@ -195,7 +195,7 @@ namespace roboptim
 
 	  Function::intervals_t intervals;
 	  problem_t::scales_t scales;
-	  for (unsigned i = 0; i < zmp_->outputSize (); ++i)
+	  for (Function::size_type i = 0; i < zmp_->outputSize (); ++i)
 	    {
 	      //FIXME:
 	      intervals.push_back (roboptim::Function::makeInterval (-.1, .1));
@@ -219,7 +219,7 @@ namespace roboptim
     {
       if(mesh && motionIndex < mesh->numMotions())
 	{
-	  if(motionIndex >= characterInfos->size())
+	  if(motionIndex >= static_cast<int> (characterInfos->size ()))
 	    {
 	      characterInfos->resize(motionIndex + 1);
 	    }
