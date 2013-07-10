@@ -20,15 +20,15 @@ namespace roboptim
 	 vector_t
 	 (3 * mesh->numFrames ()))
     {
-      int activeVertexIndex =
+      const int activeVertexIndex =
 	mesh->localToActiveIndex (motionIndex, localMarkerIndex);
       cnoid::MarkerMotionPtr motion = mesh->motion (motionIndex);
 
       A ().reserve (3 * mesh->numFrames ());
       for (int frameId = 0; frameId < mesh->numFrames (); ++frameId)
 	{
-	  const int row = 0;
-	  const int col = activeVertexIndex * 3;
+	  const int row = 3 * frameId;
+	  const int col = 3 * frameId + activeVertexIndex * 3;
 
 	  for(int k = 0; k < 3; ++k)
 	    this->A ().insert (row + k, col + k) = 1.0;
@@ -36,11 +36,11 @@ namespace roboptim
 	  if (isRelative)
 	    {
 	      const cnoid::Vector3& markerPosition =
-		motion->frame(frameId)[activeVertexIndex];
-	      this->b ().segment<3> (row) = markerPosition + pos;
+		motion->frame(frameId)[localMarkerIndex];
+	      this->b ().segment<3> (row) = -markerPosition - pos;
 	    }
 	  else
-	    this->b ().segment<3> (row) = pos;
+	    this->b ().segment<3> (row) = -pos;
 	}
 
       this->A ().finalize ();

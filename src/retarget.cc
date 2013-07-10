@@ -239,7 +239,7 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Set solver parameters.
-      solver.parameters ()["max-iterations"].value = 100;
+      solver.parameters ()["max-iterations"].value = 1000;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
