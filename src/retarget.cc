@@ -239,11 +239,12 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Set solver parameters.
-      solver.parameters ()["max-iterations"].value = 1000;
+      solver.parameters ()["max-iterations"].value = 2;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
       solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
+      solver.parameters ()["nag.verify-level"].value = 0;
 
       LOG4CXX_INFO (logger, "Solver:\n" << solver);
       LOG4CXX_DEBUG(logger, "start solving...");

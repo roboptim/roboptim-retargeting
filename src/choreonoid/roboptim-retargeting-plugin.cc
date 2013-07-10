@@ -72,9 +72,10 @@ private:
       cnoid::ItemTreeView::instance()->selectedItems<cnoid::Item>();
     cnoid::ItemList<cnoid::BodyItem> bodyItems = selected;
 
-    for (int i = 0; i < bodyItems.size (); ++i)
+    for (std::size_t i = 0; i < bodyItems.size (); ++i)
       {
-	cnoid::BodyItem* bodyItem = bodyItems.get (i);
+	int i_ = static_cast<int> (i);
+	cnoid::BodyItem* bodyItem = bodyItems.get (i_);
 	if (bodyItem->body ())
 	  body = bodyItem->body ();
 
@@ -151,7 +152,7 @@ private:
     bool enablePosition = true;
     bool enableCollision = false;
     bool enableTorque = false;
-    bool enableZmp = false;
+    bool enableZmp = true;
     //std::string solverName = "ipopt-sparse";
     std::string solverName = "nag-nlp-sparse";
 
@@ -250,6 +251,24 @@ private:
     retarget.animatedMesh ()->computeVertexWeights ();
     retarget.animatedMesh ()->writeTrajectory (filename);
     LOG4CXX_INFO (logger, "trajectory written to: " << filename);
+
+    // Write torque.
+    if (retarget.torqueConstraint ())
+      {
+	roboptim::Function::vector_t torques =
+	  (*retarget.torqueConstraint ()) (x);
+	int nDofs = retarget.animatedMesh ()->numFrames () / torques.size ();
+	std::ofstream file ("/tmp/final-torque.dat");
+	for (roboptim::Function::size_type frameId = 0;
+	     frameId < retarget.animatedMesh ()->numFrames ();
+	     ++frameId)
+	  {
+	    for (int dof = 0; dof < nDofs; ++dof)
+	      file
+		<< torques[frameId * nDofs + dof]  << " ";
+	    file << "\n";
+	  }
+      }
 
     resultItem->seq ()->setFrameRate (retarget.animatedMesh ()->framerate ());
     resultItem->seq ()->setNumParts (retarget.animatedMesh ()->numVertices ());
