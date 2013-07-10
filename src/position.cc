@@ -28,7 +28,8 @@ namespace roboptim
       for (int frameId = 0; frameId < mesh->numFrames (); ++frameId)
 	{
 	  const int row = 3 * frameId;
-	  const int col = 3 * frameId + activeVertexIndex * 3;
+	  const int col =
+	    (3 * frameId * mesh->numActiveVertices()) + (activeVertexIndex * 3);
 
 	  for(int k = 0; k < 3; ++k)
 	    this->A ().insert (row + k, col + k) = 1.0;
