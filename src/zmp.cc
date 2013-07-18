@@ -158,7 +158,7 @@ namespace roboptim
 	}
 
       //plotQ (q, dq, ddq);
-      //std::cout << result << std::endl;
+      std::cout << "ZMP: " << result << std::endl;
     }
 
     void

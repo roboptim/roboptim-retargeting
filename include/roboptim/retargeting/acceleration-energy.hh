@@ -1,8 +1,11 @@
 #ifndef ROBOPTIM_RETARGETING_ACCELERATION_ENERGY_HH
 # define ROBOPTIM_RETARGETING_ACCELERATION_ENERGY_HH
-# include <roboptim/core/differentiable-function.hh>
+# include <boost/shared_ptr.hpp>
+# include <roboptim/core/numeric-quadratic-function.hh>
 
 # include <roboptim/retargeting/animated-interaction-mesh.hh>
+
+# include <cnoid/ext/MocapPlugin/MarkerIMesh.h>
 
 namespace roboptim
 {
@@ -21,22 +24,13 @@ namespace roboptim
     /// \f]
 
     class AccelerationEnergy
-      : public roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
+      : public roboptim::GenericNumericQuadraticFunction<EigenMatrixSparse>
     {
     public:
       explicit AccelerationEnergy
-      (AnimatedInteractionMeshShPtr_t animatedMesh) throw ();
+      (cnoid::MarkerIMeshPtr markerIMesh) throw ();
 
       virtual ~AccelerationEnergy () throw ();
-      void impl_compute (result_t& result, const argument_t& x)
-	const throw ();
-      void impl_gradient (gradient_t& gradient,
-			  const argument_t& argument,
-			  size_type functionId = 0)
-	const throw ();
-
-    private:
-      AnimatedInteractionMeshShPtr_t animatedMesh_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

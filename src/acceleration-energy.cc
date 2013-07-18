@@ -1,3 +1,4 @@
+#include <fstream>
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/acceleration-energy.hh"
 
@@ -6,80 +7,90 @@ namespace roboptim
   namespace retargeting
   {
     AccelerationEnergy::AccelerationEnergy
-    (AnimatedInteractionMeshShPtr_t animatedMesh) throw ()
-      : roboptim::GenericDifferentiableFunction<EigenMatrixSparse>
-	(static_cast<size_type> (animatedMesh->optimizationVectorSize ()),
-	 1, ""),
-	animatedMesh_ (animatedMesh)
-    {}
-
-    AccelerationEnergy::~AccelerationEnergy () throw ()
-    {}
-
-    void
-    AccelerationEnergy::impl_compute
-    (result_t& result, const argument_t& x)
-      const throw ()
+    (cnoid::MarkerIMeshPtr mesh) throw ()
+      : roboptim::GenericNumericQuadraticFunction<EigenMatrixSparse>
+	(matrix_t
+	 (mesh->numFrames () * mesh->numActiveVertices () * 3,
+	  mesh->numFrames () * mesh->numActiveVertices () * 3),
+	 vector_t (mesh->numFrames () * mesh->numActiveVertices () * 3))
     {
-      result.resize (1);
+      const double weight = 1e-6;
+      const double dt = mesh->getTimeStep();
+      const double k = weight / ((dt * dt) * (dt * dt));
 
-      // Set result to zero and add the energy contribution of each
-      // vertex of each frame separately.
-      result[0] = 0.;
 
-      const unsigned& numFrames = animatedMesh_->numFrames ();
-      const unsigned& numVertices = animatedMesh_->numVertices ();
+      typedef Eigen::Triplet<double> triplet_t;
 
-      // We exclude first and last frame for which the contribution of
-      // energy is zero.
-      for (unsigned frame = 1;
-	   frame < numFrames - 1; ++frame)
+      // Fill the matrix first.
+      std::vector<triplet_t> coefficients;
+      for (int col = 0;
+	   col < mesh->numFrames () * mesh->numActiveVertices () * 3;
+	   ++col)
+	coefficients.push_back (triplet_t (0, col, 0.));
+      this->A ().setFromTriplets (coefficients.begin (), coefficients.end ());
+
+      // Compute coefficients.
+      for (int frameId = 0; frameId < mesh->numFrames (); ++frameId)
 	{
-	  AnimatedInteractionMesh::vertex_iterator_t vertexIt;
-	  AnimatedInteractionMesh::vertex_iterator_t vertexEnd;
-
-	  boost::tie (vertexIt, vertexEnd) =
-	    boost::vertices (animatedMesh_->graph ());
-	  for (long unsigned vertex = 0; vertex < numVertices; ++vertex)
+	  for (int markerId = 0; markerId < mesh->numActiveVertices ();
+	       ++markerId)
 	    {
-	      long unsigned variableId = frame * numVertices + vertex;
-	      long unsigned variableIdPreviousFrame =
-		(frame - 1) * numVertices + vertex;
-	      long unsigned variableIdNextFrame =
-		(frame + 1) * numVertices + vertex;
+	      int prevOffset =
+		(frameId - 1) * mesh->numActiveVertices () * 3 + (markerId * 3);
+	      int currentOffset =
+		frameId * mesh->numActiveVertices () * 3 + (markerId * 3);
+	      int succOffset =
+		(frameId + 1) * mesh->numActiveVertices () * 3 + (markerId * 3);
 
-	      // Compute velocity from position by finite differentiation.
-	      double h = 1. / animatedMesh_->framerate ();
-	      result[0] +=
-		(x[variableIdNextFrame] 
-		 - 2 * x[variableId]
-		 + x[variableIdPreviousFrame])
-		 / (h * h);
+	      // V_{i-1}
+	      if (prevOffset >= 0)
+		{
+		  this->A ().coeffRef (prevOffset + 0, currentOffset + 0) += 1. * k;
+		  this->A ().coeffRef (prevOffset + 1, currentOffset + 1) += 1. * k;
+		  this->A ().coeffRef (prevOffset + 2, currentOffset + 2) += 1. * k;
+		}
+	      // V_i
+	      this->A ().coeffRef
+		(currentOffset + 0, currentOffset + 0) += -2. * k;
+	      this->A ().coeffRef
+		(currentOffset + 1, currentOffset + 1) += -2. * k;
+	      this->A ().coeffRef
+		(currentOffset + 2, currentOffset + 2) += -2. * k;
+	      // V_{i+1}
+	      if (succOffset < this->A ().rows ())
+		{
+		  this->A ().coeffRef (succOffset + 0, currentOffset + 0) += 1. * k;
+		  this->A ().coeffRef (succOffset + 1, currentOffset + 1) += 1. * k;
+		  this->A ().coeffRef (succOffset + 2, currentOffset + 2) += 1. * k;
+		}
 	    }
 	}
 
-      result[0] = .5 * result[0] * result[0];
+      this->A () = this->A ().transpose () * this->A ();
 
-      result[0] *= 1e-6; // weight on acceleration, should not be here.
+      this->A ().finalize ();
+      this->b ().setZero ();
+
+      // Print A in file (dense representation).
+      {
+	std::ofstream file ("/tmp/acceleration-A.dat");
+	file.setf (std::ios::right);
+	for (Eigen::MatrixXd::Index row = 0; row < A ().rows (); ++row)
+	  {
+	    for (Eigen::MatrixXd::Index col = 0; col < A ().cols (); ++col)
+	      file << std::showpos << std::fixed << std::setprecision (8)
+		   << A ().coeff (row, col) << " ";
+	    file << "\n";
+	  }
+      }
+      {
+	std::ofstream file ("/tmp/acceleration-b.dat");
+	for (Eigen::MatrixXd::Index elt = 0; elt < b ().size (); ++elt)
+	  file << b ()[elt] << "\n";
+      }
     }
 
-    void
-    AccelerationEnergy::impl_gradient
-    (gradient_t& gradient,
-     const argument_t& x,
-     size_type i)
-      const throw ()
-    {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-      Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-      roboptim::GenericFiniteDifferenceGradient<
-	EigenMatrixSparse,
-	finiteDifferenceGradientPolicies::Simple<EigenMatrixSparse> >
-	fdg (*this);
-      fdg.gradient (gradient, x, i);
-    }
-
+    AccelerationEnergy::~AccelerationEnergy () throw ()
+    {}
   } // end of namespace retargeting.
 } // end of namespace roboptim.

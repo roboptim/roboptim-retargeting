@@ -29,9 +29,7 @@ namespace roboptim
 	(AnimatedInteractionMesh::loadAnimatedMesh
 	 (markerMotion, character)),
 	costLaplacian_ (),
-	costAcceleration_
-	(AccelerationEnergyShPtr_t
-	 (new AccelerationEnergy (animatedMesh_))),
+	costAcceleration_ (),
 	cost_ (),
 	problem_ (),
 	boneLength_ (),
@@ -52,9 +50,12 @@ namespace roboptim
 	 (animatedMesh_, markerMotion, character, markerIMesh,
 	  characterInfos));
 
+      costAcceleration_ = AccelerationEnergyShPtr_t
+	(new AccelerationEnergy (markerIMesh));
+
       std::vector<DifferentiableFunctionShPtr_t> costs;
       costs.push_back (costLaplacian_);
-      //costs.push_back (costAcceleration_);
+      costs.push_back (costAcceleration_);
       cost_ = boost::make_shared<Sum<EigenMatrixSparse> > (costs);
       problem_ = boost::make_shared<problem_t> (*cost_);
 
@@ -239,12 +240,12 @@ namespace roboptim
       solver_t& solver = factory ();
 
       // Set solver parameters.
-      solver.parameters ()["max-iterations"].value = 2;
+      solver.parameters ()["max-iterations"].value = 100;
       solver.parameters ()["ipopt.output_file"].value =
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
       solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
-      solver.parameters ()["nag.verify-level"].value = 0;
+      solver.parameters ()["nag.verify-level"].value = 3;
 
       LOG4CXX_INFO (logger, "Solver:\n" << solver);
       LOG4CXX_DEBUG(logger, "start solving...");
