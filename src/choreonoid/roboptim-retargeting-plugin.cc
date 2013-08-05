@@ -4,7 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
-#include <roboptim/retargeting/retarget.hh>
+#include <roboptim/retargeting/problem/marker.hh>
 
 #include <cnoid/BodyItem>
 #include <cnoid/ItemList>
@@ -152,12 +152,12 @@ private:
     bool enablePosition = true;
     bool enableCollision = false;
     bool enableTorque = false;
-    bool enableZmp = false;
+    bool enableZmp = true;
     //std::string solverName = "ipopt-sparse";
     std::string solverName = "nag-nlp-sparse";
 
     // Retarget motion.
-    roboptim::retargeting::Retarget retarget
+    roboptim::retargeting::problem::Marker retarget
       (markerMotionItem->motion (),
        character,
        body,
@@ -197,7 +197,7 @@ private:
     // Populate result.
     // Check if the minimization has succeed.
     if (retarget.result ().which () ==
-	roboptim::retargeting::Retarget::solver_t::SOLVER_ERROR)
+	roboptim::retargeting::problem::Marker::solver_t::SOLVER_ERROR)
       {
 	const roboptim::SolverError& result =
 	  boost::get<roboptim::SolverError> (retarget.result ());
@@ -214,7 +214,7 @@ private:
 	cnoid::MessageView::mainInstance ()->putln (ss.str ());
       }
     else if (retarget.result ().which () ==
-	roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
+	roboptim::retargeting::problem::Marker::solver_t::SOLVER_VALUE_WARNINGS)
       {
 	const roboptim::Result& result =
 	  boost::get<roboptim::ResultWithWarnings> (retarget.result ());
@@ -222,7 +222,7 @@ private:
 	LOG4CXX_WARN (logger, "solver warnings: " << result);
       }
     else if (retarget.result ().which () ==
-	     roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE)
+	     roboptim::retargeting::problem::Marker::solver_t::SOLVER_VALUE)
       {
 	const roboptim::Result& result =
 	  boost::get<roboptim::Result> (retarget.result ());

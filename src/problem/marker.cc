@@ -1,62 +1,72 @@
 #include <boost/make_shared.hpp>
 #include <roboptim/core/solver-factory.hh>
 
+#include <roboptim/core/differentiable-function.hh>
+#include <roboptim/core/numeric-quadratic-function.hh>
+#include <roboptim/core/filter/plus.hh>
+
 #include <cnoid/Body>
 
-#include "roboptim/retargeting/retarget.hh"
+#include "roboptim/retargeting/problem/marker.hh"
 
 namespace roboptim
 {
   namespace retargeting
   {
-    log4cxx::LoggerPtr Retarget::logger
-    (log4cxx::Logger::getLogger("roboptim.retargeting.Retarget"));
-
-    Retarget::Retarget (cnoid::MarkerMotionPtr markerMotion,
-			cnoid::CharacterPtr character,
-			cnoid::BodyPtr body,
-			cnoid::MarkerIMeshPtr markerIMesh,
-			bool enableBoneLength,
-			bool enablePosition,
-			bool enableCollision,
-			bool enableTorque,
-			bool enableZmp,
-			const std::string& solverName,
-			cnoid::MarkerMotionItemPtr markerMotionItem)
-      : characterInfos (new std::vector<CharacterInfo> ()),
-	mesh (markerIMesh),
-	animatedMesh_
-	(AnimatedInteractionMesh::loadAnimatedMesh
-	 (markerMotion, character)),
-	costLaplacian_ (),
-	costAcceleration_ (),
-	cost_ (),
-	problem_ (),
-	boneLength_ (),
-	positions_ (),
-	collisions_ (),
-	torque_ (),
-	zmp_ (),
-	result_ (),
-	solverName_ (solverName)
+    namespace problem
     {
-      markerIMesh->addMotion (markerMotion, character);
-      markerIMesh->update ();
+      log4cxx::LoggerPtr Marker::logger
+      (log4cxx::Logger::getLogger("roboptim.retargeting.Marker"));
 
-      setCharacterPair (0, character, character);
+      Marker::Marker (cnoid::MarkerMotionPtr markerMotion,
+		      cnoid::CharacterPtr character,
+		      cnoid::BodyPtr body,
+		      cnoid::MarkerIMeshPtr markerIMesh,
+		      bool enableBoneLength,
+		      bool enablePosition,
+		      bool enableCollision,
+		      bool enableTorque,
+		      bool enableZmp,
+		      const std::string& solverName,
+		      cnoid::MarkerMotionItemPtr markerMotionItem)
+	: characterInfos (new std::vector<CharacterInfo> ()),
+	  mesh (markerIMesh),
+	  animatedMesh_
+	  (AnimatedInteractionMesh::loadAnimatedMesh
+	   (markerMotion, character)),
+	  costLaplacian_ (),
+	  costAcceleration_ (),
+	  cost_ (),
+	  problem_ (),
+	  boneLength_ (),
+	  positions_ (),
+	  collisions_ (),
+	  torque_ (),
+	  zmp_ (),
+	  result_ (),
+	  solverName_ (solverName)
+      {
+	markerIMesh->addMotion (markerMotion, character);
+	markerIMesh->update ();
 
-      costLaplacian_ = LaplacianDeformationEnergyShPtr_t
-	(new LaplacianDeformationEnergy
-	 (animatedMesh_, markerMotion, character, markerIMesh,
-	  characterInfos));
+	setCharacterPair (0, character, character);
 
-      costAcceleration_ = AccelerationEnergyShPtr_t
-	(new AccelerationEnergy (markerIMesh));
+	costLaplacian_ = LaplacianDeformationEnergyShPtr_t
+	  (new LaplacianDeformationEnergy
+	   (animatedMesh_, markerMotion, character, markerIMesh,
+	    characterInfos));
 
-      std::vector<DifferentiableFunctionShPtr_t> costs;
-      costs.push_back (costLaplacian_);
-      costs.push_back (costAcceleration_);
-      cost_ = boost::make_shared<Sum<EigenMatrixSparse> > (costs);
+	costAcceleration_ = AccelerationEnergyShPtr_t
+	  (new AccelerationEnergy (markerIMesh));
+
+	cost_ = roboptim::plus<
+	  roboptim::GenericDifferentiableFunction<roboptim::EigenMatrixSparse>,
+	  roboptim::GenericNumericQuadraticFunction<roboptim::EigenMatrixSparse>
+	  >
+	(costLaplacian_, costAcceleration_);
+
+      //cost_ = costAcceleration_;
+
       problem_ = boost::make_shared<problem_t> (*cost_);
 
       // Use loaded animated interaction mesh to provide starting
@@ -73,9 +83,9 @@ namespace roboptim
 	  cnoid::MarkerMotion::Frame frame = markerMotion->frame (frameId);
 	  for (int partId = 0;
 	       partId < markerMotion->numParts (); ++partId)
-		 x.segment<3>
-		 (frameId * markerMotion->numParts () * 3 + partId * 3) =
-		   frame[partId];
+	    x.segment<3>
+	      (frameId * markerMotion->numParts () * 3 + partId * 3) =
+	      frame[partId];
 	}
 
       problem_->startingPoint () = x;
@@ -84,8 +94,8 @@ namespace roboptim
 
 
       AnimatedInteractionMeshShPtr_t animatedMeshLocal =
-	AnimatedInteractionMesh::makeFromOptimizationVariables
-	(animatedMesh_->state (), animatedMesh_);
+						    AnimatedInteractionMesh::makeFromOptimizationVariables
+						    (animatedMesh_->state (), animatedMesh_);
 
 
       // Create bone lengths constraint,
@@ -94,27 +104,27 @@ namespace roboptim
       int numFrames = mesh->numFrames ();
       AnimatedInteractionMesh::edge_descriptor_t it;
       boneLength_ = BoneLengthShPtr_t
-	(new BoneLength
-	 (markerIMesh, characterInfos, numAllBones));
+						       (new BoneLength
+							(markerIMesh, characterInfos, numAllBones));
 
       // Create position constraints.
       int leftAnkle = markerMotion->markerIndex("LeftAnkle");
       const cnoid::Vector3& p = markerMotionItem->currentMarkerPosition(leftAnkle);
       positions_.push_back
-	(PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false)));
+      (PositionShPtr_t (new Position (mesh, 0, leftAnkle, p, false)));
 
       int rightAnkle = markerMotion->markerIndex("RightAnkle");
       const cnoid::Vector3& p2 = markerMotionItem->currentMarkerPosition(rightAnkle);
       positions_.push_back
-	(PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false)));
+      (PositionShPtr_t (new Position (mesh, 0, rightAnkle, p2, false)));
 
 
       // Create torque constraints.
       torque_ = boost::make_shared<Torque>
-	(animatedMesh_, animatedMeshLocal, body, markerMotion);
+		   (animatedMesh_, animatedMeshLocal, body, markerMotion);
 
       zmp_ = boost::make_shared<ZMP>
-	(animatedMesh_, animatedMeshLocal, body, markerMotion);
+		   (animatedMesh_, animatedMeshLocal, body, markerMotion);
 
       // Add constraints to problem.
 
@@ -210,12 +220,12 @@ namespace roboptim
 	}
     }
 
-    Retarget::~Retarget ()
-    {
-    }
+      Marker::~Marker ()
+      {
+      }
 
     void
-    Retarget::setCharacterPair
+    Marker::setCharacterPair
     (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)
     {
       if(mesh && motionIndex < mesh->numMotions())
@@ -234,7 +244,7 @@ namespace roboptim
     }
 
     void
-    Retarget::solve ()
+    Marker::solve ()
     {
       roboptim::SolverFactory<solver_t> factory (solverName_, *problem_);
       solver_t& solver = factory ();
@@ -245,7 +255,7 @@ namespace roboptim
 	"/tmp/ipopt.log";
       solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
       solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
-      solver.parameters ()["nag.verify-level"].value = 3;
+      solver.parameters ()["nag.verify-level"].value = 0;
 
       LOG4CXX_INFO (logger, "Solver:\n" << solver);
       LOG4CXX_DEBUG(logger, "start solving...");
@@ -254,5 +264,6 @@ namespace roboptim
       result_ = solver.minimum ();
     }
 
-  } // end of namespace retargeting.
-} // end of namespace roboptim.
+  } // end of namespace problem.
+} // end of namespace retargeting.
+  } // end of namespace roboptim.

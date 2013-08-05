@@ -10,7 +10,7 @@
 
 #include <roboptim/core/visualization/gnuplot.hh>
 
-#include <roboptim/retargeting/retarget.hh>
+#include <roboptim/retargeting/problem/marker.hh>
 
 #include <roboptim/retargeting/config.hh>
 
@@ -255,7 +255,7 @@ int main (int argc, char** argv)
   markerMotion->loadStdYAMLformat (trajectoryFilePath);
 
   // Retarget motion.
-  roboptim::retargeting::Retarget retarget
+  roboptim::retargeting::problem::Marker retarget
     (markerMotion,
      character,
      body,
@@ -284,7 +284,7 @@ int main (int argc, char** argv)
 
   // Check if the minimization has succeed.
   if (retarget.result ().which () ==
-      roboptim::retargeting::Retarget::solver_t::SOLVER_ERROR)
+      roboptim::retargeting::problem::Marker::solver_t::SOLVER_ERROR)
     {
       const roboptim::SolverError& result =
 	boost::get<roboptim::SolverError> (retarget.result ());
@@ -309,7 +309,7 @@ int main (int argc, char** argv)
   LOG4CXX_INFO (logger, "a solution has been found!");
 
   if (retarget.result ().which () ==
-      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE_WARNINGS)
+      roboptim::retargeting::problem::Marker::solver_t::SOLVER_VALUE_WARNINGS)
     {
       const roboptim::Result& result =
 	boost::get<roboptim::ResultWithWarnings> (retarget.result ());

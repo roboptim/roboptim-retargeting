@@ -1,6 +1,6 @@
 #include <boost/format.hpp>
 #include <log4cxx/logger.h>
-#include <roboptim/retargeting/retarget.hh>
+#include <roboptim/retargeting/problem/marker.hh>
 
 #define BOOST_TEST_MODULE retarget
 
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE (simple)
     throw std::runtime_error ("failed to load model");
 
 
-  roboptim::retargeting::Retarget retarget
+  roboptim::retargeting::problem::Marker retarget
     (markerMotion,
      character,
      body,
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   // Check if the minimization has succeed.
   if (retarget.result ().which () !=
-      roboptim::retargeting::Retarget::solver_t::SOLVER_VALUE)
+      roboptim::retargeting::problem::Marker::solver_t::SOLVER_VALUE)
     {
       std::cout << "A solution should have been found. Failing..."
                 << std::endl

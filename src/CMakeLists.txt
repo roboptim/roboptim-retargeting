@@ -11,7 +11,7 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   laplacian-coordinate.cc
   laplacian-deformation-energy.cc
   position.cc
-  retarget.cc
+  problem/marker.cc
   torque.cc
   zmp.cc
   yaml-helper.cc yaml-helper.hh
