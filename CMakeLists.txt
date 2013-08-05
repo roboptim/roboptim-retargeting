@@ -39,8 +39,6 @@ SET(HEADERS
   ${CSD}/include/roboptim/retargeting/laplacian-deformation-energy.hh
   ${CSD}/include/roboptim/retargeting/position.hh
   ${CSD}/include/roboptim/retargeting/problem/marker.hh
-  ${CSD}/include/roboptim/retargeting/sum.hh
-  ${CSD}/include/roboptim/retargeting/sum.hxx
   ${CSD}/include/roboptim/retargeting/torque.hh
   )
 
