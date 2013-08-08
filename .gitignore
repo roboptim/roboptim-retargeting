@@ -1,3 +1,7 @@
 _build*/
 *~
 \#*\#
+doc/memo/*aux*
+doc/memo/*.d
+doc/memo/*.fls
+doc/memo/*.pdf

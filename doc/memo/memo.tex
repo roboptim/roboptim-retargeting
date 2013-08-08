@@ -1,0 +1,215 @@
+\documentclass{article}
+
+\usepackage{manfnt}
+
+\makeatletter
+\def\hang{\hangindent\parindent}
+\def\d@nger{\medbreak\begingroup\clubpenalty=10000
+  \def\par{\endgraf\endgroup\medbreak} \noindent\hang\hangafter=-2
+  \hbox to0pt{\hskip-\hangindent\dbend\hfill}}
+\outer\def\danger{\d@nger}
+\makeatother
+
+\title{Motion Retargeting}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+The goal of this problem is to adapt a trajectory captured using a
+motion capture system to a robot.
+
+\section{Notations}
+
+A trajectory is composed of $M$ frames. The robot is composed of $N$
+joints. $q_i^j$ denotes the position of the $i$-th joint at the $j$-th
+frame.
+
+
+\section{Joint Optimization}
+
+The vector of optimization contains the joint value for each frame of
+the trajectory. It is noted $\mathbf{x}$ and can be illustrated as
+follow:
+
+
+\begin{center}
+  \begin{tabular}{|c c c | c | c c c|}
+    \hline
+    $q_0^0$ & \ldots & $q_N^0$ & \ldots & $q_0^M$ & \ldots & $q_N^M$\\
+    \hline
+  \end{tabular}
+\end{center}
+
+$x^j$ is the configuration vector for the $j$-th frame.
+
+
+\subsection{Problem statement}
+
+\subsection{Cost function}
+
+Let $F$ be the problem cost function.
+
+\begin{equation}
+  F(\mathbf{x}) = {LDE}(\mathbf{x}) + \alpha {Acc}(\mathbf{x})
+\end{equation}
+
+
+$\alpha$ is a weight on the acceleration term. Its default value is
+$10^{-6}$.
+
+The $LDE$ function denotes the Laplacian Deformation Energy while the
+Acc term denotes the acceleration energy.
+
+\paragraph{Laplacian Deformation Energy}
+
+The Laplacian Deformation Energy associated with a marker is:
+
+\begin{equation}
+  LDE(v_i^j) = \frac{1}{2} \| \delta_i^j - L(v_i^j) \|^2
+\end{equation}
+
+
+$L(v_i^j)$ is the Laplacian Coordinate of the marker $i$ at frame $j$.
+
+
+\begin{equation}
+  L(v_i^j) = v_i^j - \sum_{l\in N(v_i^j)} w_{(i,l)}^j v_l^j
+\end{equation}
+
+
+$N(v_i^j)$ are the neighbors of the marker $v_i^j$
+(one-ring). $w_{(i,l)}^j$ is the weight of marker $i$ in frame $j$
+which is inversely proportional to the distance of $v_i^j$ and $v_l^j$
+in the original motion. These weights are precomputed at the beginning
+of the motion.
+
+
+Each marker position can be computed from its attached joint position
+using the JointToMarker function:
+
+\begin{equation}
+  JointToMarker(q_i^j) = offset + DirectGeometry(\mathbf{x}^j, i)
+\end{equation}
+
+This function relies on the $DirectGeometry$ function which computes
+the position of each body attached to each joint for a particular
+frame $j$ and a particular
+configuration. $DirectGeometry(\mathbf{x}^j, i)$ is the position of
+the body $i$ for the configuration $\mathbf{x}^j$ (i.e. the
+configuration at the $j$-th frame).
+
+
+Therefore, the previous equation can be rewritten as:
+
+\begin{equation}
+  LDE(q_i^j) = \frac{1}{2} \| \delta_i^j - L(JointToMarker(q_i^j)) \|^2
+\end{equation}
+
+
+The previous equations are considering the Laplacian Deformation
+Energy for one frame. The final term of the cost function is computed
+by summing each frame Laplacian Deformation Energy associated with
+each joint:
+
+
+\begin{equation}
+  LDE(\mathbf{x}) = \sum_{j \in M} \sum_{i \in N}  LDE(x_i^j)
+\end{equation}
+
+
+\danger There may be zero or several markers associated to some
+joints. Some are also of little interest and ignored to preserve
+computational power (for instance the face joints).
+
+
+By expanding the previous equation and replacing the symbols, one can
+obtain:
+
+
+\begin{equation}
+  LDE(\mathbf{x}) = \frac{1}{2}  \sum_{j \in M} \sum_{i \in N} \big\| \delta_i^j - \big( JointToMarker(\mathbf{x}_i^j) - \sum_{l\in N(v_i^j)} w_{(i,l)}^j JointToMarker(\mathbf{x}_l^j) \big) \big\|^2
+\end{equation}
+
+
+\paragraph{Acceleration Energy}
+
+
+The joint acceleration is considered as follow:
+
+
+\begin{equation}
+  {Acc}(\mathbf{x}) = \ddot{x}
+\end{equation}
+
+
+\danger In the original paper and Choreonoid implementation, the
+marker acceleration is considered and not the joint one.
+
+
+\subsection{Constraints}
+
+\paragraph{Bone Length}
+
+The bone length constraint is expressed as:
+
+\begin{equation}
+  BoneLength(p_1, p_2) = (\| p_1 - p_2 \| - l_e)^2
+\end{equation}
+
+\paragraph{Position}
+
+\begin{equation}
+  Position(m_i^j) = T
+\end{equation}
+
+Where $T = (x, y, z)$ is a particular reference point.
+
+
+The constraint can be evaluated through the use of $JointToMarker$:
+
+\begin{equation}
+  Position_{(i,j)}(\mathbf{x}) = Position(JointToMarker(\mathbf{x}^j, i))
+\end{equation}
+
+\paragraph{ZMP}
+
+The ZMP can be computed for a particular value of $\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}$.
+
+\begin{equation}
+  ZMP(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})
+\end{equation}
+
+An estimation of $\mathbf{\dot{q}}$ and $\mathbf{\ddot{q}}$ can be
+computed from $\mathbf{x}$ using numerical differentiation:
+
+\begin{equation}
+  ZMP_j(\mathbf{x}^j, \mathbf{\dot{x}}^j, \mathbf{\ddot{x}}^j)
+\end{equation}
+
+
+\paragraph{Torque}
+
+The torque values can be computed for a particular value of
+$\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}$.
+
+\begin{equation}
+  Torque(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})
+\end{equation}
+
+An estimation of $\mathbf{\dot{q}}$ and $\mathbf{\ddot{q}}$ can be
+computed from $\mathbf{x}$.
+
+
+\begin{equation}
+  Torque_j(\mathbf{x}^j, \mathbf{\dot{x}}^j, \mathbf{\ddot{x}}^j)
+\end{equation}
+
+
+\section{Spline Joint Optimization}
+
+TO BE DONE
+
+
+\end{document}
