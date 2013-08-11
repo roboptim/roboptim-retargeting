@@ -6,9 +6,7 @@ namespace roboptim
 {
   namespace retargeting
   {
-    namespace zmpPolicies
-    {
-    /// \brief Compute the ZMP position.
+    /// \brief Abstract class for Computing the ZMP position.
     ///
     /// Input:
     ///  x = [q, \dot{q}, \ddot{q}]
@@ -16,13 +14,16 @@ namespace roboptim
     /// Output:
     ///  result = [zmp_x, zmp_y, 0]
     ///
+    /// IMplementation must be done in zmp/*.hh depending on how the
+    /// computation is done (metapod, choreonoid or linear model)
+    ///
     /// \tparam T Function traits type
     template <typename T>
-    class ZMP : public T
+    class ZMP : public GenericDifferentiableFunction<T>
     {
     public:
       explicit ZMP (std::string title) throw ()
-	: T (3, 2, std::string ("ZMP [") + title + "]")
+	: GenericDifferentiableFunction<T> (3, 2, std::string ("ZMP [") + title + "]")
       {}
 
       virtual ~ZMP () throw ()
