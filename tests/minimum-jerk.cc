@@ -23,6 +23,7 @@
 
 #include "tests-config.h"
 
+#include <roboptim/core/filter/derivative.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
@@ -43,12 +44,21 @@ BOOST_AUTO_TEST_CASE (simple)
   double init = .2;
   double goal = 1.6;
 
-  MinimumJerkTrajectory<EigenMatrixDense> minimumJerkTrajectory (tmin, tmax, init, goal);
-  MinimumJerkTrajectory<EigenMatrixDense>::discreteInterval_t intervalS (-10., 10., 0.01);
+  boost::shared_ptr<MinimumJerkTrajectory<EigenMatrixDense> >
+    minimumJerkTrajectory =
+    boost::make_shared<MinimumJerkTrajectory<EigenMatrixDense> >
+    (tmin, tmax, init, goal);
+  MinimumJerkTrajectory<EigenMatrixDense>::discreteInterval_t
+    intervalS (-10., 10., 0.01);
 
   using namespace roboptim::visualization::gnuplot;
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
 
   std::cout
-    << (gnuplot << plot (minimumJerkTrajectory, intervalS));
+    << (gnuplot
+	<< set ("multiplot layout 2, 1")
+	<< plot (*minimumJerkTrajectory, intervalS)
+	<< plot (*derivative (minimumJerkTrajectory, 0), intervalS)
+	<< unset ("multiplot")
+	);
 }

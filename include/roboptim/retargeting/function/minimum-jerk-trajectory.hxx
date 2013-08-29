@@ -42,14 +42,14 @@ namespace roboptim
       value_type delta = positionEnd - positionStart;
 
       coefficients_[0] = positionStart;
-      coefficients_[1] = length * velocityStart;
-      coefficients_[2] = .5 * length * length * accelerationStart;
+      coefficients_[1] = velocityStart;
+      coefficients_[2] = .5 * accelerationStart;
       coefficients_[3] =
 	- 3. / 2. * length * length * accelerationStart
 	- 6. * length * velocityStart
 	+ 10 * delta;
       coefficients_[4] =
-	3. / 2. * length * length* accelerationStart
+	3. / 2. * length * length * accelerationStart
 	+ 8 * length * velocityStart
 	- 15 * delta;
       coefficients_[5] =
@@ -81,12 +81,13 @@ namespace roboptim
 
       // accumulate the power of t (argument[0])
       value_type accu = 1.;
+      value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
 
       result[0] = 0.;
       for (size_type i = 0; i < coefficients_.size (); ++i)
 	{
 	  result[0] += coefficients_[i] * accu;
-	  accu *= argument[0];
+	  accu *= t;
 	}
     }
 
@@ -103,14 +104,15 @@ namespace roboptim
 	  return;
 	}
 
-      // accumulate the power of t (argument[0])
-      value_type accu = argument[0];
+      // accumulate the power of t
+      value_type accu = 1.;
+      value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
 
       gradient[0] = 0.;
       for (size_type i = 1; i < coefficients_.size (); ++i)
 	{
 	  gradient[0] += i * coefficients_[i] * accu;
-	  accu *= argument[0];
+	  accu *= t;
 	}
     }
   } // end of namespace retargeting.
