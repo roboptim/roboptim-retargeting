@@ -28,7 +28,7 @@ namespace roboptim
     (value_type timeStart, value_type timeEnd,
      value_type positionStart, value_type positionEnd,
      value_type velocityStart, value_type accelerationStart) throw ()
-      : GenericDifferentiableFunction<T> (1, 1, "minimum jerk trajectory"),
+      : GenericTwiceDifferentiableFunction<T> (1, 1, "minimum jerk trajectory"),
 	timeStart_ (timeStart),
 	timeEnd_ (timeEnd),
 	positionStart_ (positionStart),
@@ -99,7 +99,7 @@ namespace roboptim
     {
       if (argument[0] < timeStart_ || argument[0] > timeEnd_)
 	{
-	  gradient[0] = 0.;
+	  gradient.setZero ();
 	  return;
 	}
 
@@ -115,6 +115,33 @@ namespace roboptim
 	  accu *= t;
 	}
     }
+
+    template <typename T>
+    void
+    MinimumJerkTrajectory<T>::impl_hessian (hessian_t& hessian,
+					    const argument_t& argument,
+					    size_type)
+      const throw ()
+    {
+      if (argument[0] < timeStart_ || argument[0] > timeEnd_)
+	{
+	  hessian.setZero ();
+	  return;
+	}
+
+      // accumulate the power of t
+      value_type accu = 1.;
+      value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
+      value_type i = 2.;
+
+      hessian (0, 0) = 0.;
+      for (std::size_t idx = 2; idx < coefficients_.size (); ++idx, i += 1.)
+	{
+	  hessian (0, 0) += i * (i - 1.) * coefficients_[idx] * accu;
+	  accu *= t;
+	}
+    }
+
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 

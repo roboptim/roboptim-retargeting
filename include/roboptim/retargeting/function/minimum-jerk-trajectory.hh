@@ -19,7 +19,7 @@
 # define ROBOPTIM_RETARGETING_MINIMUM_JERK_TRAJECTORY_HH
 # include <boost/array.hpp>
 # include <boost/shared_ptr.hpp>
-# include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/twice-differentiable-function.hh>
 
 namespace roboptim
 {
@@ -28,10 +28,11 @@ namespace roboptim
     /// \brief Minimum jerk trajectory computation.
     template <typename T>
     class MinimumJerkTrajectory :
-      public GenericDifferentiableFunction<T>
+      public GenericTwiceDifferentiableFunction<T>
     {
     public:
-      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (GenericDifferentiableFunction<T>);
+      ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+      (GenericTwiceDifferentiableFunction<T>);
 
       explicit MinimumJerkTrajectory
       (value_type timeStart, value_type timeEnd,
@@ -51,6 +52,10 @@ namespace roboptim
 				  size_type functionId = 0)
 	const throw ();
 
+      virtual void impl_hessian (hessian_t& hessian,
+				 const argument_t& argument,
+				 size_type functionId = 0)
+	const throw ();
     private:
       value_type timeStart_;
       value_type timeEnd_;

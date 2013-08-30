@@ -56,9 +56,10 @@ BOOST_AUTO_TEST_CASE (simple)
 
   std::cout
     << (gnuplot
-	<< set ("multiplot layout 2, 1")
+	<< set ("multiplot layout 3, 1")
 	<< plot (*minimumJerkTrajectory, intervalS)
 	<< plot (*derivative (minimumJerkTrajectory, 0), intervalS)
+	<< plot (*derivative (derivative (minimumJerkTrajectory, 0), 0), intervalS)
 	<< unset ("multiplot")
 	);
 }
