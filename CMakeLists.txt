@@ -52,6 +52,7 @@ SEARCH_FOR_BOOST()
 
 ADD_REQUIRED_DEPENDENCY("roboptim-core >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt >= 0.5")
+ADD_REQUIRED_DEPENDENCY("roboptim-trajectory >= 0.5")
 ADD_REQUIRED_DEPENDENCY("yaml-cpp")
 ADD_REQUIRED_DEPENDENCY("liblog4cxx >= 0.10.0")
 ADD_REQUIRED_DEPENDENCY("metapod")

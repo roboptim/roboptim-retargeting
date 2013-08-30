@@ -20,6 +20,7 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   model/hrp4g2.cc model/hrp4g2.hh
   )
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-trajectory)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting metapod)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting liblog4cxx)

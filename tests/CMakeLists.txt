@@ -11,8 +11,9 @@ MACRO(ROBOPTIM_RETARGETING_TEST NAME)
   # Link against Boost.
   TARGET_LINK_LIBRARIES(${NAME} ${Boost_LIBRARIES})
 
-  # roboptim-core
+  # roboptim-core and roboptim-trajectory
   PKG_CONFIG_USE_DEPENDENCY(${NAME} roboptim-core)
+  PKG_CONFIG_USE_DEPENDENCY(${NAME} roboptim-trajectory)
 
   # roboptim-retargeting
   TARGET_LINK_LIBRARIES(${NAME} roboptim-retargeting)
@@ -39,3 +40,4 @@ ROBOPTIM_RETARGETING_TEST(animated-interaction-mesh)
 ROBOPTIM_RETARGETING_TEST(problem-marker)
 
 ROBOPTIM_RETARGETING_TEST(minimum-jerk)
+ROBOPTIM_RETARGETING_TEST(minimum-jerk-problem)
