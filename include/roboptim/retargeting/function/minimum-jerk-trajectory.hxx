@@ -27,8 +27,7 @@ namespace roboptim
     MinimumJerkTrajectory<T>::MinimumJerkTrajectory
     (value_type timeStart, value_type timeEnd,
      value_type positionStart, value_type positionEnd,
-     value_type velocityStart, value_type velocityEnd,
-     value_type accelerationStart, value_type accelerationEnd) throw ()
+     value_type velocityStart, value_type accelerationStart) throw ()
       : GenericDifferentiableFunction<T> (1, 1, "minimum jerk trajectory"),
 	timeStart_ (timeStart),
 	timeEnd_ (timeEnd),
@@ -84,7 +83,7 @@ namespace roboptim
       value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
 
       result[0] = 0.;
-      for (size_type i = 0; i < coefficients_.size (); ++i)
+      for (std::size_t i = 0; i < coefficients_.size (); ++i)
 	{
 	  result[0] += coefficients_[i] * accu;
 	  accu *= t;
@@ -107,11 +106,12 @@ namespace roboptim
       // accumulate the power of t
       value_type accu = 1.;
       value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
+      value_type i = 1.;
 
       gradient[0] = 0.;
-      for (size_type i = 1; i < coefficients_.size (); ++i)
+      for (std::size_t idx = 1; idx < coefficients_.size (); ++idx, i += 1.)
 	{
-	  gradient[0] += i * coefficients_[i] * accu;
+	  gradient[0] += i * coefficients_[idx] * accu;
 	  accu *= t;
 	}
     }

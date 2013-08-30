@@ -36,8 +36,8 @@ namespace roboptim
       explicit MinimumJerkTrajectory
       (value_type timeStart, value_type timeEnd,
        value_type positionStart, value_type positionEnd,
-       value_type velocityStart = 0., value_type velocityEnd = 0.,
-       value_type accelerationStart = 0., value_type accelerationEnd = 0.) throw ();
+       value_type velocityStart = 0.,
+       value_type accelerationStart = 0.) throw ();
       virtual ~MinimumJerkTrajectory () throw ();
 
     protected:
