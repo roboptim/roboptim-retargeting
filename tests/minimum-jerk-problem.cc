@@ -48,13 +48,13 @@ boost::array<double, 44> standardPose = {{
   }};
 
 template <typename T>
-class Cost : public GenericDifferentiableFunction<T>
+class CostAcceleration : public GenericDifferentiableFunction<T>
 {
 public:
   ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
   (GenericDifferentiableFunction<T>);
 
-  explicit Cost (const vector_t& x, size_type nDofs, value_type dt)
+  explicit CostAcceleration (const vector_t& x, size_type nDofs, value_type dt)
     : GenericDifferentiableFunction<T> (x.size (), 1, "acceleration"),
       x_ (x)
   {
@@ -89,6 +89,42 @@ private:
   vector_t x_;
 };
 
+
+// template <typename T>
+// class CostFollowTrajectory : public GenericDifferentiableFunction<T>
+// {
+// public:
+//   ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+//   (GenericDifferentiableFunction<T>);
+
+//   explicit CostFollowTrajectory (const GenericDifferentiableFunction<T>& reference,
+// 				 size_type nPoints,
+// 				 size_type nDofs,
+// 				 discreteInterval_t interval)
+//     : GenericDifferentiableFunction<T> (x.size (), 1, "acceleration"),
+//       x_ (x)
+//   {
+//   }
+
+// protected:
+//   virtual void impl_compute (result_t& result,
+// 			     const argument_t& argument)
+//     const throw ()
+//   {
+//   }
+
+//   virtual void impl_gradient (gradient_t& gradient,
+// 			      const argument_t& argument,
+// 			      size_type functionId = 0)
+//     const throw ()
+//   {
+//   }
+
+// private:
+//   vector_t x_;
+// };
+
+
 BOOST_AUTO_TEST_CASE (simple)
 {
   typedef MinimumJerkTrajectory<EigenMatrixDense>::vector_t vector_t;
@@ -111,21 +147,25 @@ BOOST_AUTO_TEST_CASE (simple)
   vector_t initialTrajectory (nFrames * standardPose.size ());
   initialTrajectory.setZero ();
 
+  vector_t x (4);
+  x[0] = init;
+  x[1] = goal;
+  x[2] = x[3] = 0.;
+
   boost::shared_ptr<MinimumJerkTrajectory<EigenMatrixDense> >
     minimumJerkTrajectory =
     boost::make_shared<MinimumJerkTrajectory<EigenMatrixDense> >
-    (tmin, tmax, init, goal);
+    ();
+  minimumJerkTrajectory->setParameters (x);
 
-  vector_t x (1);
   for (std::size_t frameId = 0; frameId < nFrames; ++frameId)
     {
-      x[0] = static_cast<value_type> (frameId) * dt;
-
       for (std::size_t dof = 0; dof < nDofs; ++dof)
 	initialTrajectory[frameId * nDofs + dof] = standardPose[dof];
 
       initialTrajectory[frameId * nDofs + dofId] =
-	(*minimumJerkTrajectory) (x)[0];
+	(*minimumJerkTrajectory)
+	(static_cast<value_type> (frameId) * dt)[0];
     }
 
   // Create problem.

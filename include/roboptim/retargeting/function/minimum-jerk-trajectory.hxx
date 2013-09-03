@@ -25,19 +25,29 @@ namespace roboptim
   {
     template <typename T>
     MinimumJerkTrajectory<T>::MinimumJerkTrajectory
-    (value_type timeStart, value_type timeEnd,
-     value_type positionStart, value_type positionEnd,
-     value_type velocityStart, value_type accelerationStart) throw ()
-      : GenericTwiceDifferentiableFunction<T> (1, 1, "minimum jerk trajectory"),
-	timeStart_ (timeStart),
-	timeEnd_ (timeEnd),
-	positionStart_ (positionStart),
-	positionEnd_ (positionEnd),
+    () throw ()
+      : Trajectory<3> (makeInterval (0., 1.), 1,
+		       vector_t::Zero (4),
+		       "minimum jerk trajectory"),
 	coefficients_ ()
-    {
-      assert (timeEnd >= timeStart);
+    {}
 
-      value_type length = timeEnd - timeStart;
+    template <typename T>
+    MinimumJerkTrajectory<T>::~MinimumJerkTrajectory () throw ()
+    {}
+
+    template <typename T>
+    void
+    MinimumJerkTrajectory<T>::setParameters (const vector_t& params) throw ()
+    {
+      Trajectory<3>::setParameters (params);
+
+      value_type positionStart = params[0];
+      value_type positionEnd = params[1];
+      value_type velocityStart = params[2];
+      value_type accelerationStart = params[3];
+
+      value_type length = this->length ();
       value_type delta = positionEnd - positionStart;
 
       coefficients_[0] = positionStart;
@@ -58,90 +68,136 @@ namespace roboptim
     }
 
     template <typename T>
-    MinimumJerkTrajectory<T>::~MinimumJerkTrajectory () throw ()
-    {}
-
-    template <typename T>
     void
-    MinimumJerkTrajectory<T>::impl_compute (result_t& result,
-					    const argument_t& argument)
+    MinimumJerkTrajectory<T>::impl_compute (result_t& result, double t)
       const throw ()
     {
-      if (argument[0] < timeStart_)
+      if (t < timeRange ().first)
 	{
-	  result[0] = positionStart_;
+	  result[0] = parameters ()[0];
 	  return;
 	}
-      if (argument[0] > timeEnd_)
+      if (t > timeRange ().second)
 	{
-	  result[0] = positionEnd_;
+	  result[0] = parameters ()[1];
 	  return;
 	}
 
-      // accumulate the power of t (argument[0])
+      // accumulate the power of t (t)
       value_type accu = 1.;
-      value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
+      value_type tScaled = (t - timeRange ().first) / this->length ();
 
       result[0] = 0.;
       for (std::size_t i = 0; i < coefficients_.size (); ++i)
 	{
 	  result[0] += coefficients_[i] * accu;
-	  accu *= t;
+	  accu *= tScaled;
+	}
+    }
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::jacobian_t
+    MinimumJerkTrajectory<T>::variationConfigWrtParam (double t) const throw ()
+    {
+      throw std::runtime_error ("NOT IMPLEMENTED");
+    }
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::jacobian_t
+    MinimumJerkTrajectory<T>::variationDerivWrtParam (double t, size_type order)
+      const throw ()
+    {
+      throw std::runtime_error ("NOT IMPLEMENTED");
+    }
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::value_type
+    MinimumJerkTrajectory<T>::singularPointAtRank (size_type) const
+    {
+      return value_type (); // zero
+    }
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::vector_t
+    MinimumJerkTrajectory<T>::derivBeforeSingularPoint (size_type rank, size_type order) const
+    {}
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::vector_t
+    MinimumJerkTrajectory<T>::derivAfterSingularPoint (size_type rank, size_type order) const
+    {}
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::jacobian_t
+    MinimumJerkTrajectory<T>::variationConfigWrtParam (StableTimePoint tp) const throw ()
+    {
+      throw std::runtime_error ("NOT IMPLEMENTED");
+    }
+
+    template <typename T>
+    typename MinimumJerkTrajectory<T>::jacobian_t
+    MinimumJerkTrajectory<T>::variationDerivWrtParam
+    (StableTimePoint tp, size_type order) const throw ()
+    {
+      throw std::runtime_error ("NOT IMPLEMENTED");
+    }
+
+    template <typename T>
+    void
+    MinimumJerkTrajectory<T>::impl_derivative (gradient_t& gradient,
+					       double t,
+					       size_type order)
+      const throw ()
+    {
+      gradient.setZero ();
+      if (t < timeRange ().first || t > timeRange ().second)
+	return;
+
+      if (order == 0)
+	this->operator () (gradient, t);
+      else if (order == 1)
+	{
+	  // accumulate the power of t
+	  value_type accu = 1.;
+	  value_type tScaled = (t - timeRange ().first) / this->length ();
+	  value_type i = 1.;
+
+	  for (std::size_t idx = 1; idx < coefficients_.size (); ++idx, i += 1.)
+	    {
+	      gradient[0] += i * coefficients_[idx] * accu;
+	      accu *= tScaled;
+	    }
+	}
+      else if (order == 2)
+	{
+	  // accumulate the power of t
+	  value_type accu = 1.;
+	  value_type tScaled = (t - timeRange ().first) / this->length ();
+	  value_type i = 2.;
+
+	  for (std::size_t idx = 2; idx < coefficients_.size (); ++idx, i += 1.)
+	    {
+	      gradient[0] += i * (i - 1.) * coefficients_[idx] * accu;
+	      accu *= tScaled;
+	    }
 	}
     }
 
     template <typename T>
     void
-    MinimumJerkTrajectory<T>::impl_gradient (gradient_t& gradient,
-					     const argument_t& argument,
-					     size_type)
+    MinimumJerkTrajectory<T>::impl_derivative (gradient_t& g, StableTimePoint, size_type order)
       const throw ()
     {
-      if (argument[0] < timeStart_ || argument[0] > timeEnd_)
-	{
-	  gradient.setZero ();
-	  return;
-	}
-
-      // accumulate the power of t
-      value_type accu = 1.;
-      value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
-      value_type i = 1.;
-
-      gradient[0] = 0.;
-      for (std::size_t idx = 1; idx < coefficients_.size (); ++idx, i += 1.)
-	{
-	  gradient[0] += i * coefficients_[idx] * accu;
-	  accu *= t;
-	}
+      throw std::runtime_error ("NOT IMPLEMENTED");
     }
 
     template <typename T>
-    void
-    MinimumJerkTrajectory<T>::impl_hessian (hessian_t& hessian,
-					    const argument_t& argument,
-					    size_type)
+    Trajectory<3>*
+    MinimumJerkTrajectory<T>::resize (interval_t timeRange)
       const throw ()
     {
-      if (argument[0] < timeStart_ || argument[0] > timeEnd_)
-	{
-	  hessian.setZero ();
-	  return;
-	}
-
-      // accumulate the power of t
-      value_type accu = 1.;
-      value_type t = (argument[0] - timeStart_) / (timeEnd_ - timeStart_);
-      value_type i = 2.;
-
-      hessian (0, 0) = 0.;
-      for (std::size_t idx = 2; idx < coefficients_.size (); ++idx, i += 1.)
-	{
-	  hessian (0, 0) += i * (i - 1.) * coefficients_[idx] * accu;
-	  accu *= t;
-	}
+      throw std::runtime_error ("NOT IMPLEMENTED");
     }
-
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 

@@ -19,48 +19,59 @@
 # define ROBOPTIM_RETARGETING_MINIMUM_JERK_TRAJECTORY_HH
 # include <boost/array.hpp>
 # include <boost/shared_ptr.hpp>
-# include <roboptim/core/twice-differentiable-function.hh>
+# include <roboptim/trajectory/trajectory.hh>
 
 namespace roboptim
 {
   namespace retargeting
   {
     /// \brief Minimum jerk trajectory computation.
+    ///
+    /// The curve is parametrized by a vector of four parameters:
+    /// - position start
+    /// - position end
+    /// - velocity start
+    /// - acceleration start
+    ///
+    /// This class is a partial implementation of a Trajectory.
+    /// Some methods will return a runtime_error if called.
     template <typename T>
     class MinimumJerkTrajectory :
-      public GenericTwiceDifferentiableFunction<T>
+      public Trajectory<3>
     {
     public:
       ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
       (GenericTwiceDifferentiableFunction<T>);
 
-      explicit MinimumJerkTrajectory
-      (value_type timeStart, value_type timeEnd,
-       value_type positionStart, value_type positionEnd,
-       value_type velocityStart = 0.,
-       value_type accelerationStart = 0.) throw ();
+      ROBOPTIM_IMPLEMENT_CLONE (MinimumJerkTrajectory<T>);
+
+      explicit MinimumJerkTrajectory () throw ();
       virtual ~MinimumJerkTrajectory () throw ();
 
+      /// \brief Store parameters and update coefficients.
+      void setParameters (const vector_t&) throw ();
     protected:
-      virtual void impl_compute (result_t& result,
-				 const argument_t& argument)
+      void impl_compute (result_t& result, double t) const throw ();
+      jacobian_t variationConfigWrtParam (double t) const throw ();
+      jacobian_t variationDerivWrtParam (double t, size_type order)
 	const throw ();
+      value_type singularPointAtRank (size_type rank) const;
+      vector_t derivBeforeSingularPoint (size_type rank, size_type order) const;
+      vector_t derivAfterSingularPoint (size_type rank, size_type order) const;
 
-
-      virtual void impl_gradient (gradient_t& gradient,
-				  const argument_t& argument,
-				  size_type functionId = 0)
+      jacobian_t variationConfigWrtParam (StableTimePoint tp)
+      const throw ();
+      jacobian_t
+      variationDerivWrtParam (StableTimePoint tp, size_type order)
+      const throw ();
+      void impl_derivative (gradient_t& derivative,
+			    double argument,
+			    size_type order = 1) const throw ();
+      void impl_derivative (gradient_t& g, StableTimePoint, size_type order)
 	const throw ();
-
-      virtual void impl_hessian (hessian_t& hessian,
-				 const argument_t& argument,
-				 size_type functionId = 0)
+      Trajectory<3>* resize (interval_t timeRange)
 	const throw ();
     private:
-      value_type timeStart_;
-      value_type timeEnd_;
-      value_type positionStart_;
-      value_type positionEnd_;
       boost::array<value_type, 6> coefficients_;
     };
   } // end of namespace retargeting.

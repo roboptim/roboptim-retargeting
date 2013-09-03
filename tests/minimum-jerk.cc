@@ -39,17 +39,25 @@ BOOST_AUTO_TEST_CASE (simple)
 {
   configureLog4cxx ();
 
+  typedef MinimumJerkTrajectory<EigenMatrixDense>::vector_t vector_t;
+
   double tmin = .4;
   double tmax = 3.8;
   double init = .2;
   double goal = 1.6;
 
+  vector_t x (4);
+  x[0] = init;
+  x[1] = goal;
+  x[2] = x[3] = 0.;
+
   boost::shared_ptr<MinimumJerkTrajectory<EigenMatrixDense> >
     minimumJerkTrajectory =
     boost::make_shared<MinimumJerkTrajectory<EigenMatrixDense> >
-    (tmin, tmax, init, goal);
+    ();
+  minimumJerkTrajectory->setParameters (x);
   MinimumJerkTrajectory<EigenMatrixDense>::discreteInterval_t
-    intervalS (-10., 10., 0.01);
+    intervalS (0., 1., 0.001);
 
   using namespace roboptim::visualization::gnuplot;
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
