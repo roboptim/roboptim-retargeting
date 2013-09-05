@@ -24,11 +24,12 @@
 #include "tests-config.h"
 
 #include <roboptim/core/filter/derivative.hh>
-#include <roboptim/core/filter/vector-interpolation.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
 #include <roboptim/trajectory/state-function.hh>
+#include <roboptim/trajectory/trajectory-sum-cost.hh>
+#include <roboptim/trajectory/vector-interpolation.hh>
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 
 using namespace roboptim;
@@ -48,81 +49,72 @@ boost::array<double, 44> standardPose = {{
   }};
 
 template <typename T>
-class CostAcceleration : public GenericDifferentiableFunction<T>
+class CostReferenceTrajectory : public GenericDifferentiableFunction<T>
 {
 public:
   ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
   (GenericDifferentiableFunction<T>);
 
-  explicit CostAcceleration (const vector_t& x, size_type nDofs, value_type dt)
-    : GenericDifferentiableFunction<T> (x.size (), 1, "acceleration"),
-      x_ (x)
-  {
-    boost::shared_ptr<VectorInterpolation<T> >
-      vectorInterpolation =
-      roboptim::vectorInterpolation<typename T::traits_t>
-      (x_, static_cast<size_type> (nDofs), dt);
+  /// \brief Import discrete interval type.
+  typedef typename parent_t::discreteInterval_t discreteInterval_t;
+  /// \brief Import discrete interval type.
+  typedef typename parent_t::interval_t interval_t;
 
-    boost::shared_ptr<Derivative<VectorInterpolation<T> > >
-      velocity = derivative (vectorInterpolation, 0);
+  typedef Trajectory<3> trajectory_t;
 
-    boost::shared_ptr<Derivative< Derivative<VectorInterpolation<T> > > >
-      acceleration = derivative (velocity, 0);
+  explicit CostReferenceTrajectory (boost::shared_ptr<Trajectory<3> > referenceTrajectory,
+				    size_type dofId,
+				    value_type dt)
+    throw ()
+    : GenericDifferentiableFunction<T> (1, 1, "CostReferenceTrajectory"),
+      referenceTrajectory_ (referenceTrajectory),
+      vectorInterpolation_
+      (boost::make_shared<VectorInterpolation>
+       (vector_t::Zero (referenceTrajectory->outputSize ()),
+	referenceTrajectory->outputSize (), dt)),
+      dofId_ (dofId),
+      reference_ (referenceTrajectory->outputSize ()),
+      value_ (referenceTrajectory->outputSize ()),
+      dt_ (dt)
+  {}
 
-  }
+  virtual ~CostReferenceTrajectory () throw ()
+  {}
 
 protected:
   virtual void impl_compute (result_t& result,
-			     const argument_t& argument)
+			     const argument_t& p)
     const throw ()
   {
+    vectorInterpolation_->setParameters (p);
+    const value_type min = referenceTrajectory_->timeRange ().first;
+    const value_type max = referenceTrajectory_->timeRange ().second;
+    for (value_type t = min; t < max; t += dt_)
+      {
+	(*vectorInterpolation_) (value_, t);
+	(*referenceTrajectory_) (reference_, t);
+	result[0] +=
+	  .5 * (value_[dofId_] - reference_[dofId_])
+	  * (value_[dofId_] - reference_[dofId_]);
+      }
   }
 
   virtual void impl_gradient (gradient_t& gradient,
 			      const argument_t& argument,
-			      size_type functionId = 0)
+			      size_type)
     const throw ()
   {
+    gradient[0] = argument[dofId_];
   }
 
 private:
-  vector_t x_;
+  boost::shared_ptr<VectorInterpolation > vectorInterpolation_;
+  boost::shared_ptr<Trajectory<3> > referenceTrajectory_;
+  size_type dofId_;
+  mutable result_t reference_;
+  mutable result_t value_;
+  value_type dt_;
 };
-
-
-// template <typename T>
-// class CostFollowTrajectory : public GenericDifferentiableFunction<T>
-// {
-// public:
-//   ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
-//   (GenericDifferentiableFunction<T>);
-
-//   explicit CostFollowTrajectory (const GenericDifferentiableFunction<T>& reference,
-// 				 size_type nPoints,
-// 				 size_type nDofs,
-// 				 discreteInterval_t interval)
-//     : GenericDifferentiableFunction<T> (x.size (), 1, "acceleration"),
-//       x_ (x)
-//   {
-//   }
-
-// protected:
-//   virtual void impl_compute (result_t& result,
-// 			     const argument_t& argument)
-//     const throw ()
-//   {
-//   }
-
-//   virtual void impl_gradient (gradient_t& gradient,
-// 			      const argument_t& argument,
-// 			      size_type functionId = 0)
-//     const throw ()
-//   {
-//   }
-
-// private:
-//   vector_t x_;
-// };
 
 
 BOOST_AUTO_TEST_CASE (simple)
@@ -168,23 +160,33 @@ BOOST_AUTO_TEST_CASE (simple)
 	(static_cast<value_type> (frameId) * dt)[0];
     }
 
+  MinimumJerkTrajectory<EigenMatrixDense>::discreteInterval_t
+    intervalS (tmin, tmax, 0.01);
+
+  boost::shared_ptr<VectorInterpolation >
+    initialTrajectoryFct =
+    vectorInterpolation
+    (initialTrajectory, static_cast<size_type> (nDofs), dt);
+
+  boost::shared_ptr<CostReferenceTrajectory<EigenMatrixDense> >
+    cost = boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
+    (initialTrajectoryFct, dofId, dt);
+
+  std::cerr << "initial cost: " << (*cost) (initialTrajectory) << std::endl;
+
   // Create problem.
 
   // Solve problem.
 
 
   // Display initial and final trajectory.
-  MinimumJerkTrajectory<EigenMatrixDense>::discreteInterval_t
-    intervalS (tmin, tmax, 0.01);
-
   using namespace roboptim::visualization::gnuplot;
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
   std::cout
     << (gnuplot
 	<< set ("multiplot layout 2, 1")
 	<< plot (*minimumJerkTrajectory, intervalS)
-	<< plot (*vectorInterpolation<EigenMatrixDense>
-		 (initialTrajectory, static_cast<size_type> (nDofs), dt), intervalS)
+	<< plot (*initialTrajectoryFct, intervalS)
 	<< unset ("multiplot")
 	);
   std::cerr << initialTrajectory << std::endl;
