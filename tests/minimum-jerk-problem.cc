@@ -66,11 +66,12 @@ public:
 				    size_type dofId,
 				    value_type dt)
     throw ()
-    : GenericDifferentiableFunction<T> (1, 1, "CostReferenceTrajectory"),
+    : GenericDifferentiableFunction<T>
+      (referenceTrajectory->parameters ().size (), 1, "CostReferenceTrajectory"),
       referenceTrajectory_ (referenceTrajectory),
       vectorInterpolation_
       (boost::make_shared<VectorInterpolation>
-       (vector_t::Zero (referenceTrajectory->outputSize ()),
+       (vector_t::Zero (referenceTrajectory->parameters ().size ()),
 	referenceTrajectory->outputSize (), dt)),
       dofId_ (dofId),
       reference_ (referenceTrajectory->outputSize ()),
@@ -86,6 +87,10 @@ protected:
 			     const argument_t& p)
     const throw ()
   {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+    Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
     vectorInterpolation_->setParameters (p);
     const value_type min = referenceTrajectory_->timeRange ().first;
     const value_type max = referenceTrajectory_->timeRange ().second;
@@ -100,11 +105,28 @@ protected:
   }
 
   virtual void impl_gradient (gradient_t& gradient,
-			      const argument_t& argument,
+			      const argument_t& p,
 			      size_type)
     const throw ()
   {
-    gradient[0] = argument[dofId_];
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+    Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+    vectorInterpolation_->setParameters (p);
+
+    const value_type min = referenceTrajectory_->timeRange ().first;
+    const value_type max = referenceTrajectory_->timeRange ().second;
+
+    for (value_type t = min; t < max; t += dt_)
+      {
+	(*vectorInterpolation_) (value_, t);
+	(*referenceTrajectory_) (reference_, t);
+
+	gradient +=
+	  (value_[dofId_] - reference_[dofId_])
+	  * vectorInterpolation_->variationStateWrtParam (t, 1);
+      }
   }
 
 private:
@@ -172,8 +194,6 @@ BOOST_AUTO_TEST_CASE (simple)
     cost = boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
     (initialTrajectoryFct, dofId, dt);
 
-  std::cerr << "initial cost: " << (*cost) (initialTrajectory) << std::endl;
-
   // Create problem.
 
   // Solve problem.
@@ -189,5 +209,4 @@ BOOST_AUTO_TEST_CASE (simple)
 	<< plot (*initialTrajectoryFct, intervalS)
 	<< unset ("multiplot")
 	);
-  std::cerr << initialTrajectory << std::endl;
 }
