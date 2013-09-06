@@ -24,13 +24,15 @@
 #include "tests-config.h"
 
 #include <roboptim/core/filter/derivative.hh>
+#include <roboptim/core/problem.hh>
+#include <roboptim/core/solver.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
+#include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/trajectory/state-function.hh>
 #include <roboptim/trajectory/trajectory-sum-cost.hh>
 #include <roboptim/trajectory/vector-interpolation.hh>
-#include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 
 using namespace roboptim;
 using namespace roboptim::visualization;
@@ -138,6 +140,15 @@ private:
   value_type dt_;
 };
 
+typedef roboptim::Solver<
+  GenericDifferentiableFunction<EigenMatrixDense>,
+  boost::mpl::vector<
+    GenericNumericLinearFunction<EigenMatrixDense>,
+    GenericDifferentiableFunction<EigenMatrixDense> >
+  >
+solver_t;
+typedef solver_t::problem_t problem_t;
+typedef boost::shared_ptr<problem_t> ProblemShPtr_t;
 
 BOOST_AUTO_TEST_CASE (simple)
 {
@@ -195,6 +206,7 @@ BOOST_AUTO_TEST_CASE (simple)
     (initialTrajectoryFct, dofId, dt);
 
   // Create problem.
+  ProblemShPtr_t problem = boost::make_shared<problem_t> (*cost);
 
   // Solve problem.
 
