@@ -26,6 +26,7 @@
 #include <roboptim/core/filter/derivative.hh>
 #include <roboptim/core/problem.hh>
 #include <roboptim/core/solver.hh>
+#include <roboptim/core/solver-factory.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
@@ -70,11 +71,11 @@ public:
     throw ()
     : GenericDifferentiableFunction<T>
       (referenceTrajectory->parameters ().size (), 1, "CostReferenceTrajectory"),
-      referenceTrajectory_ (referenceTrajectory),
       vectorInterpolation_
       (boost::make_shared<VectorInterpolation>
        (vector_t::Zero (referenceTrajectory->parameters ().size ()),
 	referenceTrajectory->outputSize (), dt)),
+      referenceTrajectory_ (referenceTrajectory),
       dofId_ (dofId),
       reference_ (referenceTrajectory->outputSize ()),
       value_ (referenceTrajectory->outputSize ()),
@@ -127,7 +128,7 @@ protected:
 
 	gradient +=
 	  (value_[dofId_] - reference_[dofId_])
-	  * vectorInterpolation_->variationStateWrtParam (t, 1);
+	  * vectorInterpolation_->variationStateWrtParam (t, 1).row (dofId_);
       }
   }
 
@@ -143,7 +144,7 @@ private:
 typedef roboptim::Solver<
   GenericDifferentiableFunction<EigenMatrixDense>,
   boost::mpl::vector<
-    GenericNumericLinearFunction<EigenMatrixDense>,
+    GenericLinearFunction<EigenMatrixDense>,
     GenericDifferentiableFunction<EigenMatrixDense> >
   >
 solver_t;
@@ -156,7 +157,7 @@ BOOST_AUTO_TEST_CASE (simple)
   typedef MinimumJerkTrajectory<EigenMatrixDense>::value_type value_type;
   typedef MinimumJerkTrajectory<EigenMatrixDense>::size_type size_type;
 
-  std::size_t nFrames = 100.;
+  std::size_t nFrames = 10.;
   value_type dt = 0.005;
   value_type tmin = 0.;
   value_type tmax = dt * static_cast<value_type> (nFrames);
@@ -209,16 +210,68 @@ BOOST_AUTO_TEST_CASE (simple)
   ProblemShPtr_t problem = boost::make_shared<problem_t> (*cost);
 
   // Solve problem.
+  roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
+  solver_t& solver = factory ();
 
+  // Set solver parameters.
+  solver.parameters ()["max-iterations"].value = 100;
+  solver.parameters ()["ipopt.output_file"].value =
+    "/tmp/ipopt.log";
+  solver.parameters ()["ipopt.expect_infeasible_problem"].value = "yes";
+  solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
+  solver.parameters ()["nag.verify-level"].value = 0;
+
+  std::cerr << "Solver:\n" << solver << std::endl;
+  std::cerr << "start solving..." << std::endl;
+  solver.solve ();
+  std::cerr << "problem solved." << std::endl;
+
+  // Rebuild final trajectory.
+  std::cerr << "result type: " << solver.minimum ().type ().name () << std::endl;
+
+  if (solver.minimum ().which () == solver_t::SOLVER_ERROR)
+    {
+      std::cerr << "error" << std::endl;
+      roboptim::SolverError error =
+	boost::get<roboptim::SolverError> (solver.minimum ());
+      std::cerr << error << std::endl;
+      return;
+    }
+
+  boost::shared_ptr<VectorInterpolation >
+    finalTrajectoryFct;
+
+  if (solver.minimum ().which () == solver_t::SOLVER_VALUE_WARNINGS)
+    {
+      std::cerr << "warnings" << std::endl;
+      roboptim::ResultWithWarnings result =
+	boost::get<roboptim::ResultWithWarnings> (solver.minimum ());
+      finalTrajectoryFct =
+	vectorInterpolation
+	(result.x, static_cast<size_type> (nDofs), dt);
+    }
+
+  if (solver.minimum ().which () == solver_t::SOLVER_VALUE)
+    {
+      std::cerr << "ok" << std::endl;
+      roboptim::Result result =
+	boost::get<roboptim::Result> (solver.minimum ());
+      finalTrajectoryFct =
+	vectorInterpolation
+	(result.x, static_cast<size_type> (nDofs), dt);
+    }
+
+  assert (!!finalTrajectoryFct);
 
   // Display initial and final trajectory.
   using namespace roboptim::visualization::gnuplot;
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
   std::cout
     << (gnuplot
-	<< set ("multiplot layout 2, 1")
+	<< set ("multiplot layout 3, 1")
 	<< plot (*minimumJerkTrajectory, intervalS)
 	<< plot (*initialTrajectoryFct, intervalS)
+	<< plot (*finalTrajectoryFct, intervalS)
 	<< unset ("multiplot")
 	);
 }
