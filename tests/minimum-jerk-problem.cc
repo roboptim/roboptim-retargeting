@@ -18,22 +18,26 @@
 
 #define BOOST_TEST_MODULE minimum_jerk_problem
 
+#include <vector>
+
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
 #include "tests-config.h"
 
-#include <roboptim/core/filter/derivative.hh>
 #include <roboptim/core/problem.hh>
 #include <roboptim/core/solver.hh>
 #include <roboptim/core/solver-factory.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
-#include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/trajectory/state-function.hh>
-#include <roboptim/trajectory/trajectory-sum-cost.hh>
 #include <roboptim/trajectory/vector-interpolation.hh>
+
+#include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
+#include <roboptim/retargeting/function/zmp/metapod.hh>
+
+#include "model/hrp4g2.hh"
 
 using namespace roboptim;
 using namespace roboptim::visualization;
@@ -153,23 +157,34 @@ typedef boost::shared_ptr<problem_t> ProblemShPtr_t;
 
 BOOST_AUTO_TEST_CASE (simple)
 {
+  // Forward typedefs.
   typedef MinimumJerkTrajectory<EigenMatrixDense>::vector_t vector_t;
+  typedef MinimumJerkTrajectory<EigenMatrixDense>::interval_t interval_t;
   typedef MinimumJerkTrajectory<EigenMatrixDense>::value_type value_type;
   typedef MinimumJerkTrajectory<EigenMatrixDense>::size_type size_type;
 
+  // Problem configuration
+  // - number of frames
   std::size_t nFrames = 10.;
+  // - delta t used for time synchronization
   value_type dt = 0.005;
+  // - minimum trajectory time
   value_type tmin = 0.;
+  // - maximum trajectory time
   value_type tmax = dt * static_cast<value_type> (nFrames);
+  // - dof initial position
   value_type init = 0.;
+  // - dof goal position
   value_type goal = 1.;
-  // the id of the dof we move.
+  // - the id of the dof we move.
   std::size_t dofId = 0;
+  // - total number of dofs
   std::size_t nDofs = standardPose.size ();
 
+  // Configure log4cxx
   configureLog4cxx ();
 
-  // compute the initial trajectory (whole body)
+  // Compute the initial trajectory (whole body)
   vector_t initialTrajectory (nFrames * standardPose.size ());
   initialTrajectory.setZero ();
 
@@ -184,6 +199,7 @@ BOOST_AUTO_TEST_CASE (simple)
     ();
   minimumJerkTrajectory->setParameters (x);
 
+  // Build the starting point
   for (std::size_t frameId = 0; frameId < nFrames; ++frameId)
     {
       for (std::size_t dof = 0; dof < nDofs; ++dof)
@@ -194,6 +210,7 @@ BOOST_AUTO_TEST_CASE (simple)
 	(static_cast<value_type> (frameId) * dt)[0];
     }
 
+  // Build a trajectory over the starting point for display
   MinimumJerkTrajectory<EigenMatrixDense>::discreteInterval_t
     intervalS (tmin, tmax, 0.01);
 
@@ -202,12 +219,103 @@ BOOST_AUTO_TEST_CASE (simple)
     vectorInterpolation
     (initialTrajectory, static_cast<size_type> (nDofs), dt);
 
+  // Build the cost function as the difference between the
+  // reference trajectory and the current trajectory.
   boost::shared_ptr<CostReferenceTrajectory<EigenMatrixDense> >
     cost = boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
     (initialTrajectoryFct, dofId, dt);
 
+  // Clone the vector interpolation object so that it can be used by
+  // constraints
+  boost::shared_ptr<VectorInterpolation >
+    vectorInterpolationConstraints =
+    vectorInterpolation
+    (initialTrajectory, static_cast<size_type> (nDofs), dt);
+
+
   // Create problem.
   ProblemShPtr_t problem = boost::make_shared<problem_t> (*cost);
+
+  // Add constraints.
+  bool enableFeetPositionsConstraint = false;
+  bool enableTorqueConstraint = false;
+  bool enableZmpConstraint = true;
+
+  if (enableFeetPositionsConstraint)
+    {
+      unsigned nConstraints = 1;
+
+      // Left foot.
+      std::vector<interval_t> leftFootBounds (3);
+      for (std::size_t i = 0; i < nDofs; ++i)
+	leftFootBounds[i] = interval_t (0, 0);
+
+      std::vector<value_type> leftFootScales (3);
+      for (std::size_t i = 0; i < nDofs; ++i)
+	leftFootScales[i] = 1.;
+
+      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+	leftFootOneFrame;
+
+      roboptim::StateFunction<VectorInterpolation>::addToProblem
+	(*vectorInterpolationConstraints, leftFootOneFrame, 0,
+	 *problem, leftFootBounds, leftFootScales, nConstraints);
+
+      // Right foot.
+      std::vector<interval_t> rightFootBounds (3);
+      for (std::size_t i = 0; i < nDofs; ++i)
+	rightFootBounds[i] = interval_t (0, 0);
+
+      std::vector<value_type> rightFootScales (3);
+      for (std::size_t i = 0; i < nDofs; ++i)
+	rightFootScales[i] = 1.;
+
+      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+	rightFootOneFrame;
+
+      roboptim::StateFunction<VectorInterpolation>::addToProblem
+	(*vectorInterpolationConstraints, rightFootOneFrame, 0,
+	 *problem, rightFootBounds, rightFootScales, nConstraints);
+    }
+  if (enableTorqueConstraint)
+    {
+      unsigned nConstraints = 1;
+      std::vector<interval_t> torqueBounds (nDofs);
+      for (std::size_t i = 0; i < nDofs; ++i)
+	torqueBounds[i] = interval_t (-1, 1);
+
+      std::vector<value_type> torqueScales (nDofs);
+      for (std::size_t i = 0; i < nDofs; ++i)
+	torqueScales[i] = 1.;
+
+      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+	torqueOneFrame;
+
+      roboptim::StateFunction<VectorInterpolation>::addToProblem
+	(*vectorInterpolationConstraints, torqueOneFrame, 2,
+	 *problem, torqueBounds, torqueScales, nConstraints);
+    }
+  if (enableZmpConstraint)
+    {
+      unsigned nConstraints = 1;
+      std::vector<interval_t> zmpBounds (3);
+      zmpBounds[0] = interval_t (-1, 1);
+      zmpBounds[1] = interval_t (-1, 1);
+      zmpBounds[2] = interval_t (0., 0.);
+
+      std::vector<value_type> zmpScales (3);
+      zmpScales[0] = 1.;
+      zmpScales[1] = 1.;
+      zmpScales[2] = 1.;
+
+      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+	zmpOneFrame =
+	boost::make_shared<ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+
+      roboptim::StateFunction<VectorInterpolation>::addToProblem
+	(*vectorInterpolationConstraints, zmpOneFrame, 2,
+	 *problem, zmpBounds, zmpScales, nConstraints);
+    }
 
   // Solve problem.
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
@@ -233,7 +341,7 @@ BOOST_AUTO_TEST_CASE (simple)
     {
       std::cerr << "error" << std::endl;
       roboptim::SolverError error =
-	boost::get<roboptim::SolverError> (solver.minimum ());
+  	boost::get<roboptim::SolverError> (solver.minimum ());
       std::cerr << error << std::endl;
       return;
     }
@@ -245,7 +353,7 @@ BOOST_AUTO_TEST_CASE (simple)
     {
       std::cerr << "warnings" << std::endl;
       roboptim::ResultWithWarnings result =
-	boost::get<roboptim::ResultWithWarnings> (solver.minimum ());
+  	boost::get<roboptim::ResultWithWarnings> (solver.minimum ());
       finalTrajectoryFct =
 	vectorInterpolation
 	(result.x, static_cast<size_type> (nDofs), dt);

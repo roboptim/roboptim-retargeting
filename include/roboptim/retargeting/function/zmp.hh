@@ -1,5 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_ZMP_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_ZMP_HH
+# include <string>
+
 # include <roboptim/core/differentiable-function.hh>
 
 namespace roboptim
@@ -12,9 +14,9 @@ namespace roboptim
     ///  x = [q, \dot{q}, \ddot{q}]
     ///
     /// Output:
-    ///  result = [zmp_x, zmp_y, 0]
+    ///  result = [zmp_x, zmp_y]
     ///
-    /// IMplementation must be done in zmp/*.hh depending on how the
+    /// Implementation must be done in zmp/*.hh depending on how the
     /// computation is done (metapod, choreonoid or linear model)
     ///
     /// \tparam T Function traits type
@@ -22,8 +24,12 @@ namespace roboptim
     class ZMP : public GenericDifferentiableFunction<T>
     {
     public:
-      explicit ZMP (std::string title) throw ()
-	: GenericDifferentiableFunction<T> (3, 2, std::string ("ZMP [") + title + "]")
+      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+      (GenericDifferentiableFunction<T>);
+
+      explicit ZMP (size_type nDofs, std::string title) throw ()
+	: GenericDifferentiableFunction<T>
+	  (nDofs * 3, 2, std::string ("ZMP [") + title + "]")
       {}
 
       virtual ~ZMP () throw ()
