@@ -1,5 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_TORQUE_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_TORQUE_HH
+# include <string>
+
 # include <roboptim/core/differentiable-function.hh>
 
 namespace roboptim
@@ -16,12 +18,16 @@ namespace roboptim
     ///
     /// \tparam T Function traits type
     template <typename T>
-    class Torque : public T
+    class Torque : public GenericDifferentiableFunction<T>
     {
     public:
-      explicit Torque (std::string title,
-		    size_type nDofs) throw ()
-	: T (3, nDofs, std::string ("Torque [") + title + "]")
+      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+      (GenericDifferentiableFunction<T>);
+
+      explicit Torque (size_type nDofs,
+		       std::string title) throw ()
+	: GenericDifferentiableFunction<T>
+	  (nDofs * 3, nDofs, std::string ("Torque [") + title + "]")
       {}
 
       virtual ~Torque () throw ()

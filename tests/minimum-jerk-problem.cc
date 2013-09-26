@@ -35,6 +35,7 @@
 #include <roboptim/trajectory/vector-interpolation.hh>
 
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
+#include <roboptim/retargeting/function/torque/metapod.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
 
 #include "model/hrp4g2.hh"
@@ -289,7 +290,8 @@ BOOST_AUTO_TEST_CASE (simple)
 	torqueScales[i] = 1.;
 
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
-	torqueOneFrame;
+	torqueOneFrame =
+	boost::make_shared<TorqueMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, torqueOneFrame, 2,
