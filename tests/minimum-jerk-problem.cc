@@ -36,6 +36,7 @@
 #include <roboptim/trajectory/vector-interpolation.hh>
 
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
+#include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
 #include <roboptim/retargeting/function/torque/metapod.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
 

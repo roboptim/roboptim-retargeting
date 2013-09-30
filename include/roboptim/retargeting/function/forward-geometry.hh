@@ -1,29 +1,36 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_HH
+# include <cnoid/Body>
+
 # include <roboptim/core/differentiable-function.hh>
 
 namespace roboptim
 {
   namespace retargeting
   {
-    /// \brief Compute forward geometry for a particular robot model.
+    /// \brief Compute a particular body position for a given configuration.
     ///
-    /// Robot model from choreonoid should be passed to the
-    /// constructor and use for computation.  The analytical jacobian
-    /// must also be retrieved and returned in the
-    /// impl_gradient/impl_jacobian methods.
+    /// Input: [q0, q1, ..., qN]
+    /// Output: [bodyM_x, bodyM_y, bodyM_z]
     template <typename T>
     class ForwardGeometry : public GenericDifferentiableFunction<T>
     {
     public:
-      explicit ForwardGeometry ()
-	: GenericDifferentiableFunction ("ForwardGeometry", 1, 1*3)
-      {
-      }
+      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+      (GenericDifferentiableFunction<T>);
 
-      ~ForwardGeometry ()
-      {
-      }
+      explicit ForwardGeometry (size_type nDofs,
+				std::string title)
+	: GenericDifferentiableFunction<T>
+	  ((boost::format ("ForwardGeometry [%s]") % title).str (),
+	   nDofs, 3)
+      {}
+
+      virtual ~ForwardGeometry ()
+      {}
+
+    private:
+      cnoid::BodyPtr robot_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
