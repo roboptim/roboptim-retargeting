@@ -72,9 +72,10 @@ public:
 
   typedef Trajectory<3> trajectory_t;
 
-  explicit CostReferenceTrajectory (boost::shared_ptr<Trajectory<3> > referenceTrajectory,
-				    size_type dofId,
-				    value_type dt)
+  explicit CostReferenceTrajectory
+  (boost::shared_ptr<Trajectory<3> > referenceTrajectory,
+   size_type dofId,
+   value_type dt)
     throw ()
     : GenericDifferentiableFunction<T>
       (referenceTrajectory->parameters ().size (), 1, "CostReferenceTrajectory"),
@@ -239,6 +240,9 @@ BOOST_AUTO_TEST_CASE (simple)
   // Create problem.
   ProblemShPtr_t problem = boost::make_shared<problem_t> (*cost);
 
+  // Load robot.
+  cnoid::BodyPtr robot;
+
   // Add constraints.
   bool enableFeetPositionsConstraint = false;
   bool enableTorqueConstraint = false;
@@ -258,7 +262,9 @@ BOOST_AUTO_TEST_CASE (simple)
 	leftFootScales[i] = 1.;
 
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
-	leftFootOneFrame;
+	leftFootOneFrame =
+	boost::make_shared<ForwardGeometryChoreonoid<EigenMatrixDense> >
+	(robot, std::string ("L_TOE_P"));
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, leftFootOneFrame, 0,
@@ -274,7 +280,9 @@ BOOST_AUTO_TEST_CASE (simple)
 	rightFootScales[i] = 1.;
 
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
-	rightFootOneFrame;
+	rightFootOneFrame =
+	boost::make_shared<ForwardGeometryChoreonoid<EigenMatrixDense> >
+	(robot, std::string ("R_TOE_P"));
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, rightFootOneFrame, 0,

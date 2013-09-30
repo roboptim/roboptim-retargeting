@@ -1,7 +1,6 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_HH
-# include <cnoid/Body>
-
+# include <boost/format.hpp>
 # include <roboptim/core/differentiable-function.hh>
 
 namespace roboptim
@@ -21,16 +20,13 @@ namespace roboptim
 
       explicit ForwardGeometry (size_type nDofs,
 				std::string title)
+	throw ()
 	: GenericDifferentiableFunction<T>
-	  ((boost::format ("ForwardGeometry [%s]") % title).str (),
-	   nDofs, 3)
+	  (nDofs, 3, (boost::format ("ForwardGeometry [%s]") % title).str ())
       {}
 
-      virtual ~ForwardGeometry ()
+      virtual ~ForwardGeometry () throw ()
       {}
-
-    private:
-      cnoid::BodyPtr robot_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

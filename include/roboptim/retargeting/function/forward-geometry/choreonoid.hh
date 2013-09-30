@@ -1,5 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
+# include <boost/format.hpp>
+
 # include <cnoid/Body>
 # include <cnoid/JointPath>
 
@@ -38,7 +40,36 @@ namespace roboptim
 	  }
       }
 
-      ~ForwardGeometryChoreonoid ()
+      explicit ForwardGeometryChoreonoid
+      (cnoid::BodyPtr robot, const std::string& bodyName) throw ()
+	: ForwardGeometry<T> (robot->numJoints (), "choreonoid"),
+	  robot_ (robot),
+	  bodyId_ (0),
+	  jointPath_ (robot->rootLink ())
+      {
+	cnoid::Link* link = robot->link (bodyName.c_str ());
+	if (!link)
+	  {
+	    boost::format fmt
+	      ("failed to construct ForwardGeometryChoreonoid function:"
+	       " no body whose name is '%s' can be found");
+	    fmt % bodyName;
+	    throw std::runtime_error (fmt.str ());
+	  }
+
+	bodyId_ = link->jointId ();
+	if (bodyId_ >= robot->numLinks ())
+	  {
+	    boost::format fmt
+	      ("failed to construct ForwardGeometryChoreonoid function:"
+	       " invalid body id %d (robot contains %d bodies)");
+	    fmt % bodyId_ % robot->numLinks ();
+	    throw std::runtime_error (fmt.str ());
+	  }
+      }
+
+
+      virtual ~ForwardGeometryChoreonoid () throw ()
       {}
 
     protected:
@@ -65,7 +96,10 @@ namespace roboptim
 	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  robot_->joint (dofId)->q () = x[dofId];
 	robot_->calcForwardKinematics (true, true);
-	jointPath_.calcJacobian (gradient);
+
+	Eigen::MatrixXd matrix;
+	jointPath_.calcJacobian (matrix);
+	gradient = matrix;
       }
 
     private:
