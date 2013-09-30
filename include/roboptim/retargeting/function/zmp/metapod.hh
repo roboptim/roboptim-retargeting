@@ -12,6 +12,28 @@ namespace roboptim
 {
   namespace retargeting
   {
+    template<typename T>
+    void plotQ (const T& state)
+    {
+      static int id = 0;
+      std::cout << "writing " << id << std::endl;
+      std::string filename = (boost::format ("/tmp/zmp-%1%.dat") % id++).str ();
+      std::ofstream file (filename.c_str ());
+
+      std::size_t nDofs  = state.size () / 3;
+      std::size_t qOffset  = 0. / 3. * state.size ();
+      std::size_t dqOffset = 1. / 3. * state.size ();
+      std::size_t ddqOffset = 2. / 3. * state.size ();
+      for (std::size_t dofId = 0; dofId < nDofs; ++dofId)
+	{
+	  file
+	    << state[qOffset + dofId] << " "
+	    << state[dqOffset + dofId] << " "
+	    << state[ddqOffset + dofId] << "\n"
+	    ;
+	}
+    }
+
     /// \brief ZMP position computed through Metapod
     ///
     /// \tparam T Function traits type
@@ -39,6 +61,8 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
+	//plotQ (x);
+
 	metapod::rnea<robot_t, true>::run
 	  (robot_,
 	   x.segment (0 * robot_t::NBDOF, robot_t::NBDOF),

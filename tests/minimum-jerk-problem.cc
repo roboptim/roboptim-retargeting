@@ -29,6 +29,8 @@
 #include <roboptim/core/solver.hh>
 #include <roboptim/core/solver-factory.hh>
 #include <roboptim/core/filter/chain.hh>
+#include <roboptim/core/filter/selection.hh>
+#include <roboptim/core/filter/split.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
@@ -49,13 +51,13 @@ using namespace roboptim::retargeting;
 using boost::test_tools::output_test_stream;
 
 boost::array<double, 44> standardPose = {{
-  0, 0, -25, 50, -25, 0, 0,
-  0, 0, -25, 50, -25, 0, 0,
-  0, 0, 0,
-  0, 0, 0,
-  -1.0, 1.0, 0, 0, 0, -1.0, 1.0, -1.0,
-  5, -10, 0, -15, 0,  10,  1.0, 0,
-  5,  10, 0, -15, 0, -10, -1.0, 0
+    0, 0, -25, 50, -25, 0, 0,
+    0, 0, -25, 50, -25, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    -1.0, 1.0, 0, 0, 0, -1.0, 1.0, -1.0,
+    5, -10, 0, -15, 0,  10,  1.0, 0,
+    5,  10, 0, -15, 0, -10, -1.0, 0
   }};
 
 template <typename T>
@@ -239,6 +241,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   // Create problem.
   ProblemShPtr_t problem = boost::make_shared<problem_t> (*cost);
+  problem->startingPoint () = initialTrajectory;
 
   // Load robot.
   cnoid::BodyPtr robot;
@@ -310,9 +313,16 @@ BOOST_AUTO_TEST_CASE (simple)
   if (enableZmpConstraint)
     {
       unsigned nConstraints = 3;
+      value_type soleX = 0.03;
+      value_type soleY = 0.;
+      value_type soleLength = 0.05; //FIXME:
+      value_type soleWidth = 0.025; //FIXME:
+
       std::vector<interval_t> zmpBounds (2);
-      zmpBounds[0] = interval_t (-1, 1);
-      zmpBounds[1] = interval_t (-1, 1);
+      zmpBounds[0] = interval_t (soleX - .5 * soleLength,
+				 soleX + .5 * soleLength);
+      zmpBounds[1] = interval_t (soleY - .5 * soleWidth,
+				 soleY + .5 * soleWidth);
 
       std::vector<value_type> zmpScales (2);
       zmpScales[0] = 1.;
@@ -352,7 +362,7 @@ BOOST_AUTO_TEST_CASE (simple)
       std::cerr << "error" << std::endl;
       roboptim::SolverError error =
   	boost::get<roboptim::SolverError> (solver.minimum ());
-      std::cerr << error << std::endl;
+      std::cerr << "Result:\n" << error << std::endl;
       return;
     }
 
@@ -364,6 +374,7 @@ BOOST_AUTO_TEST_CASE (simple)
       std::cerr << "warnings" << std::endl;
       roboptim::ResultWithWarnings result =
   	boost::get<roboptim::ResultWithWarnings> (solver.minimum ());
+      std::cerr << "Result:\n" << result << std::endl;
       finalTrajectoryFct =
 	vectorInterpolation
 	(result.x, static_cast<size_type> (nDofs), dt);
@@ -374,6 +385,7 @@ BOOST_AUTO_TEST_CASE (simple)
       std::cerr << "ok" << std::endl;
       roboptim::Result result =
 	boost::get<roboptim::Result> (solver.minimum ());
+      std::cerr << "Result:\n" << result << std::endl;
       finalTrajectoryFct =
 	vectorInterpolation
 	(result.x, static_cast<size_type> (nDofs), dt);
@@ -392,6 +404,38 @@ BOOST_AUTO_TEST_CASE (simple)
 	<< plot (*finalTrajectoryFct, intervalS)
 	<< unset ("multiplot")
 	);
+
+  // Log data.
+
+  for (unsigned i = 0; i < nDofs; ++i)
+    {
+      boost::format fmt
+	("/tmp/minimum-jerk-problem-dof-initial-%d.gp");
+      fmt % i;
+      std::ofstream dofGnuplotFile
+	(fmt.str ().c_str (), std::ofstream::out);
+      Gnuplot gnuplotDof = Gnuplot::make_interactive_gnuplot ();
+
+      dofGnuplotFile <<
+	(gnuplotDof
+	 << plot (Split<GenericDifferentiableFunction<EigenMatrixDense> >
+		  (initialTrajectoryFct, i), intervalS));
+    }
+  for (unsigned i = 0; i < nDofs; ++i)
+    {
+      boost::format fmt
+	("/tmp/minimum-jerk-problem-dof-final-%d.gp");
+      fmt % i;
+      std::ofstream dofGnuplotFile
+	(fmt.str ().c_str (), std::ofstream::out);
+      Gnuplot gnuplotDof = Gnuplot::make_interactive_gnuplot ();
+
+      dofGnuplotFile <<
+	(gnuplotDof
+	 << plot (Split<GenericDifferentiableFunction<EigenMatrixDense> >
+		  (finalTrajectoryFct, i), intervalS));
+    }
+
 
   {
     std::ofstream zmpGnuplotFile

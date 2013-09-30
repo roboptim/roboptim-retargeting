@@ -74,7 +74,7 @@ namespace roboptim
 
     protected:
 
-      // FIMXE: once again we make a huge assumption here by
+      // FIXME: once again we make a huge assumption here by
       // considering all joints are 1-DOFs joints.
       void
       impl_compute
