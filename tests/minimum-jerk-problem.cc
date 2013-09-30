@@ -28,6 +28,7 @@
 #include <roboptim/core/problem.hh>
 #include <roboptim/core/solver.hh>
 #include <roboptim/core/solver-factory.hh>
+#include <roboptim/core/filter/chain.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
@@ -244,7 +245,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   if (enableFeetPositionsConstraint)
     {
-      unsigned nConstraints = 1;
+      unsigned nConstraints = 3;
 
       // Left foot.
       std::vector<interval_t> leftFootBounds (3);
@@ -299,16 +300,14 @@ BOOST_AUTO_TEST_CASE (simple)
     }
   if (enableZmpConstraint)
     {
-      unsigned nConstraints = 1;
-      std::vector<interval_t> zmpBounds (3);
+      unsigned nConstraints = 3;
+      std::vector<interval_t> zmpBounds (2);
       zmpBounds[0] = interval_t (-1, 1);
       zmpBounds[1] = interval_t (-1, 1);
-      zmpBounds[2] = interval_t (0., 0.);
 
-      std::vector<value_type> zmpScales (3);
+      std::vector<value_type> zmpScales (2);
       zmpScales[0] = 1.;
       zmpScales[1] = 1.;
-      zmpScales[2] = 1.;
 
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
 	zmpOneFrame =
@@ -384,4 +383,105 @@ BOOST_AUTO_TEST_CASE (simple)
 	<< plot (*finalTrajectoryFct, intervalS)
 	<< unset ("multiplot")
 	);
+
+  {
+    std::ofstream zmpGnuplotFile
+      ("/tmp/minimum-jerk-problem-zmp.gp", std::ofstream::out);
+    Gnuplot gnuplotZmp = Gnuplot::make_interactive_gnuplot ();
+
+    zmpGnuplotFile << (gnuplotZmp);
+    zmpGnuplotFile <<
+      "plot '-' title 'ZMP (x)' with line,"
+      " '-' title 'ZMP (y)' with line,"
+      " '-' title 'ZMP final (x)' with line,"
+      " '-' title 'ZMP final (y)' with line\n";
+
+    boost::shared_ptr<roboptim::DifferentiableFunction> zmp =
+      boost::make_shared<ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+    vector_t zmpValue (2);
+
+    for (value_type t = boost::get<0> (intervalS);
+	 t < boost::get<1> (intervalS);
+	 t += boost::get<2> (intervalS))
+      {
+	zmpValue = (*zmp) (initialTrajectoryFct->state (t, 2));
+	zmpGnuplotFile << t << " " << zmpValue[0] << "\n";
+      }
+    zmpGnuplotFile << "e\n";
+    for (value_type t = boost::get<0> (intervalS);
+	 t < boost::get<1> (intervalS);
+	 t += boost::get<2> (intervalS))
+      {
+	zmpValue = (*zmp) (initialTrajectoryFct->state (t, 2));
+	zmpGnuplotFile << t << " " << zmpValue[1] << "\n";
+      }
+    zmpGnuplotFile << "e\n";
+
+
+    for (value_type t = boost::get<0> (intervalS);
+	 t < boost::get<1> (intervalS);
+	 t += boost::get<2> (intervalS))
+      {
+	zmpValue = (*zmp) (finalTrajectoryFct->state (t, 2));
+	zmpGnuplotFile << t << " " << zmpValue[0] << "\n";
+      }
+    zmpGnuplotFile << "e\n";
+    for (value_type t = boost::get<0> (intervalS);
+	 t < boost::get<1> (intervalS);
+	 t += boost::get<2> (intervalS))
+      {
+	zmpValue = (*zmp) (finalTrajectoryFct->state (t, 2));
+	zmpGnuplotFile << t << " " << zmpValue[1] << "\n";
+      }
+    zmpGnuplotFile << "e\n";
+  }
+
+  {
+    std::ofstream torqueGnuplotFile
+      ("/tmp/minimum-jerk-problem-torque.gp", std::ofstream::out);
+    Gnuplot gnuplotTorque = Gnuplot::make_interactive_gnuplot ();
+
+    torqueGnuplotFile << (gnuplotTorque);
+    torqueGnuplotFile << "plot ";
+
+    for (unsigned i = 0; i < nDofs; ++i)
+      torqueGnuplotFile
+	<< "'-' title 'Torque (dofId = " << i << ")' with line,";
+    for (unsigned i = 0; i < nDofs; ++i)
+      {
+	torqueGnuplotFile
+	  << "'-' title 'Torque (dofId = " << i << ")' with line";
+	if (i < nDofs - 1)
+	  torqueGnuplotFile << ",";
+      }
+    torqueGnuplotFile << "\n";
+
+    boost::shared_ptr<roboptim::DifferentiableFunction> torque =
+      boost::make_shared<TorqueMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+    vector_t torqueValue (nDofs);
+
+    for (unsigned i = 0; i < nDofs; ++i)
+      {
+	for (value_type t = boost::get<0> (intervalS);
+	     t < boost::get<1> (intervalS);
+	     t += boost::get<2> (intervalS))
+	  {
+	    torqueValue = (*torque) (initialTrajectoryFct->state (t, 2));
+	    torqueGnuplotFile << t << " " << torqueValue[i] << "\n";
+	  }
+	torqueGnuplotFile << "e\n";
+      }
+
+    for (unsigned i = 0; i < nDofs; ++i)
+      {
+	for (value_type t = boost::get<0> (intervalS);
+	     t < boost::get<1> (intervalS);
+	     t += boost::get<2> (intervalS))
+	  {
+	    torqueValue = (*torque) (finalTrajectoryFct->state (t, 2));
+	    torqueGnuplotFile << t << " " << torqueValue[i] << "\n";
+	  }
+	torqueGnuplotFile << "e\n";
+      }
+  }
 }
