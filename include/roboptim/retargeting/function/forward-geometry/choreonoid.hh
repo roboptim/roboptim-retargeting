@@ -1,6 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # include <cnoid/Body>
+# include <cnoid/JointPath>
 
 # include <roboptim/retargeting/function/forward-geometry.hh>
 
@@ -24,7 +25,8 @@ namespace roboptim
       (cnoid::BodyPtr robot, size_type bodyId) throw ()
 	: ForwardGeometry<T> (robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
-	  bodyId_ (bodyId)
+	  bodyId_ (bodyId),
+	  jointPath_ (robot->rootLink ())
       {
 	if (bodyId >= robot->numLinks ())
 	  {
@@ -50,7 +52,7 @@ namespace roboptim
       {
 	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  robot_->joint (dofId)->q () = x[dofId];
-	robot_->calcForwardKinematics ();
+	robot_->calcForwardKinematics (true, true);
 	result = robot_->link (bodyId_)->p ();
       }
 
@@ -60,20 +62,16 @@ namespace roboptim
 		     size_type i)
 	const throw ()
       {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	roboptim::GenericFiniteDifferenceGradient<
-	  T,
-	  finiteDifferenceGradientPolicies::Simple<T> >
-	  fdg (*this);
-	fdg.gradient (gradient, x, i);
+	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	  robot_->joint (dofId)->q () = x[dofId];
+	robot_->calcForwardKinematics (true, true);
+	jointPath_.calcJacobian (gradient);
       }
 
     private:
       cnoid::BodyPtr robot_;
       size_type bodyId_;
+      mutable cnoid::JointPath jointPath_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
