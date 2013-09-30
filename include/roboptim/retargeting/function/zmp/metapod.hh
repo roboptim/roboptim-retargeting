@@ -32,6 +32,7 @@ namespace roboptim
       virtual ~ZMPMetapod () throw ()
       {}
 
+    protected:
       // see https://github.com/laas/metapod/issues/63
       void
       impl_compute
