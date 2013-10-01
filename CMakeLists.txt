@@ -48,6 +48,7 @@ SETUP_PROJECT()
 PKG_CONFIG_APPEND_LIBS(roboptim-retargeting)
 
 # Search for dependencies.
+SET(BOOST_COMPONENTS date_time filesystem system thread program_options unit_test_framework)
 SEARCH_FOR_BOOST()
 
 ADD_REQUIRED_DEPENDENCY("roboptim-core >= 0.5")

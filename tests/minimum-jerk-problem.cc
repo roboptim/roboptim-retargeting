@@ -19,12 +19,13 @@
 #define BOOST_TEST_MODULE minimum_jerk_problem
 
 #include <vector>
-
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
 #include "tests-config.h"
 
+#include <roboptim/core/linear-function.hh>
+#include <roboptim/core/optimization-logger.hh>
 #include <roboptim/core/problem.hh>
 #include <roboptim/core/solver.hh>
 #include <roboptim/core/solver-factory.hh>
@@ -340,6 +341,17 @@ BOOST_AUTO_TEST_CASE (simple)
   // Solve problem.
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
   solver_t& solver = factory ();
+
+  OptimizationLogger<solver_t> logger ("/tmp/minimum-jerk-problem");
+  try
+    {
+      logger.setIterationCallback (solver);
+    }
+  catch (std::runtime_error& e)
+    {
+      std::cerr << e.what () << std::endl;
+      return 1;
+    }
 
   // Set solver parameters.
   solver.parameters ()["max-iterations"].value = 100;
