@@ -342,16 +342,7 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
   solver_t& solver = factory ();
 
-  OptimizationLogger<solver_t> logger ("/tmp/minimum-jerk-problem");
-  try
-    {
-      logger.setIterationCallback (solver);
-    }
-  catch (std::runtime_error& e)
-    {
-      std::cerr << e.what () << std::endl;
-      return 1;
-    }
+  OptimizationLogger<solver_t> logger (solver, "/tmp/minimum-jerk-problem");
 
   // Set solver parameters.
   solver.parameters ()["max-iterations"].value = 100;
