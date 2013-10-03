@@ -43,3 +43,5 @@ ROBOPTIM_RETARGETING_TEST(problem-marker)
 
 ROBOPTIM_RETARGETING_TEST(minimum-jerk)
 ROBOPTIM_RETARGETING_TEST(minimum-jerk-problem)
+
+ROBOPTIM_RETARGETING_TEST(zmp-choreonoid)

@@ -37,11 +37,11 @@ namespace roboptim
 	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  {
 	    robot_->joint (dofId)->q () =
-	      x.segment (0 * robot->numJoints ())[dofId];
+	      x.segment (0 * robot_->numJoints (), robot_->numJoints ())[dofId];
 	    robot_->joint (dofId)->dq () =
-	      x.segment (1 * robot->numJoints ())[dofId];
+	      x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
 	    robot_->joint (dofId)->ddq () =
-	      x.segment (2 * robot->numJoints ())[dofId];
+	      x.segment (2 * robot_->numJoints (), robot_->numJoints ())[dofId];
 	  }
 	robot_->calcForwardKinematics (true, true);
 	const cnoid::Vector3& com = robot_->calcCenterOfMass ();
