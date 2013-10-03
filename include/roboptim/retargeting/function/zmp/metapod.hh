@@ -1,10 +1,12 @@
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_ZMP_METAPOD_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_ZMP_METAPOD_HH
+# include <roboptim/core/finite-difference-gradient.hh>
+
+# include <boost/format.hpp>
 # include <boost/fusion/include/at_c.hpp>
 # include <metapod/algos/rnea.hh>
 # include <metapod/tools/print.hh>
 
-# include <roboptim/core/finite-difference-gradient.hh>
 
 # include <roboptim/retargeting/function/zmp.hh>
 

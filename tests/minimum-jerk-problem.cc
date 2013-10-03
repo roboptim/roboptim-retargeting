@@ -43,6 +43,7 @@
 #include <roboptim/retargeting/function/torque/metapod.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
 
+#include <cnoid/BodyLoader>
 #include "model/hrp4g2.hh"
 
 using namespace roboptim;
@@ -244,8 +245,15 @@ BOOST_AUTO_TEST_CASE (simple)
   ProblemShPtr_t problem = boost::make_shared<problem_t> (*cost);
   problem->startingPoint () = initialTrajectory;
 
-  // Load robot.
-  cnoid::BodyPtr robot;
+  //FIXME: we should embed the copy.
+  std::string modelFilePath
+    ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+
+  // Loading robot.
+  cnoid::BodyLoader loader;
+  cnoid::BodyPtr robot = loader.load (modelFilePath);
+  if (!robot)
+    throw std::runtime_error ("failed to load model");
 
   // Add constraints.
   bool enableFeetPositionsConstraint = false;
