@@ -51,4 +51,19 @@ BOOST_AUTO_TEST_CASE (rnd)
       BOOST_CHECK_EQUAL (res[0], robot->centerOfMass ()[0]);
       BOOST_CHECK_EQUAL (res[1], robot->centerOfMass ()[1]);
     }
+
+  std::cout << "==========" << iendl;
+
+    for (int i = 0; i < 100; ++i)
+    {
+      x = vector_t::Random (3 * robot->numJoints ());
+      vector_t res = zmp (x);
+
+      std::cout << "----------" << iendl
+		<< "X:" << incindent << iendl
+		<< x << decindent << iendl
+		<< "ZMP(X): " << incindent << iendl
+		<< res << decindent << iendl;
+    }
+
 }

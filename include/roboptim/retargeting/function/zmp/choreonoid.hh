@@ -54,6 +54,29 @@ namespace roboptim
 	cnoid::Vector3 ddcom; // \ddot{x}
 	cnoid::Vector3 dL; // \dot{L}
 
+	// Finite differences
+	const double delta = 1e-8;
+	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	  robot_->joint (dofId)->q () +=
+	    delta * x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
+	robot_->calcForwardKinematics (true, true);
+	const cnoid::Vector3& com2 = robot_->calcCenterOfMass ();
+	cnoid::Vector3 P2;
+	cnoid::Vector3 L2;
+	robot_->calcTotalMomentum (P2, L2);
+
+	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	  robot_->joint (dofId)->q () +=
+	    delta * x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
+	robot_->calcForwardKinematics (true, true);
+	const cnoid::Vector3& com3 = robot_->calcCenterOfMass ();
+
+	// Compute ddcom by finite differences
+	ddcom = (com3 - (2 * com2) + com) / (delta * delta);
+
+	// Compute dL by finite differences
+	dL = (L2 - L) / delta;
+
 	// Reorder dL
 	cnoid::Vector2 dL_reordered;
 	dL_reordered[0] = dL[1];
