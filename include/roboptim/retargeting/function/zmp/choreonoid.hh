@@ -21,7 +21,8 @@ namespace roboptim
 
       explicit ZMPChoreonoid (cnoid::BodyPtr robot) throw ()
 	: ZMP<T> (robot->numJoints (), "choreonoid"),
-	  robot_ (robot)
+	  robot_ (robot),
+	  g_ (9.81)
       {}
 
       virtual ~ZMPChoreonoid () throw ()
@@ -33,7 +34,37 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
-	//FIXME: implement this
+	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	  {
+	    robot_->joint (dofId)->q () =
+	      x.segment (0 * robot->numJoints ())[dofId];
+	    robot_->joint (dofId)->dq () =
+	      x.segment (1 * robot->numJoints ())[dofId];
+	    robot_->joint (dofId)->ddq () =
+	      x.segment (2 * robot->numJoints ())[dofId];
+	  }
+	robot_->calcForwardKinematics (true, true);
+	const cnoid::Vector3& com = robot_->calcCenterOfMass ();
+	const double& m = robot_->mass ();
+	cnoid::Vector3 P;
+	cnoid::Vector3 L;
+	robot_->calcTotalMomentum (P, L);
+
+	//FIXME: to be computed by fd.
+	cnoid::Vector3 ddcom; // \ddot{x}
+	cnoid::Vector3 dL; // \dot{L}
+
+	// Reorder dL
+	cnoid::Vector2 dL_reordered;
+	dL_reordered[0] = dL[1];
+	dL_reordered[1] = dL[0];
+
+	// alpha = \ddot{x_z} + g
+	const double alpha = ddcom[2] + g_;
+
+	result = com.segment<2> (0);
+	result -= dL_reordered / (m * alpha);
+	result -= ddcom.segment<2> (0) * (com[2] / alpha);
       }
 
       void
@@ -55,6 +86,7 @@ namespace roboptim
 
     private:
       cnoid::BodyPtr robot_;
+      value_type g_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
