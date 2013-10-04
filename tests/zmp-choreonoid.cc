@@ -54,7 +54,9 @@ BOOST_AUTO_TEST_CASE (rnd)
 
   std::cout << "==========" << iendl;
 
-    for (int i = 0; i < 100; ++i)
+  // if the velocity/acceleration is not null, check that the ZMP and
+  // COM are not the same.
+  for (int i = 0; i < 100; ++i)
     {
       x = vector_t::Random (3 * robot->numJoints ());
       vector_t res = zmp (x);
@@ -64,6 +66,9 @@ BOOST_AUTO_TEST_CASE (rnd)
 		<< x << decindent << iendl
 		<< "ZMP(X): " << incindent << iendl
 		<< res << decindent << iendl;
-    }
 
+      robot->calcCenterOfMass ();
+      BOOST_CHECK_GE (std::abs (res[0] - robot->centerOfMass ()[0]), 1e-5);
+      BOOST_CHECK_GE (std::abs (res[1] - robot->centerOfMass ()[1]), 1e-5);
+    }
 }
