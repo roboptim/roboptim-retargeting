@@ -41,6 +41,7 @@
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
 #include <roboptim/retargeting/function/torque/metapod.hh>
+#include <roboptim/retargeting/function/zmp/choreonoid.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
 
 #include <cnoid/BodyLoader>
@@ -337,9 +338,15 @@ BOOST_AUTO_TEST_CASE (simple)
       zmpScales[0] = 1.;
       zmpScales[1] = 1.;
 
+#ifdef USE_METAPOD_ZMP
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
 	zmpOneFrame =
 	boost::make_shared<ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+#else
+      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+	zmpOneFrame =
+	boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot);
+#endif //! USE_METAPOD_ZMP
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, zmpOneFrame, 2,
