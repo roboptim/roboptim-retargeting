@@ -81,7 +81,7 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
-	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  robot_->joint (dofId)->q () = x[dofId];
 	robot_->calcForwardKinematics (true, true);
 	result = robot_->link (bodyId_)->p ();
@@ -93,7 +93,7 @@ namespace roboptim
 		     size_type i)
 	const throw ()
       {
-	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  robot_->joint (dofId)->q () = x[dofId];
 	robot_->calcForwardKinematics (true, true);
 
