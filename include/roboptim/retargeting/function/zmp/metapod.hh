@@ -38,6 +38,9 @@ namespace roboptim
 
     /// \brief ZMP position computed through Metapod
     ///
+    /// You *have* to make sure that your model root joint is a
+    /// floating joint here.
+    ///
     /// \tparam T Function traits type
     /// \tparam R Robot type
     template <typename T, typename R>
@@ -66,10 +69,7 @@ namespace roboptim
 	//plotQ (x);
 
 	metapod::rnea<robot_t, true>::run
-	  (robot_,
-	   x.segment (0 * robot_t::NBDOF, robot_t::NBDOF),
-	   x.segment (1 * robot_t::NBDOF, robot_t::NBDOF),
-	   x.segment (2 * robot_t::NBDOF, robot_t::NBDOF));
+	  (robot_, this->q (x), this->dq (x), this->ddq (x));
 	metapod::getTorques (robot_, torques_);
 
 	// Express root spatial resultant force in world frame.

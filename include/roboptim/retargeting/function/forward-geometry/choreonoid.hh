@@ -24,7 +24,7 @@ namespace roboptim
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (ForwardGeometry<T>);
 
       explicit ForwardGeometryChoreonoid
-      (cnoid::BodyPtr robot, size_type bodyId) throw ()
+      (cnoid::BodyPtr robot, int bodyId) throw ()
 	: ForwardGeometry<T> (robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
 	  bodyId_ (bodyId),
@@ -104,7 +104,7 @@ namespace roboptim
 
     private:
       cnoid::BodyPtr robot_;
-      size_type bodyId_;
+      int bodyId_;
       mutable cnoid::JointPath jointPath_;
     };
   } // end of namespace retargeting.

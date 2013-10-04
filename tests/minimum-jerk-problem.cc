@@ -53,7 +53,9 @@ using namespace roboptim::retargeting;
 
 using boost::test_tools::output_test_stream;
 
-boost::array<double, 44> standardPose = {{
+boost::array<double, 6 + 44> standardPose = {{
+    0, 0, 0, 0, 0, 0,
+
     0, 0, -25, 50, -25, 0, 0,
     0, 0, -25, 50, -25, 0, 0,
     0, 0, 0,
@@ -212,7 +214,8 @@ BOOST_AUTO_TEST_CASE (simple)
   for (std::size_t frameId = 0; frameId < nFrames; ++frameId)
     {
       for (std::size_t dof = 0; dof < nDofs; ++dof)
-	initialTrajectory[frameId * nDofs + dof] = standardPose[dof];
+	initialTrajectory[frameId * nDofs + dof] =
+	  standardPose[dof] * M_PI / 360.;
 
       initialTrajectory[frameId * nDofs + dofId] =
 	(*minimumJerkTrajectory)

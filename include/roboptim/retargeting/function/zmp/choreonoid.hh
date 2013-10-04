@@ -31,7 +31,8 @@ namespace roboptim
 
 
       explicit ZMPChoreonoid (cnoid::BodyPtr robot) throw ()
-	: ZMP<T> (robot->numJoints (), "choreonoid"),
+	// Add a fictional free floating joint at the beginning.
+	: ZMP<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
 	  g_ (9.81),
 	  delta_ (1e-5),
@@ -39,7 +40,7 @@ namespace roboptim
 	  states_ ()
       {
 	for (std::size_t i = 0; i < states_.size (); ++i)
-	  states_[i].x.resize (robot->numJoints ());
+	  states_[i].x.resize (6 + robot->numJoints ());
       }
 
       virtual ~ZMPChoreonoid () throw ()
@@ -90,17 +91,34 @@ namespace roboptim
       void fillStates (const argument_t& x) const throw ()
       {
 	// Store q
-	states_[0].x = x.segment
-	  (0 * robot_->numJoints (), robot_->numJoints ());
+	states_[0].x = this->q (x, true);
+	assert (states_[0].x.size () == x.size () / 3);
+
+	// Set root link position.
+	rootLinkPosition_.translation () = this->translation (x);
+
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	rootLinkPosition_.linear () =
+	  Eigen::AngleAxisd
+	  (this->rotation (x).norm (),
+	   this->rotation (x).normalized ()).toRotationMatrix ();
+
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (false);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+
+	robot_->rootLink ()->position () = rootLinkPosition_;
 
 	// Set q, dq, ddq.
 	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  {
-	    robot_->joint (dofId)->q () = states_[0].x[dofId];
-	    robot_->joint (dofId)->dq () =
-	      x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
-	    robot_->joint (dofId)->ddq () =
-	      x.segment (2 * robot_->numJoints (), robot_->numJoints ())[dofId];
+	    robot_->joint (dofId)->q () = this->q (x, false)[dofId];
+	    robot_->joint (dofId)->dq () = this->dq (x, false)[dofId];
+	    robot_->joint (dofId)->ddq () = this->ddq (x, false)[dofId];
 	  }
 	robot_->calcForwardKinematics (true, true);
 	states_[0].com = robot_->calcCenterOfMass ();
@@ -110,8 +128,7 @@ namespace roboptim
 	  {
 	    // Store q + delta * dq
 	    states_[i].x = states_[i - 1].x;
-	    states_[i].x +=
-	      delta_ * x.segment (1 * robot_->numJoints (), robot_->numJoints ());
+	    states_[i].x += delta_ * this->dq (x);
 
 	    // Update robot position (dq, ddq are unchanged).
 	    for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
@@ -180,6 +197,9 @@ namespace roboptim
       value_type delta_;
       /// \brief Robot total mass
       value_type m_;
+
+      /// \brief Root link position
+      mutable cnoid::Position rootLinkPosition_;
 
       /// \brief Set of computed quantities for
       ///        q, q + delta, q + 2 * delta
