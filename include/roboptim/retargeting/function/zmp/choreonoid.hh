@@ -1,5 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_ZMP_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_ZMP_CHOREONOID_HH
+# include <boost/array.hpp>
+
 # include <roboptim/core/finite-difference-gradient.hh>
 
 # include <cnoid/Body>
@@ -19,75 +21,137 @@ namespace roboptim
     public:
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (ZMP<T>);
 
+      struct State
+      {
+	vector_t x;
+	cnoid::Vector3 com;
+	cnoid::Vector3 P;
+	cnoid::Vector3 L;
+      };
+
+
       explicit ZMPChoreonoid (cnoid::BodyPtr robot) throw ()
 	: ZMP<T> (robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
-	  g_ (9.81)
-      {}
+	  g_ (9.81),
+	  delta_ (1e-5),
+	  m_ (robot->mass ()),
+	  states_ ()
+      {
+	for (std::size_t i = 0; i < states_.size (); ++i)
+	  states_[i].x.resize (robot->numJoints ());
+      }
 
       virtual ~ZMPChoreonoid () throw ()
       {}
 
-    protected:
-      void
-      impl_compute
-      (result_t& result, const argument_t& x)
-	const throw ()
+      const State& states () const throw ()
       {
-	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	return states_;
+      }
+
+      void printState (std::ostream& o, std::size_t i) const throw ()
+      {
+	if (i >= states_.size ())
 	  {
-	    robot_->joint (dofId)->q () =
-	      x.segment (0 * robot_->numJoints (), robot_->numJoints ())[dofId];
+	    o << "State does not exist" << decindent;
+	    return;
+	  }
+	o << "x: " << incindent << iendl
+	  << states_[i].x << decindent << iendl
+	  << "CoM: " << states_[i].com << iendl
+	  << "P: " << states_[i].P << iendl
+	  << "L: " << states_[i].L;
+      }
+
+      void printQuantities (std::ostream& o) const throw ()
+      {
+	o << "g: " << g_ << iendl
+	  << "delta: " << delta_ << iendl
+	  << "m: " << m_ << iendl
+	  << "States: " << incindent << iendl;
+	for (std::size_t i = 0; i < states_.size (); ++i)
+	  {
+	    o << "State " << i << incindent << iendl;
+	    printState (o, i);
+	    if (i == states_.size () - 1)
+	      o << decindent;
+	    o << decindent << iendl;
+	  }
+	o  << "CoM acceleration: " << incindent << iendl
+	   << ddcom_ << decindent << iendl
+	   << "Variation of the kinetic momentum:" << incindent << iendl
+	   << dL_ << decindent << iendl
+	   << "Reordered variation of the kinetic momentum:" << incindent << iendl
+	   << dL_reordered_ << decindent << iendl;
+      }
+
+    protected:
+      void fillStates (const argument_t& x) const throw ()
+      {
+	// Store q
+	states_[0].x = x.segment
+	  (0 * robot_->numJoints (), robot_->numJoints ());
+
+	// Set q, dq, ddq.
+	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	  {
+	    robot_->joint (dofId)->q () = states_[0].x[dofId];
 	    robot_->joint (dofId)->dq () =
 	      x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
 	    robot_->joint (dofId)->ddq () =
 	      x.segment (2 * robot_->numJoints (), robot_->numJoints ())[dofId];
 	  }
 	robot_->calcForwardKinematics (true, true);
-	const cnoid::Vector3& com = robot_->calcCenterOfMass ();
-	const double& m = robot_->mass ();
-	cnoid::Vector3 P;
-	cnoid::Vector3 L;
-	robot_->calcTotalMomentum (P, L);
+	states_[0].com = robot_->calcCenterOfMass ();
+	robot_->calcTotalMomentum (states_[0].P, states_[0].L);
 
-	//FIXME: to be computed by fd.
-	cnoid::Vector3 ddcom; // \ddot{x}
-	cnoid::Vector3 dL; // \dot{L}
+	for (std::size_t i = 1; i < states_.size (); ++i)
+	  {
+	    // Store q + delta * dq
+	    states_[i].x = states_[i - 1].x;
+	    states_[i].x +=
+	      delta_ * x.segment (1 * robot_->numJoints (), robot_->numJoints ());
 
-	// Finite differences
-	const double delta = 1e-8;
-	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
-	  robot_->joint (dofId)->q () +=
-	    delta * x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
-	robot_->calcForwardKinematics (true, true);
-	const cnoid::Vector3& com2 = robot_->calcCenterOfMass ();
-	cnoid::Vector3 P2;
-	cnoid::Vector3 L2;
-	robot_->calcTotalMomentum (P2, L2);
+	    // Update robot position (dq, ddq are unchanged).
+	    for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
+	      robot_->joint (dofId)->q () = states_[i].x[dofId];
 
-	for(std::size_t dofId = 0; dofId < robot_->numJoints (); ++dofId)
-	  robot_->joint (dofId)->q () +=
-	    delta * x.segment (1 * robot_->numJoints (), robot_->numJoints ())[dofId];
-	robot_->calcForwardKinematics (true, true);
-	const cnoid::Vector3& com3 = robot_->calcCenterOfMass ();
+	    // Compute quantities
+	    robot_->calcForwardKinematics (true, true);
 
-	// Compute ddcom by finite differences
-	ddcom = (com3 - (2 * com2) + com) / (delta * delta);
+	    // Store CoM
+	    states_[i].com = robot_->calcCenterOfMass ();
 
-	// Compute dL by finite differences
-	dL = (L2 - L) / delta;
+	    // Compute momentum and store it
+	    robot_->calcTotalMomentum (states_[i].P, states_[i].L);
+	  }
+      }
+
+      void
+      impl_compute
+      (result_t& result, const argument_t& x)
+	const throw ()
+      {
+	fillStates (x);
+
+	// Compute center of mass acceleration
+	ddcom_ = states_[2].com - (2 * states_[1].com) + states_[0].com;
+	ddcom_ /= delta_ * delta_;
+
+	// Compute variation of the kinetic momentum
+	dL_ = (states_[1].L - states_[0].L) / delta_;
 
 	// Reorder dL
-	cnoid::Vector2 dL_reordered;
-	dL_reordered[0] = dL[1];
-	dL_reordered[1] = dL[0];
+	dL_reordered_[0] = dL_[1];
+	dL_reordered_[1] = dL_[0];
 
 	// alpha = \ddot{x_z} + g
-	const double alpha = ddcom[2] + g_;
+	const double alpha = ddcom_[2] + g_;
 
-	result = com.segment<2> (0);
-	result -= dL_reordered / (m * alpha);
-	result -= ddcom.segment<2> (0) * (com[2] / alpha);
+	result = this->states_[0].com.segment (0, 2);
+	result -= dL_reordered_ / (m_ * alpha);
+	result -= ddcom_.segment<2> (0) * (states_[0].com[2] / alpha);
       }
 
       void
@@ -108,8 +172,35 @@ namespace roboptim
       }
 
     private:
+      /// \brief Pointer to loaded robot model
       cnoid::BodyPtr robot_;
+      /// \brief Gravitational constant
       value_type g_;
+      /// \brief Delta used for finite differentiation
+      value_type delta_;
+      /// \brief Robot total mass
+      value_type m_;
+
+      /// \brief Set of computed quantities for
+      ///        q, q + delta, q + 2 * delta
+      mutable boost::array<State, 3> states_;
+
+      /// \brief Center of mass acceleration.
+      ///
+      /// \ddot{x}
+      mutable cnoid::Vector3 ddcom_;
+
+      /// \brief Variation of the kinetic momentum around the center
+      ///        of mass.
+      ///
+      /// \dot{L}
+      mutable cnoid::Vector3 dL_;
+
+      /// \brief The equation need dL in another order, so reorder and
+      ///        store it here for direct use in the final expression.
+      ///
+      /// [ \dot{\delta_y}, \dot{\delta_x}]
+      mutable cnoid::Vector2 dL_reordered_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

@@ -34,18 +34,22 @@ BOOST_AUTO_TEST_CASE (rnd)
   vector_t x (3 * robot->numJoints ());
   x.setZero ();
 
+  vector_t res;
+
   // check that the center of mass and the ZMP are at the same
   // position if velocity and acceleration is null.
   for (int i = 0; i < 100; ++i)
     {
       x.segment (0, robot->numJoints ()) = vector_t::Random (robot->numJoints ());
-      vector_t res = zmp (x);
+      res = zmp (x);
 
       std::cout << "----------" << iendl
 		<< "X:" << incindent << iendl
 		<< x << decindent << iendl
 		<< "ZMP(X): " << incindent << iendl
 		<< res << decindent << iendl;
+      zmp.printQuantities (std::cerr);
+      std::cerr << iendl;
 
       robot->calcCenterOfMass ();
       BOOST_CHECK_EQUAL (res[0], robot->centerOfMass ()[0]);
@@ -59,16 +63,60 @@ BOOST_AUTO_TEST_CASE (rnd)
   for (int i = 0; i < 100; ++i)
     {
       x = vector_t::Random (3 * robot->numJoints ());
-      vector_t res = zmp (x);
+      res = zmp (x);
 
       std::cout << "----------" << iendl
 		<< "X:" << incindent << iendl
 		<< x << decindent << iendl
 		<< "ZMP(X): " << incindent << iendl
 		<< res << decindent << iendl;
+      zmp.printQuantities (std::cerr);
+      std::cerr << iendl;
 
       robot->calcCenterOfMass ();
       BOOST_CHECK_GE (std::abs (res[0] - robot->centerOfMass ()[0]), 1e-5);
       BOOST_CHECK_GE (std::abs (res[1] - robot->centerOfMass ()[1]), 1e-5);
     }
+
+  std::cout << "==========" << iendl;
+
+  x.segment (0 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  x.segment (1 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  x.segment (2 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  res = zmp (x);
+
+  std::cout << "X:" << incindent << iendl
+	    << x << decindent << iendl
+	    << "ZMP(X): " << incindent << iendl
+	    << res << decindent << iendl;
+  zmp.printQuantities (std::cerr);
+  std::cerr << iendl;
+
+  std::cout << "==========" << iendl;
+
+  x.segment (0 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  x.segment (1 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  x.segment (2 * robot->numJoints (), robot->numJoints ()).setConstant (1.);
+  res = zmp (x);
+
+  std::cout << "X:" << incindent << iendl
+	    << x << decindent << iendl
+	    << "ZMP(X): " << incindent << iendl
+	    << res << decindent << iendl;
+  zmp.printQuantities (std::cerr);
+  std::cerr << iendl;
+
+  std::cout << "==========" << iendl;
+
+  x.segment (0 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  x.segment (1 * robot->numJoints (), robot->numJoints ()).setConstant (1.);
+  x.segment (2 * robot->numJoints (), robot->numJoints ()).setConstant (0.);
+  res = zmp (x);
+
+  std::cout << "X:" << incindent << iendl
+	    << x << decindent << iendl
+	    << "ZMP(X): " << incindent << iendl
+	    << res << decindent << iendl;
+  zmp.printQuantities (std::cerr);
+  std::cerr << iendl;
 }

@@ -325,8 +325,8 @@ BOOST_AUTO_TEST_CASE (simple)
       unsigned nConstraints = 3;
       value_type soleX = 0.03;
       value_type soleY = 0.;
-      value_type soleLength = 0.05; //FIXME:
-      value_type soleWidth = 0.025; //FIXME:
+      value_type soleLength = 0.2; //FIXME:
+      value_type soleWidth = 0.1; //FIXME:
 
       std::vector<interval_t> zmpBounds (2);
       zmpBounds[0] = interval_t (soleX - .5 * soleLength,
