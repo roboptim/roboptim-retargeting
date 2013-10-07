@@ -46,3 +46,5 @@ ROBOPTIM_RETARGETING_TEST(minimum-jerk-problem)
 
 ROBOPTIM_RETARGETING_TEST(zmp-choreonoid)
 ROBOPTIM_RETARGETING_TEST(zmp-metapod)
+
+ROBOPTIM_RETARGETING_TEST(forward-geometry-choreonoid)
