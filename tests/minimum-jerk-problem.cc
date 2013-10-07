@@ -486,6 +486,7 @@ BOOST_AUTO_TEST_CASE (simple)
   assert (!!finalTrajectoryFct);
 
   // Display initial and final trajectory.
+  initialTrajectoryFct->setParameters (initialTrajectory);
   using namespace roboptim::visualization::gnuplot;
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
   std::cout
