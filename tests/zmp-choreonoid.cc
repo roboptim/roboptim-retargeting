@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE (minimum_jerk)
 
   ZMPChoreonoid<EigenMatrixDense> zmp (robot);
 
-  size_type dofId = 0;
+  size_type dofId = 6;
   value_type dt = 0.05;
   value_type tmin = 0.;
   value_type tmax = 1.;
