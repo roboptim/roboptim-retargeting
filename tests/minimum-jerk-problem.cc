@@ -65,6 +65,74 @@ boost::array<double, 6 + 44> standardPose = {{
     5,  10, 0, -15, 0, -10, -1.0, 0
   }};
 
+namespace roboptim
+{
+  template <typename T, typename U>
+  class MinimumJerkOptimizationLogger : public OptimizationLogger<T>
+  {
+  public:
+    typedef T solver_t;
+    typedef typename solver_t::problem_t problem_t;
+    typedef typename solver_t::problem_t::value_type value_type;
+    typedef typename solver_t::problem_t::vector_t vector_t;
+    typedef typename solver_t::problem_t::function_t::discreteInterval_t
+    discreteInterval_t;
+
+    explicit MinimumJerkOptimizationLogger
+    (solver_t& solver, const boost::filesystem::path& path,
+     discreteInterval_t discreteInterval,
+     boost::shared_ptr<Trajectory<3> > trajectory,
+     boost::shared_ptr<ZMP<U> > zmp)
+      : OptimizationLogger<T> (solver, path),
+	discreteInterval_ (discreteInterval),
+	trajectory_ (trajectory),
+	zmp_ (zmp)
+    {}
+
+    ~MinimumJerkOptimizationLogger () throw ()
+    {}
+  protected:
+    virtual
+    void perIterationCallbackUnsafe (const typename solver_t::vector_t& x,
+				     const typename solver_t::problem_t& pb)
+    {
+      OptimizationLogger<T>::perIterationCallbackUnsafe (x, pb);
+
+      boost::filesystem::path path = this->path ();
+      const boost::filesystem::path iterationPath =
+	path / (boost::format ("iteration-%d") % this->callbackCallId ()).str ();
+
+      // Log ZMP
+      if (zmp_)
+	{
+	  boost::filesystem::ofstream streamZmp (iterationPath / "zmp.csv");
+	  streamZmp << "ZMP X, ZMP Y\n";
+
+	  const value_type tmin = boost::get<0> (discreteInterval_);
+	  const value_type tmax = boost::get<1> (discreteInterval_);
+	  const value_type dt = boost::get<2> (discreteInterval_);
+
+	  for (value_type t = tmin; t + dt < tmax; t += dt)
+	    {
+	      trajectory_->setParameters (x);
+	      vector_t state = trajectory_->state (t, 2);
+	      vector_t zmp = (*zmp_) (state);
+	      streamZmp << zmp[0] << ", " << zmp[1] << "\n";
+	    }
+
+	  for (value_type  i = 0; i < x.size (); ++i)
+	    {	    }
+	  streamZmp << "\n";
+	}
+     }
+
+   private:
+     discreteInterval_t discreteInterval_;
+     boost::shared_ptr<Trajectory<3> > trajectory_;
+    boost::shared_ptr<ZMP<U> > zmp_;
+  };
+} // end of namespace roboptim.
+
 template <typename T>
 class CostReferenceTrajectory : public GenericDifferentiableFunction<T>
 {
@@ -323,9 +391,11 @@ BOOST_AUTO_TEST_CASE (simple)
 	(*vectorInterpolationConstraints, torqueOneFrame, 2,
 	 *problem, torqueBounds, torqueScales, nConstraints);
     }
+
+  boost::shared_ptr<ZMP<EigenMatrixDense> > zmpOneFrame;
   if (enableZmpConstraint)
     {
-      unsigned nConstraints = 3;
+      unsigned nConstraints = 10;
       value_type soleX = 0.03;
       value_type soleY = 0.;
       value_type soleLength = 0.2; //FIXME:
@@ -342,12 +412,10 @@ BOOST_AUTO_TEST_CASE (simple)
       zmpScales[1] = 1.;
 
 #ifdef USE_METAPOD_ZMP
-      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
-	zmpOneFrame =
+      zmpOneFrame =
 	boost::make_shared<ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
 #else
-      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
-	zmpOneFrame =
+      zmpOneFrame =
 	boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot);
 #endif //! USE_METAPOD_ZMP
 
@@ -360,7 +428,10 @@ BOOST_AUTO_TEST_CASE (simple)
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
   solver_t& solver = factory ();
 
-  OptimizationLogger<solver_t> logger (solver, "/tmp/minimum-jerk-problem");
+
+  MinimumJerkOptimizationLogger<solver_t, EigenMatrixDense> logger
+    (solver, "/tmp/minimum-jerk-problem",
+     intervalS, initialTrajectoryFct, zmpOneFrame);
 
   // Set solver parameters.
   solver.parameters ()["max-iterations"].value = 100;
