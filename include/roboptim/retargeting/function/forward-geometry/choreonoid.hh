@@ -7,6 +7,8 @@
 
 # include <roboptim/retargeting/function/forward-geometry.hh>
 
+# include <roboptim/core/finite-difference-gradient.hh>
+
 namespace roboptim
 {
   namespace retargeting
@@ -117,6 +119,54 @@ namespace roboptim
 		     size_type i)
 	const throw ()
       {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	roboptim::GenericFiniteDifferenceGradient<
+	  T,
+	  finiteDifferenceGradientPolicies::Simple<T> >
+	  fdg (*this);
+	fdg.gradient (gradient, x, i);
+	return;
+
+	if (i < 3)
+	  {
+	    gradient.setZero ();
+	    gradient[i] = 1.;
+	    return;
+	  }
+	if (i < 6)
+	  {
+	    gradient.setZero ();
+	    //FIXME: how to do that?
+	    return;
+	  }
+
+	// Set root link position.
+	rootLinkPosition_.translation () = this->translation (x);
+
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	value_type norm = this->rotation (x).norm ();
+
+	if (norm < 1e-10)
+	  rootLinkPosition_.linear ().setIdentity ();
+	else
+	  rootLinkPosition_.linear () =
+	    Eigen::AngleAxisd
+	    (norm,
+	     this->rotation (x).normalized ()).toRotationMatrix ();
+
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (false);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	robot_->rootLink ()->position () = rootLinkPosition_;
+
+	// Set joints values.
 	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  robot_->joint (dofId)->q () = x[dofId];
 	robot_->calcForwardKinematics (true, true);
