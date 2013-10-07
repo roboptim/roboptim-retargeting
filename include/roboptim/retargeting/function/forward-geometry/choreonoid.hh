@@ -25,7 +25,7 @@ namespace roboptim
 
       explicit ForwardGeometryChoreonoid
       (cnoid::BodyPtr robot, int bodyId) throw ()
-	: ForwardGeometry<T> (robot->numJoints (), "choreonoid"),
+	: ForwardGeometry<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
 	  bodyId_ (bodyId),
 	  jointPath_ (robot->rootLink ())
@@ -42,7 +42,7 @@ namespace roboptim
 
       explicit ForwardGeometryChoreonoid
       (cnoid::BodyPtr robot, const std::string& bodyName) throw ()
-	: ForwardGeometry<T> (robot->numJoints (), "choreonoid"),
+	: ForwardGeometry<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
 	  bodyId_ (0),
 	  jointPath_ (robot->rootLink ())
@@ -81,6 +81,30 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
+	// Set root link position.
+	rootLinkPosition_.translation () = this->translation (x);
+
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	value_type norm = this->rotation (x).norm ();
+
+	if (norm < 1e-10)
+	  rootLinkPosition_.linear ().setIdentity ();
+	else
+	  rootLinkPosition_.linear () =
+	    Eigen::AngleAxisd
+	    (norm,
+	     this->rotation (x).normalized ()).toRotationMatrix ();
+
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (false);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	robot_->rootLink ()->position () = rootLinkPosition_;
+
+	// Set joints values.
 	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  robot_->joint (dofId)->q () = x[dofId];
 	robot_->calcForwardKinematics (true, true);
@@ -106,6 +130,8 @@ namespace roboptim
       cnoid::BodyPtr robot_;
       int bodyId_;
       mutable cnoid::JointPath jointPath_;
+      /// \brief Root link position
+      mutable cnoid::Position rootLinkPosition_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
