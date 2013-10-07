@@ -101,15 +101,19 @@ namespace roboptim
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-	rootLinkPosition_.linear () =
-	  Eigen::AngleAxisd
-	  (this->rotation (x).norm (),
-	   this->rotation (x).normalized ()).toRotationMatrix ();
+	value_type norm = this->rotation (x).norm ();
+
+	if (norm < 1e-10)
+	  rootLinkPosition_.linear ().setIdentity ();
+	else
+	  rootLinkPosition_.linear () =
+	    Eigen::AngleAxisd
+	    (norm,
+	     this->rotation (x).normalized ()).toRotationMatrix ();
 
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (false);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
 
 	robot_->rootLink ()->position () = rootLinkPosition_;
 
