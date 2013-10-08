@@ -24,6 +24,7 @@
 
 #include "tests-config.h"
 
+#include <roboptim/core/numeric-linear-function.hh>
 #include <roboptim/core/linear-function.hh>
 #include <roboptim/core/optimization-logger.hh>
 #include <roboptim/core/problem.hh>
@@ -55,7 +56,7 @@ using namespace roboptim::retargeting;
 using boost::test_tools::output_test_stream;
 
 boost::array<double, 6 + 44> standardPose = {{
-    0, 0, 0, 0, 0, 0,
+    0, 0, 0.6, 0, 0, 0, //FIXME: double check robot height
 
     0, 0, -25, 50, -25, 0, 0,
     0, 0, -25, 50, -25, 0, 0,
@@ -238,6 +239,7 @@ typedef boost::shared_ptr<problem_t> ProblemShPtr_t;
 BOOST_AUTO_TEST_CASE (simple)
 {
   // Forward typedefs.
+  typedef MinimumJerkTrajectory<EigenMatrixDense>::matrix_t matrix_t;
   typedef MinimumJerkTrajectory<EigenMatrixDense>::vector_t vector_t;
   typedef MinimumJerkTrajectory<EigenMatrixDense>::interval_t interval_t;
   typedef MinimumJerkTrajectory<EigenMatrixDense>::value_type value_type;
@@ -253,7 +255,7 @@ BOOST_AUTO_TEST_CASE (simple)
   // - maximum trajectory time
   value_type tmax = dt * static_cast<value_type> (nFrames);
   // - the id of the dof we move.
-  std::size_t dofId = 0;
+  std::size_t dofId = 6;
   // - dof initial position
   value_type init = standardPose[dofId] * M_PI / 360.;
   // - dof goal position
@@ -284,9 +286,10 @@ BOOST_AUTO_TEST_CASE (simple)
     {
       for (std::size_t dof = 0; dof < nDofs; ++dof)
 	initialTrajectory[frameId * nDofs + dof] =
-	  standardPose[dof] * M_PI / 360.;
+	  (dof < 6)
+	  ? standardPose[dof] : standardPose[dof] * M_PI / 360.;
 
-      initialTrajectory[frameId * nDofs + dofId] =
+       initialTrajectory[frameId * nDofs + dofId] =
 	(*minimumJerkTrajectory)
 	(static_cast<value_type> (frameId) * dt)[0];
     }
@@ -329,14 +332,16 @@ BOOST_AUTO_TEST_CASE (simple)
     throw std::runtime_error ("failed to load model");
 
   // Add constraints.
+  bool enableFreezeFrame = false;
   bool enableFeetPositionsConstraint = true;
+  bool enableVelocityConstraint = false;
   bool enableTorqueConstraint = false;
   bool enableZmpConstraint = true;
 
   // Should we use Metapod or Choreonoid?
   bool useMetapod = false;
 
-  // Bound joint positions.
+  // Bound joint positions and free first and last frames.
   {
     for (std::size_t frameId = 0; frameId < nFrames; ++frameId)
       for (std::size_t jointId = 0; jointId < robot->numJoints (); ++jointId)
@@ -346,6 +351,36 @@ BOOST_AUTO_TEST_CASE (simple)
 	  (robot->joint (jointId)->q_lower (),
 	   robot->joint (jointId)->q_upper ());
   }
+
+  // Freeze first frame
+  boost::shared_ptr<GenericLinearFunction<EigenMatrixDense> >
+    freeze;
+  if (enableFreezeFrame)
+    {
+      matrix_t A (6 + robot->numJoints (),
+		  nFrames * (6 + robot->numJoints ()));
+      A.setZero ();
+      A.block (0, 0,
+	       6 + robot->numJoints (),
+	       6 + robot->numJoints ()).setIdentity ();
+      vector_t b (6 + robot->numJoints ());
+      for (std::size_t jointId = 0; jointId < b.size (); ++jointId)
+	b[jointId] = standardPose[jointId];
+
+      freeze =
+	boost::make_shared<GenericNumericLinearFunction<EigenMatrixDense> >
+	(A, b);
+
+      std::vector<interval_t> freezeBounds (6 + robot->numJoints ());
+      for (std::size_t jointId = 0; jointId < 6 + robot->numJoints (); ++jointId)
+	freezeBounds[jointId] = Function::makeInterval (-1e-4, 1e-4);
+
+      std::vector<value_type> freezeScales (6 + robot->numJoints ());
+      for (std::size_t jointId = 0; jointId < 6 + robot->numJoints (); ++jointId)
+	freezeScales[jointId] = 1.;
+
+      problem->addConstraint (freeze, freezeBounds, freezeScales);
+    }
 
   if (enableFeetPositionsConstraint)
     {
@@ -393,6 +428,39 @@ BOOST_AUTO_TEST_CASE (simple)
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, rightFootOneFrame, 0,
 	 *problem, rightFootBounds, rightFootScales, nConstraints);
+    }
+
+  boost::shared_ptr<GenericLinearFunction<EigenMatrixDense> >
+    velocityOneFrame;
+  if (enableVelocityConstraint)
+    {
+      unsigned nConstraints = 3;
+
+      matrix_t A (robot->numJoints (),
+		  2 * (6 + robot->numJoints ()));
+      A.setZero ();
+      A.block
+	(0, 6 + robot->numJoints (),
+	 robot->numJoints (), robot->numJoints ()).setIdentity ();
+      vector_t b (robot->numJoints ());
+      b.setZero ();
+      velocityOneFrame =
+	boost::make_shared<GenericNumericLinearFunction<EigenMatrixDense> >
+	(A, b);
+
+      std::vector<interval_t> velocityBounds (robot->numJoints ());
+      for (std::size_t jointId = 0; jointId < robot->numJoints (); ++jointId)
+	velocityBounds[jointId] = Function::makeInterval
+	  (robot->joint (jointId)->dq_lower (),
+	   robot->joint (jointId)->dq_upper ());
+
+      std::vector<value_type> velocityScales (robot->numJoints ());
+      for (std::size_t jointId = 0; jointId < robot->numJoints (); ++jointId)
+	velocityScales[jointId] = 1.;
+
+      roboptim::StateFunction<VectorInterpolation>::addToProblem
+	(*vectorInterpolationConstraints, velocityOneFrame, 1,
+	 *problem, velocityBounds, velocityScales, nConstraints);
     }
 
   boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
@@ -450,8 +518,6 @@ BOOST_AUTO_TEST_CASE (simple)
 	(*vectorInterpolationConstraints, zmpOneFrame, 2,
 	 *problem, zmpBounds, zmpScales, nConstraints);
     }
-
-  //FIXME: freeze start and end positions
 
   // Solve problem.
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
