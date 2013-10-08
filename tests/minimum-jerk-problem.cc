@@ -40,6 +40,7 @@
 
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
+#include <roboptim/retargeting/function/torque/choreonoid.hh>
 #include <roboptim/retargeting/function/torque/metapod.hh>
 #include <roboptim/retargeting/function/zmp/choreonoid.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
@@ -251,12 +252,12 @@ BOOST_AUTO_TEST_CASE (simple)
   value_type tmin = 0.;
   // - maximum trajectory time
   value_type tmax = dt * static_cast<value_type> (nFrames);
-  // - dof initial position
-  value_type init = 0.;
-  // - dof goal position
-  value_type goal = 1.;
   // - the id of the dof we move.
   std::size_t dofId = 0;
+  // - dof initial position
+  value_type init = standardPose[dofId] * M_PI / 360.;
+  // - dof goal position
+  value_type goal = (standardPose[dofId] + 1.) * M_PI / 360.;
   // - total number of dofs
   std::size_t nDofs = standardPose.size ();
 
@@ -328,50 +329,63 @@ BOOST_AUTO_TEST_CASE (simple)
     throw std::runtime_error ("failed to load model");
 
   // Add constraints.
-  bool enableFeetPositionsConstraint = false;
+  bool enableFeetPositionsConstraint = true;
   bool enableTorqueConstraint = false;
   bool enableZmpConstraint = true;
+
+  // Should we use Metapod or Choreonoid?
+  bool useMetapod = false;
 
   if (enableFeetPositionsConstraint)
     {
       unsigned nConstraints = 3;
 
+      typedef ForwardGeometryChoreonoid<EigenMatrixDense> forwardGeometry_t;
+
       // Left foot.
-      std::vector<interval_t> leftFootBounds (3);
-      for (std::size_t i = 0; i < nDofs; ++i)
-	leftFootBounds[i] = interval_t (0, 0);
-
-      std::vector<value_type> leftFootScales (3);
-      for (std::size_t i = 0; i < nDofs; ++i)
-	leftFootScales[i] = 1.;
-
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
 	leftFootOneFrame =
-	boost::make_shared<ForwardGeometryChoreonoid<EigenMatrixDense> >
+	boost::make_shared<forwardGeometry_t>
 	(robot, std::string ("L_TOE_P"));
+
+      forwardGeometry_t::vector_t leftFootPosition =
+	(*leftFootOneFrame) ((*initialTrajectoryFct) (0.));
+      std::vector<interval_t> leftFootBounds (leftFootPosition.size ());
+      for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
+	leftFootBounds[i] = forwardGeometry_t::makeInterval
+	  (leftFootPosition[i] - 1e-4, leftFootPosition[i] + 1e-4);
+
+      std::vector<value_type> leftFootScales (6);
+      for (std::size_t i = 0; i < 6; ++i)
+	leftFootScales[i] = 1.;
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, leftFootOneFrame, 0,
 	 *problem, leftFootBounds, leftFootScales, nConstraints);
 
       // Right foot.
-      std::vector<interval_t> rightFootBounds (3);
-      for (std::size_t i = 0; i < nDofs; ++i)
-	rightFootBounds[i] = interval_t (0, 0);
-
-      std::vector<value_type> rightFootScales (3);
-      for (std::size_t i = 0; i < nDofs; ++i)
-	rightFootScales[i] = 1.;
-
       boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
 	rightFootOneFrame =
-	boost::make_shared<ForwardGeometryChoreonoid<EigenMatrixDense> >
+	boost::make_shared<forwardGeometry_t>
 	(robot, std::string ("R_TOE_P"));
+
+      forwardGeometry_t::vector_t rightFootPosition =
+	(*rightFootOneFrame) ((*initialTrajectoryFct) (0.));
+      std::vector<interval_t> rightFootBounds (rightFootPosition.size ());
+      for (std::size_t i = 0; i < rightFootPosition.size (); ++i)
+	rightFootBounds[i] = forwardGeometry_t::makeInterval
+	  (rightFootPosition[i] - 1e-4, rightFootPosition[i] + 1e-4);
+      std::vector<value_type> rightFootScales (6);
+      for (std::size_t i = 0; i < 6; ++i)
+	rightFootScales[i] = 1.;
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, rightFootOneFrame, 0,
 	 *problem, rightFootBounds, rightFootScales, nConstraints);
     }
+
+  boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+    torqueOneFrame;
   if (enableTorqueConstraint)
     {
       unsigned nConstraints = 1;
@@ -383,9 +397,12 @@ BOOST_AUTO_TEST_CASE (simple)
       for (std::size_t i = 0; i < nDofs; ++i)
 	torqueScales[i] = 1.;
 
-      boost::shared_ptr<GenericDifferentiableFunction<EigenMatrixDense> >
+      if (useMetapod)
 	torqueOneFrame =
-	boost::make_shared<TorqueMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+	  boost::make_shared<TorqueMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+      else
+	torqueOneFrame =
+	  boost::make_shared<TorqueChoreonoid<EigenMatrixDense> > (robot);
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, torqueOneFrame, 2,
@@ -411,18 +428,20 @@ BOOST_AUTO_TEST_CASE (simple)
       zmpScales[0] = 1.;
       zmpScales[1] = 1.;
 
-#ifdef USE_METAPOD_ZMP
-      zmpOneFrame =
-	boost::make_shared<ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
-#else
-      zmpOneFrame =
-	boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot);
-#endif //! USE_METAPOD_ZMP
+      if (useMetapod)
+	zmpOneFrame =
+	  boost::make_shared<ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+      else
+	zmpOneFrame =
+	  boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot);
 
       roboptim::StateFunction<VectorInterpolation>::addToProblem
 	(*vectorInterpolationConstraints, zmpOneFrame, 2,
 	 *problem, zmpBounds, zmpScales, nConstraints);
     }
+
+  //FIXME: freeze start and end positions
+  //FIXME: add position and velocity limits.
 
   // Solve problem.
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
