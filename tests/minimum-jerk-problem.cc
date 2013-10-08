@@ -336,6 +336,17 @@ BOOST_AUTO_TEST_CASE (simple)
   // Should we use Metapod or Choreonoid?
   bool useMetapod = false;
 
+  // Bound joint positions.
+  {
+    for (std::size_t frameId = 0; frameId < nFrames; ++frameId)
+      for (std::size_t jointId = 0; jointId < robot->numJoints (); ++jointId)
+	problem->argumentBounds ()
+	  [frameId * (6 + robot->numJoints ()) + 6 + jointId] =
+	  MinimumJerkTrajectory<EigenMatrixDense>::makeInterval
+	  (robot->joint (jointId)->q_lower (),
+	   robot->joint (jointId)->q_upper ());
+  }
+
   if (enableFeetPositionsConstraint)
     {
       unsigned nConstraints = 3;
@@ -441,7 +452,6 @@ BOOST_AUTO_TEST_CASE (simple)
     }
 
   //FIXME: freeze start and end positions
-  //FIXME: add position and velocity limits.
 
   // Solve problem.
   roboptim::SolverFactory<solver_t> factory ("cfsqp", *problem);
