@@ -14,6 +14,9 @@ namespace roboptim
   {
     /// \brief Torque position computed through Metapod
     ///
+    /// You *have* to make sure that your model root joint is a
+    /// floating joint here.
+    ///
     /// \tparam T Function traits type
     /// \tparam R Robot type
     template <typename T, typename R>
@@ -38,10 +41,7 @@ namespace roboptim
 	const throw ()
       {
 	metapod::rnea<robot_t, true>::run
-	  (robot_,
-	   x.segment (0 * robot_t::NBDOF, robot_t::NBDOF),
-	   x.segment (1 * robot_t::NBDOF, robot_t::NBDOF),
-	   x.segment (2 * robot_t::NBDOF, robot_t::NBDOF));
+	  (robot_, this->q (x), this->dq (x), this->ddq (x));
 	metapod::getTorques (robot_, torques_);
 	result = torques_;
       }
