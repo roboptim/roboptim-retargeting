@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE (root_link)
   ForwardGeometryChoreonoid<EigenMatrixDense> forwardGeometry (robot, 0);
 
   vector_t x (6 + robot->numJoints ());
-  vector_t res (3);
+  vector_t res (6);
 
   // Zero
   x.setZero ();
@@ -48,15 +48,17 @@ BOOST_AUTO_TEST_CASE (root_link)
     << "ForwardGeometry(X): " << incindent << iendl
     << res << decindent << iendl;
 
-  BOOST_CHECK_EQUAL (res[0], 0.);
-  BOOST_CHECK_EQUAL (res[1], 0.);
-  BOOST_CHECK_EQUAL (res[2], 0.);
+  for (std::size_t i = 0; i < 6; ++i)
+    BOOST_CHECK_EQUAL (res[i], 0.);
 
   // 1, 2, 3, Zero*N
   x.setZero ();
   x[0] = 1.;
   x[1] = 4.;
   x[2] = 8.;
+  x[3] = M_PI / 2.;
+  x[4] = M_PI;
+  x[5] = 1.5 * M_PI;
   res = forwardGeometry (x);
   std::cout
     << "X:" << incindent << iendl
@@ -64,9 +66,8 @@ BOOST_AUTO_TEST_CASE (root_link)
     << "ForwardGeometry(X): " << incindent << iendl
     << res << decindent << iendl;
 
-  BOOST_CHECK_EQUAL (res[0], 1.);
-  BOOST_CHECK_EQUAL (res[1], 4.);
-  BOOST_CHECK_EQUAL (res[2], 8.);
+  for (std::size_t i = 0; i < 3; ++i)
+    BOOST_CHECK_CLOSE (res[i], x[i], 1e-5);
 
   // Jacobian is identity.
   x.setRandom (x.size ());
@@ -78,6 +79,6 @@ BOOST_AUTO_TEST_CASE (root_link)
     << "ForwardGeometry.jacobian(X): " << incindent << iendl
     << jacobian << decindent << iendl;
 
-  for (std::size_t i = 0; i < 3; ++i)
-    BOOST_CHECK_EQUAL (jacobian (i, i), 1.);
+  for (std::size_t i = 0; i < 6; ++i)
+    BOOST_CHECK_CLOSE (jacobian (i, i), 1., 1e-5);
 }

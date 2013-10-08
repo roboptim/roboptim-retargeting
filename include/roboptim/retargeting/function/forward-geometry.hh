@@ -22,7 +22,7 @@ namespace roboptim
 				std::string title)
 	throw ()
 	: GenericDifferentiableFunction<T>
-	  (nDofs, 3, (boost::format ("ForwardGeometry [%s]") % title).str ())
+	  (nDofs, 6, (boost::format ("ForwardGeometry [%s]") % title).str ())
       {}
 
       virtual ~ForwardGeometry () throw ()
