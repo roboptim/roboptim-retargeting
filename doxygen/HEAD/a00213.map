@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$a00150.html" title="laplacian&#45;deformation&#45;energy.hh" alt="" coords="168,86,381,117"/>
+<area shape="rect" id="node17" href="$a00148.html" title="laplacian&#45;deformation&#45;energy.cc" alt="" coords="332,166,545,197"/>
+<area shape="rect" id="node19" href="$a00146.html" title="laplacian&#45;coordinate.cc" alt="" coords="469,86,629,117"/>
+<area shape="rect" id="node5" href="$a00145.html" title="joint.hh" alt="" coords="73,166,135,197"/>
+<area shape="rect" id="node9" href="$a00152.html" title="marker.hh" alt="" coords="228,166,308,197"/>
+<area shape="rect" id="node7" href="$a00144.html" title="joint.cc" alt="" coords="5,246,67,277"/>
+<area shape="rect" id="node11" href="$a00162.html" title="roboptim&#45;retargeting&#45;plugin.cc" alt="" coords="91,246,285,277"/>
+<area shape="rect" id="node13" href="$a00151.html" title="marker.cc" alt="" coords="309,246,389,277"/>
+<area shape="rect" id="node15" href="$a00161.html" title="roboptim&#45;retarget&#45;motion.cc" alt="" coords="413,246,595,277"/>
+</map>

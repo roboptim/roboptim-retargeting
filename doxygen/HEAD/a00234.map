@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$a00145.html" title="joint.hh" alt="" coords="115,86,176,117"/>
+<area shape="rect" id="node7" href="$a00152.html" title="marker.hh" alt="" coords="228,86,308,117"/>
+<area shape="rect" id="node15" href="$a00159.html" title="position.cc" alt="" coords="332,86,417,117"/>
+<area shape="rect" id="node5" href="$a00144.html" title="joint.cc" alt="" coords="5,166,67,197"/>
+<area shape="rect" id="node9" href="$a00162.html" title="roboptim&#45;retargeting&#45;plugin.cc" alt="" coords="91,166,285,197"/>
+<area shape="rect" id="node11" href="$a00151.html" title="marker.cc" alt="" coords="309,166,389,197"/>
+<area shape="rect" id="node13" href="$a00161.html" title="roboptim&#45;retarget&#45;motion.cc" alt="" coords="413,166,595,197"/>
+</map>

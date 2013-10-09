@@ -1,0 +1,4 @@
+\form#0:\[ E_A(V_{i-1}',V_i',V_{i+1}') = \frac{1}{2} \| V_{i-1}^2 + 2 V_i + V_{i+1}^2 \|^2 \]
+\form#1:\[ C_B(V_i') = B_i V_i - l \]
+\form#2:\[ L(p_j) = p_j - \sum_{l \in N_j} w_l^j p_l \]
+\form#3:\[ E_L(V_{i}') = \sum_{j} \| \delta_{j} - L(p_{j}'^{i}) \|^{2} \]
