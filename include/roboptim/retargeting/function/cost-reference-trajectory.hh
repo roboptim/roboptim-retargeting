@@ -3,6 +3,8 @@
 # include <string>
 
 # include <roboptim/core/differentiable-function.hh>
+# include <roboptim/trajectory/trajectory.hh>
+# include <roboptim/trajectory/vector-interpolation.hh>
 
 namespace roboptim
 {

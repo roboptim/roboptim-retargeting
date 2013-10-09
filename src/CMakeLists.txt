@@ -12,6 +12,7 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   laplacian-deformation-energy.cc
   position.cc
   problem/marker.cc
+  problem/minimum-jerk.cc
   problem/joint.cc
   torque.cc
   zmp.cc
@@ -30,6 +31,8 @@ TARGET_LINK_LIBRARIES(roboptim-retargeting
   blas lapack
   CnoidBody CnoidMocap CnoidMocapPlugin)
 TARGET_LINK_LIBRARIES(roboptim-retargeting tet)
+TARGET_LINK_LIBRARIES(roboptim-retargeting
+  roboptim-retargeting ${Boost_LIBRARIES})
 
 SET_TARGET_PROPERTIES(roboptim-retargeting PROPERTIES SOVERSION 0.0.0)
 INSTALL(TARGETS roboptim-retargeting DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -38,15 +41,14 @@ INSTALL(TARGETS roboptim-retargeting DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ADD_EXECUTABLE(roboptim-retarget-motion roboptim-retarget-motion)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion choreonoid)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion choreonoid-body-plugin)
-
-TARGET_LINK_LIBRARIES(roboptim-retarget-motion
-  roboptim-retargeting ${Boost_LIBRARIES})
-
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion choreonoid)
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retarget-motion liblog4cxx)
 
 # Misc.
 TARGET_LINK_LIBRARIES(roboptim-retarget-motion
   blas lapack)
+TARGET_LINK_LIBRARIES(roboptim-retarget-motion
+  roboptim-retargeting ${Boost_LIBRARIES})
 
 INSTALL(TARGETS roboptim-retarget-motion
   DESTINATION ${CMAKE_INSTALL_BINDIR})
