@@ -134,7 +134,7 @@ namespace roboptim
 	  tmax_ (dt_ * static_cast<value_type> (nFrames_)),
 	  dofId_ (6 + 28),
 	  init_ (standardPose[dofId_] * M_PI / 180.),
-	  goal_ (robot->joint (dofId_ - 6)->q_upper () / 5. - 0.01),
+	  goal_ (robot->joint (dofId_ - 6)->q_upper () / 4. - 0.01),
 	  nDofs_ (standardPose.size ()),
 	  interval_ (tmin_, tmax_, 0.01),
 	  cost_ (),
