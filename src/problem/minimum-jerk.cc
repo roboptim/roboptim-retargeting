@@ -263,10 +263,10 @@ namespace roboptim
 	    std::vector<interval_t> leftFootBounds (leftFootPosition.size ());
 	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
 	      leftFootBounds[i] = forwardGeometry_t::makeInterval
-		(leftFootPosition[i] - 1e-4, leftFootPosition[i] + 1e-4);
+		(leftFootPosition[i], leftFootPosition[i]);
 
 	    std::vector<value_type> leftFootScales (6);
-	    for (std::size_t i = 0; i < 6; ++i)
+	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
 	      leftFootScales[i] = 1.;
 
 	    roboptim::StateFunction<VectorInterpolation>::addToProblem
@@ -283,9 +283,9 @@ namespace roboptim
 	    std::vector<interval_t> rightFootBounds (rightFootPosition.size ());
 	    for (std::size_t i = 0; i < rightFootPosition.size (); ++i)
 	      rightFootBounds[i] = forwardGeometry_t::makeInterval
-		(rightFootPosition[i] - 1e-4, rightFootPosition[i] + 1e-4);
-	    std::vector<value_type> rightFootScales (6);
-	    for (std::size_t i = 0; i < 6; ++i)
+		(rightFootPosition[i], rightFootPosition[i]);
+	    std::vector<value_type> rightFootScales (rightFootPosition.size ());
+	    for (std::size_t i = 0; i < rightFootPosition.size (); ++i)
 	      rightFootScales[i] = 1.;
 
 	    roboptim::StateFunction<VectorInterpolation>::addToProblem
