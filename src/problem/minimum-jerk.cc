@@ -132,9 +132,9 @@ namespace roboptim
 	  dt_ (0.005),
 	  tmin_ (0.),
 	  tmax_ (dt_ * static_cast<value_type> (nFrames_)),
-	  dofId_ (6),
+	  dofId_ (6 + 28),
 	  init_ (standardPose[dofId_] * M_PI / 180.),
-	  goal_ ((standardPose[dofId_] + 1.) * M_PI / 180.),
+	  goal_ (robot->joint (dofId_ - 6)->q_upper () / 5. - 0.01),
 	  nDofs_ (standardPose.size ()),
 	  interval_ (tmin_, tmax_, 0.01),
 	  cost_ (),
@@ -163,6 +163,7 @@ namespace roboptim
 	minimumJerkTrajectory->setParameters (x);
 
 	// Build the starting point
+	value_type dtMinimumJerk = (1. - 0.) / nFrames_;
 	for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
 	  {
 	    for (std::size_t dof = 0; dof < nDofs_; ++dof)
@@ -172,7 +173,7 @@ namespace roboptim
 
 	    initialTrajectory[frameId * nDofs_ + dofId_] =
 	      (*minimumJerkTrajectory)
-	      (static_cast<value_type> (frameId) * dt_)[0];
+	      (static_cast<value_type> (frameId) * dtMinimumJerk)[0];
 	  }
 
 	// Build a trajectory over the starting point for display
