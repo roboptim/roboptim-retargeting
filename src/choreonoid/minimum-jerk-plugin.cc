@@ -186,8 +186,8 @@ private:
       (log4cxx::Logger::getLogger
        ("roboptim.retargeting.choreonoid"));
 
-    bool enableFreeze = false;
-    bool enableVelocity = false;
+    bool enableFreeze = true;
+    bool enableVelocity = true;
     bool enablePosition = false;
     bool enableCollision = false;
     bool enableTorque = false;

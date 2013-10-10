@@ -52,8 +52,8 @@ BOOST_AUTO_TEST_CASE (simple)
   if (!robot)
     throw std::runtime_error ("failed to load model");
 
-  bool enableFreeze = false;
-  bool enableVelocity = false;
+  bool enableFreeze = true;
+  bool enableVelocity = true;
   bool enablePosition = false;
   bool enableCollision = false;
   bool enableTorque = false;
