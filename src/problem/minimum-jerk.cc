@@ -133,8 +133,8 @@ namespace roboptim
 	  tmin_ (0.),
 	  tmax_ (dt_ * static_cast<value_type> (nFrames_)),
 	  dofId_ (6),
-	  init_ (standardPose[dofId_] * M_PI / 360.),
-	  goal_ ((standardPose[dofId_] + 1.) * M_PI / 360.),
+	  init_ (standardPose[dofId_] * M_PI / 180.),
+	  goal_ ((standardPose[dofId_] + 1.) * M_PI / 180.),
 	  nDofs_ (standardPose.size ()),
 	  interval_ (tmin_, tmax_, 0.01),
 	  cost_ (),
@@ -168,7 +168,7 @@ namespace roboptim
 	    for (std::size_t dof = 0; dof < nDofs_; ++dof)
 	      initialTrajectory[frameId * nDofs_ + dof] =
 		(dof < 6)
-		? standardPose[dof] : standardPose[dof] * M_PI / 360.;
+		? standardPose[dof] : standardPose[dof] * M_PI / 180.;
 
 	    initialTrajectory[frameId * nDofs_ + dofId_] =
 	      (*minimumJerkTrajectory)
@@ -224,7 +224,8 @@ namespace roboptim
 		     6 + robot->numJoints ()).setIdentity ();
 	    vector_t b (6 + robot->numJoints ());
 	    for (std::size_t jointId = 0; jointId < b.size (); ++jointId)
-	      b[jointId] = standardPose[jointId];
+	      b[jointId] = (jointId < 6)
+		? -standardPose[jointId] : -standardPose[jointId] * M_PI / 180.;
 
 	    freeze_ =
 	      boost::make_shared<
@@ -234,7 +235,7 @@ namespace roboptim
 	    std::vector<interval_t> freezeBounds (6 + robot->numJoints ());
 	    for (std::size_t jointId = 0;
 		 jointId < 6 + robot->numJoints (); ++jointId)
-	      freezeBounds[jointId] = Function::makeInterval (-1e-4, 1e-4);
+	      freezeBounds[jointId] = Function::makeInterval (0., 0.);
 
 	    std::vector<value_type> freezeScales (6 + robot->numJoints ());
 	    for (std::size_t jointId = 0;
@@ -246,7 +247,7 @@ namespace roboptim
 
 	if (enableFeetPositions)
 	  {
-	    unsigned nConstraints = 3;
+	    unsigned nConstraints = nFrames_ - 2;
 
 	    typedef ForwardGeometryChoreonoid<EigenMatrixDense>
 	      forwardGeometry_t;
@@ -295,7 +296,7 @@ namespace roboptim
 	  velocityOneFrame;
 	if (enableVelocity)
 	  {
-	    unsigned nConstraints = 3;
+	    unsigned nConstraints = nFrames_ - 2;
 
 	    matrix_t A (robot->numJoints (),
 			2 * (6 + robot->numJoints ()));
@@ -328,7 +329,7 @@ namespace roboptim
 	  }
 	if (enableTorque)
 	  {
-	    unsigned nConstraints = 1;
+	    unsigned nConstraints = nFrames_ - 2;
 	    std::vector<interval_t> torqueBounds (nDofs_);
 	    for (std::size_t i = 0; i < nDofs_; ++i)
 	      torqueBounds[i] = interval_t (-1, 1);
@@ -351,7 +352,7 @@ namespace roboptim
 	  }
 	if (enableZmp)
 	  {
-	    unsigned nConstraints = 10;
+	    unsigned nConstraints = nFrames_ - 2;
 	    value_type soleX = 0.03;
 	    value_type soleY = 0.;
 	    value_type soleLength = 0.2; //FIXME:
@@ -397,8 +398,9 @@ namespace roboptim
 	  (*problem_->startingPoint (),
 	   static_cast<size_type> (nDofs_), dt_);
 	MinimumJerkOptimizationLogger<solver_t, EigenMatrixDense>
-	  optimizationLogger (solver, "/tmp/minimum-jerk-problem",
-			      interval_, trajectory, zmp_, additionalCallback_);
+	  optimizationLogger
+	  (solver, "/tmp/minimum-jerk-problem",
+	   interval_, trajectory, zmp_, additionalCallback_);
 
 	// Set solver parameters.
 	solver.parameters ()["max-iterations"].value = 100;
