@@ -136,7 +136,7 @@ namespace roboptim
 
 	    // Update robot position (dq, ddq are unchanged).
 	    for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
-	      robot_->joint (dofId)->q () = states_[i].x[dofId];
+	      robot_->joint (dofId)->q () = states_[i].x[6 + dofId];
 
 	    // Compute quantities
 	    robot_->calcForwardKinematics (true, true);
