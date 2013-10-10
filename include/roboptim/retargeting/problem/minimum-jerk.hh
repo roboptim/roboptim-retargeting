@@ -106,6 +106,11 @@ namespace roboptim
 	  return torque_;
 	}
 
+	std::size_t nFrames () const throw ()
+	{
+	  return nFrames_;
+	}
+
 	std::size_t nDofs () const throw ()
 	{
 	  return nDofs_;
