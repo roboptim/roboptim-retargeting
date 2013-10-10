@@ -2,6 +2,7 @@
 # define ROBOPTIM_RETARGETING_PROBLEM_MINIMUM_JERK_HH
 # include <string>
 
+# include <boost/function.hpp>
 # include <boost/shared_ptr.hpp>
 
 # include <roboptim/core/differentiable-function.hh>
@@ -66,7 +67,8 @@ namespace roboptim
 	 bool enableCollision,
 	 bool enableTorque,
 	 bool enableZmp,
-	 const std::string& solverName);
+	 const std::string& solverName,
+	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
 	virtual ~MinimumJerk ();
 
 	/// \brief Solve the underlying optimization problem.
@@ -127,6 +129,18 @@ namespace roboptim
 	  return interval_;
 	}
 
+	solver_t::callback_t&
+	additionalCallback () throw ()
+	{
+	  return additionalCallback_;
+	}
+
+	const solver_t::callback_t&
+	additionalCallback () const throw ()
+	{
+	  return additionalCallback_;
+	}
+
       private:
 	static log4cxx::LoggerPtr logger;
 
@@ -175,9 +189,9 @@ namespace roboptim
 
 	/// \}
 
-      /// \brief Trajectory used by constraints.
-      boost::shared_ptr<VectorInterpolation>
-      vectorInterpolationConstraints_;
+	/// \brief Trajectory used by constraints.
+	boost::shared_ptr<VectorInterpolation>
+	vectorInterpolationConstraints_;
 
 	/// \brief Optimization problem.
 	ProblemShPtr_t problem_;
@@ -185,6 +199,9 @@ namespace roboptim
 	GenericSolver::result_t result_;
 
 	std::string solverName_;
+
+	/// \brief Additional callback on top of usual logging.
+	solver_t::callback_t additionalCallback_;
       };
 
     } // end of namespace problem.

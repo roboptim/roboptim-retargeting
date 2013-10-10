@@ -57,11 +57,13 @@ namespace roboptim
       (solver_t& solver, const boost::filesystem::path& path,
        discreteInterval_t discreteInterval,
        boost::shared_ptr<Trajectory<3> > trajectory,
-       boost::shared_ptr<ZMP<U> > zmp)
+       boost::shared_ptr<ZMP<U> > zmp,
+       typename solver_t::callback_t additionalCallback)
 	: OptimizationLogger<T> (solver, path),
 	  discreteInterval_ (discreteInterval),
 	  trajectory_ (trajectory),
-	  zmp_ (zmp)
+	  zmp_ (zmp),
+	  additionalCallback_ (additionalCallback)
       {
       }
 
@@ -96,17 +98,19 @@ namespace roboptim
 		vector_t zmp = (*zmp_) (state);
 		streamZmp << zmp[0] << ", " << zmp[1] << "\n";
 	      }
-
-	    for (value_type  i = 0; i < x.size (); ++i)
-	      {	    }
 	    streamZmp << "\n";
 	  }
+
+	// Call additional callback.
+	if (additionalCallback_)
+	  additionalCallback_ (x, pb);
       }
 
     private:
       discreteInterval_t discreteInterval_;
       boost::shared_ptr<Trajectory<3> > trajectory_;
       boost::shared_ptr<ZMP<U> > zmp_;
+      typename solver_t::callback_t additionalCallback_;
     };
 
     namespace problem
@@ -122,7 +126,8 @@ namespace roboptim
        bool enableCollision,
        bool enableTorque,
        bool enableZmp,
-       const std::string& solverName)
+       const std::string& solverName,
+       solver_t::callback_t additionalCallback)
 	: nFrames_ (10.),
 	  dt_ (0.005),
 	  tmin_ (0.),
@@ -139,7 +144,8 @@ namespace roboptim
 	  vectorInterpolationConstraints_ (),
 	  problem_ (),
 	  result_ (),
-	  solverName_ (solverName)
+	  solverName_ (solverName),
+	  additionalCallback_ (additionalCallback)
       {
         // Compute the initial trajectory (whole body)
 	vector_t initialTrajectory (nFrames_ * standardPose.size ());
@@ -392,7 +398,7 @@ namespace roboptim
 	   static_cast<size_type> (nDofs_), dt_);
 	MinimumJerkOptimizationLogger<solver_t, EigenMatrixDense>
 	  optimizationLogger (solver, "/tmp/minimum-jerk-problem",
-		  interval_, trajectory, zmp_);
+			      interval_, trajectory, zmp_, additionalCallback_);
 
 	// Set solver parameters.
 	solver.parameters ()["max-iterations"].value = 100;

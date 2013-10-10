@@ -1,6 +1,7 @@
 #include <sstream>
 
 #include <boost/bind.hpp>
+#include <boost/format.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
@@ -24,6 +25,9 @@
 class MinimumJerkPlugin : public cnoid::Plugin
 {
 public:
+  typedef roboptim::retargeting::problem::MinimumJerk::size_type size_type;
+  typedef roboptim::retargeting::problem::MinimumJerk::solver_t solver_t;
+
   explicit MinimumJerkPlugin ()
     : Plugin("RoboptimMinimumJerk"),
       menuItem_ (),
@@ -100,6 +104,78 @@ private:
       menuItem_->setEnabled (false);
   }
 
+  void perIterationCallback
+  (roboptim::retargeting::problem::MinimumJerk& minimumJerkProblem,
+   cnoid::BodyMotionItemPtr bodyMotionItem,
+   const solver_t::vector_t& x,
+   const solver_t::problem_t&)
+  {
+    static int iteration = 0;
+    boost::format name ("minimum-jerk - iteration %d");
+    name % iteration;
+    addResultToTree (minimumJerkProblem, bodyMotionItem, name.str (), x);
+    ++iteration;
+  }
+
+  void addResultToTree
+  (roboptim::retargeting::problem::MinimumJerk& minimumJerkProblem,
+   cnoid::BodyMotionItemPtr bodyMotionItem,
+   const std::string& name,
+   const solver_t::vector_t& x)
+  {
+    cnoid::BodyMotionItemPtr resultItem =
+      boost::dynamic_pointer_cast<cnoid::BodyMotionItem>
+      (bodyMotionItem->duplicate ());
+
+    resultItem->setName (name);
+    resultItem->motion ()->setDimension
+      (minimumJerkProblem.nFrames (), minimumJerkProblem.nDofs () - 6);
+    resultItem->motion ()->setFrameRate (1. / minimumJerkProblem.dt ());
+
+    // Copy joint values.
+    for (int frameId = 0; frameId < minimumJerkProblem.nFrames (); ++frameId)
+      for (std::size_t jointId = 0; jointId < minimumJerkProblem.nDofs () - 6;
+    	   ++jointId)
+    	resultItem->jointPosSeqItem ()->seq ()->frame (frameId)[jointId] =
+    	  x[frameId * minimumJerkProblem.nDofs () + 6 + jointId];
+
+    // Copy base link positions and attitudes.
+    for (int frameId = 0; frameId < minimumJerkProblem.nFrames (); ++frameId)
+      for (std::size_t jointId = 0; jointId < minimumJerkProblem.nDofs () - 6;
+    	   ++jointId)
+    	{
+    	  resultItem->linkPosSeqItem ()->seq ()->frame
+    	    (frameId)[jointId].translation () =
+    	    x.segment(frameId * minimumJerkProblem.nDofs (), 3);
+
+    	  cnoid::Vector3 axis =
+    	    x.segment(frameId * minimumJerkProblem.nDofs () + 3, 3);
+    	  double angle = axis.norm ();
+
+	  // If axis norm is null, set to identity manually.
+	  if (angle >= 1e-8)
+	    {
+	      axis.normalize ();
+	      Eigen::AngleAxisd angleAxis (angle, axis);
+	      Eigen::Quaterniond q (angleAxis);
+	      resultItem->linkPosSeqItem ()->seq ()->frame
+		(frameId)[jointId].rotation () = q;
+	    }
+	  else
+	    {
+	      resultItem->linkPosSeqItem ()->seq ()->frame
+		(frameId)[jointId].rotation () = Eigen::Quaterniond ();
+	    }
+    	}
+
+    cnoid::callSynchronously
+      (boost::bind (&cnoid::RootItem::addChildItem,
+		    cnoid::ItemTreeView::instance()->rootItem (),
+		    resultItem,
+		    false));
+
+  }
+
   void buildProblemAndOptimize (cnoid::BodyPtr robot,
 				cnoid::BodyMotionItemPtr bodyMotionItem)
   {
@@ -118,16 +194,24 @@ private:
     bool enableZmp = true;
     std::string solverName = "cfsqp";
 
-    typedef roboptim::retargeting::problem::MinimumJerk::size_type size_type;
-    typedef roboptim::retargeting::problem::MinimumJerk::solver_t solver_t;
-
-
     // Build optimization problem.
     roboptim::retargeting::problem::MinimumJerk
       minimumJerkProblem
       (robot, enableFreeze, enableVelocity,
        enablePosition, enableCollision,
        enableTorque, enableZmp, solverName);
+
+    solver_t::callback_t cb = boost::bind
+      (&MinimumJerkPlugin::perIterationCallback,
+       this, minimumJerkProblem, bodyMotionItem, _1, _2);
+    minimumJerkProblem.additionalCallback () = cb;
+
+    if (minimumJerkProblem.problem ()->startingPoint ())
+      addResultToTree
+	(minimumJerkProblem,
+	 bodyMotionItem,
+	 "minimum-jerk - initial trajectory",
+	 *(minimumJerkProblem.problem ()->startingPoint ()));
 
     try
       {
@@ -200,47 +284,9 @@ private:
 	return;
       }
 
-    cnoid::BodyMotionItemPtr resultItem =
-      boost::dynamic_pointer_cast<cnoid::BodyMotionItem>
-      (bodyMotionItem->duplicate ());
-
-    resultItem->setName("roboptim-minimumjerk-result");
-    resultItem->motion ()->setDimension
-      (minimumJerkProblem.nFrames (), minimumJerkProblem.nDofs () - 6);
-    resultItem->motion ()->setFrameRate (1. / minimumJerkProblem.dt ());
-
-    // Copy joint values.
-    for (int frameId = 0; frameId < minimumJerkProblem.nFrames (); ++frameId)
-      for (std::size_t jointId = 0; jointId < minimumJerkProblem.nDofs () - 6;
-    	   ++jointId)
-    	resultItem->jointPosSeqItem ()->seq ()->frame (frameId)[jointId] =
-    	  x[frameId * minimumJerkProblem.nDofs () + 6 + jointId];
-
-    // Copy base link positions and attitudes.
-    for (int frameId = 0; frameId < minimumJerkProblem.nFrames (); ++frameId)
-      for (std::size_t jointId = 0; jointId < minimumJerkProblem.nDofs () - 6;
-    	   ++jointId)
-    	{
-    	  resultItem->linkPosSeqItem ()->seq ()->frame
-    	    (frameId)[jointId].translation () =
-    	    x.segment(frameId * minimumJerkProblem.nDofs (), 3);
-
-    	  cnoid::Vector3 axis =
-    	    x.segment(frameId * minimumJerkProblem.nDofs () + 3, 3);
-    	  double angle = axis.norm ();
-    	  axis.normalize ();
-    	  Eigen::AngleAxisd angleAxis (angle, axis);
-    	  Eigen::Quaterniond q (angleAxis);
-    	  resultItem->linkPosSeqItem ()->seq ()->frame
-    	    (frameId)[jointId].rotation () = q;
-    	}
-
-    cnoid::callSynchronously
-      (boost::bind (&cnoid::RootItem::addChildItem,
-		    cnoid::ItemTreeView::instance()->rootItem (),
-		    resultItem,
-		    false));
-
+    addResultToTree
+      (minimumJerkProblem, bodyMotionItem,
+       "minimum-jerk - final result", x);
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Minimum Jerk - end");
     if (menuItem_)
       menuItem_->setEnabled (true);
