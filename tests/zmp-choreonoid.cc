@@ -45,7 +45,8 @@ BOOST_AUTO_TEST_CASE (rnd)
   // position if velocity and acceleration is null.
   for (int i = 0; i < 100; ++i)
     {
-      zmp.q (x) = vector_t::Random (6 + robot->numJoints ());
+      x.setZero ();
+      zmp.q (x).setRandom ();
       res = zmp (x);
 
       std::cout << "----------" << iendl
@@ -67,7 +68,7 @@ BOOST_AUTO_TEST_CASE (rnd)
   // COM are not the same.
   for (int i = 0; i < 100; ++i)
     {
-      x = vector_t::Random (3 * (6 + robot->numJoints ()));
+      x.setRandom ();
       res = zmp (x);
 
       std::cout << "----------" << iendl
