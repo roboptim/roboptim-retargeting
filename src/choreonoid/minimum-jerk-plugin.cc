@@ -188,7 +188,7 @@ private:
 
     bool enableFreeze = true;
     bool enableVelocity = true;
-    bool enablePosition = false;
+    bool enablePosition = true;
     bool enableCollision = false;
     bool enableTorque = false;
     bool enableZmp = true;
