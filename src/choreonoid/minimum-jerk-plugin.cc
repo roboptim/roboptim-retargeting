@@ -62,7 +62,7 @@ public:
     hbox->addWidget (new QLabel (_ ("Solver")));
     solver_.addItem ("cfsqp");
     solver_.addItem ("ipopt");
-    solver_.addItem ("nag");
+    solver_.addItem ("nag-nlp");
     solver_.setEditable (true);
     solver_.setCurrentIndex (1);
     hbox->addWidget (&solver_);
@@ -201,6 +201,22 @@ public:
       (QMessageBox::Critical,
        "Error while solving minimum jerk problem",
        "An exception has been thrown during problem optimization.",
+       QMessageBox::Ok),
+      nosolutionBox_
+      (QMessageBox::Critical,
+       "Error while solving minimum jerk problem",
+       "No solution has been found during the optimization process.",
+       QMessageBox::Ok),
+      warningBox_
+      (QMessageBox::Warning,
+       "Minimum jerk problem",
+       "A solution has been found but may not be totally satisfying. "
+       "Please proceed carefully.",
+       QMessageBox::Ok),
+      finishedBox_
+      (QMessageBox::Information,
+       "Minimum jerk problem",
+       "The optimization process finished successfully.",
        QMessageBox::Ok),
       rootItem_ (cnoid::ItemTreeView::instance()->rootItem ()),
       folderIteration_ (),
@@ -505,6 +521,13 @@ private:
 	   << std::endl
 	   << boost::get<roboptim::SolverError>
 	  (minimumJerkProblem.result ()).what ();
+
+	cnoid::callSynchronously
+	  (boost::bind
+	   (&QMessageBox::setDetailedText,
+	    boost::ref (nosolutionBox_), ss.str ().c_str ()));
+	cnoid::callSynchronously
+	  (boost::bind (&QMessageBox::exec, boost::ref (nosolutionBox_)));
 	cnoid::MessageView::mainInstance ()->putln (ss.str ());
       }
     else if (minimumJerkProblem.result ().which () ==
@@ -514,6 +537,16 @@ private:
 	  boost::get<roboptim::ResultWithWarnings>
 	  (minimumJerkProblem.result ());
 	x = result.x;
+
+	std::stringstream ss;
+	ss << result;
+	cnoid::callSynchronously
+	  (boost::bind
+	   (&QMessageBox::setDetailedText,
+	    boost::ref (warningBox_), ss.str ().c_str ()));
+	cnoid::callSynchronously
+	  (boost::bind (&QMessageBox::exec, boost::ref (warningBox_)));
+
 	LOG4CXX_WARN (logger, "solver warnings: " << result);
       }
     else if (minimumJerkProblem.result ().which () == solver_t::SOLVER_VALUE)
@@ -521,6 +554,16 @@ private:
 	const roboptim::Result& result =
 	  boost::get<roboptim::Result> (minimumJerkProblem.result ());
 	x = result.x;
+
+	std::stringstream ss;
+	ss << result;
+	cnoid::callSynchronously
+	  (boost::bind
+	   (&QMessageBox::setDetailedText,
+	    boost::ref (finishedBox_), ss.str ().c_str ()));
+	cnoid::callSynchronously
+	  (boost::bind (&QMessageBox::exec, boost::ref (finishedBox_)));
+
 	LOG4CXX_WARN (logger, "result: " << result);
       }
     else
@@ -563,6 +606,9 @@ private:
   boost::shared_ptr<boost::thread> thread_;
 
   QMessageBox errorBox_;
+  QMessageBox nosolutionBox_;
+  QMessageBox warningBox_;
+  QMessageBox finishedBox_;
 
   cnoid::ItemPtr rootItem_;
   cnoid::FolderItem* folderIteration_;
