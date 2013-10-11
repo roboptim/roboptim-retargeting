@@ -120,6 +120,8 @@ namespace roboptim
 
       MinimumJerk::MinimumJerk
       (cnoid::BodyPtr robot,
+       size_type nFrames,
+       value_type dt,
        bool enableFreezeFrame,
        bool enableVelocity,
        bool enableFeetPositions,
@@ -128,13 +130,13 @@ namespace roboptim
        bool enableZmp,
        const std::string& solverName,
        solver_t::callback_t additionalCallback)
-	: nFrames_ (10.),
-	  dt_ (0.005),
+	: nFrames_ (nFrames),
+	  dt_ (dt),
 	  tmin_ (0.),
 	  tmax_ (dt_ * static_cast<value_type> (nFrames_)),
 	  dofId_ (6 + 28),
 	  init_ (standardPose[dofId_] * M_PI / 180.),
-	  goal_ (robot->joint (dofId_ - 6)->q_upper () / 4. - 0.01),
+	  goal_ (robot->joint (dofId_ - 6)->q_upper () - 0.01),
 	  nDofs_ (standardPose.size ()),
 	  interval_ (tmin_, tmax_, 0.01),
 	  cost_ (),

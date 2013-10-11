@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE (simple)
   typedef problem::MinimumJerk::solver_t solver_t;
 
   problem::MinimumJerk minimumJerkProblem
-    (robot, enableFreeze, enableVelocity,
+    (robot, 10, 0.1, enableFreeze, enableVelocity,
      enablePosition, enableCollision,
      enableTorque, enableZmp, solverName);
   minimumJerkProblem.solve ();

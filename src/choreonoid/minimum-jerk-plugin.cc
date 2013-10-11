@@ -5,10 +5,18 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
+#include <QLabel>
+#include <QDialogButtonBox>
+#include <QBoxLayout>
+
 #include <roboptim/retargeting/problem/minimum-jerk.hh>
 
+#include <cnoid/Archive>
 #include <cnoid/BodyItem>
 #include <cnoid/BodyMotionItem>
+#include <cnoid/Button>
+#include <cnoid/ComboBox>
+#include <cnoid/Dialog>
 #include <cnoid/ItemList>
 #include <cnoid/ItemTreeView>
 #include <cnoid/LazyCaller>
@@ -16,11 +24,165 @@
 #include <cnoid/MessageView>
 #include <cnoid/Plugin>
 #include <cnoid/RootItem>
+#include <cnoid/SpinBox>
 
 #include <log4cxx/logger.h>
 #include <log4cxx/xml/domconfigurator.h>
 
 #include "directories.hh"
+
+#define _(x) x
+
+class MinimumJerkPlugin;
+
+class MinimumJerkDialog : public cnoid::Dialog
+{
+public:
+  MinimumJerkDialog (MinimumJerkPlugin& plugin)
+    : cnoid::Dialog (),
+      plugin_ (plugin),
+      solver_ (),
+      nFrames_ (),
+      dt_ (),
+      enableFreeze_ (),
+      enableVelocity_ (),
+      enablePosition_ (),
+      enableTorque_ (),
+      enableZmp_ ()
+  {
+    setWindowTitle(_ ("Setup Minimum Jerk Problem"));
+
+    QVBoxLayout* vbox = new QVBoxLayout ();
+    setLayout (vbox);
+
+    QHBoxLayout* hbox = new QHBoxLayout ();
+    hbox->addSpacing (40);
+    hbox->addWidget (new QLabel (_ ("Solver")));
+    solver_.addItem ("cfsqp");
+    solver_.addItem ("ipopt");
+    solver_.addItem ("nag");
+    solver_.setEditable (true);
+    solver_.setCurrentIndex (1);
+    hbox->addWidget (&solver_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    hbox->addSpacing (40);
+    hbox->addWidget (new QLabel (_ ("Number of frames")));
+    nFrames_.setDecimals (0);
+    nFrames_.setRange (10, 1000);
+    nFrames_.setValue (20);
+    hbox->addWidget (&nFrames_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    hbox->addSpacing (40);
+    hbox->addWidget(new QLabel (_ ("Time discretization (dt)")));
+    dt_.setDecimals (3);
+    dt_.setRange (0.001, 1.);
+    dt_.setValue (0.1);
+    hbox->addWidget(&dt_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    enableFreeze_.setText (_ ("Freeze first frame"));
+    enableFreeze_.setChecked (true);
+    hbox->addWidget (&enableFreeze_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    enableVelocity_.setText (_ ("Joint velocity"));
+    enableVelocity_.setChecked (true);
+    hbox->addWidget (&enableVelocity_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    enablePosition_.setText (_ ("Feet position"));
+    enablePosition_.setChecked (true);
+    hbox->addWidget (&enablePosition_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    enableTorque_.setText (_ ("Torque"));
+    enableTorque_.setChecked (false);
+    hbox->addWidget (&enableTorque_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
+    enableZmp_.setText (_ ("ZMP"));
+    enableZmp_.setChecked (true);
+    hbox->addWidget (&enableZmp_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    cnoid::PushButton* applyButton = new cnoid::PushButton (_ ("&Solve"));
+    applyButton->setDefault (true);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox (this);
+    buttonBox->addButton (applyButton, QDialogButtonBox::AcceptRole);
+    applyButton->sigClicked ().connect
+      (boost::bind (&MinimumJerkDialog::accept, this));
+
+    vbox->addWidget(buttonBox);
+  }
+
+  bool store (cnoid::Archive& archive)
+  {
+    //FIXME: this is probably a bad idea to store the index only.
+    archive.write ("solver", solver_.currentIndex ());
+
+    archive.write ("nFrames", nFrames_.value ());
+    archive.write ("dt", dt_.value ());
+    archive.write ("enableFreeze", enableFreeze_.isChecked ());
+    archive.write ("enableVelocity", enableVelocity_.isChecked ());
+    archive.write ("enablePosition", enablePosition_.isChecked ());
+    archive.write ("enableTorque", enableTorque_.isChecked ());
+    archive.write ("enableZmp", enableZmp_.isChecked ());
+    return true;
+  }
+  void restore (const cnoid::Archive& archive)
+  {
+    //FIXME: this is probably a bad idea to store the index only.
+    solver_.setCurrentIndex
+      (archive.get ("solver", solver_.currentIndex ()));
+
+    nFrames_.setValue
+      (archive.get ("nFrames", nFrames_.value ()));
+    dt_.setValue (archive.get ("dt", dt_.value ()));
+    enableFreeze_.setChecked
+      (archive.get ("enableFreeze", enableFreeze_.isChecked ()));
+    enableVelocity_.setChecked
+      (archive.get ("enableVelocity", enableVelocity_.isChecked ()));
+    enablePosition_.setChecked
+      (archive.get ("enablePosition", enablePosition_.isChecked ()));
+    enableTorque_.setChecked
+      (archive.get ("enableTorque", enableTorque_.isChecked ()));
+    enableZmp_.setChecked
+      (archive.get ("enableZmp", enableZmp_.isChecked ()));
+  }
+
+  virtual void onAccepted ();
+
+public:
+  MinimumJerkPlugin& plugin_;
+
+  cnoid::ComboBox solver_;
+
+  cnoid::DoubleSpinBox nFrames_;
+  cnoid::DoubleSpinBox dt_;
+
+  cnoid::CheckBox enableFreeze_;
+  cnoid::CheckBox enableVelocity_;
+  cnoid::CheckBox enablePosition_;
+  cnoid::CheckBox enableTorque_;
+  cnoid::CheckBox enableZmp_;
+};
 
 class MinimumJerkPlugin : public cnoid::Plugin
 {
@@ -31,7 +193,9 @@ public:
   explicit MinimumJerkPlugin ()
     : Plugin("RoboptimMinimumJerk"),
       menuItem_ (),
-      thread_ ()
+      menuItemSolve_ (),
+      thread_ (),
+      dialog_ ()
   {}
 
   virtual bool initialize ()
@@ -41,15 +205,28 @@ public:
     log4cxxConfigurationFile += "/log4cxx.xml";
     log4cxx::xml::DOMConfigurator::configure (log4cxxConfigurationFile);
 
-    menuItem_ =
-      menuManager ().setPath ("/Filters").addItem ("Roboptim Minimum Jerk");
-    menuItem_->sigTriggered ().connect
-      (boost::bind (&MinimumJerkPlugin::menuCb, this));
+    if (!dialog_)
+      {
+	dialog_ = this->manage (new MinimumJerkDialog (*this));
+	menuItem_ =
+	  menuManager ().setPath ("/Filters").addItem ("Roboptim Minimum Jerk (setup and solve)");
+	menuItem_->sigTriggered ().connect
+	  (boost::bind (&MinimumJerkPlugin::menuCb, this));
+	menuItemSolve_ =
+	  menuManager ().setPath ("/Filters").addItem ("Roboptim Minimum Jerk (solve)");
+	menuItemSolve_->sigTriggered ().connect
+	  (boost::bind (&MinimumJerkPlugin::solve, this));
+
+        connectProjectArchiver
+	  ("MinimumJerkDialog",
+	   bind(&MinimumJerkDialog::store, dialog_, _1),
+	   bind(&MinimumJerkDialog::restore, dialog_, _1));
+      }
+
     return true;
   }
 
-private:
-  void menuCb ()
+  void solve ()
   {
     if (thread_)
       {
@@ -100,8 +277,20 @@ private:
       (boost::bind (&MinimumJerkPlugin::buildProblemAndOptimize,
 		    this, body, bodyMotionItem));
 
-    if (menuItem_ && thread_)
-      menuItem_->setEnabled (false);
+    if (thread_)
+      {
+	if (menuItem_)
+	  menuItem_->setEnabled (false);
+	if (menuItemSolve_)
+	  menuItemSolve_->setEnabled (false);
+      }
+  }
+
+private:
+  void menuCb ()
+  {
+    if (dialog_)
+      dialog_->show ();
   }
 
   void perIterationCallback
@@ -186,18 +375,26 @@ private:
       (log4cxx::Logger::getLogger
        ("roboptim.retargeting.choreonoid"));
 
-    bool enableFreeze = true;
-    bool enableVelocity = true;
-    bool enablePosition = true;
+    if (!dialog_)
+      throw std::runtime_error ("dialog box is missing");
+
+    // Retrieve problem setup from dialog window.
+    // The dialog window values are restored from the loaded project.
+    unsigned nFrames = dialog_->nFrames_.value ();
+    double dt = dialog_->dt_.value ();
+    bool enableFreeze = dialog_->enableFreeze_.isChecked ();
+    bool enableVelocity = dialog_->enableVelocity_.isChecked ();
+    bool enablePosition = dialog_->enablePosition_.isChecked ();
     bool enableCollision = false;
-    bool enableTorque = false;
-    bool enableZmp = true;
-    std::string solverName = "cfsqp";
+    bool enableTorque = dialog_->enableTorque_.isChecked ();
+    bool enableZmp = dialog_->enableZmp_.isChecked ();
+    std::string solverName =
+      dialog_->solver_.currentText ().toUtf8 ().constData ();
 
     // Build optimization problem.
     roboptim::retargeting::problem::MinimumJerk
       minimumJerkProblem
-      (robot, enableFreeze, enableVelocity,
+      (robot, nFrames, dt, enableFreeze, enableVelocity,
        enablePosition, enableCollision,
        enableTorque, enableZmp, solverName);
 
@@ -222,6 +419,8 @@ private:
 	cnoid::MessageView::mainInstance ()->putln (e.what ());
 	if (menuItem_)
 	  menuItem_->setEnabled (true);
+	if (menuItemSolve_)
+	  menuItemSolve_->setEnabled (true);
 	thread_.reset ();
 	return;
       }
@@ -269,6 +468,8 @@ private:
 	  ()->putln ("Roboptim Minimum Jerk - failed");
 	if (menuItem_)
 	  menuItem_->setEnabled (true);
+	if (menuItemSolve_)
+	  menuItemSolve_->setEnabled (true);
 	thread_.reset (); // yeah suicide time.
 	return;
       }
@@ -280,6 +481,8 @@ private:
 	  ()->putln ("Roboptim Minimum Jerk - end");
 	if (menuItem_)
 	  menuItem_->setEnabled (true);
+	if (menuItemSolve_)
+	  menuItemSolve_->setEnabled (true);
 	thread_.reset (); // yeah suicide time.
 	return;
       }
@@ -290,11 +493,22 @@ private:
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Minimum Jerk - end");
     if (menuItem_)
       menuItem_->setEnabled (true);
+    if (menuItemSolve_)
+      menuItemSolve_->setEnabled (true);
     thread_.reset (); // yeah suicide time.
   }
 
   cnoid::Action* menuItem_;
+  cnoid::Action* menuItemSolve_;
   boost::shared_ptr<boost::thread> thread_;
+
+  MinimumJerkDialog* dialog_;
 };
 
 CNOID_IMPLEMENT_PLUGIN_ENTRY (MinimumJerkPlugin)
+
+void
+MinimumJerkDialog::onAccepted ()
+{
+  plugin_.solve ();
+}

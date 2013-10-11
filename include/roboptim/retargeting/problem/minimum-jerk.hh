@@ -61,6 +61,8 @@ namespace roboptim
 
 	explicit MinimumJerk
 	(cnoid::BodyPtr robot,
+	 size_type nFrames,
+	 value_type dt,
 	 bool enableFreezeFrame,
 	 bool enableVelocity,
 	 bool enablePosition,
