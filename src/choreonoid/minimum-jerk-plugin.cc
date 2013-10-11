@@ -5,9 +5,10 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
-#include <QLabel>
-#include <QDialogButtonBox>
 #include <QBoxLayout>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QMessageBox>
 
 #include <roboptim/retargeting/problem/minimum-jerk.hh>
 
@@ -196,10 +197,18 @@ public:
       menuItem_ (),
       menuItemSolve_ (),
       thread_ (),
+      errorBox_
+      (QMessageBox::Critical,
+       "Error while solving minimum jerk problem",
+       "An exception has been thrown during problem optimization.",
+       QMessageBox::Ok),
       rootItem_ (cnoid::ItemTreeView::instance()->rootItem ()),
       folderIteration_ (),
       dialog_ ()
-  {}
+  {
+    errorBox_.setWindowFlags
+      (errorBox_.windowFlags () & ~Qt::WindowCloseButtonHint);
+  }
 
   virtual bool initialize ()
   {
@@ -267,14 +276,20 @@ public:
 
     if (!bodyMotionItem)
       {
-	cnoid::MessageView::mainInstance ()->putln
-	  ("no robot motion item is selected");
+	QMessageBox::critical
+	  (0,
+	   "Error while initializing minimum jerk optimization",
+	   "Please, select a BodyMotion item (anything will do) "
+	   "before trying to solve the problem.");
 	return;
       }
     if (!body && !bodyItem)
       {
-	cnoid::MessageView::mainInstance ()->putln
-	  ("no robot model item is selected");
+	QMessageBox::critical
+	  (0,
+	   "Error while initializing minimum jerk optimization",
+	   "Please, select the robot you want to use in the optimization process "
+	   "before trying to solve the problem.");
 	return;
       }
 
@@ -298,8 +313,9 @@ public:
     cnoid::MessageView::mainInstance ()->putln
       ("Roboptim Minimum Jerk - launching thread");
     thread_ = boost::make_shared<boost::thread>
-      (boost::bind (&MinimumJerkPlugin::buildProblemAndOptimize,
-		    this, body, bodyMotionItem));
+      (boost::bind
+       (&MinimumJerkPlugin::buildProblemAndOptimize,
+	this, body, bodyMotionItem));
 
     if (thread_)
       {
@@ -456,6 +472,11 @@ private:
       }
     catch (std::runtime_error& e)
       {
+	cnoid::callSynchronously
+	  (boost::bind
+	   (&QMessageBox::setDetailedText, boost::ref (errorBox_), e.what ()));
+	cnoid::callSynchronously
+	  (boost::bind (&QMessageBox::exec, boost::ref (errorBox_)));
 	cnoid::MessageView::mainInstance ()->putln (e.what ());
 	if (menuItem_)
 	  menuItem_->setEnabled (true);
@@ -540,6 +561,9 @@ private:
   cnoid::Action* menuItem_;
   cnoid::Action* menuItemSolve_;
   boost::shared_ptr<boost::thread> thread_;
+
+  QMessageBox errorBox_;
+
   cnoid::ItemPtr rootItem_;
   cnoid::FolderItem* folderIteration_;
 
