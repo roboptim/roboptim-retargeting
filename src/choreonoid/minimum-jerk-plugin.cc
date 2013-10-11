@@ -17,6 +17,7 @@
 #include <cnoid/Button>
 #include <cnoid/ComboBox>
 #include <cnoid/Dialog>
+#include <cnoid/FolderItem>
 #include <cnoid/ItemList>
 #include <cnoid/ItemTreeView>
 #include <cnoid/LazyCaller>
@@ -195,6 +196,8 @@ public:
       menuItem_ (),
       menuItemSolve_ (),
       thread_ (),
+      rootItem_ (cnoid::ItemTreeView::instance()->rootItem ()),
+      folderIteration_ (),
       dialog_ ()
   {}
 
@@ -236,18 +239,22 @@ public:
       }
 
     cnoid::BodyPtr body;
+    cnoid::BodyItemPtr bodyItem;
     cnoid::BodyMotionItemPtr bodyMotionItem;
     cnoid::ItemList<cnoid::Item> selected =
       cnoid::ItemTreeView::instance()->selectedItems<cnoid::Item>();
     cnoid::ItemList<cnoid::BodyItem> bodyItems = selected;
     cnoid::ItemList<cnoid::BodyMotionItem> bodyMotionItems = selected;
 
-    for (std::size_t i = 0; i < bodyItems.size (); ++i)
+    for (std::size_t i = 0; !body && i < bodyItems.size (); ++i)
       {
 	int i_ = static_cast<int> (i);
-	cnoid::BodyItem* bodyItem = bodyItems.get (i_);
-	if (bodyItem->body ())
-	  body = bodyItem->body ();
+	cnoid::BodyItemPtr bodyItemTmp = bodyItems.get (i_);
+	if (bodyItemTmp->body ())
+	  {
+	    body = bodyItemTmp->body ();
+	    bodyItem = bodyItemTmp;
+	  }
       }
 
     for (std::size_t i = 0; i < bodyMotionItems.size (); ++i)
@@ -264,13 +271,30 @@ public:
 	  ("no robot motion item is selected");
 	return;
       }
-    if (!body)
+    if (!body && !bodyItem)
       {
 	cnoid::MessageView::mainInstance ()->putln
 	  ("no robot model item is selected");
 	return;
       }
 
+    // Create folder
+    static int callId = 0;
+    cnoid::FolderItem* folder = new cnoid::FolderItem ();
+    if (callId == 0)
+      folder->setName ("RobOptim Minimum Jerk");
+    else
+      folder->setName
+	((boost::format ("RobOptim Minimum Jerk (%d)") % callId).str ());
+    ++callId;
+    folderIteration_ = new cnoid::FolderItem ();
+    folderIteration_->setName ("Intermediate iterations");
+    folder->addChildItem (folderIteration_);
+
+    bodyItem->addChildItem (folder);
+    rootItem_ = folder;
+
+    // Launch thread
     cnoid::MessageView::mainInstance ()->putln
       ("Roboptim Minimum Jerk - launching thread");
     thread_ = boost::make_shared<boost::thread>
@@ -300,9 +324,16 @@ private:
    const solver_t::problem_t&)
   {
     static int iteration = 0;
-    boost::format name ("minimum-jerk - iteration %d");
+    boost::format name ("iteration %d");
     name % iteration;
-    addResultToTree (minimumJerkProblem, bodyMotionItem, name.str (), x);
+    if (folderIteration_)
+      addResultToTree
+	(minimumJerkProblem,
+	 bodyMotionItem, name.str (), x, folderIteration_);
+    else
+      addResultToTree
+	(minimumJerkProblem,
+	 bodyMotionItem, name.str (), x);
     ++iteration;
   }
 
@@ -310,7 +341,8 @@ private:
   (roboptim::retargeting::problem::MinimumJerk& minimumJerkProblem,
    cnoid::BodyMotionItemPtr bodyMotionItem,
    const std::string& name,
-   const solver_t::vector_t& x)
+   const solver_t::vector_t& x,
+   cnoid::ItemPtr parentItem)
   {
     cnoid::BodyMotionItemPtr resultItem =
       boost::dynamic_pointer_cast<cnoid::BodyMotionItem>
@@ -358,11 +390,19 @@ private:
     	}
 
     cnoid::callSynchronously
-      (boost::bind (&cnoid::RootItem::addChildItem,
-		    cnoid::ItemTreeView::instance()->rootItem (),
-		    resultItem,
-		    false));
+      (boost::bind
+       (&cnoid::Item::addChildItem, parentItem, resultItem, false));
 
+  }
+
+  void addResultToTree
+  (roboptim::retargeting::problem::MinimumJerk& minimumJerkProblem,
+   cnoid::BodyMotionItemPtr bodyMotionItem,
+   const std::string& name,
+   const solver_t::vector_t& x)
+  {
+    addResultToTree
+      (minimumJerkProblem, bodyMotionItem, name, x, rootItem_);
   }
 
   void buildProblemAndOptimize (cnoid::BodyPtr robot,
@@ -407,7 +447,7 @@ private:
       addResultToTree
 	(minimumJerkProblem,
 	 bodyMotionItem,
-	 "minimum-jerk - initial trajectory",
+	 "initial trajectory",
 	 *(minimumJerkProblem.problem ()->startingPoint ()));
 
     try
@@ -488,8 +528,7 @@ private:
       }
 
     addResultToTree
-      (minimumJerkProblem, bodyMotionItem,
-       "minimum-jerk - final result", x);
+      (minimumJerkProblem, bodyMotionItem, "final result", x);
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Minimum Jerk - end");
     if (menuItem_)
       menuItem_->setEnabled (true);
@@ -501,6 +540,8 @@ private:
   cnoid::Action* menuItem_;
   cnoid::Action* menuItemSolve_;
   boost::shared_ptr<boost::thread> thread_;
+  cnoid::ItemPtr rootItem_;
+  cnoid::FolderItem* folderIteration_;
 
   MinimumJerkDialog* dialog_;
 };
