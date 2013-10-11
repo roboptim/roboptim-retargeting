@@ -58,7 +58,6 @@ public:
     setLayout (vbox);
 
     QHBoxLayout* hbox = new QHBoxLayout ();
-    hbox->addSpacing (40);
     hbox->addWidget (new QLabel (_ ("Solver")));
     solver_.addItem ("cfsqp");
     solver_.addItem ("ipopt");
@@ -70,7 +69,6 @@ public:
     vbox->addLayout (hbox);
 
     hbox = new QHBoxLayout ();
-    hbox->addSpacing (40);
     hbox->addWidget (new QLabel (_ ("Number of frames")));
     nFrames_.setDecimals (0);
     nFrames_.setRange (10, 1000);
@@ -80,7 +78,6 @@ public:
     vbox->addLayout (hbox);
 
     hbox = new QHBoxLayout ();
-    hbox->addSpacing (40);
     hbox->addWidget(new QLabel (_ ("Time discretization (dt)")));
     dt_.setDecimals (3);
     dt_.setRange (0.001, 1.);
