@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <sstream>
 
 #include <boost/bind.hpp>
@@ -69,6 +70,16 @@ public:
     vbox->addLayout (hbox);
 
     hbox = new QHBoxLayout ();
+    hbox->addWidget (new QLabel (_ ("Trajectory Type")));
+    trajectoryType_.addItem ("interpolation");
+    trajectoryType_.addItem ("cubic-spline");
+    trajectoryType_.setEditable (false);
+    trajectoryType_.setCurrentIndex (1);
+    hbox->addWidget (&trajectoryType_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    hbox = new QHBoxLayout ();
     hbox->addWidget (new QLabel (_ ("Number of frames")));
     nFrames_.setDecimals (0);
     nFrames_.setRange (10, 1000);
@@ -136,6 +147,9 @@ public:
     //FIXME: this is probably a bad idea to store the index only.
     archive.write ("solver", solver_.currentIndex ());
 
+    //FIXME: this is probably a bad idea to store the index only.
+    archive.write ("trajectoryType", trajectoryType_.currentIndex ());
+
     archive.write ("nFrames", nFrames_.value ());
     archive.write ("dt", dt_.value ());
     archive.write ("enableFreeze", enableFreeze_.isChecked ());
@@ -150,6 +164,10 @@ public:
     //FIXME: this is probably a bad idea to store the index only.
     solver_.setCurrentIndex
       (archive.get ("solver", solver_.currentIndex ()));
+
+    //FIXME: this is probably a bad idea to store the index only.
+    solver_.setCurrentIndex
+      (archive.get ("trajectoryType", trajectoryType_.currentIndex ()));
 
     nFrames_.setValue
       (archive.get ("nFrames", nFrames_.value ()));
@@ -172,6 +190,8 @@ public:
   MinimumJerkPlugin& plugin_;
 
   cnoid::ComboBox solver_;
+
+  cnoid::ComboBox trajectoryType_;
 
   cnoid::DoubleSpinBox nFrames_;
   cnoid::DoubleSpinBox dt_;
@@ -459,6 +479,31 @@ private:
     bool enableZmp = dialog_->enableZmp_.isChecked ();
     std::string solverName =
       dialog_->solver_.currentText ().toUtf8 ().constData ();
+    std::string trajectoryType =
+      dialog_->trajectoryType_.currentText ().toUtf8 ().constData ();
+
+    boost::array<std::string, 2> validTrajectoryType = {{
+	"interpolation", "cubic-spline"
+      }};
+    if (std::find (validTrajectoryType.begin (), validTrajectoryType.end (),
+		   trajectoryType)
+	== validTrajectoryType.end ())
+      {
+	std::string errorMsg ("invalid trajectory type");
+	cnoid::callSynchronously
+	  (boost::bind
+	   (&QMessageBox::setDetailedText, boost::ref (errorBox_),
+	    errorMsg.c_str ()));
+	cnoid::callSynchronously
+	  (boost::bind (&QMessageBox::exec, boost::ref (errorBox_)));
+	cnoid::MessageView::mainInstance ()->putln (errorMsg.c_str ());
+	if (menuItem_)
+	  menuItem_->setEnabled (true);
+	if (menuItemSolve_)
+	  menuItemSolve_->setEnabled (true);
+	thread_.reset ();
+	return;
+      }
 
     // Build optimization problem.
     roboptim::retargeting::problem::MinimumJerk
