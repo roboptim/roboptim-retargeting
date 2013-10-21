@@ -63,18 +63,20 @@ BOOST_AUTO_TEST_CASE (simple)
   typedef problem::MinimumJerk::size_type size_type;
   typedef problem::MinimumJerk::solver_t solver_t;
 
-  problem::MinimumJerk minimumJerkProblem
+  problem::MinimumJerkShPtr_t minimumJerkProblem =
+    roboptim::retargeting::problem::MinimumJerk::
+    buildVectorInterpolationBasedOptimizationProblem
     (robot, 10, 0.1, enableFreeze, enableVelocity,
      enablePosition, enableCollision,
      enableTorque, enableZmp, solverName);
-  minimumJerkProblem.solve ();
+  minimumJerkProblem->solve ();
 
   // Rebuild final trajectory.
-  if (minimumJerkProblem.result ().which () == solver_t::SOLVER_ERROR)
+  if (minimumJerkProblem->result ().which () == solver_t::SOLVER_ERROR)
     {
       std::cerr << "error" << std::endl;
       roboptim::SolverError error =
-  	boost::get<roboptim::SolverError> (minimumJerkProblem.result ());
+  	boost::get<roboptim::SolverError> (minimumJerkProblem->result ());
       std::cerr << "Result:\n" << error << std::endl;
       return;
     }
@@ -82,28 +84,28 @@ BOOST_AUTO_TEST_CASE (simple)
   boost::shared_ptr<VectorInterpolation >
     finalTrajectoryFct;
 
-  if (minimumJerkProblem.result ().which () == solver_t::SOLVER_VALUE_WARNINGS)
+  if (minimumJerkProblem->result ().which () == solver_t::SOLVER_VALUE_WARNINGS)
     {
       std::cerr << "warnings" << std::endl;
       roboptim::ResultWithWarnings result =
-  	boost::get<roboptim::ResultWithWarnings> (minimumJerkProblem.result ());
+  	boost::get<roboptim::ResultWithWarnings> (minimumJerkProblem->result ());
       std::cerr << "Result:\n" << result << std::endl;
       finalTrajectoryFct =
 	vectorInterpolation
-	(result.x, static_cast<size_type> (minimumJerkProblem.nDofs ()),
-	 minimumJerkProblem.dt ());
+	(result.x, static_cast<size_type> (minimumJerkProblem->nDofs ()),
+	 minimumJerkProblem->dt ());
     }
 
-  if (minimumJerkProblem.result ().which () == solver_t::SOLVER_VALUE)
+  if (minimumJerkProblem->result ().which () == solver_t::SOLVER_VALUE)
     {
       std::cerr << "ok" << std::endl;
       roboptim::Result result =
-	boost::get<roboptim::Result> (minimumJerkProblem.result ());
+	boost::get<roboptim::Result> (minimumJerkProblem->result ());
       std::cerr << "Result:\n" << result << std::endl;
       finalTrajectoryFct =
 	vectorInterpolation
-	(result.x, static_cast<size_type> (minimumJerkProblem.nDofs ()),
-	 minimumJerkProblem.dt ());
+	(result.x, static_cast<size_type> (minimumJerkProblem->nDofs ()),
+	 minimumJerkProblem->dt ());
     }
 
   assert (!!finalTrajectoryFct);
@@ -113,6 +115,6 @@ BOOST_AUTO_TEST_CASE (simple)
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
   std::cout
     << (gnuplot
-  	<< plot (*finalTrajectoryFct, minimumJerkProblem.interval ())
+  	<< plot (*finalTrajectoryFct, minimumJerkProblem->interval ())
   	);
 }

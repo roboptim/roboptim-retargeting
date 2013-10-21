@@ -687,6 +687,7 @@ private:
     // The dialog window values are restored from the loaded project.
     unsigned nFrames = dialog_->generalTab ()->nFrames ().value ();
     double dt = dialog_->generalTab ()->dt ().value ();
+    unsigned nNodes = dialog_->generalTab ()->nNodes ().value ();
     bool enableFreeze = dialog_->generalTab ()->enableFreeze ().isChecked ();
     bool enableVelocity =
       dialog_->generalTab ()->enableVelocity ().isChecked ();
@@ -725,27 +726,44 @@ private:
       }
 
     // Build optimization problem.
-    roboptim::retargeting::problem::MinimumJerk
-      minimumJerkProblem
-      (robot, nFrames, dt, enableFreeze, enableVelocity,
-       enablePosition, enableCollision,
-       enableTorque, enableZmp, solverName);
+    using roboptim::retargeting::problem::MinimumJerk;
+
+    roboptim::retargeting::problem::MinimumJerkShPtr_t
+      minimumJerkProblem;
+
+    if (trajectoryType == "interpolation")
+      minimumJerkProblem =
+	roboptim::retargeting::problem::MinimumJerk
+	::buildVectorInterpolationBasedOptimizationProblem
+	(robot, nFrames, dt, enableFreeze, enableVelocity,
+	 enablePosition, enableCollision,
+	 enableTorque, enableZmp, solverName);
+    else if (trajectoryType == "cubic-spline")
+      minimumJerkProblem =
+	roboptim::retargeting::problem::MinimumJerk
+	::buildSplineBasedOptimizationProblem
+	(robot, nFrames, nNodes, enableFreeze, enableVelocity,
+	 enablePosition, enableCollision,
+	 enableTorque, enableZmp, solverName);
+    else
+      throw std::runtime_error ("invalid trajectory type");
+
 
     solver_t::callback_t cb = boost::bind
       (&MinimumJerkPlugin::perIterationCallback,
-       this, minimumJerkProblem, bodyMotionItem, _1, _2);
-    minimumJerkProblem.additionalCallback () = cb;
+       this, *minimumJerkProblem, bodyMotionItem, _1, _2);
+    minimumJerkProblem->additionalCallback () = cb;
 
-    if (minimumJerkProblem.problem ()->startingPoint ())
+    if (minimumJerkProblem->problem ()->startingPoint ())
       addResultToTree
-	(minimumJerkProblem,
+	(*minimumJerkProblem,
 	 bodyMotionItem,
 	 "initial trajectory",
-	 *(minimumJerkProblem.problem ()->startingPoint ()));
+	 *(minimumJerkProblem->problem ()->startingPoint ()));
 
     try
       {
-	minimumJerkProblem.solve ();
+	minimumJerkProblem->solve ();
       }
     catch (std::runtime_error& e)
       {
@@ -768,10 +786,10 @@ private:
 
     // Populate result.
     // Check if the minimization has succeed.
-    if (minimumJerkProblem.result ().which () == solver_t::SOLVER_ERROR)
+    if (minimumJerkProblem->result ().which () == solver_t::SOLVER_ERROR)
       {
 	const roboptim::SolverError& result =
-	  boost::get<roboptim::SolverError> (minimumJerkProblem.result ());
+	  boost::get<roboptim::SolverError> (minimumJerkProblem->result ());
 	if (result.lastState ())
 	  x = result.lastState ()->x;
 	else
@@ -781,7 +799,7 @@ private:
 	ss << "No solution has been found. Failing..."
 	   << std::endl
 	   << boost::get<roboptim::SolverError>
-	  (minimumJerkProblem.result ()).what ();
+	  (minimumJerkProblem->result ()).what ();
 
 	cnoid::callSynchronously
 	  (boost::bind
@@ -791,12 +809,12 @@ private:
 	  (boost::bind (&QMessageBox::exec, boost::ref (nosolutionBox_)));
 	cnoid::MessageView::mainInstance ()->putln (ss.str ());
       }
-    else if (minimumJerkProblem.result ().which () ==
+    else if (minimumJerkProblem->result ().which () ==
 	     solver_t::SOLVER_VALUE_WARNINGS)
       {
 	const roboptim::Result& result =
 	  boost::get<roboptim::ResultWithWarnings>
-	  (minimumJerkProblem.result ());
+	  (minimumJerkProblem->result ());
 	x = result.x;
 
 	std::stringstream ss;
@@ -810,10 +828,10 @@ private:
 
 	LOG4CXX_WARN (logger, "solver warnings: " << result);
       }
-    else if (minimumJerkProblem.result ().which () == solver_t::SOLVER_VALUE)
+    else if (minimumJerkProblem->result ().which () == solver_t::SOLVER_VALUE)
       {
 	const roboptim::Result& result =
-	  boost::get<roboptim::Result> (minimumJerkProblem.result ());
+	  boost::get<roboptim::Result> (minimumJerkProblem->result ());
 	x = result.x;
 
 	std::stringstream ss;
@@ -853,7 +871,7 @@ private:
       }
 
     addResultToTree
-      (minimumJerkProblem, bodyMotionItem, "final result", x);
+      (*minimumJerkProblem, bodyMotionItem, "final result", x);
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Minimum Jerk - end");
     if (menuItem_)
       menuItem_->setEnabled (true);

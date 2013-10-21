@@ -122,6 +122,7 @@ namespace roboptim
       (cnoid::BodyPtr robot,
        size_type nFrames,
        value_type dt,
+       size_type nNodes,
        bool enableFreezeFrame,
        bool enableVelocity,
        bool enableFeetPositions,
@@ -130,8 +131,10 @@ namespace roboptim
        bool enableZmp,
        const std::string& solverName,
        solver_t::callback_t additionalCallback)
-	: nFrames_ (nFrames),
+	: robot_ (robot),
+	  nFrames_ (nFrames),
 	  dt_ (dt),
+	  nNodes_ (nNodes),
 	  tmin_ (0.),
 	  tmax_ (dt_ * static_cast<value_type> (nFrames_)),
 	  dofId_ (6 + 28),
@@ -148,14 +151,44 @@ namespace roboptim
 	  result_ (),
 	  solverName_ (solverName),
 	  additionalCallback_ (additionalCallback)
+      {}
+
+      MinimumJerkShPtr_t
+      MinimumJerk::buildVectorInterpolationBasedOptimizationProblem
+      (cnoid::BodyPtr robot,
+       size_type nFrames,
+       value_type dt,
+       bool enableFreezeFrame,
+       bool enableVelocity,
+       bool enableFeetPositions,
+       bool enableCollision,
+       bool enableTorque,
+       bool enableZmp,
+       const std::string& solverName,
+       solver_t::callback_t additionalCallback)
       {
+	MinimumJerkShPtr_t minimumJerk
+	  (new MinimumJerk
+	   (robot,
+	    nFrames,
+	    dt,
+	    0,
+	    enableFreezeFrame,
+	    enableVelocity,
+	    enableFeetPositions,
+	    enableCollision,
+	    enableTorque,
+	    enableZmp,
+	    solverName,
+	    additionalCallback));
+
         // Compute the initial trajectory (whole body)
-	vector_t initialTrajectory (nFrames_ * standardPose.size ());
+	vector_t initialTrajectory (minimumJerk->nFrames_ * standardPose.size ());
 	initialTrajectory.setZero ();
 
 	vector_t x (4);
-	x[0] = init_;
-	x[1] = goal_;
+	x[0] = minimumJerk->init_;
+	x[1] = minimumJerk->goal_;
 	x[2] = x[3] = 0.;
 
 	boost::shared_ptr<MinimumJerkTrajectory<EigenMatrixDense> >
@@ -165,15 +198,16 @@ namespace roboptim
 	minimumJerkTrajectory->setParameters (x);
 
 	// Build the starting point
-	value_type dtMinimumJerk = (1. - 0.) / nFrames_;
-	for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
+	value_type dtMinimumJerk = (1. - 0.) / minimumJerk->nFrames_;
+	for (std::size_t frameId = 0; frameId < minimumJerk->nFrames_; ++frameId)
 	  {
-	    for (std::size_t dof = 0; dof < nDofs_; ++dof)
-	      initialTrajectory[frameId * nDofs_ + dof] =
+	    for (std::size_t dof = 0; dof < minimumJerk->nDofs_; ++dof)
+	      initialTrajectory[frameId * minimumJerk->nDofs_ + dof] =
 		(dof < 6)
 		? standardPose[dof] : standardPose[dof] * M_PI / 180.;
 
-	    initialTrajectory[frameId * nDofs_ + dofId_] =
+	    initialTrajectory[frameId * minimumJerk->nDofs_
+			      + minimumJerk->dofId_] =
 	      (*minimumJerkTrajectory)
 	      (static_cast<value_type> (frameId) * dtMinimumJerk)[0];
 	  }
@@ -182,25 +216,87 @@ namespace roboptim
 	boost::shared_ptr<Trajectory<3> >
 	  initialTrajectoryFct =
 	  vectorInterpolation
-	  (initialTrajectory, static_cast<size_type> (nDofs_), dt_);
+	  (initialTrajectory,
+	   static_cast<size_type> (minimumJerk->nDofs_),
+	   minimumJerk->dt_);
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
-	cost_ = boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
-	  (initialTrajectoryFct, dofId_, dt_);
+	minimumJerk->cost_ = boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
+	  (initialTrajectoryFct, minimumJerk->dofId_, minimumJerk->dt_);
 
 	// Clone the vector interpolation object so that it can be used by
 	// constraints
-	trajectoryConstraints_ =
+	minimumJerk->trajectoryConstraints_ =
 	  vectorInterpolation
-	  (initialTrajectory, static_cast<size_type> (nDofs_), dt_);
-
+	  (initialTrajectory,
+	   static_cast<size_type> (minimumJerk->nDofs_),
+	   minimumJerk->dt_);
 
 	// Create problem.
-	problem_ = boost::make_shared<problem_t> (*cost_);
-	problem_->startingPoint () = initialTrajectory;
+	minimumJerk->problem_ = boost::make_shared<problem_t> (*minimumJerk->cost_);
+	minimumJerk->problem_->startingPoint () = initialTrajectory;
 
-	// Add constraints.
+	minimumJerk->addConstraints
+	  (enableFreezeFrame,
+	   enableVelocity,
+	   enableFeetPositions,
+	   enableCollision,
+	   enableTorque,
+	   enableZmp);
+
+	return minimumJerk;
+      }
+
+      MinimumJerkShPtr_t
+      MinimumJerk::buildSplineBasedOptimizationProblem
+      (cnoid::BodyPtr robot,
+       size_type nFrames,
+       size_type nNodes,
+       bool enableFreezeFrame,
+       bool enableVelocity,
+       bool enableFeetPositions,
+       bool enableCollision,
+       bool enableTorque,
+       bool enableZmp,
+       const std::string& solverName,
+       solver_t::callback_t additionalCallback)
+      {
+	MinimumJerkShPtr_t minimumJerk
+	  (new MinimumJerk
+	   (robot,
+	    nFrames,
+	    0,
+	    nNodes,
+	    enableFreezeFrame,
+	    enableVelocity,
+	    enableFeetPositions,
+	    enableCollision,
+	    enableTorque,
+	    enableZmp,
+	    solverName,
+	    additionalCallback));
+
+	// minimumJerk->addConstraints
+	//   (enableFreezeFrame,
+	//    enableVelocity,
+	//    enableFeetPositions,
+	//    enableCollision,
+	//    enableTorque,
+	//    enableZmp);
+
+	return minimumJerk;
+      }
+
+      void
+      MinimumJerk::addConstraints
+      (bool enableFreezeFrame,
+       bool enableVelocity,
+       bool enableFeetPositions,
+       bool enableCollision,
+       bool enableTorque,
+       bool enableZmp)
+      {
 	// Should we use Metapod or Choreonoid?
 	bool useMetapod = false;
 
@@ -208,24 +304,24 @@ namespace roboptim
 	{
 	  for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
 	    for (std::size_t jointId = 0;
-		 jointId < robot->numJoints (); ++jointId)
+		 jointId < robot_->numJoints (); ++jointId)
 	      problem_->argumentBounds ()
-		[frameId * (6 + robot->numJoints ()) + 6 + jointId] =
+		[frameId * (6 + robot_->numJoints ()) + 6 + jointId] =
 		MinimumJerkTrajectory<EigenMatrixDense>::makeInterval
-		(robot->joint (jointId)->q_lower (),
-		 robot->joint (jointId)->q_upper ());
+		(robot_->joint (jointId)->q_lower (),
+		 robot_->joint (jointId)->q_upper ());
 	}
 
 	// Freeze first frame
 	if (enableFreezeFrame)
 	  {
-	    matrix_t A (6 + robot->numJoints (),
-			nFrames_ * (6 + robot->numJoints ()));
+	    matrix_t A (6 + robot_->numJoints (),
+			nFrames_ * (6 + robot_->numJoints ()));
 	    A.setZero ();
 	    A.block (0, 0,
-		     6 + robot->numJoints (),
-		     6 + robot->numJoints ()).setIdentity ();
-	    vector_t b (6 + robot->numJoints ());
+		     6 + robot_->numJoints (),
+		     6 + robot_->numJoints ()).setIdentity ();
+	    vector_t b (6 + robot_->numJoints ());
 	    for (std::size_t jointId = 0; jointId < b.size (); ++jointId)
 	      b[jointId] = (jointId < 6)
 		? -standardPose[jointId] : -standardPose[jointId] * M_PI / 180.;
@@ -235,14 +331,14 @@ namespace roboptim
 		GenericNumericLinearFunction<EigenMatrixDense> >
 	      (A, b);
 
-	    std::vector<interval_t> freezeBounds (6 + robot->numJoints ());
+	    std::vector<interval_t> freezeBounds (6 + robot_->numJoints ());
 	    for (std::size_t jointId = 0;
-		 jointId < 6 + robot->numJoints (); ++jointId)
+		 jointId < 6 + robot_->numJoints (); ++jointId)
 	      freezeBounds[jointId] = Function::makeInterval (0., 0.);
 
-	    std::vector<value_type> freezeScales (6 + robot->numJoints ());
+	    std::vector<value_type> freezeScales (6 + robot_->numJoints ());
 	    for (std::size_t jointId = 0;
-		 jointId < 6 + robot->numJoints (); ++jointId)
+		 jointId < 6 + robot_->numJoints (); ++jointId)
 	      freezeScales[jointId] = 1.;
 
 	    problem_->addConstraint (freeze_, freezeBounds, freezeScales);
@@ -252,23 +348,27 @@ namespace roboptim
 	  {
 	    unsigned nConstraints = nFrames_ - 2;
 
+	    vector_t qInitial (6 + robot_->numJoints ());
+	    for (std::size_t dofId = 0; dofId < qInitial.size (); ++dofId)
+	      qInitial[dofId] = standardPose[dofId];
+
 	    typedef ForwardGeometryChoreonoid<EigenMatrixDense>
 	      forwardGeometry_t;
 
 	    // Left foot.
 	    positions_[0] =
 	      boost::make_shared<forwardGeometry_t>
-	      (robot, std::string ("L_TOE_P"));
+	      (robot_, std::string ("L_TOE_P"));
 
 	    forwardGeometry_t::vector_t leftFootPosition =
-	      (*positions_[0]) ((*initialTrajectoryFct) (0.));
+	      (*positions_[0]) (qInitial);
 	    std::vector<interval_t> leftFootBounds (leftFootPosition.size ());
 	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
 	      leftFootBounds[i] = forwardGeometry_t::makeInterval
 		(leftFootPosition[i], leftFootPosition[i]);
 
 	    std::vector<value_type> leftFootScales (6);
-	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
+	    for (std::size_t i = 0; i < leftFootScales.size (); ++i)
 	      leftFootScales[i] = 1.;
 
 	    roboptim::StateFunction<Trajectory<3> >::addToProblem
@@ -278,16 +378,16 @@ namespace roboptim
 	    // Right foot.
 	    positions_[1] =
 	      boost::make_shared<forwardGeometry_t>
-	      (robot, std::string ("R_TOE_P"));
+	      (robot_, std::string ("R_TOE_P"));
 
 	    forwardGeometry_t::vector_t rightFootPosition =
-	      (*positions_[1]) ((*initialTrajectoryFct) (0.));
+	      (*positions_[1]) (qInitial);
 	    std::vector<interval_t> rightFootBounds (rightFootPosition.size ());
 	    for (std::size_t i = 0; i < rightFootPosition.size (); ++i)
 	      rightFootBounds[i] = forwardGeometry_t::makeInterval
 		(rightFootPosition[i], rightFootPosition[i]);
 	    std::vector<value_type> rightFootScales (rightFootPosition.size ());
-	    for (std::size_t i = 0; i < rightFootPosition.size (); ++i)
+	    for (std::size_t i = 0; i < rightFootScales.size (); ++i)
 	      rightFootScales[i] = 1.;
 
 	    roboptim::StateFunction<Trajectory<3> >::addToProblem
@@ -301,29 +401,29 @@ namespace roboptim
 	  {
 	    unsigned nConstraints = nFrames_ - 2;
 
-	    matrix_t A (robot->numJoints (),
-			2 * (6 + robot->numJoints ()));
+	    matrix_t A (robot_->numJoints (),
+			2 * (6 + robot_->numJoints ()));
 	    A.setZero ();
 	    A.block
-	      (0, 6 + robot->numJoints (),
-	       robot->numJoints (), robot->numJoints ()).setIdentity ();
-	    vector_t b (robot->numJoints ());
+	      (0, 6 + robot_->numJoints (),
+	       robot_->numJoints (), robot_->numJoints ()).setIdentity ();
+	    vector_t b (robot_->numJoints ());
 	    b.setZero ();
 	    velocityOneFrame =
 	      boost::make_shared<
 		GenericNumericLinearFunction<EigenMatrixDense> >
 	      (A, b);
 
-	    std::vector<interval_t> velocityBounds (robot->numJoints ());
+	    std::vector<interval_t> velocityBounds (robot_->numJoints ());
 	    for (std::size_t jointId = 0;
-		 jointId < robot->numJoints (); ++jointId)
+		 jointId < robot_->numJoints (); ++jointId)
 	      velocityBounds[jointId] = Function::makeInterval
-		(robot->joint (jointId)->dq_lower (),
-		 robot->joint (jointId)->dq_upper ());
+		(robot_->joint (jointId)->dq_lower (),
+		 robot_->joint (jointId)->dq_upper ());
 
-	    std::vector<value_type> velocityScales (robot->numJoints ());
+	    std::vector<value_type> velocityScales (robot_->numJoints ());
 	    for (std::size_t jointId = 0;
-		 jointId < robot->numJoints (); ++jointId)
+		 jointId < robot_->numJoints (); ++jointId)
 	      velocityScales[jointId] = 1.;
 
 	    roboptim::StateFunction<Trajectory<3> >::addToProblem
@@ -347,7 +447,7 @@ namespace roboptim
 		  EigenMatrixDense, metapod::hrp4g2> > ();
 	    else
 	      torque_ =
-		boost::make_shared<TorqueChoreonoid<EigenMatrixDense> > (robot);
+		boost::make_shared<TorqueChoreonoid<EigenMatrixDense> > (robot_);
 
 	    roboptim::StateFunction<Trajectory<3> >::addToProblem
 	      (*trajectoryConstraints_, torque_, 2,
@@ -377,13 +477,13 @@ namespace roboptim
 		  ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
 	    else
 	      zmp_ =
-		boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot);
+		boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot_);
 
 	    roboptim::StateFunction<Trajectory<3> >::addToProblem
 	      (*trajectoryConstraints_, zmp_, 2,
 	       *problem_, zmpBounds, zmpScales, nConstraints);
 	  }
-      }
+    }
 
       MinimumJerk::~MinimumJerk ()
       {

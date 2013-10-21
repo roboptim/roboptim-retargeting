@@ -25,6 +25,10 @@ namespace roboptim
   {
     namespace problem
     {
+      class MinimumJerk;
+
+      typedef boost::shared_ptr<MinimumJerk> MinimumJerkShPtr_t;
+
       /// \brief Define minimum jerk optimization problem.
       class MinimumJerk
       {
@@ -59,7 +63,8 @@ namespace roboptim
 	typedef boost::shared_ptr<problem_t>
 	ProblemShPtr_t;
 
-	explicit MinimumJerk
+	static MinimumJerkShPtr_t
+	buildVectorInterpolationBasedOptimizationProblem
 	(cnoid::BodyPtr robot,
 	 size_type nFrames,
 	 value_type dt,
@@ -71,6 +76,21 @@ namespace roboptim
 	 bool enableZmp,
 	 const std::string& solverName,
 	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
+
+	static MinimumJerkShPtr_t
+	buildSplineBasedOptimizationProblem
+	(cnoid::BodyPtr robot,
+	 size_type nFrames,
+	 size_type nNodes,
+	 bool enableFreezeFrame,
+	 bool enableVelocity,
+	 bool enablePosition,
+	 bool enableCollision,
+	 bool enableTorque,
+	 bool enableZmp,
+	 const std::string& solverName,
+	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
+
 	virtual ~MinimumJerk ();
 
 	/// \brief Solve the underlying optimization problem.
@@ -143,16 +163,44 @@ namespace roboptim
 	  return additionalCallback_;
 	}
 
+      protected:
+	explicit MinimumJerk
+	(cnoid::BodyPtr robot,
+	 size_type nFrames,
+	 value_type dt,
+	 size_type nNodes,
+	 bool enableFreezeFrame,
+	 bool enableVelocity,
+	 bool enableFeetPositions,
+	 bool enableCollision,
+	 bool enableTorque,
+	 bool enableZmp,
+	 const std::string& solverName,
+	 solver_t::callback_t additionalCallback);
+
+	void addConstraints
+	(bool enableFreezeFrame,
+	 bool enableVelocity,
+	 bool enableFeetPositions,
+	 bool enableCollision,
+	 bool enableTorque,
+	 bool enableZmp);
+
       private:
 	static log4cxx::LoggerPtr logger;
+
+	cnoid::BodyPtr robot_;
 
 	/// \name Problem configuration
 	/// \{
 
 	/// \brief number of frames
 	std::size_t nFrames_;
-	/// \brief delta t used for time synchronization
+	/// \brief delta t used for time synchronization (vector
+	///        interpolation only)
 	value_type dt_;
+	/// \brief number of spline nodes (spline only)
+	value_type nNodes_;
 	/// \brief minimum trajectory time
 	value_type tmin_;
 	/// \brief maximum trajectory time
