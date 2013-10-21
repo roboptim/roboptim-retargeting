@@ -143,7 +143,7 @@ namespace roboptim
 	  positions_ (2),
 	  torque_ (),
 	  zmp_ (),
-	  vectorInterpolationConstraints_ (),
+	  trajectoryConstraints_ (),
 	  problem_ (),
 	  result_ (),
 	  solverName_ (solverName),
@@ -179,7 +179,7 @@ namespace roboptim
 	  }
 
 	// Build a trajectory over the starting point for display
-	boost::shared_ptr<VectorInterpolation >
+	boost::shared_ptr<Trajectory<3> >
 	  initialTrajectoryFct =
 	  vectorInterpolation
 	  (initialTrajectory, static_cast<size_type> (nDofs_), dt_);
@@ -191,7 +191,7 @@ namespace roboptim
 
 	// Clone the vector interpolation object so that it can be used by
 	// constraints
-	vectorInterpolationConstraints_ =
+	trajectoryConstraints_ =
 	  vectorInterpolation
 	  (initialTrajectory, static_cast<size_type> (nDofs_), dt_);
 
@@ -271,8 +271,8 @@ namespace roboptim
 	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
 	      leftFootScales[i] = 1.;
 
-	    roboptim::StateFunction<VectorInterpolation>::addToProblem
-	      (*vectorInterpolationConstraints_, positions_[0], 0,
+	    roboptim::StateFunction<Trajectory<3> >::addToProblem
+	      (*trajectoryConstraints_, positions_[0], 0,
 	       *problem_, leftFootBounds, leftFootScales, nConstraints);
 
 	    // Right foot.
@@ -290,8 +290,8 @@ namespace roboptim
 	    for (std::size_t i = 0; i < rightFootPosition.size (); ++i)
 	      rightFootScales[i] = 1.;
 
-	    roboptim::StateFunction<VectorInterpolation>::addToProblem
-	      (*vectorInterpolationConstraints_, positions_[1], 0,
+	    roboptim::StateFunction<Trajectory<3> >::addToProblem
+	      (*trajectoryConstraints_, positions_[1], 0,
 	       *problem_, rightFootBounds, rightFootScales, nConstraints);
 	  }
 
@@ -326,8 +326,8 @@ namespace roboptim
 		 jointId < robot->numJoints (); ++jointId)
 	      velocityScales[jointId] = 1.;
 
-	    roboptim::StateFunction<VectorInterpolation>::addToProblem
-	      (*vectorInterpolationConstraints_, velocityOneFrame, 1,
+	    roboptim::StateFunction<Trajectory<3> >::addToProblem
+	      (*trajectoryConstraints_, velocityOneFrame, 1,
 	       *problem_, velocityBounds, velocityScales, nConstraints);
 	  }
 	if (enableTorque)
@@ -349,8 +349,8 @@ namespace roboptim
 	      torque_ =
 		boost::make_shared<TorqueChoreonoid<EigenMatrixDense> > (robot);
 
-	    roboptim::StateFunction<VectorInterpolation>::addToProblem
-	      (*vectorInterpolationConstraints_, torque_, 2,
+	    roboptim::StateFunction<Trajectory<3> >::addToProblem
+	      (*trajectoryConstraints_, torque_, 2,
 	       *problem_, torqueBounds, torqueScales, nConstraints);
 	  }
 	if (enableZmp)
@@ -379,8 +379,8 @@ namespace roboptim
 	      zmp_ =
 		boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot);
 
-	    roboptim::StateFunction<VectorInterpolation>::addToProblem
-	      (*vectorInterpolationConstraints_, zmp_, 2,
+	    roboptim::StateFunction<Trajectory<3> >::addToProblem
+	      (*trajectoryConstraints_, zmp_, 2,
 	       *problem_, zmpBounds, zmpScales, nConstraints);
 	  }
       }
@@ -395,7 +395,7 @@ namespace roboptim
 	roboptim::SolverFactory<solver_t> factory (solverName_, *problem_);
 	solver_t& solver = factory ();
 
-	boost::shared_ptr<VectorInterpolation >
+	boost::shared_ptr<Trajectory<3> >
 	  trajectory =
 	  vectorInterpolation
 	  (*problem_->startingPoint (),

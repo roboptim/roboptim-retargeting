@@ -192,8 +192,8 @@ namespace roboptim
 	/// \}
 
 	/// \brief Trajectory used by constraints.
-	boost::shared_ptr<VectorInterpolation>
-	vectorInterpolationConstraints_;
+	boost::shared_ptr<Trajectory<3> >
+	trajectoryConstraints_;
 
 	/// \brief Optimization problem.
 	ProblemShPtr_t problem_;
