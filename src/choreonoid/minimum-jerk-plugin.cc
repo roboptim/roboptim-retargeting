@@ -8,8 +8,11 @@
 
 #include <QBoxLayout>
 #include <QDialogButtonBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QMessageBox>
+#include <QScrollArea>
+#include <QTabWidget>
 
 #include <roboptim/retargeting/problem/minimum-jerk.hh>
 
@@ -38,27 +41,15 @@
 
 class MinimumJerkPlugin;
 
-class MinimumJerkDialog : public cnoid::Dialog
+class MinimumJerkMainDialog : public QWidget
 {
 public:
-  MinimumJerkDialog (MinimumJerkPlugin& plugin)
-    : cnoid::Dialog (),
-      plugin_ (plugin),
-      solver_ (),
-      nFrames_ (),
-      dt_ (),
-      enableFreeze_ (),
-      enableVelocity_ (),
-      enablePosition_ (),
-      enableTorque_ (),
-      enableZmp_ ()
+  explicit MinimumJerkMainDialog (QWidget* parent = 0)
+    : QWidget (parent)
   {
-    setWindowTitle(_ ("Setup Minimum Jerk Problem"));
+    QVBoxLayout* vbox = new QVBoxLayout;
 
-    QVBoxLayout* vbox = new QVBoxLayout ();
-    setLayout (vbox);
-
-    QHBoxLayout* hbox = new QHBoxLayout ();
+    QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget (new QLabel (_ ("Solver")));
     solver_.addItem ("cfsqp");
     solver_.addItem ("ipopt");
@@ -69,7 +60,7 @@ public:
     hbox->addStretch ();
     vbox->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     hbox->addWidget (new QLabel (_ ("Trajectory Type")));
     trajectoryType_.addItem ("interpolation");
     trajectoryType_.addItem ("cubic-spline");
@@ -79,7 +70,7 @@ public:
     hbox->addStretch ();
     vbox->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     hbox->addWidget (new QLabel (_ ("Number of frames")));
     nFrames_.setDecimals (0);
     nFrames_.setRange (10, 1000);
@@ -88,7 +79,7 @@ public:
     hbox->addStretch ();
     vbox->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     hbox->addWidget(new QLabel (_ ("Time discretization (dt)")));
     dt_.setDecimals (3);
     dt_.setRange (0.001, 1.);
@@ -97,40 +88,238 @@ public:
     hbox->addStretch ();
     vbox->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
+    hbox->addWidget(new QLabel (_ ("Number of nodes (spline only)")));
+    nNodes_.setDecimals (0);
+    nNodes_.setRange (5, 10000);
+    nNodes_.setValue (10);
+    hbox->addWidget(&dt_);
+    hbox->addStretch ();
+    vbox->addLayout (hbox);
+
+    QGroupBox* constraints = new QGroupBox ("Constraints");
+
+    QVBoxLayout* vboxConstraints = new QVBoxLayout;
+    constraints->setLayout (vboxConstraints);
+
+    hbox = new QHBoxLayout;
     enableFreeze_.setText (_ ("Freeze first frame"));
     enableFreeze_.setChecked (true);
     hbox->addWidget (&enableFreeze_);
     hbox->addStretch ();
-    vbox->addLayout (hbox);
+    vboxConstraints->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     enableVelocity_.setText (_ ("Joint velocity"));
     enableVelocity_.setChecked (true);
     hbox->addWidget (&enableVelocity_);
     hbox->addStretch ();
-    vbox->addLayout (hbox);
+    vboxConstraints->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     enablePosition_.setText (_ ("Feet position"));
     enablePosition_.setChecked (true);
     hbox->addWidget (&enablePosition_);
     hbox->addStretch ();
-    vbox->addLayout (hbox);
+    vboxConstraints->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     enableTorque_.setText (_ ("Torque"));
     enableTorque_.setChecked (false);
     hbox->addWidget (&enableTorque_);
     hbox->addStretch ();
-    vbox->addLayout (hbox);
+    vboxConstraints->addLayout (hbox);
 
-    hbox = new QHBoxLayout ();
+    hbox = new QHBoxLayout;
     enableZmp_.setText (_ ("ZMP"));
     enableZmp_.setChecked (true);
     hbox->addWidget (&enableZmp_);
     hbox->addStretch ();
-    vbox->addLayout (hbox);
+    vboxConstraints->addLayout (hbox);
+
+    vbox->addWidget (constraints);
+
+    vbox->addStretch (1);
+    setLayout (vbox);
+  }
+
+  cnoid::ComboBox& solver ()
+  {
+    return solver_;
+  }
+
+  cnoid::ComboBox& trajectoryType ()
+  {
+    return trajectoryType_;
+  }
+
+  cnoid::DoubleSpinBox& nFrames ()
+  {
+    return nFrames_;
+  }
+
+  cnoid::DoubleSpinBox& dt ()
+  {
+    return dt_;
+  }
+
+  cnoid::DoubleSpinBox& nNodes ()
+  {
+    return nNodes_;
+  }
+
+
+  cnoid::CheckBox& enableFreeze ()
+  {
+    return enableFreeze_;
+  }
+  cnoid::CheckBox& enableVelocity ()
+  {
+    return enableVelocity_;
+  }
+  cnoid::CheckBox& enablePosition ()
+  {
+    return enablePosition_;
+  }
+  cnoid::CheckBox& enableTorque ()
+  {
+    return enableTorque_;
+  }
+  cnoid::CheckBox& enableZmp ()
+  {
+    return enableZmp_;
+  }
+
+private:
+  cnoid::ComboBox solver_;
+
+  cnoid::ComboBox trajectoryType_;
+
+  cnoid::DoubleSpinBox nFrames_;
+
+  /// \brief Discretization step if vector interpolation is used
+  cnoid::DoubleSpinBox dt_;
+
+  /// \brief Number of nodes when spline is used
+  cnoid::DoubleSpinBox nNodes_;
+
+  /// \name Constraints
+  /// \{
+  cnoid::CheckBox enableFreeze_;
+  cnoid::CheckBox enableVelocity_;
+  cnoid::CheckBox enablePosition_;
+  cnoid::CheckBox enableTorque_;
+  cnoid::CheckBox enableZmp_;
+  /// \}
+};
+
+class MinimumJerkDofDialog : public QWidget
+{
+public:
+  explicit MinimumJerkDofDialog (QWidget* parent = 0)
+    : QWidget (parent)
+  {
+    //FIXME: for now only HRP-4C is supported.
+    boost::array<QString, 48> dofs = {{
+	"Free floating X",
+	"Free floating Y",
+	"Free floating Z",
+	"Free floating angle axis alpha",
+	"Free floating angle axis beta",
+	"Free floating angle axis gamma",
+	"R_HIP_Y",
+	"R_HIP_R",
+	"R_HIP_P",
+	"R_KNEE_P",
+	"R_ANKLE_P",
+	"R_ANKLE_R",
+	"L_HIP_Y",
+	"L_HIP_R",
+	"L_HIP_P",
+	"L_KNEE_P",
+	"L_ANKLE_P",
+	"L_ANKLE_R",
+	"CHEST_P",
+	"CHEST_R",
+	"CHEST_Y",
+	"NECK_Y",
+	"NECK_R",
+	"NECK_P",
+	"EYEBROW_P",
+	"EYELID_P",
+	"EYE_P",
+	"EYE_Y",
+	"MOUTH_P",
+	"LOWERLIP_P",
+	"UPPERLIP_P",
+	"CHEEK_P",
+	"R_SHOULDER_P",
+	"R_SHOULDER_R",
+	"R_SHOULDER_Y",
+	"R_ELBOW_P",
+	"R_WRIST_Y",
+	"R_WRIST_R",
+	"R_HAND_J0",
+	"R_HAND_J1",
+	"L_SHOULDER_P",
+	"L_SHOULDER_R",
+	"L_SHOULDER_Y",
+	"L_ELBOW_P",
+	"L_WRIST_Y",
+	"L_WRIST_R",
+	"L_HAND_J0",
+	"L_HAND_J1"
+      }};
+
+    QGroupBox* dofGroup = new QGroupBox (_ ("Degrees of Freedom to be considered"));
+    QVBoxLayout* dofLayout = new QVBoxLayout;
+
+    for (std::size_t dofId = 0; dofId < dofs.size (); ++dofId)
+      {
+	QCheckBox* isDofActive = new QCheckBox (dofs[dofId]);
+	isDofActive->setChecked (true);
+	dofLayout->addWidget (isDofActive);
+	dofs_.push_back (isDofActive);
+      }
+    dofGroup->setLayout (dofLayout);
+
+    QScrollArea* scrollarea = new QScrollArea;
+    scrollarea->setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
+    scrollarea->setVerticalScrollBarPolicy (Qt::ScrollBarAsNeeded);
+    scrollarea->setWidget (dofGroup);
+
+    QVBoxLayout* mainLayout = new QVBoxLayout;
+    mainLayout->addWidget (scrollarea);
+    mainLayout->addStretch (1);
+    setLayout (mainLayout);
+  }
+
+  const std::vector<QCheckBox*>& dofs () const throw ()
+  {
+    return dofs_;
+  }
+
+private:
+  std::vector<QCheckBox*> dofs_;
+};
+
+class MinimumJerkDialog : public cnoid::Dialog
+{
+public:
+  MinimumJerkDialog (MinimumJerkPlugin& plugin)
+    : cnoid::Dialog (),
+      plugin_ (plugin),
+      generalTab_ (new MinimumJerkMainDialog ()),
+      dofTab_ (new MinimumJerkDofDialog ())
+  {
+    setWindowTitle(_ ("Setup Minimum Jerk Problem"));
+
+    QVBoxLayout* vbox = new QVBoxLayout ();
+
+    QTabWidget* tabs = new QTabWidget ();
+    tabs->addTab (generalTab_, "General");
+    tabs->addTab (dofTab_, "Degrees of Freedom");
+    vbox->addWidget (tabs);
 
     cnoid::PushButton* applyButton = new cnoid::PushButton (_ ("&Solve"));
     applyButton->setDefault (true);
@@ -138,50 +327,87 @@ public:
     buttonBox->addButton (applyButton, QDialogButtonBox::AcceptRole);
     applyButton->sigClicked ().connect
       (boost::bind (&MinimumJerkDialog::accept, this));
-
     vbox->addWidget(buttonBox);
+
+    vbox->addStretch (1);
+    setLayout (vbox);
   }
+
+  MinimumJerkMainDialog* generalTab ()
+  {
+    return generalTab_;
+  }
+  MinimumJerkDofDialog* dofTab ()
+  {
+    return dofTab_;
+  }
+
 
   bool store (cnoid::Archive& archive)
   {
     //FIXME: this is probably a bad idea to store the index only.
-    archive.write ("solver", solver_.currentIndex ());
+    archive.write ("solver", generalTab ()->solver ().currentIndex ());
 
     //FIXME: this is probably a bad idea to store the index only.
-    archive.write ("trajectoryType", trajectoryType_.currentIndex ());
+    archive.write ("trajectoryType",
+		   generalTab ()->trajectoryType ().currentIndex ());
 
-    archive.write ("nFrames", nFrames_.value ());
-    archive.write ("dt", dt_.value ());
-    archive.write ("enableFreeze", enableFreeze_.isChecked ());
-    archive.write ("enableVelocity", enableVelocity_.isChecked ());
-    archive.write ("enablePosition", enablePosition_.isChecked ());
-    archive.write ("enableTorque", enableTorque_.isChecked ());
-    archive.write ("enableZmp", enableZmp_.isChecked ());
+    archive.write ("nFrames", generalTab ()->nFrames ().value ());
+    archive.write ("dt", generalTab ()->dt ().value ());
+    archive.write ("enableFreeze", generalTab ()->enableFreeze ().isChecked ());
+    archive.write ("enableVelocity",
+		   generalTab ()->enableVelocity ().isChecked ());
+    archive.write ("enablePosition",
+		   generalTab ()->enablePosition ().isChecked ());
+    archive.write ("enableTorque", generalTab ()->enableTorque ().isChecked ());
+    archive.write ("enableZmp", generalTab ()->enableZmp ().isChecked ());
+
+    for (std::size_t dofId = 0; dofId < dofTab ()->dofs ().size (); ++dofId)
+      archive.write
+	((boost::format ("dof[%d]") % dofId).str (),
+	 dofTab ()->dofs ()[dofId]->isChecked ());
+
     return true;
   }
   void restore (const cnoid::Archive& archive)
   {
     //FIXME: this is probably a bad idea to store the index only.
-    solver_.setCurrentIndex
-      (archive.get ("solver", solver_.currentIndex ()));
+    generalTab ()->solver ().setCurrentIndex
+      (archive.get ("solver",
+		    generalTab ()->solver ().currentIndex ()));
 
     //FIXME: this is probably a bad idea to store the index only.
-    solver_.setCurrentIndex
-      (archive.get ("trajectoryType", trajectoryType_.currentIndex ()));
+    generalTab ()->solver ().setCurrentIndex
+      (archive.get ("trajectoryType",
+		    generalTab ()->trajectoryType ().currentIndex ()));
 
-    nFrames_.setValue
-      (archive.get ("nFrames", nFrames_.value ()));
-    dt_.setValue (archive.get ("dt", dt_.value ()));
-    enableFreeze_.setChecked
-      (archive.get ("enableFreeze", enableFreeze_.isChecked ()));
-    enableVelocity_.setChecked
-      (archive.get ("enableVelocity", enableVelocity_.isChecked ()));
-    enablePosition_.setChecked
-      (archive.get ("enablePosition", enablePosition_.isChecked ()));
-    enableTorque_.setChecked
-      (archive.get ("enableTorque", enableTorque_.isChecked ()));
-    enableZmp_.setChecked
-      (archive.get ("enableZmp", enableZmp_.isChecked ()));
+    generalTab ()->nFrames ().setValue
+      (archive.get ("nFrames",
+		    generalTab ()->nFrames ().value ()));
+    generalTab ()->dt ().setValue
+      (archive.get
+       ("dt", generalTab ()->dt ().value ()));
+    generalTab ()->enableFreeze ().setChecked
+      (archive.get ("enableFreeze",
+		    generalTab ()->enableFreeze ().isChecked ()));
+    generalTab ()->enableVelocity ().setChecked
+      (archive.get ("enableVelocity",
+		    generalTab ()->enableVelocity ().isChecked ()));
+    generalTab ()->enablePosition ().setChecked
+      (archive.get ("enablePosition",
+		    generalTab ()->enablePosition ().isChecked ()));
+    generalTab ()->enableTorque ().setChecked
+      (archive.get ("enableTorque",
+		    generalTab ()->enableTorque ().isChecked ()));
+    generalTab ()->enableZmp ().setChecked
+      (archive.get ("enableZmp",
+		    generalTab ()->enableZmp ().isChecked ()));
+
+    for (std::size_t dofId = 0; dofId < dofTab ()->dofs ().size (); ++dofId)
+      dofTab ()->dofs ()[dofId]->setChecked
+	(archive.get
+	 ((boost::format ("dof[%d]") % dofId).str (),
+	  dofTab ()->dofs ()[dofId]->isChecked ()));
   }
 
   virtual void onAccepted ();
@@ -189,18 +415,8 @@ public:
 public:
   MinimumJerkPlugin& plugin_;
 
-  cnoid::ComboBox solver_;
-
-  cnoid::ComboBox trajectoryType_;
-
-  cnoid::DoubleSpinBox nFrames_;
-  cnoid::DoubleSpinBox dt_;
-
-  cnoid::CheckBox enableFreeze_;
-  cnoid::CheckBox enableVelocity_;
-  cnoid::CheckBox enablePosition_;
-  cnoid::CheckBox enableTorque_;
-  cnoid::CheckBox enableZmp_;
+  MinimumJerkMainDialog* generalTab_;
+  MinimumJerkDofDialog* dofTab_;
 };
 
 class MinimumJerkPlugin : public cnoid::Plugin
@@ -469,18 +685,21 @@ private:
 
     // Retrieve problem setup from dialog window.
     // The dialog window values are restored from the loaded project.
-    unsigned nFrames = dialog_->nFrames_.value ();
-    double dt = dialog_->dt_.value ();
-    bool enableFreeze = dialog_->enableFreeze_.isChecked ();
-    bool enableVelocity = dialog_->enableVelocity_.isChecked ();
-    bool enablePosition = dialog_->enablePosition_.isChecked ();
+    unsigned nFrames = dialog_->generalTab ()->nFrames ().value ();
+    double dt = dialog_->generalTab ()->dt ().value ();
+    bool enableFreeze = dialog_->generalTab ()->enableFreeze ().isChecked ();
+    bool enableVelocity =
+      dialog_->generalTab ()->enableVelocity ().isChecked ();
+    bool enablePosition =
+      dialog_->generalTab ()->enablePosition ().isChecked ();
     bool enableCollision = false;
-    bool enableTorque = dialog_->enableTorque_.isChecked ();
-    bool enableZmp = dialog_->enableZmp_.isChecked ();
+    bool enableTorque = dialog_->generalTab ()->enableTorque ().isChecked ();
+    bool enableZmp = dialog_->generalTab ()->enableZmp ().isChecked ();
     std::string solverName =
-      dialog_->solver_.currentText ().toUtf8 ().constData ();
+      dialog_->generalTab ()->solver ().currentText ().toUtf8 ().constData ();
     std::string trajectoryType =
-      dialog_->trajectoryType_.currentText ().toUtf8 ().constData ();
+      dialog_->generalTab ()->trajectoryType ()
+      .currentText ().toUtf8 ().constData ();
 
     boost::array<std::string, 2> validTrajectoryType = {{
 	"interpolation", "cubic-spline"
