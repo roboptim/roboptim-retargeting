@@ -702,6 +702,12 @@ private:
       dialog_->generalTab ()->trajectoryType ()
       .currentText ().toUtf8 ().constData ();
 
+    std::vector<bool> enabledDofs;
+    for (std::size_t dofId = 0;
+	 dofId < dialog_->dofTab ()->dofs ().size (); ++dofId)
+      enabledDofs.push_back
+	(dialog_->dofTab ()->dofs ()[dofId]->isChecked ());
+
     boost::array<std::string, 2> validTrajectoryType = {{
 	"interpolation", "cubic-spline"
       }};
@@ -737,14 +743,16 @@ private:
 	::buildVectorInterpolationBasedOptimizationProblem
 	(robot, nFrames, dt, enableFreeze, enableVelocity,
 	 enablePosition, enableCollision,
-	 enableTorque, enableZmp, solverName);
+	 enableTorque, enableZmp, solverName,
+	 enabledDofs);
     else if (trajectoryType == "cubic-spline")
       minimumJerkProblem =
 	roboptim::retargeting::problem::MinimumJerk
 	::buildSplineBasedOptimizationProblem
 	(robot, nFrames, nNodes, enableFreeze, enableVelocity,
 	 enablePosition, enableCollision,
-	 enableTorque, enableZmp, solverName);
+	 enableTorque, enableZmp, solverName,
+	 enabledDofs);
     else
       throw std::runtime_error ("invalid trajectory type");
 

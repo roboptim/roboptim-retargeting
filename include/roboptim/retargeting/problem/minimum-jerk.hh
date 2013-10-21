@@ -75,6 +75,7 @@ namespace roboptim
 	 bool enableTorque,
 	 bool enableZmp,
 	 const std::string& solverName,
+	 std::vector<bool> enabledDofs,
 	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
 
 	static MinimumJerkShPtr_t
@@ -89,6 +90,7 @@ namespace roboptim
 	 bool enableTorque,
 	 bool enableZmp,
 	 const std::string& solverName,
+	 std::vector<bool> enabledDofs,
 	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
 
 	virtual ~MinimumJerk ();
@@ -176,6 +178,7 @@ namespace roboptim
 	 bool enableTorque,
 	 bool enableZmp,
 	 const std::string& solverName,
+	 std::vector<bool> enabledDofs,
 	 solver_t::callback_t additionalCallback);
 
 	void addConstraints
@@ -252,6 +255,9 @@ namespace roboptim
 
 	/// \brief Additional callback on top of usual logging.
 	solver_t::callback_t additionalCallback_;
+
+	/// \brief Whether each DOF must be considered or not
+	std::vector<bool> enabledDofs_;
       };
 
     } // end of namespace problem.

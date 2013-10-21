@@ -59,6 +59,7 @@ BOOST_AUTO_TEST_CASE (simple)
   bool enableTorque = false;
   bool enableZmp = true;
   std::string solverName = "cfsqp";
+  std::vector<bool> enabledDofs (6 + 42, true);
 
   typedef problem::MinimumJerk::size_type size_type;
   typedef problem::MinimumJerk::solver_t solver_t;
@@ -68,7 +69,7 @@ BOOST_AUTO_TEST_CASE (simple)
     buildVectorInterpolationBasedOptimizationProblem
     (robot, 10, 0.1, enableFreeze, enableVelocity,
      enablePosition, enableCollision,
-     enableTorque, enableZmp, solverName);
+     enableTorque, enableZmp, solverName, enabledDofs);
   minimumJerkProblem->solve ();
 
   // Rebuild final trajectory.

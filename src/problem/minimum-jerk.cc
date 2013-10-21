@@ -130,6 +130,7 @@ namespace roboptim
        bool enableTorque,
        bool enableZmp,
        const std::string& solverName,
+       std::vector<bool> enabledDofs,
        solver_t::callback_t additionalCallback)
 	: robot_ (robot),
 	  nFrames_ (nFrames),
@@ -150,7 +151,8 @@ namespace roboptim
 	  problem_ (),
 	  result_ (),
 	  solverName_ (solverName),
-	  additionalCallback_ (additionalCallback)
+	  additionalCallback_ (additionalCallback),
+	  enabledDofs_ (enabledDofs)
       {}
 
       MinimumJerkShPtr_t
@@ -165,6 +167,7 @@ namespace roboptim
        bool enableTorque,
        bool enableZmp,
        const std::string& solverName,
+       std::vector<bool> enabledDofs,
        solver_t::callback_t additionalCallback)
       {
 	MinimumJerkShPtr_t minimumJerk
@@ -180,6 +183,7 @@ namespace roboptim
 	    enableTorque,
 	    enableZmp,
 	    solverName,
+	    enabledDofs,
 	    additionalCallback));
 
         // Compute the initial trajectory (whole body)
@@ -260,6 +264,7 @@ namespace roboptim
        bool enableTorque,
        bool enableZmp,
        const std::string& solverName,
+       std::vector<bool> enabledDofs,
        solver_t::callback_t additionalCallback)
       {
 	MinimumJerkShPtr_t minimumJerk
@@ -275,6 +280,7 @@ namespace roboptim
 	    enableTorque,
 	    enableZmp,
 	    solverName,
+	    enabledDofs,
 	    additionalCallback));
 
 	// minimumJerk->addConstraints
@@ -300,7 +306,7 @@ namespace roboptim
 	// Should we use Metapod or Choreonoid?
 	bool useMetapod = false;
 
-	// Bound joint positions and free first and last frames.
+	// Bound joint positions.
 	{
 	  for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
 	    for (std::size_t jointId = 0;
@@ -310,6 +316,17 @@ namespace roboptim
 		MinimumJerkTrajectory<EigenMatrixDense>::makeInterval
 		(robot_->joint (jointId)->q_lower (),
 		 robot_->joint (jointId)->q_upper ());
+
+	  // Fix disabled DOFs
+	  for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
+	    for (std::size_t jointId = 0;
+		 jointId < 6 + robot_->numJoints (); ++jointId)
+	      if (!enabledDofs_[jointId])
+	      problem_->argumentBounds ()
+		[frameId * (6 + robot_->numJoints ()) + jointId] =
+		MinimumJerkTrajectory<EigenMatrixDense>::makeInterval
+		(standardPose[jointId],
+		 standardPose[jointId]);
 	}
 
 	// Freeze first frame
