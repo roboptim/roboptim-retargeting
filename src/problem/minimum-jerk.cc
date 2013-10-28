@@ -304,7 +304,8 @@ namespace roboptim
        bool enableZmp)
       {
 	// Should we use Metapod or Choreonoid?
-	bool useMetapod = false;
+	bool useMetapodTorque = true;
+	bool useMetapodZmp = false;
 
 	// Bound joint positions.
 	{
@@ -458,7 +459,7 @@ namespace roboptim
 	    for (std::size_t i = 0; i < nDofs_; ++i)
 	      torqueScales[i] = 1.;
 
-	    if (useMetapod)
+	    if (useMetapodTorque)
 	      torque_ =
 		boost::make_shared<TorqueMetapod<
 		  EigenMatrixDense, metapod::hrp4g2<double> > > ();
@@ -488,7 +489,7 @@ namespace roboptim
 	    zmpScales[0] = 1.;
 	    zmpScales[1] = 1.;
 
-	    if (useMetapod)
+	    if (useMetapodZmp)
 	      zmp_ =
 		boost::make_shared<
 		  ZMPMetapod<EigenMatrixDense, metapod::hrp4g2<double> > > ();
