@@ -8,7 +8,11 @@
 #  pragma warning( push )
 // disable warning C4251: need to have DLL interface
 // disable warning C4099: struct/class discrepancies
-#  pragma warning( disable: 4251 4099 )
+// The following warnings are only needed if the FloatType is float, because
+// the code generator uses double anyway.
+// disable warning C4305 truncation from 'double' to 'float'
+// disable warning C4244 conversion from 'double' to 'float', possible loss of data
+#  pragma warning( disable: 4251 4099 4305 4244 )
 # endif
 
 # include "config.hh"
@@ -18,10 +22,10 @@
 
 // by default, boost fusion vector only provides constructor for vectors with
 // up to 10 elements.
-# if !defined(FUSION_MAX_VECTOR_SIZE) && (44 > 10)
-#  define FUSION_MAX_VECTOR_SIZE 44
+# if !defined(FUSION_MAX_VECTOR_SIZE) && (45 > 10)
+#  define FUSION_MAX_VECTOR_SIZE 45
 # endif
-# if defined(FUSION_MAX_VECTOR_SIZE) && (44 > FUSION_MAX_VECTOR_SIZE)
+# if defined(FUSION_MAX_VECTOR_SIZE) && (45 > FUSION_MAX_VECTOR_SIZE)
 // todo: warn or stop
 # endif
 # include <boost/fusion/sequence.hpp>
@@ -30,66 +34,75 @@
 
 namespace metapod {
 
+template <typename FloatType>
 class HRP4G2_DLLAPI hrp4g2 {
+  METAPOD_TYPEDEFS;
 public:
+  // the following new/delete operators are only needed if there is a
+  // member variable of fixed-size vectorizable Eigen type (or a member
+  // having such a member).
+  // It's not easy to tell in advance, so let always use the aligned operators.
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   // Global constants or variable of the robot
-  enum { NBDOF = 44 };
-  enum { NBBODIES = 44 };
+  enum { NBDOF = 50 };
+  enum { NBBODIES = 45 };
 
+  typedef FloatType RobotFloatType;
   typedef Eigen::Matrix< FloatType, NBDOF, 1 > confVector;
 
   enum NodeId
   {
-    CHEST_P_LINK = 0,
-    CHEST_R_LINK = 1,
-    CHEST_Y_LINK = 2,
-    L_SHOULDER_P_LINK = 3,
-    L_SHOULDER_R_LINK = 4,
-    L_SHOULDER_Y_LINK = 5,
-    L_ELBOW_P_LINK = 6,
-    L_WRIST_Y_LINK = 7,
-    L_WRIST_R_LINK = 8,
-    L_HAND_J0_LINK = 9,
-    L_HAND_J1_LINK = 10,
-    NECK_Y_LINK = 11,
-    NECK_R_LINK = 12,
-    NECK_P_LINK = 13,
-    EYEBROW_P_LINK = 14,
-    EYELID_P_LINK = 15,
-    EYE_P_LINK = 16,
-    EYE_Y_LINK = 17,
-    MOUTH_P_LINK = 18,
-    CHEEK_P_LINK = 19,
-    LOWERLIP_P_LINK = 20,
-    UPPERLIP_P_LINK = 21,
-    R_SHOULDER_P_LINK = 22,
-    R_SHOULDER_R_LINK = 23,
-    R_SHOULDER_Y_LINK = 24,
-    R_ELBOW_P_LINK = 25,
-    R_WRIST_Y_LINK = 26,
-    R_WRIST_R_LINK = 27,
-    R_HAND_J0_LINK = 28,
-    R_HAND_J1_LINK = 29,
-    L_HIP_Y_LINK = 30,
-    L_HIP_R_LINK = 31,
-    L_HIP_P_LINK = 32,
-    L_KNEE_P_LINK = 33,
-    L_ANKLE_P_LINK = 34,
-    L_ANKLE_R_LINK = 35,
-    L_TOE_P_LINK = 36,
-    R_HIP_Y_LINK = 37,
-    R_HIP_R_LINK = 38,
-    R_HIP_P_LINK = 39,
-    R_KNEE_P_LINK = 40,
-    R_ANKLE_P_LINK = 41,
-    R_ANKLE_R_LINK = 42,
-    R_TOE_P_LINK = 43
+    base_link = 0,
+    CHEST_P_LINK = 1,
+    CHEST_R_LINK = 2,
+    CHEST_Y_LINK = 3,
+    L_SHOULDER_P_LINK = 4,
+    L_SHOULDER_R_LINK = 5,
+    L_SHOULDER_Y_LINK = 6,
+    L_ELBOW_P_LINK = 7,
+    L_WRIST_Y_LINK = 8,
+    L_WRIST_R_LINK = 9,
+    L_HAND_J0_LINK = 10,
+    L_HAND_J1_LINK = 11,
+    NECK_Y_LINK = 12,
+    NECK_R_LINK = 13,
+    NECK_P_LINK = 14,
+    EYEBROW_P_LINK = 15,
+    EYELID_P_LINK = 16,
+    EYE_P_LINK = 17,
+    EYE_Y_LINK = 18,
+    MOUTH_P_LINK = 19,
+    CHEEK_P_LINK = 20,
+    LOWERLIP_P_LINK = 21,
+    UPPERLIP_P_LINK = 22,
+    R_SHOULDER_P_LINK = 23,
+    R_SHOULDER_R_LINK = 24,
+    R_SHOULDER_Y_LINK = 25,
+    R_ELBOW_P_LINK = 26,
+    R_WRIST_Y_LINK = 27,
+    R_WRIST_R_LINK = 28,
+    R_HAND_J0_LINK = 29,
+    R_HAND_J1_LINK = 30,
+    L_HIP_Y_LINK = 31,
+    L_HIP_R_LINK = 32,
+    L_HIP_P_LINK = 33,
+    L_KNEE_P_LINK = 34,
+    L_ANKLE_P_LINK = 35,
+    L_ANKLE_R_LINK = 36,
+    L_TOE_P_LINK = 37,
+    R_HIP_Y_LINK = 38,
+    R_HIP_R_LINK = 39,
+    R_HIP_P_LINK = 40,
+    R_KNEE_P_LINK = 41,
+    R_ANKLE_P_LINK = 42,
+    R_ANKLE_R_LINK = 43,
+    R_TOE_P_LINK = 44
   };
 
   // children of the root/NP node
   static const int child0_id = 0;
-  static const int child1_id = 30;
-  static const int child2_id = 37;
+  static const int child1_id = -2;
+  static const int child2_id = -2;
   static const int child3_id = -2;
   static const int child4_id = -2;
 
@@ -101,19 +114,19 @@ public:
     static const int id = 0;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
     static const int q_idx = 0;
-    typedef RevoluteAxisAnyJoint Joint;
+    typedef FreeFlyerJoint<FloatType> Joint;
     static const int parent_id = -1;
     static const int child0_id = 1;
-    static const int child1_id = -2;
-    static const int child2_id = -2;
+    static const int child1_id = 31;
+    static const int child2_id = 38;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node1 {
@@ -122,19 +135,19 @@ public:
     static const int id = 1;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 1;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 6;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 0;
     static const int child0_id = 2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node2 {
@@ -143,19 +156,19 @@ public:
     static const int id = 2;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 2;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 7;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 1;
     static const int child0_id = 3;
-    static const int child1_id = 11;
-    static const int child2_id = 22;
+    static const int child1_id = -2;
+    static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node3 {
@@ -164,19 +177,19 @@ public:
     static const int id = 3;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 3;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 8;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 2;
     static const int child0_id = 4;
-    static const int child1_id = -2;
-    static const int child2_id = -2;
+    static const int child1_id = 12;
+    static const int child2_id = 23;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node4 {
@@ -185,19 +198,19 @@ public:
     static const int id = 4;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 4;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 9;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 3;
     static const int child0_id = 5;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node5 {
@@ -206,19 +219,19 @@ public:
     static const int id = 5;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 5;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 10;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 4;
     static const int child0_id = 6;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node6 {
@@ -227,19 +240,19 @@ public:
     static const int id = 6;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 6;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 11;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 5;
     static const int child0_id = 7;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node7 {
@@ -248,19 +261,19 @@ public:
     static const int id = 7;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::Transform Xt;
-    static const int q_idx = 7;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 12;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 6;
     static const int child0_id = 8;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrix>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node8 {
@@ -269,19 +282,19 @@ public:
     static const int id = 8;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 8;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixTpl<FloatType> > Xt;
+    static const int q_idx = 13;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 7;
     static const int child0_id = 9;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node9 {
@@ -290,19 +303,19 @@ public:
     static const int id = 9;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 9;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 14;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 8;
     static const int child0_id = 10;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node10 {
@@ -311,19 +324,19 @@ public:
     static const int id = 10;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 10;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 15;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 9;
-    static const int child0_id = -2;
+    static const int child0_id = 11;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node11 {
@@ -332,19 +345,19 @@ public:
     static const int id = 11;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 11;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 2;
-    static const int child0_id = 12;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 16;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 10;
+    static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node12 {
@@ -353,19 +366,19 @@ public:
     static const int id = 12;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 12;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 11;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 17;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 3;
     static const int child0_id = 13;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node13 {
@@ -374,19 +387,19 @@ public:
     static const int id = 13;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 13;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 18;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 12;
     static const int child0_id = 14;
-    static const int child1_id = 15;
-    static const int child2_id = 16;
-    static const int child3_id = 18;
+    static const int child1_id = -2;
+    static const int child2_id = -2;
+    static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node14 {
@@ -395,19 +408,19 @@ public:
     static const int id = 14;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 14;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 19;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 13;
-    static const int child0_id = -2;
-    static const int child1_id = -2;
-    static const int child2_id = -2;
-    static const int child3_id = -2;
+    static const int child0_id = 15;
+    static const int child1_id = 16;
+    static const int child2_id = 17;
+    static const int child3_id = 19;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node15 {
@@ -416,19 +429,19 @@ public:
     static const int id = 15;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 15;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 13;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 20;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 14;
     static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node16 {
@@ -437,19 +450,19 @@ public:
     static const int id = 16;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 16;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 13;
-    static const int child0_id = 17;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 21;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 14;
+    static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node17 {
@@ -458,19 +471,19 @@ public:
     static const int id = 17;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 17;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 16;
-    static const int child0_id = -2;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 22;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 14;
+    static const int child0_id = 18;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node18 {
@@ -479,19 +492,19 @@ public:
     static const int id = 18;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 18;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 13;
-    static const int child0_id = 19;
-    static const int child1_id = 20;
-    static const int child2_id = 21;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 23;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 17;
+    static const int child0_id = -2;
+    static const int child1_id = -2;
+    static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node19 {
@@ -500,19 +513,19 @@ public:
     static const int id = 19;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 19;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 18;
-    static const int child0_id = -2;
-    static const int child1_id = -2;
-    static const int child2_id = -2;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 24;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 14;
+    static const int child0_id = 20;
+    static const int child1_id = 21;
+    static const int child2_id = 22;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node20 {
@@ -521,19 +534,19 @@ public:
     static const int id = 20;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 20;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 18;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 25;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 19;
     static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node21 {
@@ -542,19 +555,19 @@ public:
     static const int id = 21;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 21;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 18;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 26;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 19;
     static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node22 {
@@ -563,19 +576,19 @@ public:
     static const int id = 22;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 22;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 2;
-    static const int child0_id = 23;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 27;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 19;
+    static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node23 {
@@ -584,19 +597,19 @@ public:
     static const int id = 23;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 23;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 22;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 28;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 3;
     static const int child0_id = 24;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node24 {
@@ -605,19 +618,19 @@ public:
     static const int id = 24;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 24;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 29;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 23;
     static const int child0_id = 25;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node25 {
@@ -626,19 +639,19 @@ public:
     static const int id = 25;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 25;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 30;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 24;
     static const int child0_id = 26;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node26 {
@@ -647,19 +660,19 @@ public:
     static const int id = 26;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::Transform Xt;
-    static const int q_idx = 26;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 31;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 25;
     static const int child0_id = 27;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrix>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node27 {
@@ -668,19 +681,19 @@ public:
     static const int id = 27;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 27;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixTpl<FloatType> > Xt;
+    static const int q_idx = 32;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 26;
     static const int child0_id = 28;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node28 {
@@ -689,19 +702,19 @@ public:
     static const int id = 28;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 28;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 33;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 27;
     static const int child0_id = 29;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node29 {
@@ -710,19 +723,19 @@ public:
     static const int id = 29;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 29;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 34;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 28;
-    static const int child0_id = -2;
+    static const int child0_id = 30;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node30 {
@@ -731,19 +744,19 @@ public:
     static const int id = 30;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 30;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = -1;
-    static const int child0_id = 31;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 35;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 29;
+    static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node31 {
@@ -752,19 +765,19 @@ public:
     static const int id = 31;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 31;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 30;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 36;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 0;
     static const int child0_id = 32;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node32 {
@@ -773,19 +786,19 @@ public:
     static const int id = 32;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 32;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 37;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 31;
     static const int child0_id = 33;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node33 {
@@ -794,19 +807,19 @@ public:
     static const int id = 33;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 33;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 38;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 32;
     static const int child0_id = 34;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node34 {
@@ -815,19 +828,19 @@ public:
     static const int id = 34;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 34;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 39;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 33;
     static const int child0_id = 35;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node35 {
@@ -836,19 +849,19 @@ public:
     static const int id = 35;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 35;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 40;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 34;
     static const int child0_id = 36;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node36 {
@@ -857,19 +870,19 @@ public:
     static const int id = 36;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 36;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 41;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 35;
-    static const int child0_id = -2;
+    static const int child0_id = 37;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node37 {
@@ -878,19 +891,19 @@ public:
     static const int id = 37;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 37;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = -1;
-    static const int child0_id = 38;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 42;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 36;
+    static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node38 {
@@ -899,19 +912,19 @@ public:
     static const int id = 38;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 38;
-    typedef RevoluteAxisAnyJoint Joint;
-    static const int parent_id = 37;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 43;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 0;
     static const int child0_id = 39;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node39 {
@@ -920,19 +933,19 @@ public:
     static const int id = 39;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 39;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 44;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 38;
     static const int child0_id = 40;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node40 {
@@ -941,19 +954,19 @@ public:
     static const int id = 40;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 40;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 45;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 39;
     static const int child0_id = 41;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node41 {
@@ -962,19 +975,19 @@ public:
     static const int id = 41;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 41;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 46;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 40;
     static const int child0_id = 42;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node42 {
@@ -983,19 +996,19 @@ public:
     static const int id = 42;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 42;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 47;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 41;
     static const int child0_id = 43;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
   class HRP4G2_DLLAPI Node43 {
@@ -1004,24 +1017,45 @@ public:
     static const int id = 43;
     static const std::string joint_name;
     static const std::string body_name;
-    static const Spatial::TransformT<Spatial::RotationMatrixIdentity> Xt;
-    static const int q_idx = 43;
-    typedef RevoluteAxisAnyJoint Joint;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 48;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
     static const int parent_id = 42;
+    static const int child0_id = 44;
+    static const int child1_id = -2;
+    static const int child2_id = -2;
+    static const int child3_id = -2;
+    static const int child4_id = -2;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
+    Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
+    Joint joint;
+    Body<FloatType> body;
+  };
+
+  class HRP4G2_DLLAPI Node44 {
+  public:
+    Node44();
+    static const int id = 44;
+    static const std::string joint_name;
+    static const std::string body_name;
+    static const Spatial::TransformT<FloatType, Spatial::RotationMatrixIdentityTpl<FloatType> > Xt;
+    static const int q_idx = 49;
+    typedef RevoluteAxisAnyJoint<FloatType> Joint;
+    static const int parent_id = 43;
     static const int child0_id = -2;
     static const int child1_id = -2;
     static const int child2_id = -2;
     static const int child3_id = -2;
     static const int child4_id = -2;
-    Spatial::TransformT<Spatial::rm_mul_op<Spatial::RotationMatrix, Spatial::RotationMatrixIdentity>::rm> sXp;
+    Spatial::TransformT<FloatType, typename Spatial::rm_mul_op<FloatType,Spatial::RotationMatrixTpl<FloatType>, Spatial::RotationMatrixIdentityTpl<FloatType> >::rm> sXp;
     Eigen::Matrix<FloatType, 6, Joint::NBDOF> joint_F; // used by crba
     Joint joint;
-    Body body;
+    Body<FloatType> body;
   };
 
 
   // vector of the robot nodes
-  typedef boost::fusion::vector44<
+  typedef boost::fusion::vector45<
       Node0,
       Node1,
       Node2,
@@ -1065,13 +1099,14 @@ public:
       Node40,
       Node41,
       Node42,
-      Node43>
+      Node43,
+      Node44>
   NodeVector;
 
   // member variables
 
   // inertias expressed in body frames
-  static Spatial::Inertia inertias[44];
+  static Inertia inertias[45];
   NodeVector nodes;
   Eigen::Matrix< FloatType, NBDOF, NBDOF > H; // used by crba
 
@@ -1081,50 +1116,51 @@ public:
 };
 
 // map node id to node type
-template <> struct Nodes <hrp4g2, 0> {typedef hrp4g2::Node0 type;};
-template <> struct Nodes <hrp4g2, 1> {typedef hrp4g2::Node1 type;};
-template <> struct Nodes <hrp4g2, 2> {typedef hrp4g2::Node2 type;};
-template <> struct Nodes <hrp4g2, 3> {typedef hrp4g2::Node3 type;};
-template <> struct Nodes <hrp4g2, 4> {typedef hrp4g2::Node4 type;};
-template <> struct Nodes <hrp4g2, 5> {typedef hrp4g2::Node5 type;};
-template <> struct Nodes <hrp4g2, 6> {typedef hrp4g2::Node6 type;};
-template <> struct Nodes <hrp4g2, 7> {typedef hrp4g2::Node7 type;};
-template <> struct Nodes <hrp4g2, 8> {typedef hrp4g2::Node8 type;};
-template <> struct Nodes <hrp4g2, 9> {typedef hrp4g2::Node9 type;};
-template <> struct Nodes <hrp4g2, 10> {typedef hrp4g2::Node10 type;};
-template <> struct Nodes <hrp4g2, 11> {typedef hrp4g2::Node11 type;};
-template <> struct Nodes <hrp4g2, 12> {typedef hrp4g2::Node12 type;};
-template <> struct Nodes <hrp4g2, 13> {typedef hrp4g2::Node13 type;};
-template <> struct Nodes <hrp4g2, 14> {typedef hrp4g2::Node14 type;};
-template <> struct Nodes <hrp4g2, 15> {typedef hrp4g2::Node15 type;};
-template <> struct Nodes <hrp4g2, 16> {typedef hrp4g2::Node16 type;};
-template <> struct Nodes <hrp4g2, 17> {typedef hrp4g2::Node17 type;};
-template <> struct Nodes <hrp4g2, 18> {typedef hrp4g2::Node18 type;};
-template <> struct Nodes <hrp4g2, 19> {typedef hrp4g2::Node19 type;};
-template <> struct Nodes <hrp4g2, 20> {typedef hrp4g2::Node20 type;};
-template <> struct Nodes <hrp4g2, 21> {typedef hrp4g2::Node21 type;};
-template <> struct Nodes <hrp4g2, 22> {typedef hrp4g2::Node22 type;};
-template <> struct Nodes <hrp4g2, 23> {typedef hrp4g2::Node23 type;};
-template <> struct Nodes <hrp4g2, 24> {typedef hrp4g2::Node24 type;};
-template <> struct Nodes <hrp4g2, 25> {typedef hrp4g2::Node25 type;};
-template <> struct Nodes <hrp4g2, 26> {typedef hrp4g2::Node26 type;};
-template <> struct Nodes <hrp4g2, 27> {typedef hrp4g2::Node27 type;};
-template <> struct Nodes <hrp4g2, 28> {typedef hrp4g2::Node28 type;};
-template <> struct Nodes <hrp4g2, 29> {typedef hrp4g2::Node29 type;};
-template <> struct Nodes <hrp4g2, 30> {typedef hrp4g2::Node30 type;};
-template <> struct Nodes <hrp4g2, 31> {typedef hrp4g2::Node31 type;};
-template <> struct Nodes <hrp4g2, 32> {typedef hrp4g2::Node32 type;};
-template <> struct Nodes <hrp4g2, 33> {typedef hrp4g2::Node33 type;};
-template <> struct Nodes <hrp4g2, 34> {typedef hrp4g2::Node34 type;};
-template <> struct Nodes <hrp4g2, 35> {typedef hrp4g2::Node35 type;};
-template <> struct Nodes <hrp4g2, 36> {typedef hrp4g2::Node36 type;};
-template <> struct Nodes <hrp4g2, 37> {typedef hrp4g2::Node37 type;};
-template <> struct Nodes <hrp4g2, 38> {typedef hrp4g2::Node38 type;};
-template <> struct Nodes <hrp4g2, 39> {typedef hrp4g2::Node39 type;};
-template <> struct Nodes <hrp4g2, 40> {typedef hrp4g2::Node40 type;};
-template <> struct Nodes <hrp4g2, 41> {typedef hrp4g2::Node41 type;};
-template <> struct Nodes <hrp4g2, 42> {typedef hrp4g2::Node42 type;};
-template <> struct Nodes <hrp4g2, 43> {typedef hrp4g2::Node43 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 0> {typedef typename hrp4g2<FloatType>::Node0 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 1> {typedef typename hrp4g2<FloatType>::Node1 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 2> {typedef typename hrp4g2<FloatType>::Node2 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 3> {typedef typename hrp4g2<FloatType>::Node3 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 4> {typedef typename hrp4g2<FloatType>::Node4 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 5> {typedef typename hrp4g2<FloatType>::Node5 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 6> {typedef typename hrp4g2<FloatType>::Node6 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 7> {typedef typename hrp4g2<FloatType>::Node7 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 8> {typedef typename hrp4g2<FloatType>::Node8 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 9> {typedef typename hrp4g2<FloatType>::Node9 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 10> {typedef typename hrp4g2<FloatType>::Node10 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 11> {typedef typename hrp4g2<FloatType>::Node11 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 12> {typedef typename hrp4g2<FloatType>::Node12 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 13> {typedef typename hrp4g2<FloatType>::Node13 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 14> {typedef typename hrp4g2<FloatType>::Node14 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 15> {typedef typename hrp4g2<FloatType>::Node15 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 16> {typedef typename hrp4g2<FloatType>::Node16 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 17> {typedef typename hrp4g2<FloatType>::Node17 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 18> {typedef typename hrp4g2<FloatType>::Node18 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 19> {typedef typename hrp4g2<FloatType>::Node19 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 20> {typedef typename hrp4g2<FloatType>::Node20 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 21> {typedef typename hrp4g2<FloatType>::Node21 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 22> {typedef typename hrp4g2<FloatType>::Node22 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 23> {typedef typename hrp4g2<FloatType>::Node23 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 24> {typedef typename hrp4g2<FloatType>::Node24 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 25> {typedef typename hrp4g2<FloatType>::Node25 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 26> {typedef typename hrp4g2<FloatType>::Node26 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 27> {typedef typename hrp4g2<FloatType>::Node27 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 28> {typedef typename hrp4g2<FloatType>::Node28 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 29> {typedef typename hrp4g2<FloatType>::Node29 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 30> {typedef typename hrp4g2<FloatType>::Node30 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 31> {typedef typename hrp4g2<FloatType>::Node31 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 32> {typedef typename hrp4g2<FloatType>::Node32 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 33> {typedef typename hrp4g2<FloatType>::Node33 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 34> {typedef typename hrp4g2<FloatType>::Node34 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 35> {typedef typename hrp4g2<FloatType>::Node35 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 36> {typedef typename hrp4g2<FloatType>::Node36 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 37> {typedef typename hrp4g2<FloatType>::Node37 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 38> {typedef typename hrp4g2<FloatType>::Node38 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 39> {typedef typename hrp4g2<FloatType>::Node39 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 40> {typedef typename hrp4g2<FloatType>::Node40 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 41> {typedef typename hrp4g2<FloatType>::Node41 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 42> {typedef typename hrp4g2<FloatType>::Node42 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 43> {typedef typename hrp4g2<FloatType>::Node43 type;};
+template <typename FloatType> struct Nodes < hrp4g2<FloatType>, 44> {typedef typename hrp4g2<FloatType>::Node44 type;};
 
 
 } // closing namespace metapod
