@@ -452,8 +452,58 @@ namespace roboptim
 	  {
 	    unsigned nConstraints = nFrames_ - 2;
 	    std::vector<interval_t> torqueBounds (nDofs_);
-	    for (std::size_t i = 0; i < nDofs_; ++i)
-	      torqueBounds[i] = interval_t (-1, 1);
+
+	    // FIXME: should we constraint the free floating?
+	    // static const double g = 9.81;
+	    // torqueBounds[0] = interval_t (0., 0.);
+	    // torqueBounds[1] = interval_t (0., 0.);
+	    // torqueBounds[2] = interval_t (-robot_->mass () * g, robot_->mass () * g);
+	    // torqueBounds[3] = interval_t (0., 0.);
+	    // torqueBounds[4] = interval_t (0., 0.);
+	    // torqueBounds[5] = interval_t (0., 0.);
+	    torqueBounds[6 + 0] = std::make_pair (-63.55, 63.55); // R_HIP_Y
+	    torqueBounds[6 + 1] = std::make_pair (-186.21, 186.21); // R_HIP_R
+	    torqueBounds[6 + 2] = std::make_pair (-95.18, 95.18); // R_HIP_P
+	    torqueBounds[6 + 3] = std::make_pair (-145.98, 145.98); // R_KNEE_P
+	    torqueBounds[6 + 4] = std::make_pair (-111.42, 111.42); // R_ANKLE_P
+	    torqueBounds[6 + 5] = std::make_pair (-75.11, 75.11); // R_ANKLE_R
+	    torqueBounds[6 + 6] = std::make_pair (-52.78, 52.78); // R_TOE_P
+	    torqueBounds[6 + 7] = std::make_pair (-186.21, 186.21); // L_HIP_R
+	    torqueBounds[6 + 9] = std::make_pair (-95.18, 95.18); // L_HIP_P
+	    torqueBounds[6 + 10] = std::make_pair (-145.98, 145.98); // L_KNEE_P
+	    torqueBounds[6 + 11] = std::make_pair (-111.42, 111.42); // L_ANKLE_P
+	    torqueBounds[6 + 12] = std::make_pair (-75.11, 75.11); // L_ANKLE_R
+	    torqueBounds[6 + 13] = std::make_pair (-52.78, 52.78); // L_TOE_P
+	    torqueBounds[6 + 14] = std::make_pair (-97.53, 97.53); // CHEST_P
+	    torqueBounds[6 + 15] = std::make_pair (-96.93, 96.93); // CHEST_R
+	    torqueBounds[6 + 16] = std::make_pair (-90.97, 90.97); // CHEST_Y
+	    torqueBounds[6 + 17] = std::make_pair (-17.59, 17.59); // NECK_Y
+	    torqueBounds[6 + 18] = std::make_pair (-17.59, 17.59); // NECK_R
+	    torqueBounds[6 + 19] = std::make_pair (-17.59, 17.59); // NECK_P
+	    torqueBounds[6 + 20] = std::make_pair (-5.26, 5.26); // EYEBROW_P
+	    torqueBounds[6 + 21] = std::make_pair (-0.71, 0.71); // EYELID_P
+	    torqueBounds[6 + 22] = std::make_pair (-0.84, 0.84); // EYE_P
+	    torqueBounds[6 + 23] = std::make_pair (-0.42, 0.42); // EYE_Y
+	    torqueBounds[6 + 24] = std::make_pair (-4.72, 4.72); // MOUTH_P
+	    torqueBounds[6 + 25] = std::make_pair (-0.22, 0.22); // LOWERLIP_P
+	    torqueBounds[6 + 26] = std::make_pair (-0.29, 0.29); // UPPERLIP_P
+	    torqueBounds[6 + 27] = std::make_pair (-5.9, 5.9); // CHEEK_P
+	    torqueBounds[6 + 28] = std::make_pair (-181.74, 181.74); // R_SHOULDER_P
+	    torqueBounds[6 + 29] = std::make_pair (-62.83, 62.83); // R_SHOULDER_R
+	    torqueBounds[6 + 30] = std::make_pair (-20.47, 20.47); // R_SHOULDER_Y
+	    torqueBounds[6 + 31] = std::make_pair (-54.46, 54.46); // R_ELBOW_P
+	    torqueBounds[6 + 32] = std::make_pair (-6.33, 6.33); // R_WRIST_Y
+	    torqueBounds[6 + 33] = std::make_pair (-6.33, 6.33); // R_WRIST_R
+	    torqueBounds[6 + 34] = std::make_pair (-0.77, 0.77); // R_HAND_J0
+	    torqueBounds[6 + 35] = std::make_pair (-1.16, 1.16); // R_HAND_J1
+	    torqueBounds[6 + 36] = std::make_pair (-181.74, 181.74); // L_SHOULDER_P
+	    torqueBounds[6 + 37] = std::make_pair (-62.83, 62.83); // L_SHOULDER_R
+	    torqueBounds[6 + 38] = std::make_pair (-20.47, 20.47); // L_SHOULDER_Y
+	    torqueBounds[6 + 39] = std::make_pair (-54.46, 54.46); // L_ELBOW_P
+	    torqueBounds[6 + 40] = std::make_pair (-6.33, 6.33); // L_WRIST_Y
+	    torqueBounds[6 + 41] = std::make_pair (-6.33, 6.33); // L_WRIST_R
+	    torqueBounds[6 + 42] = std::make_pair (-0.77, 0.77); // L_HAND_J0
+	    torqueBounds[6 + 43] = std::make_pair (-1.16, 1.16); // L_HAND_J1
 
 	    std::vector<value_type> torqueScales (nDofs_);
 	    for (std::size_t i = 0; i < nDofs_; ++i)
