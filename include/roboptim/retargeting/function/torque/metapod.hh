@@ -1,5 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_TORQUE_METAPOD_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_TORQUE_METAPOD_HH
+# include <roboptim/core/function.hh>
+
 # include <boost/fusion/include/at_c.hpp>
 # include <metapod/tools/joint.hh>
 # include <metapod/algos/rnea.hh>
