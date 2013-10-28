@@ -139,7 +139,7 @@ namespace roboptim
 
 	  // Express root spatial resultant force in world frame.
 	  // BODY is the floating base link, WAIST is the floating joint.
-	  metapod::Spatial::Force af =
+	  metapod::Spatial::ForceTpl<value_type> af =
 	    boost::fusion::at_c<0>
 	    (robot.nodes).body.iX0.applyInv
 	    (boost::fusion::at_c<0>

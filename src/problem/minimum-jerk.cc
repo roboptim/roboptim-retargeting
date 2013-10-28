@@ -461,7 +461,7 @@ namespace roboptim
 	    if (useMetapod)
 	      torque_ =
 		boost::make_shared<TorqueMetapod<
-		  EigenMatrixDense, metapod::hrp4g2> > ();
+		  EigenMatrixDense, metapod::hrp4g2<double> > > ();
 	    else
 	      torque_ =
 		boost::make_shared<TorqueChoreonoid<EigenMatrixDense> > (robot_);
@@ -491,7 +491,7 @@ namespace roboptim
 	    if (useMetapod)
 	      zmp_ =
 		boost::make_shared<
-		  ZMPMetapod<EigenMatrixDense, metapod::hrp4g2> > ();
+		  ZMPMetapod<EigenMatrixDense, metapod::hrp4g2<double> > > ();
 	    else
 	      zmp_ =
 		boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot_);

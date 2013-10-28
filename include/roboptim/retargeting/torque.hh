@@ -26,7 +26,7 @@ namespace roboptim
     {
     public:
       // Define which robot to use.
-      typedef metapod::hrp4g2 robot_t;
+      typedef metapod::hrp4g2<value_type> robot_t;
 
       explicit Torque (AnimatedInteractionMeshShPtr_t animatedMesh,
 		       AnimatedInteractionMeshShPtr_t animatedMeshLocal,

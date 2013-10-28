@@ -8,8 +8,6 @@
 #include <roboptim/core/finite-difference-gradient.hh>
 #include "roboptim/retargeting/torque.hh"
 
-#include <metapod/models/simple_humanoid/simple_humanoid.hh>
-
 #include "model/hrp4g2.hh"
 
 #include <metapod/tools/print.hh>
@@ -19,7 +17,7 @@
 #include <cnoid/BodyMotion>
 
 // Define which robot to use.
-typedef metapod::hrp4g2 robot_t;
+typedef metapod::hrp4g2<double> robot_t;
 
 namespace roboptim
 {
@@ -30,7 +28,7 @@ namespace roboptim
 		      const std::vector<Torque::robot_t::confVector>& ddq)
     {
       static int id = 0;
-      
+
       std::string filename = (boost::format ("/tmp/torque-ik-%1%.dat") % id++).str ();
       std::ofstream file (filename.c_str ());
 
@@ -40,7 +38,7 @@ namespace roboptim
 	    {
 	      file
 		<< q[frameId][qId] << " "
-		<< dq[frameId][qId] << " " 
+		<< dq[frameId][qId] << " "
 		<< ddq[frameId][qId] << " ";
 	    }
 	  file << "\n";

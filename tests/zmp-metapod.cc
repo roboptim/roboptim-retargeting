@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE (rnd)
 {
   configureLog4cxx ();
 
-  typedef metapod::hrp4g2 robot_t;
+  typedef metapod::hrp4g2<double> robot_t;
 
   typedef retargeting::ZMPMetapod<
     EigenMatrixDense, robot_t>::vector_t vector_t;
