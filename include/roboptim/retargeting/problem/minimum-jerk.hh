@@ -75,7 +75,7 @@ namespace roboptim
 	 bool enableTorque,
 	 bool enableZmp,
 	 const std::string& solverName,
-	 std::vector<bool> enabledDofs,
+	 const std::vector<bool>& enabledDofs,
 	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
 
 	static MinimumJerkShPtr_t
@@ -90,7 +90,7 @@ namespace roboptim
 	 bool enableTorque,
 	 bool enableZmp,
 	 const std::string& solverName,
-	 std::vector<bool> enabledDofs,
+	 const std::vector<bool>& enabledDofs,
 	 solver_t::callback_t additionalCallback = solver_t::callback_t ());
 
 	virtual ~MinimumJerk ();
@@ -127,7 +127,7 @@ namespace roboptim
 	  return result_;
 	}
 
-	TorqueShPtr_t torqueConstraint ()
+	DifferentiableFunctionShPtr_t torqueConstraint ()
 	{
 	  return torque_;
 	}
@@ -178,7 +178,7 @@ namespace roboptim
 	 bool enableTorque,
 	 bool enableZmp,
 	 const std::string& solverName,
-	 std::vector<bool> enabledDofs,
+	 const std::vector<bool>& enabledDofs,
 	 solver_t::callback_t additionalCallback);
 
 	void addConstraints
@@ -234,11 +234,11 @@ namespace roboptim
 	LinearFunctionShPtr_t velocity_;
 	/// \brief Body constraints
 	/// 0 is left foot and 1 is right foot
-	std::vector<ForwardGeometryShPtr_t> positions_;
+	std::vector<DifferentiableFunctionShPtr_t> positions_;
 	/// \brief Torque
-	TorqueShPtr_t torque_;
+	DifferentiableFunctionShPtr_t torque_;
 	/// \brief ZMP
-	ZmpShPtr_t zmp_;
+	DifferentiableFunctionShPtr_t zmp_;
 
 	/// \}
 

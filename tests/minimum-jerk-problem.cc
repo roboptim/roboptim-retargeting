@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE (simple)
   bool enableTorque = false;
   bool enableZmp = true;
   std::string solverName = "cfsqp";
-  std::vector<bool> enabledDofs (6 + 42, true);
+  std::vector<bool> enabledDofs (6 + 44, true);
 
   typedef problem::MinimumJerk::size_type size_type;
   typedef problem::MinimumJerk::solver_t solver_t;
