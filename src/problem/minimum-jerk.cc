@@ -29,7 +29,7 @@
 #include "../model/hrp4g2.hh"
 
 
-boost::array<double, 6 + 44> standardPose = {{
+static boost::array<double, 6 + 44> standardPose = {{
     0, 0, 0.6, 0, 0, 0, //FIXME: double check robot height
 
     0, 0, -25, 50, -25, 0, 0,
@@ -144,7 +144,7 @@ namespace roboptim
 	  dofId_ (6 + 28),
 	  init_ (standardPose[dofId_] * M_PI / 180.),
 	  goal_ (robot->joint (dofId_ - 6)->q_upper () - 0.01),
-	  nDofs_ (standardPose.size ()),
+	  nDofs_ (std::count (enabledDofs.begin (), enabledDofs.end (), true)),
 	  interval_ (tmin_, tmax_, 0.01),
 	  cost_ (),
 	  positions_ (2),
@@ -156,7 +156,15 @@ namespace roboptim
 	  solverName_ (solverName),
 	  additionalCallback_ (additionalCallback),
 	  enabledDofs_ (enabledDofs)
-      {}
+      {
+	if (!enabledDofs[dofId_])
+	  throw std::runtime_error
+	    ("dof used for cost function has been disabled");
+	// Make sure dofId stay valid even if some DOFs are disabled.
+	for (std::size_t dof = 0; dof < dofId_; ++dof)
+	  if (!enabledDofs[dof])
+	    dofId_--;
+      }
 
       MinimumJerkShPtr_t
       MinimumJerk::buildVectorInterpolationBasedOptimizationProblem
@@ -190,7 +198,12 @@ namespace roboptim
 	    additionalCallback));
 
         // Compute the initial trajectory (whole body)
-	vector_t initialTrajectory (minimumJerk->nFrames_ * standardPose.size ());
+	std::size_t nEnabledDofs =
+	  std::count (enabledDofs.begin (), enabledDofs.end (), true);
+	if (nEnabledDofs == 0)
+	  throw std::runtime_error ("all DOFs are disabled");
+
+	vector_t initialTrajectory (minimumJerk->nFrames_ * nEnabledDofs);
 	initialTrajectory.setZero ();
 
 	vector_t x (4);
@@ -208,15 +221,23 @@ namespace roboptim
 	value_type dtMinimumJerk = (1. - 0.) / minimumJerk->nFrames_;
 	for (std::size_t frameId = 0; frameId < minimumJerk->nFrames_; ++frameId)
 	  {
-	    for (std::size_t dof = 0; dof < minimumJerk->nDofs_; ++dof)
-	      initialTrajectory[frameId * minimumJerk->nDofs_ + dof] =
-		(dof < 6)
-		? standardPose[dof] : standardPose[dof] * M_PI / 180.;
-
-	    initialTrajectory[frameId * minimumJerk->nDofs_
-			      + minimumJerk->dofId_] =
-	      (*minimumJerkTrajectory)
-	      (static_cast<value_type> (frameId) * dtMinimumJerk)[0];
+	    std::size_t filteredDofId = 0;
+	    for (std::size_t dof = 0; dof < standardPose.size (); ++dof)
+	      {
+		if (!enabledDofs[dof])
+		  continue;
+		if (dof == minimumJerk->dofId_)
+		  initialTrajectory
+		    [frameId * minimumJerk->nDofs_ + filteredDofId++] =
+		    (*minimumJerkTrajectory)
+		    (static_cast<value_type> (frameId) * dtMinimumJerk)[0];
+		else
+		  initialTrajectory
+		    [frameId * minimumJerk->nDofs_ + filteredDofId++] =
+		    (dof < 6)
+		    ? standardPose[dof] : standardPose[dof] * M_PI / 180.;
+	      }
+	    assert (filteredDofId == minimumJerk->nDofs_);
 	  }
 
 	// Build a trajectory over the starting point for display
@@ -224,25 +245,18 @@ namespace roboptim
 	  initialTrajectoryFct =
 	  vectorInterpolation
 	  (initialTrajectory,
-	   static_cast<size_type> (minimumJerk->nDofs_),
+	   static_cast<size_type> (nEnabledDofs),
 	   minimumJerk->dt_);
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
+	std::size_t dofId = 0;
+	for (std::size_t dof = 0; dof < minimumJerk->dofId_; ++dof)
+	  if (enabledDofs[dof])
+	    ++dofId;
 	minimumJerk->cost_ =
 	  boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
-	  (initialTrajectoryFct, minimumJerk->dofId_, minimumJerk->dt_);
-
-	//FIXME: factor this
-	std::vector<boost::optional<value_type> > boundDofsAllFrames
-	  (minimumJerk->nFrames_ * standardPose.size ());
-	for (std::size_t frame = 0; frame < minimumJerk->nFrames_; ++frame)
-	  for (std::size_t jointId = 0;
-	       jointId < standardPose.size (); ++jointId)
-	    if (!enabledDofs[jointId])
-	      boundDofsAllFrames[frame * standardPose.size () + jointId]
-		= standardPose[jointId];
-	minimumJerk->cost_ = bind (minimumJerk->cost_, boundDofsAllFrames);
+	  (initialTrajectoryFct, dofId, minimumJerk->dt_);
 
 	// Clone the vector interpolation object so that it can be used by
 	// constraints
@@ -429,24 +443,25 @@ namespace roboptim
 	// Freeze first frame
 	if (enableFreezeFrame)
 	  {
-	    matrix_t A (6 + robot_->numJoints (),
-			nFrames_ * (6 + robot_->numJoints ()));
+	    matrix_t A (nDofs_, nFrames_ * nDofs_);
 	    A.setZero ();
-	    A.block (0, 0,
-		     6 + robot_->numJoints (),
-		     6 + robot_->numJoints ()).setIdentity ();
-	    vector_t b (6 + robot_->numJoints ());
-	    for (std::size_t jointId = 0; jointId < b.size (); ++jointId)
-	      b[jointId] = (jointId < 6)
-		? -standardPose[jointId] : -standardPose[jointId] * M_PI / 180.;
+	    A.block (0, 0, nDofs_, nDofs_).setIdentity ();
+	    vector_t b (nDofs_);
+
+	    std::size_t jointIdFiltered = 0;
+	    for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	      {
+		if (!enabledDofs_[jointId])
+		  continue;
+		b[jointIdFiltered++] = (jointId < 6)
+		  ? -standardPose[jointId] : -standardPose[jointId] * M_PI / 180.;
+	      }
+	    assert (jointIdFiltered == b.size ());
 
 	    freeze_ =
 	      boost::make_shared<
 		GenericNumericLinearFunction<EigenMatrixDense> >
 	      (A, b);
-	    // Bind and select to filter dofs.
-	    freeze_ = selectionById (freeze_, enabledDofs_);
-	    freeze_ = bind (freeze_, boundDofsAllFrames);
 
 	    std::vector<interval_t> freezeBounds
 	      (freeze_->outputSize (), Function::makeInterval (0., 0.));
@@ -573,7 +588,7 @@ namespace roboptim
 	    torque_ = selectionById (torque_, enabledDofsStateFunction3);
 
 
-	    std::vector<interval_t> torqueBounds (nDofs_);
+	    std::vector<interval_t> torqueBounds (6 + robot_->numJoints ());
 	    // FIXME: should we constraint the free floating?
 	    // static const double g = 9.81;
 	    torqueBounds[0] = std::make_pair (-Function::infinity(), Function::infinity()); // FREE FLOATING X
@@ -627,23 +642,6 @@ namespace roboptim
 	    torqueBounds[6 + 41] = std::make_pair (-6.33, 6.33); // L_WRIST_R
 	    torqueBounds[6 + 42] = std::make_pair (-0.77, 0.77); // L_HAND_J0
 	    torqueBounds[6 + 43] = std::make_pair (-1.16, 1.16); // L_HAND_J1
-
-	    // Relax some dofs.
-	    torqueBounds[6 + 17] = std::make_pair (-Function::infinity(), Function::infinity()); // NECK_Y
-	    torqueBounds[6 + 18] = std::make_pair (-Function::infinity(), Function::infinity()); // NECK_R
-	    torqueBounds[6 + 19] = std::make_pair (-Function::infinity(), Function::infinity()); // NECK_P
-	    torqueBounds[6 + 20] = std::make_pair (-Function::infinity(), Function::infinity()); // EYEBROW_P
-	    torqueBounds[6 + 21] = std::make_pair (-Function::infinity(), Function::infinity()); // EYELID_P
-	    torqueBounds[6 + 22] = std::make_pair (-Function::infinity(), Function::infinity()); // EYE_P
-	    torqueBounds[6 + 23] = std::make_pair (-Function::infinity(), Function::infinity()); // EYE_Y
-	    torqueBounds[6 + 24] = std::make_pair (-Function::infinity(), Function::infinity()); // MOUTH_P
-	    torqueBounds[6 + 25] = std::make_pair (-Function::infinity(), Function::infinity()); // LOWERLIP_P
-	    torqueBounds[6 + 26] = std::make_pair (-Function::infinity(), Function::infinity()); // UPPERLIP_P
-	    torqueBounds[6 + 27] = std::make_pair (-Function::infinity(), Function::infinity()); // CHEEK_P
-	    torqueBounds[6 + 34] = std::make_pair (-Function::infinity(), Function::infinity()); // R_HAND_J0
-	    torqueBounds[6 + 35] = std::make_pair (-Function::infinity(), Function::infinity()); // R_HAND_J1
-	    torqueBounds[6 + 42] = std::make_pair (-Function::infinity(), Function::infinity()); // L_HAND_J0
-	    torqueBounds[6 + 43] = std::make_pair (-Function::infinity(), Function::infinity()); // L_HAND_J1
 
 	    std::vector<value_type> torqueScales (torque_->outputSize (), 1.);
 	    std::vector<interval_t> torqueBoundsFiltered (torque_->outputSize ());

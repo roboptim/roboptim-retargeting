@@ -70,3 +70,12 @@ TARGET_LINK_LIBRARIES(CnoidRobOptimMinimumJerk
   roboptim-retargeting ${Boost_LIBRARIES})
 INSTALL(TARGETS CnoidRobOptimMinimumJerk
   DESTINATION ${CHOREONOID_PLUGINDIR})
+
+# Choreonoid plug-in.
+ADD_LIBRARY(CnoidRobOptimJoint MODULE
+  choreonoid/joint-plugin.cc)
+PKG_CONFIG_USE_DEPENDENCY(CnoidRobOptimJoint choreonoid)
+TARGET_LINK_LIBRARIES(CnoidRobOptimJoint
+  roboptim-retargeting ${Boost_LIBRARIES})
+INSTALL(TARGETS CnoidRobOptimJoint
+  DESTINATION ${CHOREONOID_PLUGINDIR})

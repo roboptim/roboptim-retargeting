@@ -16,7 +16,7 @@
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#define BOOST_TEST_MODULE minimum_jerk_problem
+#define BOOST_TEST_MODULE joint_problem
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
@@ -25,7 +25,7 @@
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
 
-#include "roboptim/retargeting/problem/minimum-jerk.hh"
+#include "roboptim/retargeting/problem/joint.hh"
 
 #include <cnoid/BodyLoader>
 
@@ -78,23 +78,23 @@ BOOST_AUTO_TEST_CASE (simple)
   enabledDofs[6 + 42] = false; // L_HAND_J0
   enabledDofs[6 + 43] = false; // L_HAND_J1
 
-  typedef problem::MinimumJerk::size_type size_type;
-  typedef problem::MinimumJerk::solver_t solver_t;
+  typedef problem::Joint::size_type size_type;
+  typedef problem::Joint::solver_t solver_t;
 
-  problem::MinimumJerkShPtr_t minimumJerkProblem =
-    roboptim::retargeting::problem::MinimumJerk::
+  problem::JointShPtr_t jointProblem =
+    roboptim::retargeting::problem::Joint::
     buildVectorInterpolationBasedOptimizationProblem
     (robot, 10, 0.1, enableFreeze, enableVelocity,
      enablePosition, enableCollision,
      enableTorque, enableZmp, solverName, enabledDofs);
-  minimumJerkProblem->solve ();
+  jointProblem->solve ();
 
   // Rebuild final trajectory.
-  if (minimumJerkProblem->result ().which () == solver_t::SOLVER_ERROR)
+  if (jointProblem->result ().which () == solver_t::SOLVER_ERROR)
     {
       std::cerr << "error" << std::endl;
       roboptim::SolverError error =
-  	boost::get<roboptim::SolverError> (minimumJerkProblem->result ());
+  	boost::get<roboptim::SolverError> (jointProblem->result ());
       std::cerr << "Result:\n" << error << std::endl;
       return;
     }
@@ -102,28 +102,28 @@ BOOST_AUTO_TEST_CASE (simple)
   boost::shared_ptr<VectorInterpolation >
     finalTrajectoryFct;
 
-  if (minimumJerkProblem->result ().which () == solver_t::SOLVER_VALUE_WARNINGS)
+  if (jointProblem->result ().which () == solver_t::SOLVER_VALUE_WARNINGS)
     {
       std::cerr << "warnings" << std::endl;
       roboptim::ResultWithWarnings result =
-  	boost::get<roboptim::ResultWithWarnings> (minimumJerkProblem->result ());
+  	boost::get<roboptim::ResultWithWarnings> (jointProblem->result ());
       std::cerr << "Result:\n" << result << std::endl;
       finalTrajectoryFct =
 	vectorInterpolation
-	(result.x, static_cast<size_type> (minimumJerkProblem->nDofs ()),
-	 minimumJerkProblem->dt ());
+	(result.x, static_cast<size_type> (jointProblem->nDofs ()),
+	 jointProblem->dt ());
     }
 
-  if (minimumJerkProblem->result ().which () == solver_t::SOLVER_VALUE)
+  if (jointProblem->result ().which () == solver_t::SOLVER_VALUE)
     {
       std::cerr << "ok" << std::endl;
       roboptim::Result result =
-	boost::get<roboptim::Result> (minimumJerkProblem->result ());
+	boost::get<roboptim::Result> (jointProblem->result ());
       std::cerr << "Result:\n" << result << std::endl;
       finalTrajectoryFct =
 	vectorInterpolation
-	(result.x, static_cast<size_type> (minimumJerkProblem->nDofs ()),
-	 minimumJerkProblem->dt ());
+	(result.x, static_cast<size_type> (jointProblem->nDofs ()),
+	 jointProblem->dt ());
     }
 
   assert (!!finalTrajectoryFct);
@@ -133,6 +133,6 @@ BOOST_AUTO_TEST_CASE (simple)
   Gnuplot gnuplot = Gnuplot::make_interactive_gnuplot ();
   std::cout
     << (gnuplot
-  	<< plot (*finalTrajectoryFct, minimumJerkProblem->interval ())
+  	<< plot (*finalTrajectoryFct, jointProblem->interval ())
   	);
 }

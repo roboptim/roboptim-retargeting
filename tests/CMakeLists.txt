@@ -41,6 +41,8 @@ ROBOPTIM_RETARGETING_TEST(laplacian-deformation-energy)
 ROBOPTIM_RETARGETING_TEST(animated-interaction-mesh)
 ROBOPTIM_RETARGETING_TEST(problem-marker)
 
+ROBOPTIM_RETARGETING_TEST(joint-problem)
+
 ROBOPTIM_RETARGETING_TEST(minimum-jerk)
 ROBOPTIM_RETARGETING_TEST(minimum-jerk-problem)
 
