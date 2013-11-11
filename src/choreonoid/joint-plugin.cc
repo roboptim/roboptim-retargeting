@@ -71,29 +71,11 @@ public:
     vbox->addLayout (hbox);
 
     hbox = new QHBoxLayout;
-    hbox->addWidget (new QLabel (_ ("Number of frames")));
-    nFrames_.setDecimals (0);
-    nFrames_.setRange (10, 1000);
-    nFrames_.setValue (20);
-    hbox->addWidget (&nFrames_);
-    hbox->addStretch ();
-    vbox->addLayout (hbox);
-
-    hbox = new QHBoxLayout;
-    hbox->addWidget(new QLabel (_ ("Time discretization (dt)")));
-    dt_.setDecimals (3);
-    dt_.setRange (0.001, 1.);
-    dt_.setValue (0.1);
-    hbox->addWidget(&dt_);
-    hbox->addStretch ();
-    vbox->addLayout (hbox);
-
-    hbox = new QHBoxLayout;
     hbox->addWidget(new QLabel (_ ("Number of nodes (spline only)")));
     nNodes_.setDecimals (0);
     nNodes_.setRange (5, 10000);
     nNodes_.setValue (10);
-    hbox->addWidget(&dt_);
+    hbox->addWidget(&nNodes_);
     hbox->addStretch ();
     vbox->addLayout (hbox);
 
@@ -153,16 +135,6 @@ public:
     return trajectoryType_;
   }
 
-  cnoid::DoubleSpinBox& nFrames ()
-  {
-    return nFrames_;
-  }
-
-  cnoid::DoubleSpinBox& dt ()
-  {
-    return dt_;
-  }
-
   cnoid::DoubleSpinBox& nNodes ()
   {
     return nNodes_;
@@ -194,11 +166,6 @@ private:
   cnoid::ComboBox solver_;
 
   cnoid::ComboBox trajectoryType_;
-
-  cnoid::DoubleSpinBox nFrames_;
-
-  /// \brief Discretization step if vector interpolation is used
-  cnoid::DoubleSpinBox dt_;
 
   /// \brief Number of nodes when spline is used
   cnoid::DoubleSpinBox nNodes_;
@@ -352,8 +319,6 @@ public:
     archive.write ("trajectoryType",
 		   generalTab ()->trajectoryType ().currentIndex ());
 
-    archive.write ("nFrames", generalTab ()->nFrames ().value ());
-    archive.write ("dt", generalTab ()->dt ().value ());
     archive.write ("enableFreeze", generalTab ()->enableFreeze ().isChecked ());
     archive.write ("enableVelocity",
 		   generalTab ()->enableVelocity ().isChecked ());
@@ -381,12 +346,6 @@ public:
       (archive.get ("trajectoryType",
 		    generalTab ()->trajectoryType ().currentIndex ()));
 
-    generalTab ()->nFrames ().setValue
-      (archive.get ("nFrames",
-		    generalTab ()->nFrames ().value ()));
-    generalTab ()->dt ().setValue
-      (archive.get
-       ("dt", generalTab ()->dt ().value ()));
     generalTab ()->enableFreeze ().setChecked
       (archive.get ("enableFreeze",
 		    generalTab ()->enableFreeze ().isChecked ()));
@@ -685,8 +644,6 @@ private:
 
     // Retrieve problem setup from dialog window.
     // The dialog window values are restored from the loaded project.
-    unsigned nFrames = dialog_->generalTab ()->nFrames ().value ();
-    double dt = dialog_->generalTab ()->dt ().value ();
     unsigned nNodes = dialog_->generalTab ()->nNodes ().value ();
     bool enableFreeze = dialog_->generalTab ()->enableFreeze ().isChecked ();
     bool enableVelocity =
@@ -741,7 +698,8 @@ private:
       minimumJerkProblem =
 	roboptim::retargeting::problem::Joint
 	::buildVectorInterpolationBasedOptimizationProblem
-	(robot, nFrames, dt, enableFreeze, enableVelocity,
+	(robot, bodyMotionItem->motion (),
+	 enableFreeze, enableVelocity,
 	 enablePosition, enableCollision,
 	 enableTorque, enableZmp, solverName,
 	 enabledDofs);
@@ -749,7 +707,8 @@ private:
       minimumJerkProblem =
 	roboptim::retargeting::problem::Joint
 	::buildSplineBasedOptimizationProblem
-	(robot, nFrames, nNodes, enableFreeze, enableVelocity,
+	(robot, bodyMotionItem->motion (), nNodes,
+	 enableFreeze, enableVelocity,
 	 enablePosition, enableCollision,
 	 enableTorque, enableZmp, solverName,
 	 enabledDofs);

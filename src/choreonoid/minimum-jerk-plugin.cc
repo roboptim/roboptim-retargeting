@@ -93,7 +93,7 @@ public:
     nNodes_.setDecimals (0);
     nNodes_.setRange (5, 10000);
     nNodes_.setValue (10);
-    hbox->addWidget(&dt_);
+    hbox->addWidget(&nNodes_);
     hbox->addStretch ();
     vbox->addLayout (hbox);
 

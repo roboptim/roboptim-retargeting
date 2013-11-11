@@ -16,6 +16,7 @@
 #include <roboptim/trajectory/state-function.hh>
 #include <roboptim/trajectory/vector-interpolation.hh>
 
+#include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
 #include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/retargeting/function/torque/choreonoid.hh>
@@ -123,8 +124,7 @@ namespace roboptim
 
       Joint::Joint
       (cnoid::BodyPtr robot,
-       size_type nFrames,
-       value_type dt,
+       cnoid::BodyMotionPtr initialMotion,
        size_type nNodes,
        bool enableFreezeFrame,
        bool enableVelocity,
@@ -136,14 +136,12 @@ namespace roboptim
        const std::vector<bool>& enabledDofs,
        solver_t::callback_t additionalCallback)
 	: robot_ (robot),
-	  nFrames_ (nFrames),
-	  dt_ (dt),
+	  initialMotion_ (initialMotion),
+	  nFrames_ (initialMotion->getNumFrames ()),
+	  dt_ (1. / initialMotion->getFrameRate ()),
 	  nNodes_ (nNodes),
 	  tmin_ (0.),
 	  tmax_ (dt_ * static_cast<value_type> (nFrames_)),
-	  dofId_ (6 + 28),
-	  init_ (standardPose[dofId_] * M_PI / 180.),
-	  goal_ (robot->joint (dofId_ - 6)->q_upper () - 0.01),
 	  nDofs_ (std::count (enabledDofs.begin (), enabledDofs.end (), true)),
 	  interval_ (tmin_, tmax_, 0.01),
 	  cost_ (),
@@ -156,21 +154,12 @@ namespace roboptim
 	  solverName_ (solverName),
 	  additionalCallback_ (additionalCallback),
 	  enabledDofs_ (enabledDofs)
-      {
-	if (!enabledDofs[dofId_])
-	  throw std::runtime_error
-	    ("dof used for cost function has been disabled");
-	// Make sure dofId stay valid even if some DOFs are disabled.
-	for (std::size_t dof = 0; dof < dofId_; ++dof)
-	  if (!enabledDofs[dof])
-	    dofId_--;
-      }
+      {}
 
       JointShPtr_t
       Joint::buildVectorInterpolationBasedOptimizationProblem
       (cnoid::BodyPtr robot,
-       size_type nFrames,
-       value_type dt,
+       cnoid::BodyMotionPtr initialMotion,
        bool enableFreezeFrame,
        bool enableVelocity,
        bool enableFeetPositions,
@@ -184,8 +173,7 @@ namespace roboptim
 	JointShPtr_t minimumJerk
 	  (new Joint
 	   (robot,
-	    nFrames,
-	    dt,
+	    initialMotion,
 	    0,
 	    enableFreezeFrame,
 	    enableVelocity,
@@ -203,73 +191,28 @@ namespace roboptim
 	if (nEnabledDofs == 0)
 	  throw std::runtime_error ("all DOFs are disabled");
 
-	vector_t initialTrajectory (minimumJerk->nFrames_ * nEnabledDofs);
-	initialTrajectory.setZero ();
-
-	vector_t x (4);
-	x[0] = minimumJerk->init_;
-	x[1] = minimumJerk->goal_;
-	x[2] = x[3] = 0.;
-
-	boost::shared_ptr<MinimumJerkTrajectory<EigenMatrixDense> >
-	  minimumJerkTrajectory =
-	  boost::make_shared<MinimumJerkTrajectory<EigenMatrixDense> >
-	  ();
-	minimumJerkTrajectory->setParameters (x);
-
 	// Build the starting point
-	value_type dtJoint = (1. - 0.) / minimumJerk->nFrames_;
-	for (std::size_t frameId = 0; frameId < minimumJerk->nFrames_; ++frameId)
-	  {
-	    std::size_t filteredDofId = 0;
-	    for (std::size_t dof = 0; dof < standardPose.size (); ++dof)
-	      {
-		if (!enabledDofs[dof])
-		  continue;
-		if (dof == minimumJerk->dofId_)
-		  initialTrajectory
-		    [frameId * minimumJerk->nDofs_ + filteredDofId++] =
-		    (*minimumJerkTrajectory)
-		    (static_cast<value_type> (frameId) * dtJoint)[0];
-		else
-		  initialTrajectory
-		    [frameId * minimumJerk->nDofs_ + filteredDofId++] =
-		    (dof < 6)
-		    ? standardPose[dof] : standardPose[dof] * M_PI / 180.;
-	      }
-	    assert (filteredDofId == minimumJerk->nDofs_);
-	  }
-
-	// Build a trajectory over the starting point for display
-	boost::shared_ptr<Trajectory<3> >
-	  initialTrajectoryFct =
-	  vectorInterpolation
-	  (initialTrajectory,
-	   static_cast<size_type> (nEnabledDofs),
-	   minimumJerk->dt_);
+	boost::shared_ptr<DifferentiableFunction> initialTrajectoryFct =
+	  boost::make_shared<ChoreonoidBodyTrajectory> (initialMotion, true);
+	initialTrajectoryFct =
+	  selectionById (initialTrajectoryFct, enabledDofs);
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
-	std::size_t dofId = 0;
-	for (std::size_t dof = 0; dof < minimumJerk->dofId_; ++dof)
-	  if (enabledDofs[dof])
-	    ++dofId;
-	minimumJerk->cost_ =
-	  boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
-	  (initialTrajectoryFct, dofId, minimumJerk->dt_);
+	// minimumJerk->cost_ =
+	//   boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
+	//   (initialTrajectoryFct, 0 /*FIXME:*/, minimumJerk->dt_);
 
 	// Clone the vector interpolation object so that it can be used by
 	// constraints
 	minimumJerk->trajectoryConstraints_ =
-	  vectorInterpolation
-	  (initialTrajectory,
-	   static_cast<size_type> (minimumJerk->nDofs_),
-	   minimumJerk->dt_);
+	  boost::make_shared<ChoreonoidBodyTrajectory> (initialMotion, true);
 
 	// Create problem.
 	minimumJerk->problem_ =
 	  boost::make_shared<problem_t> (*minimumJerk->cost_);
-	minimumJerk->problem_->startingPoint () = initialTrajectory;
+	// minimumJerk->problem_->startingPoint () =
+	//   initialTrajectoryFct->parameters ();
 
 	minimumJerk->addConstraints
 	  (enableFreezeFrame,
@@ -285,7 +228,7 @@ namespace roboptim
       JointShPtr_t
       Joint::buildSplineBasedOptimizationProblem
       (cnoid::BodyPtr robot,
-       size_type nFrames,
+       cnoid::BodyMotionPtr initialMotion,
        size_type nNodes,
        bool enableFreezeFrame,
        bool enableVelocity,
@@ -300,8 +243,7 @@ namespace roboptim
 	JointShPtr_t minimumJerk
 	  (new Joint
 	   (robot,
-	    nFrames,
-	    0,
+	    initialMotion,
 	    nNodes,
 	    enableFreezeFrame,
 	    enableVelocity,

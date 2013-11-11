@@ -25,9 +25,11 @@
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
 
+#include "roboptim/retargeting/function/choreonoid-body-trajectory.hh"
 #include "roboptim/retargeting/problem/joint.hh"
 
 #include <cnoid/BodyLoader>
+#include <cnoid/BodyMotion>
 
 #include "tests-config.h"
 
@@ -51,6 +53,12 @@ BOOST_AUTO_TEST_CASE (simple)
   cnoid::BodyPtr robot = loader.load (modelFilePath);
   if (!robot)
     throw std::runtime_error ("failed to load model");
+
+  // Loading the motion.
+  cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
+
+  //FIXME: we should embed the copy.
+  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial.yaml");
 
   bool enableFreeze = true;
   bool enableVelocity = true;
@@ -84,7 +92,7 @@ BOOST_AUTO_TEST_CASE (simple)
   problem::JointShPtr_t jointProblem =
     roboptim::retargeting::problem::Joint::
     buildVectorInterpolationBasedOptimizationProblem
-    (robot, 10, 0.1, enableFreeze, enableVelocity,
+    (robot, bodyMotion, enableFreeze, enableVelocity,
      enablePosition, enableCollision,
      enableTorque, enableZmp, solverName, enabledDofs);
   jointProblem->solve ();

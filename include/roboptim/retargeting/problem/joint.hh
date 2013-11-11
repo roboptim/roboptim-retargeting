@@ -18,6 +18,7 @@
 # include <roboptim/retargeting/function/zmp.hh>
 
 # include <cnoid/Body>
+# include <cnoid/BodyMotion>
 
 namespace roboptim
 {
@@ -66,8 +67,7 @@ namespace roboptim
 	static JointShPtr_t
 	buildVectorInterpolationBasedOptimizationProblem
 	(cnoid::BodyPtr robot,
-	 size_type nFrames,
-	 value_type dt,
+	 cnoid::BodyMotionPtr initialMotion,
 	 bool enableFreezeFrame,
 	 bool enableVelocity,
 	 bool enablePosition,
@@ -81,7 +81,7 @@ namespace roboptim
 	static JointShPtr_t
 	buildSplineBasedOptimizationProblem
 	(cnoid::BodyPtr robot,
-	 size_type nFrames,
+	 cnoid::BodyMotionPtr initialMotion,
 	 size_type nNodes,
 	 bool enableFreezeFrame,
 	 bool enableVelocity,
@@ -168,8 +168,7 @@ namespace roboptim
       protected:
 	explicit Joint
 	(cnoid::BodyPtr robot,
-	 size_type nFrames,
-	 value_type dt,
+	 cnoid::BodyMotionPtr initialMotion,
 	 size_type nNodes,
 	 bool enableFreezeFrame,
 	 bool enableVelocity,
@@ -192,7 +191,12 @@ namespace roboptim
       private:
 	static log4cxx::LoggerPtr logger;
 
+	/// \brief Choreonoid robot model.
 	cnoid::BodyPtr robot_;
+
+	/// \brief Original motion.
+	cnoid::BodyMotionPtr initialMotion_;
+
 
 	/// \name Problem configuration
 	/// \{
@@ -208,12 +212,6 @@ namespace roboptim
 	value_type tmin_;
 	/// \brief maximum trajectory time
 	value_type tmax_;
-	/// \brief the id of the dof we move.
-	std::size_t dofId_;
-	/// \brief dof initial position
-	value_type init_;
-	/// \brief dof goal position
-	value_type goal_;
 	/// \brief total number of dofs
 	std::size_t nDofs_;
 
