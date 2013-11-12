@@ -41,7 +41,8 @@ namespace roboptim
 					 bool addFreeFloating) throw ()
 	: VectorInterpolation
 	  (computeParametersFromBodyMotion (bodyMotion, addFreeFloating),
-	   bodyMotion->numJoints (),
+	   ((addFreeFloating ? 6 : 0) + bodyMotion->numJoints ())
+	   * bodyMotion->getNumFrames (),
 	   1. / bodyMotion->frameRate ()),
 	  bodyMotion_ (bodyMotion)
       {}

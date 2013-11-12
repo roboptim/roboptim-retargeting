@@ -185,6 +185,18 @@ namespace roboptim
 	    enabledDofs,
 	    additionalCallback));
 
+	// Compute all enabled DOFs
+	std::vector<bool> enabledDofsAllFrames
+	  (initialMotion->getNumFrames () * standardPose.size (), true);
+	std::vector<boost::optional<value_type> > boundDofsAllFrames
+	  (initialMotion->getNumFrames () * standardPose.size ());
+	for (std::size_t frame = 0;
+	     frame < initialMotion->getNumFrames (); ++frame)
+	  for (std::size_t jointId = 0;
+	       jointId < standardPose.size (); ++jointId)
+	    enabledDofsAllFrames[frame * standardPose.size () + jointId] =
+	      enabledDofs[jointId];
+
         // Compute the initial trajectory (whole body)
 	std::size_t nEnabledDofs =
 	  std::count (enabledDofs.begin (), enabledDofs.end (), true);
@@ -195,7 +207,7 @@ namespace roboptim
 	boost::shared_ptr<DifferentiableFunction> initialTrajectoryFct =
 	  boost::make_shared<ChoreonoidBodyTrajectory> (initialMotion, true);
 	initialTrajectoryFct =
-	  selectionById (initialTrajectoryFct, enabledDofs);
+	  selectionById (initialTrajectoryFct, enabledDofsAllFrames);
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
