@@ -23,6 +23,7 @@
 #include <roboptim/retargeting/function/torque/metapod.hh>
 #include <roboptim/retargeting/function/zmp/choreonoid.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
+#include <roboptim/retargeting/function/joint-to-marker/choreonoid.hh>
 
 #include "roboptim/retargeting/problem/joint.hh"
 
