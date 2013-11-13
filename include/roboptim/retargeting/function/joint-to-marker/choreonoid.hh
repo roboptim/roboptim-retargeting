@@ -94,6 +94,23 @@ namespace roboptim
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
       }
 
+      void
+      impl_gradient (gradient_t& gradient,
+		     const argument_t& x,
+		     size_type i)
+	const throw ()
+      {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	roboptim::GenericFiniteDifferenceGradient<
+	  T,
+	  finiteDifferenceGradientPolicies::Simple<T> >
+	  fdg (*this);
+	fdg.gradient (gradient, x, i);
+      }
+
     private:
       cnoid::BodyIMeshPtr mesh_;
       mutable std::vector<cnoid::Vector3> markerPositions_;
