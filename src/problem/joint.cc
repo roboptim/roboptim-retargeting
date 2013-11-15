@@ -24,6 +24,7 @@
 #include <roboptim/retargeting/function/zmp/choreonoid.hh>
 #include <roboptim/retargeting/function/zmp/metapod.hh>
 #include <roboptim/retargeting/function/joint-to-marker/choreonoid.hh>
+#include <roboptim/retargeting/function/body-laplacian-deformation-energy/choreonoid.hh>
 
 #include "roboptim/retargeting/problem/joint.hh"
 
@@ -161,6 +162,7 @@ namespace roboptim
       Joint::buildVectorInterpolationBasedOptimizationProblem
       (cnoid::BodyPtr robot,
        cnoid::BodyMotionPtr initialMotion,
+       cnoid::BodyIMeshPtr mesh,
        bool enableFreezeFrame,
        bool enableVelocity,
        bool enableFeetPositions,
@@ -208,13 +210,29 @@ namespace roboptim
 	boost::shared_ptr<DifferentiableFunction> initialTrajectoryFct =
 	  boost::make_shared<ChoreonoidBodyTrajectory> (initialMotion, true);
 	initialTrajectoryFct =
-	  selectionById (initialTrajectoryFct, enabledDofsAllFrames);
+	  selectionById (initialTrajectoryFct, enabledDofs);
+
+	std::cout << "FOO" << std::endl;
+
+	vector_t x (nEnabledDofs * initialMotion->getNumFrames ());
+	vector_t t (1);
+	for (int frameId = 0;
+	     frameId < initialMotion->getNumFrames (); ++frameId)
+	  {
+	    t[0] = frameId * (1. / initialMotion->frameRate ());
+	    x.segment (frameId * nEnabledDofs, nEnabledDofs) =
+	      (*initialTrajectoryFct) (t);
+	  }
+	std::cout << "FOO" << std::endl;
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
-	// minimumJerk->cost_ =
-	//   boost::make_shared<CostReferenceTrajectory<EigenMatrixDense> >
-	//   (initialTrajectoryFct, 0 /*FIXME:*/, minimumJerk->dt_);
+	minimumJerk->cost_ =
+	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
+	    EigenMatrixDense> >
+	  (mesh, x);
+
+	std::cout << "FOO" << std::endl;
 
 	// Clone the vector interpolation object so that it can be used by
 	// constraints
@@ -224,8 +242,7 @@ namespace roboptim
 	// Create problem.
 	minimumJerk->problem_ =
 	  boost::make_shared<problem_t> (*minimumJerk->cost_);
-	// minimumJerk->problem_->startingPoint () =
-	//   initialTrajectoryFct->parameters ();
+	minimumJerk->problem_->startingPoint () = x;
 
 	minimumJerk->addConstraints
 	  (enableFreezeFrame,

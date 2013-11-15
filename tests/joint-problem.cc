@@ -30,6 +30,7 @@
 
 #include <cnoid/BodyLoader>
 #include <cnoid/BodyMotion>
+#include <cnoid/BodyIMesh>
 
 #include "tests-config.h"
 
@@ -59,6 +60,13 @@ BOOST_AUTO_TEST_CASE (simple)
 
   //FIXME: we should embed the copy.
   bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial.yaml");
+
+  // Body Interaction Mesh
+  cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
+  if (!mesh->addBody (robot, bodyMotion))
+    throw std::runtime_error ("failed to add body to body interaction mesh");
+  if (!mesh->initialize ())
+        throw std::runtime_error ("failed to initialize body interaction mesh");
 
   bool enableFreeze = true;
   bool enableVelocity = true;
@@ -92,7 +100,7 @@ BOOST_AUTO_TEST_CASE (simple)
   problem::JointShPtr_t jointProblem =
     roboptim::retargeting::problem::Joint::
     buildVectorInterpolationBasedOptimizationProblem
-    (robot, bodyMotion, enableFreeze, enableVelocity,
+    (robot, bodyMotion, mesh, enableFreeze, enableVelocity,
      enablePosition, enableCollision,
      enableTorque, enableZmp, solverName, enabledDofs);
   jointProblem->solve ();

@@ -501,6 +501,11 @@ public:
 	return;
       }
 
+    // Create interaction mesh
+    cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
+    mesh->addBody (body, bodyMotionItem->motion ());
+    mesh->initialize ();
+
     // Create folder
     static int callId = 0;
     cnoid::FolderItem* folder = new cnoid::FolderItem ();
@@ -523,7 +528,7 @@ public:
     thread_ = boost::make_shared<boost::thread>
       (boost::bind
        (&JointPlugin::buildProblemAndOptimize,
-	this, body, bodyMotionItem));
+	this, mesh, body, bodyMotionItem));
 
     if (thread_)
       {
@@ -629,7 +634,8 @@ private:
       (minimumJerkProblem, bodyMotionItem, name, x, rootItem_);
   }
 
-  void buildProblemAndOptimize (cnoid::BodyPtr robot,
+  void buildProblemAndOptimize (cnoid::BodyIMeshPtr mesh,
+				cnoid::BodyPtr robot,
 				cnoid::BodyMotionItemPtr bodyMotionItem)
   {
     cnoid::MessageView::mainInstance ()->putln
@@ -698,7 +704,7 @@ private:
       minimumJerkProblem =
 	roboptim::retargeting::problem::Joint
 	::buildVectorInterpolationBasedOptimizationProblem
-	(robot, bodyMotionItem->motion (),
+	(robot, bodyMotionItem->motion (), mesh,
 	 enableFreeze, enableVelocity,
 	 enablePosition, enableCollision,
 	 enableTorque, enableZmp, solverName,

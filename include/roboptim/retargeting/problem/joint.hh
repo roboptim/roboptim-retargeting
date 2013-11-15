@@ -19,6 +19,7 @@
 
 # include <cnoid/Body>
 # include <cnoid/BodyMotion>
+# include <cnoid/BodyIMesh>
 
 namespace roboptim
 {
@@ -68,6 +69,7 @@ namespace roboptim
 	buildVectorInterpolationBasedOptimizationProblem
 	(cnoid::BodyPtr robot,
 	 cnoid::BodyMotionPtr initialMotion,
+	 cnoid::BodyIMeshPtr mesh,
 	 bool enableFreezeFrame,
 	 bool enableVelocity,
 	 bool enablePosition,

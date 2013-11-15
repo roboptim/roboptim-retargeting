@@ -12,6 +12,14 @@ namespace roboptim
   {
     /// \brief Convert joint position into marker position.
     ///
+    /// Input: [q]
+    /// where q is the value of a particular joint
+    /// [q] is the full robot configuration including the free-floating joint.
+    ///
+    /// Output: [m]
+    /// where m is a marker position in the 3d space (x, y, z)
+    /// [m] is the array of all markers associated with the character
+    ///
     /// The joint/marker offset is constant.
     template <typename T>
     class JointToMarkerPositionChoreonoid : public GenericDifferentiableFunction<T>
@@ -22,7 +30,8 @@ namespace roboptim
       explicit JointToMarkerPositionChoreonoid (cnoid::BodyIMeshPtr mesh)
 	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
-	  ("JointToMarkerPosition", mesh->numBodies (), 3 * mesh->numMarkers ()),
+	  (6 + mesh->numBodies (), 3 * mesh->numMarkers (),
+	   "JointToMarkerPosition"),
 	  mesh_ (mesh),
 	  markerPositions_ (mesh->numMarkers ())
       {
@@ -37,7 +46,7 @@ namespace roboptim
 	  }
       }
 
-      virtual ~JointToMarkerPositionChoreonoid ()
+      virtual ~JointToMarkerPositionChoreonoid () throw ()
       {
       }
 

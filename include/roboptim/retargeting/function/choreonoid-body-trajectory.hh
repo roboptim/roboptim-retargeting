@@ -41,11 +41,13 @@ namespace roboptim
 					 bool addFreeFloating) throw ()
 	: VectorInterpolation
 	  (computeParametersFromBodyMotion (bodyMotion, addFreeFloating),
-	   ((addFreeFloating ? 6 : 0) + bodyMotion->numJoints ())
-	   * bodyMotion->getNumFrames (),
+	   (addFreeFloating ? 6 : 0) + bodyMotion->numJoints (),
 	   1. / bodyMotion->frameRate ()),
 	  bodyMotion_ (bodyMotion)
-      {}
+      {
+	std::cout << "PARAMETERS SIZE: " << this->parameters ().size () << std::endl;
+	std::cout << "OUTPUT SIZE: " << this->outputSize () << std::endl;
+      }
 
       virtual ~ChoreonoidBodyTrajectory () throw ()
       {}
