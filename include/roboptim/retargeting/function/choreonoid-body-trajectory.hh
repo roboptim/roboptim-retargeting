@@ -45,8 +45,6 @@ namespace roboptim
 	   1. / bodyMotion->frameRate ()),
 	  bodyMotion_ (bodyMotion)
       {
-	std::cout << "PARAMETERS SIZE: " << this->parameters ().size () << std::endl;
-	std::cout << "OUTPUT SIZE: " << this->outputSize () << std::endl;
       }
 
       virtual ~ChoreonoidBodyTrajectory () throw ()
@@ -62,28 +60,47 @@ namespace roboptim
 	vector_t x
 	  (bodyMotion->getNumFrames ()
 	   * (freeFloatingOffset + bodyMotion->numJoints ()));
+	x.setZero ();
 	for (int frameId = 0; frameId < bodyMotion->getNumFrames (); ++frameId)
 	  {
-	    if (addFreeFloating)
+	    if (addFreeFloating &&
+		frameId < bodyMotion->linkPosSeq ()->numFrames ())
 	      {
+		if (!bodyMotion->linkPosSeq ())
+		  throw std::runtime_error ("no linkPosSeq");
+		const cnoid::MultiSE3Seq::Frame& frame =
+		  bodyMotion->linkPosSeq ()->frame (frameId);
+
+		// work around ugly API :(
+		if (!&frame)
+		  throw std::runtime_error ("invalid link frame");
+
 		x.segment
 		  (frameId * (freeFloatingOffset + bodyMotion->numJoints ()),
-		   3) = bodyMotion->linkPosSeq ()->frame (frameId)[0].translation ();
+		   3) = frame[0].translation ();
 
 		Eigen::AngleAxisd angleAxis =
 		  angleAxis.fromRotationMatrix
-		  (bodyMotion->linkPosSeq ()->frame
-		   (frameId)[0].rotation ().toRotationMatrix ());
+		  (frame[0].rotation ().toRotationMatrix ());
 		x.segment
 		  (frameId * (freeFloatingOffset + bodyMotion->numJoints ()) + 3,
 		   3) = angleAxis.angle () * angleAxis.axis ();
-
 	      }
+		if (addFreeFloating &&
+		    frameId >= bodyMotion->linkPosSeq ()->numFrames ())
+		  throw std::runtime_error ("no link information in MarkerMotion");
 
-	    for (int dofId = 0; dofId < bodyMotion->numJoints (); ++dofId)
-	      x[frameId * (freeFloatingOffset + bodyMotion->numJoints ())
-		+ freeFloatingOffset + dofId] =
-		bodyMotion->jointPosSeq ()->frame (frameId)[dofId];
+		const cnoid::MultiValueSeq::Frame& frame =
+		bodyMotion->jointPosSeq ()->frame (frameId);
+
+		// work around ugly API :(
+		if (!&frame)
+		  throw std::runtime_error ("invalid joint frame");
+
+		for (int dofId = 0; dofId < bodyMotion->numJoints (); ++dofId)
+		  x[frameId * (freeFloatingOffset + bodyMotion->numJoints ())
+		    + freeFloatingOffset + dofId] =
+		    frame[dofId];
 	  }
 	return x;
       }

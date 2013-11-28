@@ -34,14 +34,21 @@ namespace roboptim
 
       explicit BodyLaplacianDeformationEnergyChoreonoid
       (cnoid::BodyIMeshPtr mesh,
-       const vector_t& initialJointsTrajectory)
+       const std::size_t nDofs,
+       const std::size_t nFrames,
+       const vector_t& initialJointsTrajectory,
+       boost::shared_ptr<GenericDifferentiableFunction<T> > jointToMarker,
+       boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
+       jointToMarkerOrigin)
 	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
-	  (6 + mesh->bodyInfo (0).body->numJoints (), 1,
+	  (nFrames * (6 + mesh->bodyInfo (0).body->numJoints ()), 1,
 	   "BodyLaplacianDeformationEnergyChoreonoid"),
 	  mesh_ (mesh),
-	  jointToMarker_
-	  (boost::make_shared<JointToMarkerPositionChoreonoid<T> > (mesh)),
+	  nDofs_ (nDofs),
+	  nFrames_ (nFrames),
+	  jointToMarker_ (jointToMarker),
+	  jointToMarkerOrigin_ (jointToMarkerOrigin),
 	  markerPositions_ (mesh_->numMarkers () * 3),
 
 	  originalLaplacianCoordinates_
@@ -49,8 +56,10 @@ namespace roboptim
 	  currentLaplacianCoordinates_
 	  (mesh_->getNumFrames () * mesh_->numMarkers () * 3)
       {
+	assert (mesh_->getNumFrames () == nFrames);
+
 	// Compute initial Laplacian coordinates.
-	for (int frameId = 0; frameId < mesh_->getNumFrames (); ++frameId)
+	for (int frameId = 0; frameId < nFrames_; ++frameId)
 	  {
 	    const cnoid::BodyIMesh::Frame& neighborLists =
 	      mesh_->frame (frameId);
@@ -61,8 +70,7 @@ namespace roboptim
 	    (*jointToMarker_)
 	      (markerPositions_,
 	       initialJointsTrajectory.segment
-	       (frameId * (6 + mesh->bodyInfo (0).body->numJoints ()),
-		6 + mesh->bodyInfo (0).body->numJoints ()));
+	       (frameId * nDofs_, nDofs_));
 
 	    // Compute Laplacian Coordinates of each marker.
 	    originalLaplacianCoordinates_.segment
@@ -80,6 +88,12 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
+	jointToMarkerOrigin_->shouldUpdate ();
+
 	result[0] = 0.;
 	for (int frameId = 0; frameId < mesh_->getNumFrames (); ++frameId)
 	  {
@@ -89,11 +103,9 @@ namespace roboptim
 	      neighbors = neighborLists[frameId];
 
 	    // Compute the current marker position
+	    jointToMarkerOrigin_->frameId () = frameId;
 	    (*jointToMarker_)
-	      (markerPositions_,
-	       x.segment
-	       (frameId * (6 + mesh_->bodyInfo (0).body->numJoints ()),
-		6 + mesh_->bodyInfo (0).body->numJoints ()));
+	      (markerPositions_, x.segment (frameId * nDofs_, nDofs_));
 
 	    // Compute Laplacian Coordinates of each markerq
 	    currentLaplacianCoordinates_.segment
@@ -114,10 +126,8 @@ namespace roboptim
 		    currentLaplacianCoordinates_.segment
 		      (mesh_->numMarkers () * 3 + markerId * 3, 3) -=
 		      weight *
-		      markerPositions_.segment
-		      (mesh_->numMarkers () * 3 + neighborId * 3, 3);
+		      markerPositions_.segment (neighborId * 3, 3);
 		  }
-		cnoid::BodyIMesh::Marker& marker = mesh_->marker (markerId);
 	      }
 
 	    currentLaplacianCoordinates_ -= originalLaplacianCoordinates_;
@@ -145,7 +155,12 @@ namespace roboptim
 
     private:
       cnoid::BodyIMeshPtr mesh_;
-      boost::shared_ptr<JointToMarkerPositionChoreonoid<T> > jointToMarker_;
+      std::size_t nDofs_;
+      std::size_t nFrames_;
+
+      boost::shared_ptr<GenericDifferentiableFunction<T> > jointToMarker_;
+      boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
+      jointToMarkerOrigin_;
       mutable result_t markerPositions_;
 
       result_t originalLaplacianCoordinates_;

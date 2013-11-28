@@ -188,17 +188,29 @@ namespace roboptim
 	    enabledDofs,
 	    additionalCallback));
 
-	// Compute all enabled DOFs
+	// Compute bound Dofs.
+	typedef roboptim::Function::value_type value_type;
+	std::vector<boost::optional<value_type> > boundDofs
+	  (standardPose.size ());
+	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	  if (!enabledDofs[jointId])
+	    boundDofs[jointId] = standardPose[jointId];
+
+	std::size_t nFrames = initialMotion->getNumFrames ();
 	std::vector<bool> enabledDofsAllFrames
-	  (initialMotion->getNumFrames () * standardPose.size (), true);
+	  (nFrames * standardPose.size (), true);
 	std::vector<boost::optional<value_type> > boundDofsAllFrames
-	  (initialMotion->getNumFrames () * standardPose.size ());
-	for (std::size_t frame = 0;
-	     frame < initialMotion->getNumFrames (); ++frame)
+	  (nFrames * standardPose.size ());
+	for (std::size_t frame = 0; frame < nFrames; ++frame)
 	  for (std::size_t jointId = 0;
 	       jointId < standardPose.size (); ++jointId)
-	    enabledDofsAllFrames[frame * standardPose.size () + jointId] =
-	      enabledDofs[jointId];
+	    {
+	      enabledDofsAllFrames[frame * standardPose.size () + jointId] =
+		enabledDofs[jointId];
+	      if (!enabledDofs[jointId])
+		boundDofsAllFrames[frame * standardPose.size () + jointId]
+		  = standardPose[jointId];
+	    }
 
         // Compute the initial trajectory (whole body)
 	std::size_t nEnabledDofs =
@@ -206,9 +218,17 @@ namespace roboptim
 	if (nEnabledDofs == 0)
 	  throw std::runtime_error ("all DOFs are disabled");
 
-	// Build the starting point
-	boost::shared_ptr<DifferentiableFunction> initialTrajectoryFct =
+	// Build the starting point.
+	boost::shared_ptr<ChoreonoidBodyTrajectory> initialTrajectory =
 	  boost::make_shared<ChoreonoidBodyTrajectory> (initialMotion, true);
+	boost::shared_ptr<DifferentiableFunction> initialTrajectoryFct =
+	  initialTrajectory;
+
+	// Build the full trajectory.
+	vector_t xComplete = initialTrajectory->parameters ();
+	std::cout << "FOO" << std::endl;
+
+	// Prune the starting point from useless DOFs
 	initialTrajectoryFct =
 	  selectionById (initialTrajectoryFct, enabledDofs);
 
@@ -227,10 +247,21 @@ namespace roboptim
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
+	boost::shared_ptr<JointToMarkerPositionChoreonoid<
+	  EigenMatrixDense> >
+	  jointToMarkerOrigin =
+	  boost::make_shared<JointToMarkerPositionChoreonoid<
+	    EigenMatrixDense> > (mesh, 0);
+	boost::shared_ptr<DifferentiableFunction>
+	  jointToMarker = jointToMarkerOrigin;
+	jointToMarker = bind (jointToMarker, boundDofs);
+
 	minimumJerk->cost_ =
 	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
 	    EigenMatrixDense> >
-	  (mesh, x);
+	  (mesh, nEnabledDofs, initialMotion->getNumFrames (), x,
+	   jointToMarker, jointToMarkerOrigin);
+	minimumJerk->cost_ = bind (minimumJerk->cost_, boundDofsAllFrames);
 
 	std::cout << "FOO" << std::endl;
 

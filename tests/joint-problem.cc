@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE (simple)
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
   //FIXME: we should embed the copy.
-  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial.yaml");
+  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial-short.yaml");
 
   // Body Interaction Mesh
   cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
@@ -68,12 +68,12 @@ BOOST_AUTO_TEST_CASE (simple)
   if (!mesh->initialize ())
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
-  bool enableFreeze = true;
-  bool enableVelocity = true;
+  bool enableFreeze = false;
+  bool enableVelocity = false;
   bool enablePosition = false;
   bool enableCollision = false;
   bool enableTorque = false;
-  bool enableZmp = true;
+  bool enableZmp = false;
   std::string solverName = "cfsqp";
   std::vector<bool> enabledDofs (6 + 44, true);
 

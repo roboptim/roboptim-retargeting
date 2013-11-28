@@ -27,11 +27,14 @@ namespace roboptim
     public:
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (GenericDifferentiableFunction<T>);
 
-      explicit JointToMarkerPositionChoreonoid (cnoid::BodyIMeshPtr mesh)
+      explicit JointToMarkerPositionChoreonoid
+      (cnoid::BodyIMeshPtr mesh, size_type frameId)
 	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
-	  (6 + mesh->numBodies (), 3 * mesh->numMarkers (),
+	  (6 + mesh->bodyInfo (0).body->numJoints (), 3 * mesh->numMarkers (),
 	   "JointToMarkerPosition"),
+	  frameId_ (frameId),
+	  shouldUpdate_ (true),
 	  mesh_ (mesh),
 	  markerPositions_ (mesh->numMarkers ())
       {
@@ -48,6 +51,21 @@ namespace roboptim
 
       virtual ~JointToMarkerPositionChoreonoid () throw ()
       {
+      }
+
+      const size_type& frameId () const throw ()
+      {
+	return frameId_;
+      }
+
+      size_type& frameId () throw ()
+      {
+	return frameId_;
+      }
+
+      void shouldUpdate () throw ()
+      {
+	shouldUpdate_ = true;
       }
 
     protected:
@@ -68,33 +86,36 @@ namespace roboptim
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-
-	for (int frameId = 0; frameId < motion->numFrames (); ++frameId)
+	if (shouldUpdate_)
 	  {
-	    motion->linkPosSeq ()->frame (frameId)[0].translation () =
-	      x.segment (frameId * nDofs, 3);
+	    if (frameId_ < motion->linkPosSeq ()->numFrames ())
+	      {
+		motion->linkPosSeq ()->frame (frameId_)[0].translation () =
+		  x.segment (frameId_ * nDofs, 3);
 
-	    value_type norm = x.segment (frameId * nDofs + 3, 3).norm ();
+		value_type norm = x.segment (frameId_ * nDofs + 3, 3).norm ();
 
-	    if (norm < 1e-10)
-	      motion->linkPosSeq ()->frame
-		(frameId)[0].rotation ().setIdentity ();
-	    else
-	      motion->linkPosSeq ()->frame
-		(frameId)[0].rotation () =
-		Eigen::AngleAxisd
-		(norm,
-		 x.segment (frameId * nDofs + 3, 3).normalized ()
-		 );
+		if (norm < 1e-10)
+		  motion->linkPosSeq ()->frame
+		    (frameId_)[0].rotation ().setIdentity ();
+		else
+		  motion->linkPosSeq ()->frame
+		    (frameId_)[0].rotation () =
+		    Eigen::AngleAxisd
+		    (norm,
+		     x.segment (frameId_ * nDofs + 3, 3).normalized ()
+		     );
+	      }
 
-	    for (int dofId = 0; dofId < motion->numJoints (); ++frameId)
-	      motion->jointPosSeq ()->frame (frameId)[dofId] =
-		x[frameId * nDofs + offset + dofId];
+	      for (int dofId = 0; dofId < motion->numJoints (); ++dofId)
+		motion->jointPosSeq ()->frame (frameId_)[dofId] =
+		  x[frameId_ * nDofs + offset + dofId];
+
+	      mesh_->update ();
+	      mesh_->getVertices (markerPositions_);
+	      shouldUpdate_ = false;
 	  }
 
-	mesh_->update ();
-
-	mesh_->getVertices (markerPositions_);
 	for (int markerId = 0; markerId < mesh_->numMarkers (); ++markerId)
 	  result.segment (markerId * 3, 3) = markerPositions_[markerId];
 
@@ -121,6 +142,8 @@ namespace roboptim
       }
 
     private:
+      size_type frameId_;
+      mutable bool shouldUpdate_;
       cnoid::BodyIMeshPtr mesh_;
       mutable std::vector<cnoid::Vector3> markerPositions_;
     };
