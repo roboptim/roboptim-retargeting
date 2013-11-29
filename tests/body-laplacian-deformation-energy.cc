@@ -75,7 +75,8 @@ BOOST_AUTO_TEST_CASE (simple)
   std::size_t nEnabledDofs =
     std::count (enabledDofs.begin (), enabledDofs.end (), true);
 
-  Function::vector_t x (1);
+  Function::vector_t x (bodyMotion->numFrames () * nEnabledDofs);
+  x.setZero ();
 
   boost::shared_ptr<JointToMarkerPositionChoreonoid<
     EigenMatrixDense> >
@@ -83,8 +84,13 @@ BOOST_AUTO_TEST_CASE (simple)
     boost::make_shared<JointToMarkerPositionChoreonoid<
       EigenMatrixDense> > (mesh, 0);
 
-  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
+  boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid<
     EigenMatrixDense> >
+    cost =
+    boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
+      EigenMatrixDense> >
     (mesh, nEnabledDofs, bodyMotion->getNumFrames (), x,
      jointToMarker, jointToMarker);
+
+  std::cout << (*cost) (x) << std::endl;
 }

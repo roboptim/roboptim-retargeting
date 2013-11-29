@@ -57,7 +57,16 @@ namespace roboptim
 	  currentLaplacianCoordinates_
 	  (mesh_->getNumFrames () * mesh_->numMarkers () * 3)
       {
-	assert (mesh_->getNumFrames () == nFrames);
+	if (mesh_->getNumFrames () != nFrames)
+	  throw std::runtime_error ("invalid number of frames");
+	if (initialJointsTrajectory.size () != nFrames * nDofs)
+	  {
+	    boost::format fmt
+	      ("invalid size for initial joint trajectory"
+	       " (expected is %d but size is %d");
+	    fmt % (nFrames * nDofs) % initialJointsTrajectory.size ();
+	    throw std::runtime_error (fmt.str ());
+	  }
 
 	// Compute initial Laplacian coordinates.
 	for (int frameId = 0; frameId < nFrames_; ++frameId)
@@ -123,7 +132,8 @@ namespace roboptim
 		       (mesh_->numMarkers () * 3 + markerId * 3, 3) -
 		       originalLaplacianCoordinates_.segment
 		       (mesh_->numMarkers () * 3 + neighborId * 3, 3)).norm ();
-		    weight = 1. / weight;
+		    if (std::abs (weight) > 1e-8)
+		      weight = 1. / weight;
 		    currentLaplacianCoordinates_.segment
 		      (mesh_->numMarkers () * 3 + markerId * 3, 3) -=
 		      weight *
