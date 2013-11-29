@@ -5,6 +5,7 @@
 # include <boost/make_shared.hpp>
 
 # include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/finite-difference-gradient.hh>
 
 # include <roboptim/retargeting/function/joint-to-marker/choreonoid.hh>
 

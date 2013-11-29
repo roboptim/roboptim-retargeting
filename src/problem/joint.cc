@@ -226,13 +226,10 @@ namespace roboptim
 
 	// Build the full trajectory.
 	vector_t xComplete = initialTrajectory->parameters ();
-	std::cout << "FOO" << std::endl;
 
 	// Prune the starting point from useless DOFs
 	initialTrajectoryFct =
 	  selectionById (initialTrajectoryFct, enabledDofs);
-
-	std::cout << "FOO" << std::endl;
 
 	vector_t x (nEnabledDofs * initialMotion->getNumFrames ());
 	vector_t t (1);
@@ -243,7 +240,6 @@ namespace roboptim
 	    x.segment (frameId * nEnabledDofs, nEnabledDofs) =
 	      (*initialTrajectoryFct) (t);
 	  }
-	std::cout << "FOO" << std::endl;
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
@@ -262,8 +258,6 @@ namespace roboptim
 	  (mesh, nEnabledDofs, initialMotion->getNumFrames (), x,
 	   jointToMarker, jointToMarkerOrigin);
 	minimumJerk->cost_ = bind (minimumJerk->cost_, boundDofsAllFrames);
-
-	std::cout << "FOO" << std::endl;
 
 	// Clone the vector interpolation object so that it can be used by
 	// constraints

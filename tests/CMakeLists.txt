@@ -55,3 +55,5 @@ ROBOPTIM_RETARGETING_TEST(zmp-metapod)
 ROBOPTIM_RETARGETING_TEST(forward-geometry-choreonoid)
 
 ROBOPTIM_RETARGETING_TEST(choreonoid-body-trajectory)
+
+ROBOPTIM_RETARGETING_TEST(body-laplacian-deformation-energy)
