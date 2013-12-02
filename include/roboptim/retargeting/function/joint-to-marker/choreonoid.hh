@@ -3,6 +3,7 @@
 # include <stdexcept>
 
 # include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/finite-difference-gradient.hh>
 
 # include <cnoid/BodyIMesh>
 
