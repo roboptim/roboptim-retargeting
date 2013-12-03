@@ -21,6 +21,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
+#include <roboptim/core/indent.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
@@ -38,18 +39,35 @@ using namespace roboptim::retargeting;
 
 using boost::test_tools::output_test_stream;
 
-//FIXME: we should embed the copy.
+//FIXME: we should embed the copies.
 std::string modelFilePath
 ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+std::string bodyMotionPath
+("/home/moulard/29_07-hrp4c-initial-short.yaml");
+
+
+typedef
+JointToMarkerPositionChoreonoid<EigenMatrixDense> JointToMarker_t;
+typedef
+boost::shared_ptr<JointToMarker_t> JointToMarkerShPtr_t;
+
+Function::vector_t evaluateAndPrintTestResult
+(std::ostream& o, JointToMarkerShPtr_t jointToMarker, Function::vector_t& x)
+{
+  jointToMarker->shouldUpdate ();
+  Function::vector_t result = (*jointToMarker) (x);
+  o << "Evaluating joint-to-marker function" << iendl
+    << "X:" << incindent << iendl
+    << x << decindent << iendl
+    << "Result:" << incindent << iendl
+    << result << decindent << iendl;
+  return result;
+}
 
 BOOST_AUTO_TEST_CASE (simple)
 {
   // Configure log4cxx
   configureLog4cxx ();
-
-  //FIXME: we should embed the copy.
-  std::string modelFilePath
-    ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
 
   // Loading robot.
   cnoid::BodyLoader loader;
@@ -59,9 +77,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   // Loading the motion.
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
-
-  //FIXME: we should embed the copy.
-  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial-short.yaml");
+  bodyMotion->loadStandardYAMLformat (bodyMotionPath);
 
   // Body Interaction Mesh
   cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
@@ -72,13 +88,43 @@ BOOST_AUTO_TEST_CASE (simple)
 
   Function::vector_t x
     (6 + mesh->bodyInfo (0).body->numJoints ());
-  x.setZero ();
+  Function::result_t result;
+  Function::vector_t previousResult;
+  JointToMarkerShPtr_t jointToMarker =
+    boost::make_shared<JointToMarker_t> (mesh, 0);
 
-  boost::shared_ptr<JointToMarkerPositionChoreonoid<
-    EigenMatrixDense> >
-    jointToMarker =
-    boost::make_shared<JointToMarkerPositionChoreonoid<
-      EigenMatrixDense> > (mesh, 0);
+  // Printing object
+  {
+    std::cout << (*jointToMarker) << iendl;
+    std::cout << iendl;
+  }
 
-  std::cout << (*jointToMarker) (x) << std::endl;
+  // x = 0
+  {
+    x.setZero ();
+    result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
+    std::cout
+      << "Gradient:" << incindent << iendl
+      << jointToMarker->gradient (x) << decindent << iendl
+      << iendl;
+    std::cout << iendl;
+  }
+
+  // translate 1 meter front in X, Y and Z directions to check
+  // for translation handling.
+  previousResult = result;
+  for (int i = 0; i < 3; ++ i)
+  {
+    x.setZero ();
+    x[i] = 1.;
+    result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
+    std::cout << iendl;
+
+    for (int idx = 0; idx < result.size (); ++idx)
+      if (idx % 3 == i)
+	BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 1., 1e-6);
+      else
+	BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 0., 1e-6);
+  }
+
 }

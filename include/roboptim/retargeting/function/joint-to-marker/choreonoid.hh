@@ -113,7 +113,7 @@ namespace roboptim
 		  x[frameId_ * nDofs + offset + dofId];
 
 	      mesh_->update ();
-	      mesh_->getVertices (markerPositions_);
+	      mesh_->getVertices (frameId_, markerPositions_);
 	      shouldUpdate_ = false;
 	  }
 
