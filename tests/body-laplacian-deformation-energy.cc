@@ -42,6 +42,8 @@ using boost::test_tools::output_test_stream;
 //FIXME: we should embed the copy.
 std::string modelFilePath
 ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+std::string bodyMotionPath
+("/home/moulard/29_07-hrp4c-initial-short.yaml");
 
 BOOST_AUTO_TEST_CASE (simple)
 {
@@ -49,8 +51,6 @@ BOOST_AUTO_TEST_CASE (simple)
   configureLog4cxx ();
 
   //FIXME: we should embed the copy.
-  std::string modelFilePath
-    ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
 
   // Loading robot.
   cnoid::BodyLoader loader;
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE (simple)
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
   //FIXME: we should embed the copy.
-  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial-short.yaml");
+  bodyMotion->loadStandardYAMLformat (bodyMotionPath);
 
   // Body Interaction Mesh
   cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
@@ -93,4 +93,10 @@ BOOST_AUTO_TEST_CASE (simple)
      jointToMarker, jointToMarker);
 
   std::cout << (*cost) (x) << std::endl;
+  std::cout << (*cost) (x) << std::endl;
+  std::cout << (*cost) (x) << std::endl;
+  std::cout << (*cost) (x) << std::endl;
+  std::cout << (*cost) (x) << std::endl;
+  std::cout << (*cost) (x) << std::endl;
+  std::cout << (*cost) << std::endl;
 }

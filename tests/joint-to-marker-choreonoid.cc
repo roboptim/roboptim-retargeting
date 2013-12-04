@@ -99,32 +99,38 @@ BOOST_AUTO_TEST_CASE (simple)
     std::cout << iendl;
   }
 
-  // x = 0
-  {
-    x.setZero ();
-    result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
-    std::cout
-      << "Gradient:" << incindent << iendl
-      << jointToMarker->gradient (x) << decindent << iendl
-      << iendl;
-    std::cout << iendl;
-  }
+  for (int frameId = 0; frameId < bodyMotion->numFrames (); ++frameId)
+    {
+      std::cout << "Frame: " << frameId << iendl;
 
-  // translate 1 meter front in X, Y and Z directions to check
-  // for translation handling.
-  previousResult = result;
-  for (int i = 0; i < 3; ++ i)
-  {
-    x.setZero ();
-    x[i] = 1.;
-    result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
-    std::cout << iendl;
+      jointToMarker->frameId () = frameId;
 
-    for (int idx = 0; idx < result.size (); ++idx)
-      if (idx % 3 == i)
-	BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 1., 1e-6);
-      else
-	BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 0., 1e-6);
-  }
+      // x = 0
+      {
+	x.setZero ();
+	result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
+	std::cout
+	  << "Gradient:" << incindent << iendl
+	  << jointToMarker->gradient (x) << decindent << iendl
+	  << iendl;
+	std::cout << iendl;
+      }
 
+      // translate 1 meter front in X, Y and Z directions to check
+      // for translation handling.
+      previousResult = result;
+      for (int i = 0; i < 3; ++ i)
+	{
+	  x.setZero ();
+	  x[i] = 1.;
+	  result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
+	  std::cout << iendl;
+
+	  for (int idx = 0; idx < result.size (); ++idx)
+	    if (idx % 3 == i)
+	      BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 1., 1e-6);
+	    else
+	      BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 0., 1e-6);
+	}
+    }
 }

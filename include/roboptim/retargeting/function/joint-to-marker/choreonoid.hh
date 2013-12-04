@@ -92,9 +92,9 @@ namespace roboptim
 	    if (frameId_ < motion->linkPosSeq ()->numFrames ())
 	      {
 		motion->linkPosSeq ()->frame (frameId_)[0].translation () =
-		  x.segment (frameId_ * nDofs, 3);
+		  x.segment (0, 3);
 
-		value_type norm = x.segment (frameId_ * nDofs + 3, 3).norm ();
+		value_type norm = x.segment (3, 3).norm ();
 
 		if (norm < 1e-10)
 		  motion->linkPosSeq ()->frame
@@ -104,13 +104,13 @@ namespace roboptim
 		    (frameId_)[0].rotation () =
 		    Eigen::AngleAxisd
 		    (norm,
-		     x.segment (frameId_ * nDofs + 3, 3).normalized ()
+		     x.segment (3, 3).normalized ()
 		     );
 	      }
 
 	      for (int dofId = 0; dofId < motion->numJoints (); ++dofId)
 		motion->jointPosSeq ()->frame (frameId_)[dofId] =
-		  x[frameId_ * nDofs + offset + dofId];
+		  x[offset + dofId];
 
 	      mesh_->update ();
 	      mesh_->getVertices (frameId_, markerPositions_);
