@@ -92,11 +92,29 @@ BOOST_AUTO_TEST_CASE (simple)
     (mesh, nEnabledDofs, bodyMotion->getNumFrames (), x,
      jointToMarker, jointToMarker);
 
+  std::cout << "Body Laplacian Deformation Energy" << std::endl;
   std::cout << (*cost) (x) << std::endl;
-  std::cout << (*cost) (x) << std::endl;
-  std::cout << (*cost) (x) << std::endl;
-  std::cout << (*cost) (x) << std::endl;
-  std::cout << (*cost) (x) << std::endl;
-  std::cout << (*cost) (x) << std::endl;
-  std::cout << (*cost) << std::endl;
+
+  Function::vector_t laplacianCoordinates
+    (mesh->getNumFrames () * mesh->numMarkers () * 3);
+  cost->computeLaplacianCoordinates (laplacianCoordinates, x);
+  std::cout << "Laplacian Coordinates" << std::endl;
+  std::cout << laplacianCoordinates << std::endl;
+  std::cout << "X" << std::endl;
+  std::cout << x << std::endl;
+
+  std::cout << "Laplacian Coordinates (again)" << std::endl;
+  cost->computeLaplacianCoordinates (laplacianCoordinates, x);
+  std::cout << laplacianCoordinates << std::endl;
+  std::cout << "X (again)" << std::endl;
+  std::cout << x << std::endl;
+
+  std::cout << "Laplacian Coordinates (again)" << std::endl;
+  cost->computeLaplacianCoordinates (laplacianCoordinates, x);
+  std::cout << laplacianCoordinates << std::endl;
+  std::cout << "X (again)" << std::endl;
+  std::cout << x << std::endl;
+
+  // std::cout << "Cost Function Display" << std::endl;
+  // std::cout << (*cost) << std::endl;
 }

@@ -112,7 +112,7 @@ namespace roboptim
 		motion->jointPosSeq ()->frame (frameId_)[dofId] =
 		  x[offset + dofId];
 
-	      mesh_->update ();
+	      //mesh_->update ();
 	      mesh_->getVertices (frameId_, markerPositions_);
 	      shouldUpdate_ = false;
 	  }

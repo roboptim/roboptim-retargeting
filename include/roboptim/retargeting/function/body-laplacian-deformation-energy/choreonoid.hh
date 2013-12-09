@@ -228,12 +228,15 @@ namespace roboptim
 	// Compute initial Laplacian coordinates.
 	computeLaplacianCoordinates
 	  (originalLaplacianCoordinates_, initialJointsTrajectory);
+	mesh_->update ();
+	computeLaplacianCoordinates
+	  (originalLaplacianCoordinates_, initialJointsTrajectory);
+
       }
 
       virtual ~BodyLaplacianDeformationEnergyChoreonoid () throw ()
       {}
 
-    protected:
       void computeLaplacianCoordinates (vector_t& result,
 					const argument_t& x) const throw ()
       {
@@ -258,26 +261,28 @@ namespace roboptim
 
 	    for (int markerId = 0; markerId < mesh_->numMarkers (); ++markerId)
 	      {
-		const cnoid::BodyIMesh::NeighborList&
-		  neighbors = neighborLists[markerId];
-		for (int l = 0; l < neighbors.size (); ++l)
-		  {
-		    int neighborId = neighbors[l];
-		    double weight =
-		      (markerPositions_.segment (markerId * 3, 3) -
-		       markerPositions_.segment (neighborId * 3, 3)).norm ();
-		    if (std::abs (weight) > 1e-8)
-		      weight = 1. / weight;
+	    	const cnoid::BodyIMesh::NeighborList&
+	    	  neighbors = neighborLists[markerId];
+	    	for (int l = 0; l < neighbors.size (); ++l)
+	    	  {
+	    	    int neighborId = neighbors[l];
+	    	    double weight =
+	    	      (markerPositions_.segment (markerId * 3, 3) -
+	    	       markerPositions_.segment (neighborId * 3, 3)).norm ();
+	    	    if (std::abs (weight) > 1e-8)
+	    	      weight = 1. / weight;
+		    weight = 1.;
 
-		    result.segment
-		      (frameId * mesh_->numMarkers () * 3 + markerId * 3, 3) -=
-		      weight *
-		      markerPositions_.segment (neighborId * 3, 3);
-		  }
+	    	    result.segment
+	    	      (frameId * mesh_->numMarkers () * 3 + markerId * 3, 3) -=
+	    	      weight *
+	    	      markerPositions_.segment (neighborId * 3, 3);
+	    	  }
 	      }
 	  }
       }
 
+    protected:
       void
       impl_compute
       (result_t& result, const argument_t& x)
@@ -342,7 +347,7 @@ namespace roboptim
 	printMatrix (o, originalLaplacianCoordinates_);
 	o<< decindent << iendl;
 
-	o << "Last Computer Laplacian Coordinates" << incindent << iendl;
+	o << "Last Computed Laplacian Coordinates" << incindent << iendl;
 	printMatrix (o, currentLaplacianCoordinates_);
 	o << decindent << iendl;
 

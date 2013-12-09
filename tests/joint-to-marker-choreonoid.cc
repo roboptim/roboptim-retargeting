@@ -56,6 +56,10 @@ Function::vector_t evaluateAndPrintTestResult
 {
   jointToMarker->shouldUpdate ();
   Function::vector_t result = (*jointToMarker) (x);
+  Function::vector_t result2 = (*jointToMarker) (x);
+
+  BOOST_CHECK (allclose (result, result2));
+
   o << "Evaluating joint-to-marker function" << iendl
     << "X:" << incindent << iendl
     << x << decindent << iendl

@@ -220,7 +220,7 @@ public:
     : QWidget (parent)
   {
     //FIXME: for now only HRP-4C is supported.
-    boost::array<QString, 48> dofs = {{
+    boost::array<QString, 6 + 44> dofs = {{
 	"Free floating X",
 	"Free floating Y",
 	"Free floating Z",
@@ -233,12 +233,14 @@ public:
 	"R_KNEE_P",
 	"R_ANKLE_P",
 	"R_ANKLE_R",
+	"R_TOE_P",
 	"L_HIP_Y",
 	"L_HIP_R",
 	"L_HIP_P",
 	"L_KNEE_P",
 	"L_ANKLE_P",
 	"L_ANKLE_R",
+	"L_TOE_P",
 	"CHEST_P",
 	"CHEST_R",
 	"CHEST_Y",
