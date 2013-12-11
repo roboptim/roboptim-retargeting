@@ -549,7 +549,7 @@ private:
   }
 
   void perIterationCallback
-  (roboptim::retargeting::problem::Joint& minimumJerkProblem,
+  (roboptim::retargeting::problem::Joint& problem,
    cnoid::BodyMotionItemPtr bodyMotionItem,
    const solver_t::vector_t& x,
    const solver_t::problem_t&)
@@ -559,17 +559,17 @@ private:
     name % iteration;
     if (folderIteration_)
       addResultToTree
-	(minimumJerkProblem,
+	(problem,
 	 bodyMotionItem, name.str (), x, folderIteration_);
     else
       addResultToTree
-	(minimumJerkProblem,
+	(problem,
 	 bodyMotionItem, name.str (), x);
     ++iteration;
   }
 
   void addResultToTree
-  (roboptim::retargeting::problem::Joint& minimumJerkProblem,
+  (roboptim::retargeting::problem::Joint& problem,
    cnoid::BodyMotionItemPtr bodyMotionItem,
    const std::string& name,
    const solver_t::vector_t& x,
@@ -581,27 +581,27 @@ private:
 
     resultItem->setName (name);
     resultItem->motion ()->setDimension
-      (minimumJerkProblem.nFrames (), minimumJerkProblem.nDofs () - 6);
-    resultItem->motion ()->setFrameRate (1. / minimumJerkProblem.dt ());
+      (problem.nFrames (), problem.nDofs () - 6);
+    resultItem->motion ()->setFrameRate (1. / problem.dt ());
 
     // Copy joint values.
-    for (int frameId = 0; frameId < minimumJerkProblem.nFrames (); ++frameId)
-      for (std::size_t jointId = 0; jointId < minimumJerkProblem.nDofs () - 6;
+    for (int frameId = 0; frameId < problem.nFrames (); ++frameId)
+      for (std::size_t jointId = 0; jointId < problem.nDofs () - 6;
     	   ++jointId)
     	resultItem->jointPosSeqItem ()->seq ()->frame (frameId)[jointId] =
-    	  x[frameId * minimumJerkProblem.nDofs () + 6 + jointId];
+	  x[frameId * problem.nDofs () + 6 + jointId];
 
     // Copy base link positions and attitudes.
-    for (int frameId = 0; frameId < minimumJerkProblem.nFrames (); ++frameId)
-      for (std::size_t jointId = 0; jointId < minimumJerkProblem.nDofs () - 6;
+    for (int frameId = 0; frameId < problem.nFrames (); ++frameId)
+      for (std::size_t jointId = 0; jointId < problem.nDofs () - 6;
     	   ++jointId)
     	{
     	  resultItem->linkPosSeqItem ()->seq ()->frame
     	    (frameId)[jointId].translation () =
-    	    x.segment(frameId * minimumJerkProblem.nDofs (), 3);
+	    x.segment(frameId * problem.nDofs (), 3);
 
     	  cnoid::Vector3 axis =
-    	    x.segment(frameId * minimumJerkProblem.nDofs () + 3, 3);
+	    x.segment(frameId * problem.nDofs () + 3, 3);
     	  double angle = axis.norm ();
 
 	  // If axis norm is null, set to identity manually.
@@ -627,13 +627,13 @@ private:
   }
 
   void addResultToTree
-  (roboptim::retargeting::problem::Joint& minimumJerkProblem,
+  (roboptim::retargeting::problem::Joint& problem,
    cnoid::BodyMotionItemPtr bodyMotionItem,
    const std::string& name,
    const solver_t::vector_t& x)
   {
     addResultToTree
-      (minimumJerkProblem, bodyMotionItem, name, x, rootItem_);
+      (problem, bodyMotionItem, name, x, rootItem_);
   }
 
   void buildProblemAndOptimize (cnoid::BodyIMeshPtr mesh,
@@ -700,10 +700,10 @@ private:
     using roboptim::retargeting::problem::Joint;
 
     roboptim::retargeting::problem::JointShPtr_t
-      minimumJerkProblem;
+      problem;
 
     if (trajectoryType == "interpolation")
-      minimumJerkProblem =
+      problem =
 	roboptim::retargeting::problem::Joint
 	::buildVectorInterpolationBasedOptimizationProblem
 	(robot, bodyMotionItem->motion (), mesh,
@@ -712,7 +712,7 @@ private:
 	 enableTorque, enableZmp, solverName,
 	 enabledDofs);
     else if (trajectoryType == "cubic-spline")
-      minimumJerkProblem =
+      problem =
 	roboptim::retargeting::problem::Joint
 	::buildSplineBasedOptimizationProblem
 	(robot, bodyMotionItem->motion (), nNodes,
@@ -726,19 +726,19 @@ private:
 
     solver_t::callback_t cb = boost::bind
       (&JointPlugin::perIterationCallback,
-       this, *minimumJerkProblem, bodyMotionItem, _1, _2);
-    minimumJerkProblem->additionalCallback () = cb;
+       this, *problem, bodyMotionItem, _1, _2);
+    problem->additionalCallback () = cb;
 
-    if (minimumJerkProblem->problem ()->startingPoint ())
+    if (problem->problem ()->startingPoint ())
       addResultToTree
-	(*minimumJerkProblem,
+	(*problem,
 	 bodyMotionItem,
 	 "initial trajectory",
-	 *(minimumJerkProblem->problem ()->startingPoint ()));
+	 *(problem->problem ()->startingPoint ()));
 
     try
       {
-	minimumJerkProblem->solve ();
+	problem->solve ();
       }
     catch (std::runtime_error& e)
       {
@@ -761,10 +761,10 @@ private:
 
     // Populate result.
     // Check if the minimization has succeed.
-    if (minimumJerkProblem->result ().which () == solver_t::SOLVER_ERROR)
+    if (problem->result ().which () == solver_t::SOLVER_ERROR)
       {
 	const roboptim::SolverError& result =
-	  boost::get<roboptim::SolverError> (minimumJerkProblem->result ());
+	  boost::get<roboptim::SolverError> (problem->result ());
 	if (result.lastState ())
 	  x = result.lastState ()->x;
 	else
@@ -774,7 +774,7 @@ private:
 	ss << "No solution has been found. Failing..."
 	   << std::endl
 	   << boost::get<roboptim::SolverError>
-	  (minimumJerkProblem->result ()).what ();
+	  (problem->result ()).what ();
 
 	cnoid::callSynchronously
 	  (boost::bind
@@ -784,12 +784,12 @@ private:
 	  (boost::bind (&QMessageBox::exec, boost::ref (nosolutionBox_)));
 	cnoid::MessageView::mainInstance ()->putln (ss.str ());
       }
-    else if (minimumJerkProblem->result ().which () ==
+    else if (problem->result ().which () ==
 	     solver_t::SOLVER_VALUE_WARNINGS)
       {
 	const roboptim::Result& result =
 	  boost::get<roboptim::ResultWithWarnings>
-	  (minimumJerkProblem->result ());
+	  (problem->result ());
 	x = result.x;
 
 	std::stringstream ss;
@@ -803,10 +803,10 @@ private:
 
 	LOG4CXX_WARN (logger, "solver warnings: " << result);
       }
-    else if (minimumJerkProblem->result ().which () == solver_t::SOLVER_VALUE)
+    else if (problem->result ().which () == solver_t::SOLVER_VALUE)
       {
 	const roboptim::Result& result =
-	  boost::get<roboptim::Result> (minimumJerkProblem->result ());
+	  boost::get<roboptim::Result> (problem->result ());
 	x = result.x;
 
 	std::stringstream ss;
@@ -846,7 +846,7 @@ private:
       }
 
     addResultToTree
-      (*minimumJerkProblem, bodyMotionItem, "final result", x);
+      (*problem, bodyMotionItem, "final result", x);
     cnoid::MessageView::mainInstance ()->putln ("Roboptim Joint Optimization - end");
     if (menuItem_)
       menuItem_->setEnabled (true);
