@@ -77,10 +77,11 @@ namespace roboptim
       {}
     protected:
       virtual
-      void perIterationCallbackUnsafe (const typename solver_t::vector_t& x,
-				       const typename solver_t::problem_t& pb)
+      void perIterationCallbackUnsafe
+      (const typename solver_t::problem_t& pb,
+       typename solver_t::solverState_t& solverState)
       {
-	OptimizationLogger<T>::perIterationCallbackUnsafe (x, pb);
+	OptimizationLogger<T>::perIterationCallbackUnsafe (pb, solverState);
 
 	boost::filesystem::path path = this->path ();
 	const boost::filesystem::path iterationPath =
@@ -99,7 +100,7 @@ namespace roboptim
 
 	    for (value_type t = tmin; t + dt < tmax; t += dt)
 	      {
-		trajectory_->setParameters (x);
+		trajectory_->setParameters (solverState.x ());
 		vector_t state = trajectory_->state (t, 2);
 		vector_t zmp = (*zmp_) (state);
 		streamZmp << zmp[0] << ", " << zmp[1] << "\n";
@@ -109,7 +110,7 @@ namespace roboptim
 
 	// Call additional callback.
 	if (additionalCallback_)
-	  additionalCallback_ (x, pb);
+	  additionalCallback_ (pb, solverState);
       }
 
     private:

@@ -587,8 +587,8 @@ private:
   void perIterationCallback
   (roboptim::retargeting::problem::MinimumJerk& minimumJerkProblem,
    cnoid::BodyMotionItemPtr bodyMotionItem,
-   const solver_t::vector_t& x,
-   const solver_t::problem_t&)
+   const solver_t::problem_t&,
+   solver_t::solverState_t& solverState)
   {
     static int iteration = 0;
     boost::format name ("iteration %d");
@@ -596,11 +596,11 @@ private:
     if (folderIteration_)
       addResultToTree
 	(minimumJerkProblem,
-	 bodyMotionItem, name.str (), x, folderIteration_);
+	 bodyMotionItem, name.str (), solverState.x (), folderIteration_);
     else
       addResultToTree
 	(minimumJerkProblem,
-	 bodyMotionItem, name.str (), x);
+	 bodyMotionItem, name.str (), solverState.x ());
     ++iteration;
   }
 
