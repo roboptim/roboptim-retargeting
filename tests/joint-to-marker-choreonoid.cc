@@ -31,6 +31,7 @@
 #include <cnoid/BodyMotion>
 
 #include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
 #include <visualization_msgs/Marker.h>
 
 #include "tests-config.h"
@@ -111,12 +112,11 @@ BOOST_AUTO_TEST_CASE (simple)
   ros::init(argc, argv, "roboptim_retargeting");
   ros::NodeHandle n;
   ros::Rate r(1);
-  ros::Publisher marker_pub =
+  ros::Publisher markerPub =
     n.advertise<visualization_msgs::Marker>("roboptim_retargeting", 1, true);
 
   // Set our initial shape type to be a cube
   uint32_t shape = visualization_msgs::Marker::SPHERE_LIST;
-
 
   visualization_msgs::Marker marker;
   marker.header.frame_id = "/world";
@@ -151,6 +151,27 @@ BOOST_AUTO_TEST_CASE (simple)
   marker.lifetime = ros::Duration();
 
 
+  // Joint state
+  ros::Publisher jointStatePub =
+    n.advertise<sensor_msgs::JointState>("joint_states", 1, true);
+  sensor_msgs::JointState jointState;
+  jointState.header.seq = 0;
+  jointState.header.stamp = ros::Time::now ();
+  jointState.header.frame_id = "";
+
+  jointState.name.resize(robot->numJoints ());
+  for (int i = 0; i < robot->numJoints (); ++i)
+    {
+      cnoid::Link* link = robot->joint (i);
+      if (link && link->index () != -1)
+	jointState.name[i] = link->name ();
+      else
+	jointState.name[i] = "missing";
+    }
+  jointState.position.resize(robot->numJoints ());
+  jointState.velocity.resize(0);
+  jointState.effort.resize(0);
+
 
   for (int frameId = 0; frameId < bodyMotion->numFrames (); ++frameId)
     {
@@ -168,7 +189,17 @@ BOOST_AUTO_TEST_CASE (simple)
 	  << iendl;
 	std::cout << iendl;
 
-	// Publish the marker
+	// Fill joint state information
+	for (int i = 0; i < robot->numJoints (); ++i)
+	  {
+	    cnoid::Link* link = robot->joint (i);
+	    if (link && link->index () != -1)
+	      jointState.position[i] = link->q ();
+	    else
+	      jointState.position[i] = 0.;
+	  }
+
+	// Fill marker information
 	marker.points.resize (result.size() / 3);
 	for (int i = 0; i < marker.points.size (); ++i)
 	  {
@@ -196,6 +227,8 @@ BOOST_AUTO_TEST_CASE (simple)
 	}
     }
 
-  marker_pub.publish(marker);
+  // Publish topics
+  jointStatePub.publish(jointState);
+  markerPub.publish(marker);
   r.sleep();
 }

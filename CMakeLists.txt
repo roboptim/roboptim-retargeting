@@ -63,6 +63,7 @@ ADD_REQUIRED_DEPENDENCY("choreonoid")
 ADD_REQUIRED_DEPENDENCY("choreonoid-body-plugin")
 
 ADD_REQUIRED_DEPENDENCY("roscpp")
+ADD_REQUIRED_DEPENDENCY("sensor_msgs")
 ADD_REQUIRED_DEPENDENCY("visualization_msgs")
 
 HEADER_INSTALL("${HEADERS}")
