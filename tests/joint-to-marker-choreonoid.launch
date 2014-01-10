@@ -16,7 +16,7 @@ Launch:
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!-- Create a transform sender for linking these frames. -->
-  <node name="tf_world_to_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /world /base_link 40" />
+  <node name="tf_world_to_base" pkg="tf" type="static_transform_publisher" args="0 0 0.6 0 0 0 /world /base_link 40" />
 
   <!-- Launch rviz -->
   <node name="rviz" pkg="rviz" type="rviz" />

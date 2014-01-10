@@ -46,7 +46,7 @@ using boost::test_tools::output_test_stream;
 std::string modelFilePath
 ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
 std::string bodyMotionPath
-("/home/moulard/29_07-hrp4c-initial-short.yaml");
+("/home/moulard/29_07-hrp4c-initial.yaml");
 
 
 typedef
@@ -115,15 +115,12 @@ BOOST_AUTO_TEST_CASE (simple)
   ros::Publisher markerPub =
     n.advertise<visualization_msgs::Marker>("roboptim_retargeting", 1, true);
 
-  // Set our initial shape type to be a cube
-  uint32_t shape = visualization_msgs::Marker::SPHERE_LIST;
-
   visualization_msgs::Marker marker;
   marker.header.frame_id = "/world";
   marker.header.stamp = ros::Time::now();
   marker.ns = "markers";
   marker.id = 0;
-  marker.type = shape;
+  marker.type = visualization_msgs::Marker::SPHERE_LIST;
 
   // Set the marker action.  Options are ADD and DELETE
   marker.action = visualization_msgs::Marker::ADD;
@@ -179,9 +176,18 @@ BOOST_AUTO_TEST_CASE (simple)
 
       jointToMarker->frameId () = frameId;
 
-      // x = 0
       {
-	x.setZero ();
+	x.segment(0, 3) =
+	  bodyMotion->linkPosSeq ()->frame (frameId)[0].translation ();
+	x.segment(3, 3) =
+	  bodyMotion->linkPosSeq ()->frame
+	  (frameId)[0].rotation ().norm ()
+	  * bodyMotion->linkPosSeq ()->frame
+	  (frameId)[0].rotation ().vec ();
+
+	for (int dofId = 0; dofId < bodyMotion->numJoints (); ++dofId)
+	  x[6 + dofId] = bodyMotion->jointPosSeq ()->frame (frameId)[dofId];
+
 	result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
 	std::cout
 	  << "Gradient:" << incindent << iendl
@@ -207,28 +213,20 @@ BOOST_AUTO_TEST_CASE (simple)
 	    marker.points[i].y = result[i * 3 + 1];
 	    marker.points[i].z = result[i * 3 + 2];
 	  }
+
+	// Publish topics
+	std::cout << "publishing frame " << frameId << std::endl;
+
+	++jointState.header.seq;
+	jointState.header.stamp = ros::Time::now ();
+	jointStatePub.publish(jointState);
+
+	++marker.header.seq;
+	marker.header.stamp = ros::Time::now();
+	markerPub.publish(marker);
+	r.sleep();
+	if (!ros::ok ())
+	  return;
       }
-
-      // translate 1 meter front in X, Y and Z directions to check
-      // for translation handling.
-      previousResult = result;
-      for (int i = 0; i < 3; ++ i)
-	{
-	  x.setZero ();
-	  x[i] = 1.;
-	  result = evaluateAndPrintTestResult (std::cout, jointToMarker, x);
-	  std::cout << iendl;
-
-	  for (int idx = 0; idx < result.size (); ++idx)
-	    if (idx % 3 == i)
-	      BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 1., 1e-6);
-	    else
-	      BOOST_CHECK_CLOSE (result[idx] - previousResult[idx], 0., 1e-6);
-	}
     }
-
-  // Publish topics
-  jointStatePub.publish(jointState);
-  markerPub.publish(marker);
-  r.sleep();
 }
