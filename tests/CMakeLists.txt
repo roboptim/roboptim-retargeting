@@ -26,6 +26,10 @@ MACRO(ROBOPTIM_RETARGETING_TEST NAME)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid-body-plugin)
 
+  # ROS
+  PKG_CONFIG_USE_DEPENDENCY(${NAME} roscpp)
+  PKG_CONFIG_USE_DEPENDENCY(${NAME} visualization_msgs)
+
   # Misc.
   TARGET_LINK_LIBRARIES(${NAME} blas lapack
     CnoidBody CnoidMocap CnoidMocapPlugin)

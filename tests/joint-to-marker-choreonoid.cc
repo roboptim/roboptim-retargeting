@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
 
-
 #define BOOST_TEST_MODULE choreonoid_body_trajectory
 
 #include <boost/test/unit_test.hpp>
@@ -30,6 +29,9 @@
 
 #include <cnoid/BodyLoader>
 #include <cnoid/BodyMotion>
+
+#include <ros/ros.h>
+#include <visualization_msgs/Marker.h>
 
 #include "tests-config.h"
 
@@ -102,6 +104,16 @@ BOOST_AUTO_TEST_CASE (simple)
     std::cout << (*jointToMarker) << iendl;
     std::cout << iendl;
   }
+
+  // Initialize ROS.
+  int argc = 1;
+  char* argv[] = {"joint-to-marker-choreonoid"};
+  ros::init(argc, argv, "roboptim_retargeting");
+  ros::NodeHandle n;
+  ros::Rate r(1);
+  ros::Publisher marker_pub =
+    n.advertise<visualization_msgs::Marker>("roboptim_retargeting", 1);
+
 
   for (int frameId = 0; frameId < bodyMotion->numFrames (); ++frameId)
     {
