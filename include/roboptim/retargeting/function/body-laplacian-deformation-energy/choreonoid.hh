@@ -351,6 +351,29 @@ namespace roboptim
 	printMatrix (o, currentLaplacianCoordinates_);
 	o << decindent << iendl;
 
+	o << "Neighbors" << incindent << iendl;
+	for (int frameId = 0; frameId < nFrames_; ++frameId)
+	  {
+	    o << "frame " << frameId << incindent << iendl;
+	    const cnoid::BodyIMesh::Frame& neighborLists =
+	      mesh_->frame (frameId);
+	    for (int markerId = 0; markerId < mesh_->numMarkers (); ++markerId)
+	      {
+		o << "marker " << markerId << incindent << iendl;
+		const cnoid::BodyIMesh::NeighborList&
+		  neighbors = neighborLists[markerId];
+		for (int l = 0; l < neighbors.size (); ++l)
+		  {
+		    if (l != 0)
+		      o << ", ";
+		    o << neighbors[l];
+		  }
+		o << decindent << iendl;
+	      }
+	    o << decindent << iendl;
+	  }
+	o << decindent << iendl;
+
 	return o;
       }
 
