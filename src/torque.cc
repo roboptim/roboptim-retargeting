@@ -69,9 +69,9 @@ namespace roboptim
 	robot_t robot;
 	getJointIdVisitor visitor;
 	visitor.jointName = jointName;
-	unsigned res =
-	  boost::fusion::fold (robot.nodes, -1, visitor);
-	if (res == -1)
+	// unsigned res =
+	//   boost::fusion::fold (robot.nodes, -1, visitor);
+	// if (res == -1)
 	  throw std::runtime_error ("joint lookup failed");
       }
     } // end of anonymous namespace.

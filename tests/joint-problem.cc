@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   //FIXME: we should embed the copy.
   std::string modelFilePath
-    ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+    ("/home/jrluser/profiles/default-i686-linux-ubuntu-10.04.4/src/roboptim/roboptim-retargeting/chorenoid/HRP4C-release/HRP4Cg2.yaml");
 
   // Loading robot.
   cnoid::BodyLoader loader;
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE (simple)
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
   //FIXME: we should embed the copy.
-  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial-short.yaml");
+  bodyMotion->loadStandardYAMLformat ("/home/jrluser/profiles/default-i686-linux-ubuntu-10.04.4/src/roboptim/roboptim-retargeting/chorenoid/29_07-hrp4c-initial-short.yaml");
 
   // Body Interaction Mesh
   cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE (simple)
   bool enableCollision = false;
   bool enableTorque = false;
   bool enableZmp = false;
-  std::string solverName = "cfsqp";
+  std::string solverName = "nag-nlp";
   std::vector<bool> enabledDofs (6 + 44, true);
 
   // Disable useless dofs.

@@ -27,6 +27,9 @@ namespace roboptim
 	cnoid::Vector3 com;
 	cnoid::Vector3 P;
 	cnoid::Vector3 L;
+
+      public:
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
       };
 
 
@@ -225,6 +228,9 @@ namespace roboptim
       ///
       /// [ \dot{\delta_y}, \dot{\delta_x}]
       mutable cnoid::Vector2 dL_reordered_;
+
+    public:
+      EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   // Loading robot.
   cnoid::BodyLoader loader;
-  cnoid::BodyPtr body = loader.load ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+  cnoid::BodyPtr body = loader.load ("/home/jrluser/profiles/default-i686-linux-ubuntu-10.04.4/src/roboptim/roboptim-retargeting/chorenoid/HRP4C-release/HRP4Cg2.yaml");
   if (!body)
     throw std::runtime_error ("failed to load model");
 

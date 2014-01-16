@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE (simple)
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
   //FIXME: we should embed the copy.
-  bodyMotion->loadStandardYAMLformat ("/home/moulard/29_07-hrp4c-initial-short.yaml");
+  bodyMotion->loadStandardYAMLformat ("/home/jrluser/profiles/default-i686-linux-ubuntu-10.04.4/src/roboptim/roboptim-retargeting/chorenoid/29_07-hrp4c-initial-short.yaml");
 
   ChoreonoidBodyTrajectory trajectory (bodyMotion, true);
 

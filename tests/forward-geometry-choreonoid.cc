@@ -20,7 +20,7 @@ using namespace roboptim::retargeting;
 
 //FIXME: we should embed the copy.
 std::string modelFilePath
-("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
+("/home/jrluser/profiles/default-i686-linux-ubuntu-10.04.4/src/roboptim/roboptim-retargeting/chorenoid/HRP4C-release/HRP4Cg2.yaml");
 
 BOOST_AUTO_TEST_CASE (root_link)
 {

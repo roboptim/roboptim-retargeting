@@ -679,7 +679,8 @@ namespace roboptim
 		  ZMPMetapod<EigenMatrixDense, metapod::hrp4g2<double> > > ();
 	    else
 	      zmp_ =
-		boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot_);
+		boost::shared_ptr<ZMPChoreonoid<EigenMatrixDense> >
+		(new ZMPChoreonoid<EigenMatrixDense> (robot_));
 
 	    // Bind and select to filter dofs.
 	    zmp_ = bind (zmp_, boundDofsStateFunction3);
