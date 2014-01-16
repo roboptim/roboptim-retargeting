@@ -115,6 +115,6 @@ BOOST_AUTO_TEST_CASE (simple)
   std::cout << "X (again)" << std::endl;
   std::cout << x << std::endl;
 
-  // std::cout << "Cost Function Display" << std::endl;
-  // std::cout << (*cost) << std::endl;
+  std::cout << "Cost Function Display" << std::endl;
+  std::cout << (*cost) << std::endl;
 }
