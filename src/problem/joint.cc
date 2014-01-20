@@ -547,33 +547,30 @@ namespace roboptim
 		GenericNumericLinearFunction<EigenMatrixDense> >
 	      (A, b);
 
-	    // Bind and select to filter dofs.
-	    velocityOneFrame = selectionById (velocityOneFrame,
-					      enabledDofs_);
-	    velocityOneFrame = bind (velocityOneFrame, boundDofsStateFunction2);
-
-	    std::vector<interval_t> velocityBounds
-	      (velocityOneFrame->outputSize ());
+	    std::vector<interval_t> velocityBounds (nEnabledDofs);
 	    std::size_t id = 0;
-	    for (std::size_t jointId = 0;
-		 jointId < robot_->numJoints (); ++jointId)
+	    for (std::size_t jointId = 0; jointId < 6 + robot_->numJoints (); ++jointId)
 	      {
 		if (jointId < 6)
-		  {
-		    ++id;
-		    continue;
-		  }
-		if (enabledDofs_[jointId])
+		  velocityBounds[id++] = Function::makeInfiniteInterval ();
+		else if (enabledDofs_[jointId])
 		  velocityBounds[id++] = Function::makeInterval
 		    (robot_->joint (jointId - 6)->dq_lower (),
 		     robot_->joint (jointId - 6)->dq_upper ());
 	      }
-	    std::vector<value_type> velocityScales
-	      (velocityOneFrame->outputSize (), 1.);
+	    std::vector<value_type> velocityScales (nEnabledDofs, 1.);
 
-	    roboptim::StateFunction<Trajectory<3> >::addToProblem
-	      (*trajectoryConstraints_, velocityOneFrame, 1,
-	       *problem_, velocityBounds, velocityScales, nConstraints);
+	    for (unsigned i = 0; i < nConstraints; ++i)
+	      {
+		const value_type t = (i + 1.) / (nConstraints + 1.);
+		assert (t > 0. && t < 1.);
+		boost::shared_ptr<DerivableFunction> constraint
+		  (new roboptim::StateFunction<Trajectory<3> >
+		   (*trajectoryConstraints_, velocityOneFrame, t * tMax, 1));
+		constraint = bind(constraint, boundDofsAllFrames);
+		constraint = selectionById (constraint, enabledDofs_);
+		problem_->addConstraint (constraint, velocityBounds, velocityScales);
+	      }
 	  }
 	if (enableTorque)
 	  {

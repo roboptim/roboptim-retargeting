@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE (simple)
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
   bool enableFreeze = true;
-  bool enableVelocity = false;
+  bool enableVelocity = true;
   bool enablePosition = false;
   bool enableCollision = false;
   bool enableTorque = false;
