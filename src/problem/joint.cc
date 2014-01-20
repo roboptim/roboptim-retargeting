@@ -457,8 +457,8 @@ namespace roboptim
 	      {
 		if (!enabledDofs_[jointId])
 		  continue;
-		b[jointIdFiltered++] = (jointId < 6)
-		  ? -standardPose[jointId] : -standardPose[jointId] * M_PI / 180.;
+		b[jointIdFiltered] = -(*problem_->startingPoint ())[jointIdFiltered];
+		jointIdFiltered++;
 	      }
 	    assert (jointIdFiltered == b.size ());
 
