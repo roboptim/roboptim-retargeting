@@ -225,22 +225,25 @@ namespace roboptim
 	boost::shared_ptr<DifferentiableFunction> initialTrajectoryFct =
 	  initialTrajectory;
 
-	// Build the full trajectory.
+	// Build the full starting point.
+	// Project unused DOFs on standard pose.
 	vector_t xComplete = initialTrajectory->parameters ();
+	for (std::size_t frame = 0; frame < initialMotion->numFrames (); ++frame)
+	  for (std::size_t jointId = 0;
+	       jointId < standardPose.size (); ++jointId)
+	    if (!enabledDofs[jointId])
+	      xComplete[frame * standardPose.size () + jointId] =
+		standardPose[jointId];
+
 
 	// Prune the starting point from useless DOFs
-	initialTrajectoryFct =
-	  selectionById (initialTrajectoryFct, enabledDofs);
-
 	vector_t x (nEnabledDofs * initialMotion->getNumFrames ());
-	vector_t t (1);
-	for (int frameId = 0;
-	     frameId < initialMotion->getNumFrames (); ++frameId)
-	  {
-	    t[0] = frameId * (1. / initialMotion->frameRate ());
-	    x.segment (frameId * nEnabledDofs, nEnabledDofs) =
-	      (*initialTrajectoryFct) (t);
-	  }
+	size_t i = 0;
+	for (std::size_t frame = 0; frame < initialMotion->numFrames (); ++frame)
+	  for (std::size_t jointId = 0;
+	       jointId < standardPose.size (); ++jointId)
+	    if (enabledDofs[jointId])
+	      x[i++] = xComplete[frame * standardPose.size () + jointId];
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
@@ -256,7 +259,7 @@ namespace roboptim
 	minimumJerk->cost_ =
 	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
 	    EigenMatrixDense> >
-	  (mesh, nEnabledDofs, initialMotion->getNumFrames (), x,
+	  (mesh, nEnabledDofs, initialMotion->getNumFrames (), xComplete,
 	   jointToMarker, jointToMarkerOrigin);
 	minimumJerk->cost_ = bind (minimumJerk->cost_, boundDofsAllFrames);
 
@@ -269,6 +272,9 @@ namespace roboptim
 	minimumJerk->problem_ =
 	  boost::make_shared<problem_t> (*minimumJerk->cost_);
 	minimumJerk->problem_->startingPoint () = x;
+
+	// Initial cost value *must* be zero.
+	assert ((*minimumJerk->cost_) (x)[0] == 0.);
 
 	minimumJerk->addConstraints
 	  (enableFreezeFrame,

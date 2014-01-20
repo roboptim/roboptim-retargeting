@@ -211,7 +211,7 @@ namespace roboptim
       {
 	if (mesh_->getNumFrames () != nFrames)
 	  throw std::runtime_error ("invalid number of frames");
-	if (initialJointsTrajectory.size () != nFrames * nDofs)
+	if (initialJointsTrajectory.size () != this->inputSize ())
 	  {
 	    boost::format fmt
 	      ("invalid size for initial joint trajectory"
@@ -231,7 +231,6 @@ namespace roboptim
 	mesh_->update ();
 	computeLaplacianCoordinates
 	  (originalLaplacianCoordinates_, initialJointsTrajectory);
-
       }
 
       virtual ~BodyLaplacianDeformationEnergyChoreonoid () throw ()
@@ -271,7 +270,7 @@ namespace roboptim
 	    	       markerPositions_.segment (neighborId * 3, 3)).norm ();
 	    	    if (std::abs (weight) > 1e-8)
 	    	      weight = 1. / weight;
-		    weight = 1.;
+		    weight = 1.; //FIXME: WEIGHTS ARE DISABLED FOR NOW !!!!!!!
 
 	    	    result.segment
 	    	      (frameId * mesh_->numMarkers () * 3 + markerId * 3, 3) -=
