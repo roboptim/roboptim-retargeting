@@ -479,8 +479,14 @@ namespace roboptim
 	    unsigned nConstraints = nFrames_ - 2;
 
 	    vector_t qInitial (6 + robot_->numJoints ());
+	    size_t dofIdReduced = 0;
 	    for (std::size_t dofId = 0; dofId < qInitial.size (); ++dofId)
-	      qInitial[dofId] = standardPose[dofId];
+	      {
+		if (enabledDofs_[dofId])
+		  qInitial[dofId] = (*problem_->startingPoint ())[dofIdReduced++];
+		else
+		  qInitial[dofId] = standardPose[dofId];
+	      }
 
 	    typedef ForwardGeometryChoreonoid<EigenMatrixDense>
 	      forwardGeometry_t;
@@ -492,18 +498,12 @@ namespace roboptim
 
 	    forwardGeometry_t::vector_t leftFootPosition =
 	      (*positions_[0]) (qInitial);
+	    std::cout << "Q INITIQL" << std::endl << qInitial << std::endl;
 	    std::vector<interval_t> leftFootBounds (leftFootPosition.size ());
 	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
 	      leftFootBounds[i] = forwardGeometry_t::makeInterval
 		(leftFootPosition[i], leftFootPosition[i]);
 	    std::vector<value_type> leftFootScales (leftFootPosition.size (), 1.);
-
-	    // Bind to filter dofs.
-	    positions_[0] = bind (positions_[0], boundDofs);
-
-	    roboptim::StateFunction<Trajectory<3> >::addToProblem
-	      (*trajectoryConstraints_, positions_[0], 0,
-	       *problem_, leftFootBounds, leftFootScales, nConstraints);
 
 	    // Right foot.
 	    positions_[1] =
@@ -519,12 +519,26 @@ namespace roboptim
 	    std::vector<value_type> rightFootScales
 	      (rightFootPosition.size (), 1.);
 
-	    // Bind to filter dof.
-	    positions_[1] = bind (positions_[1], boundDofs);
-
-	    roboptim::StateFunction<Trajectory<3> >::addToProblem
-	      (*trajectoryConstraints_, positions_[1], 0,
-	       *problem_, rightFootBounds, rightFootScales, nConstraints);
+	    for (unsigned i = 0; i < nConstraints; ++i)
+	      {
+		const value_type t = i / (nConstraints - 1.);
+		{
+		  boost::shared_ptr<DerivableFunction> constraint
+		    (new roboptim::StateFunction<Trajectory<3> >
+		     (*trajectoryConstraints_, positions_[0], t * tMax, 0));
+		  // Bind to filter dofs.
+		  constraint = bind(constraint, boundDofsAllFrames);
+		  problem_->addConstraint (constraint, leftFootBounds, leftFootScales);
+		}
+		{
+		  boost::shared_ptr<DerivableFunction> constraint
+		    (new roboptim::StateFunction<Trajectory<3> >
+		     (*trajectoryConstraints_, positions_[1], t * tMax, 0));
+		  // Bind to filter dofs.
+		  constraint = bind(constraint, boundDofsAllFrames);
+		  problem_->addConstraint (constraint, rightFootBounds, rightFootScales);
+		}
+	      }
 	  }
 
 	boost::shared_ptr<GenericLinearFunction<EigenMatrixDense> >
