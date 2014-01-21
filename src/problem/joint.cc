@@ -498,7 +498,7 @@ namespace roboptim
 
 	    forwardGeometry_t::vector_t leftFootPosition =
 	      (*positions_[0]) (qInitial);
-	    std::cout << "Q INITIQL" << std::endl << qInitial << std::endl;
+
 	    std::vector<interval_t> leftFootBounds (leftFootPosition.size ());
 	    for (std::size_t i = 0; i < leftFootPosition.size (); ++i)
 	      leftFootBounds[i] = forwardGeometry_t::makeInterval
@@ -667,9 +667,16 @@ namespace roboptim
 	      if (enabledDofs_[jointId])
 		torqueBoundsFiltered[id++] = torqueBounds[jointId];
 
-	    roboptim::StateFunction<Trajectory<3> >::addToProblem
-	      (*trajectoryConstraints_, torque_, 2,
-	       *problem_, torqueBoundsFiltered, torqueScales, nConstraints);
+	    for (unsigned i = 0; i < nConstraints; ++i)
+	      {
+		const value_type t = (i + 1.) / (nConstraints + 1.);
+		assert (t > 0. && t < 1.);
+		boost::shared_ptr<DerivableFunction> constraint
+		  (new roboptim::StateFunction<Trajectory<3> >
+		   (*trajectoryConstraints_, torque_, t * tMax, 2));
+		constraint = bind(constraint, boundDofsAllFrames);
+		problem_->addConstraint (constraint, torqueBoundsFiltered, torqueScales);
+	      }
 	  }
 	if (enableZmp)
 	  {
@@ -695,12 +702,16 @@ namespace roboptim
 	      zmp_ =
 		boost::make_shared<ZMPChoreonoid<EigenMatrixDense> > (robot_);
 
-	    // Bind and select to filter dofs.
-	    zmp_ = bind (zmp_, boundDofsStateFunction3);
-
-	    roboptim::StateFunction<Trajectory<3> >::addToProblem
-	      (*trajectoryConstraints_, zmp_, 2,
-	       *problem_, zmpBounds, zmpScales, nConstraints);
+	    for (unsigned i = 0; i < nConstraints; ++i)
+	      {
+		const value_type t = (i + 1.) / (nConstraints + 1.);
+		assert (t > 0. && t < 1.);
+		boost::shared_ptr<DerivableFunction> constraint
+		  (new roboptim::StateFunction<Trajectory<3> >
+		   (*trajectoryConstraints_, zmp_, t * tMax, 2));
+		constraint = bind(constraint, boundDofsAllFrames);
+		problem_->addConstraint (constraint, zmpBounds, zmpScales);
+	      }
 	  }
       }
 

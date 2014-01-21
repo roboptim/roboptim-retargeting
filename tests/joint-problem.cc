@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE (simple)
   bool enablePosition = true;
   bool enableCollision = false;
   bool enableTorque = false;
-  bool enableZmp = false;
+  bool enableZmp = true;
   std::string solverName = "cfsqp";
   std::vector<bool> enabledDofs (6 + 44, true);
 
