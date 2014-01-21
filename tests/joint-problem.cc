@@ -44,6 +44,18 @@ using namespace roboptim::retargeting;
 
 using boost::test_tools::output_test_stream;
 
+static boost::array<double, 6 + 44> standardPose = {{
+    0, 0, 0.6, 0, 0, 0, //FIXME: double check robot height
+
+    0, 0, -25, 50, -25, 0, 0,
+    0, 0, -25, 50, -25, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    -1.0, 1.0, 0, 0, 0, -1.0, 1.0, -1.0,
+    5, -10, 0, -15, 0,  10,  1.0, 0,
+    5,  10, 0, -15, 0, -10, -1.0, 0
+  }};
+
 void writeBodyMotion (const std::string& filename,
 		      boost::shared_ptr<VectorInterpolation > result)
 {
@@ -232,16 +244,17 @@ BOOST_AUTO_TEST_CASE (simple)
   boost::shared_ptr<VectorInterpolation >
     finalTrajectoryFct;
 
+  Function::vector_t finalX ((6 + 44) * bodyMotion->numFrames ());
+  finalX.setZero ();
+  Function::vector_t finalXReduced;
+
   if (jointProblem->result ().which () == solver_t::SOLVER_VALUE_WARNINGS)
     {
       std::cerr << "warnings" << std::endl;
       roboptim::ResultWithWarnings result =
   	boost::get<roboptim::ResultWithWarnings> (jointProblem->result ());
       std::cerr << "Result:\n" << result << std::endl;
-      finalTrajectoryFct =
-	vectorInterpolation
-	(result.x, static_cast<size_type> (jointProblem->nDofs ()),
-	 jointProblem->dt ());
+      finalXReduced = result.x;
     }
 
   if (jointProblem->result ().which () == solver_t::SOLVER_VALUE)
@@ -250,11 +263,28 @@ BOOST_AUTO_TEST_CASE (simple)
       roboptim::Result result =
 	boost::get<roboptim::Result> (jointProblem->result ());
       std::cerr << "Result:\n" << result << std::endl;
-      finalTrajectoryFct =
-	vectorInterpolation
-	(result.x, static_cast<size_type> (jointProblem->nDofs ()),
-	 jointProblem->dt ());
+      finalXReduced = result.x;
     }
+
+  // Re-expend trajectory.
+  std::size_t nEnabledDofs =
+    std::count (enabledDofs.begin (), enabledDofs.end (), true);
+  for (std::size_t frameId = 0; frameId < bodyMotion->numFrames (); ++frameId)
+    {
+      std::size_t jointIdReduced = 0;
+      for (std::size_t jointId = 0; jointId < 6 + 44; ++jointId)
+	{
+	  if (enabledDofs[jointId])
+	    finalX[frameId * (6 + 44) + jointId] = finalXReduced[frameId * (6 + 44 - nEnabledDofs) + jointIdReduced++];
+	  else
+	    finalX[frameId * (6 + 44) + jointId] = standardPose[jointId];
+	}
+    }
+
+  finalTrajectoryFct =
+    vectorInterpolation
+    (finalX, 6 + 44,
+     jointProblem->dt ());
 
   assert (!!finalTrajectoryFct);
 
