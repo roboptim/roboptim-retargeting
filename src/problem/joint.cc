@@ -521,7 +521,8 @@ namespace roboptim
 
 	    for (unsigned i = 0; i < nConstraints; ++i)
 	      {
-		const value_type t = i / (nConstraints - 1.);
+		const value_type t = (i + 1.) / (nConstraints + 1.);
+		assert (t > 0. && t < 1.);
 		{
 		  boost::shared_ptr<DerivableFunction> constraint
 		    (new roboptim::StateFunction<Trajectory<3> >
