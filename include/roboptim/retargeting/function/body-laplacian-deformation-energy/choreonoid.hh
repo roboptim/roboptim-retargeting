@@ -187,21 +187,17 @@ namespace roboptim
 
       explicit BodyLaplacianDeformationEnergyChoreonoid
       (cnoid::BodyIMeshPtr mesh,
-       const std::size_t nDofs,
-       const std::size_t nFrames,
        const vector_t& initialJointsTrajectory,
-       boost::shared_ptr<GenericDifferentiableFunction<T> > jointToMarker,
        boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
-       jointToMarkerOrigin)
+       jointToMarker)
 	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
-	  (nFrames * (6 + mesh->bodyInfo (0).body->numJoints ()), 1,
+	  (initialJointsTrajectory.size (), 1,
 	   "BodyLaplacianDeformationEnergyChoreonoid"),
 	  mesh_ (mesh),
-	  nDofs_ (nDofs),
-	  nFrames_ (nFrames),
+	  nFrames_ (mesh_->getNumFrames ()),
+	  nDofs_ (initialJointsTrajectory.size () / mesh_->getNumFrames ()),
 	  jointToMarker_ (jointToMarker),
-	  jointToMarkerOrigin_ (jointToMarkerOrigin),
 	  markerPositions_ (mesh_->numMarkers () * 3),
 
 	  originalLaplacianCoordinates_
@@ -209,17 +205,6 @@ namespace roboptim
 	  currentLaplacianCoordinates_
 	  (mesh_->getNumFrames () * mesh_->numMarkers () * 3)
       {
-	if (mesh_->getNumFrames () != nFrames)
-	  throw std::runtime_error ("invalid number of frames");
-	if (initialJointsTrajectory.size () != this->inputSize ())
-	  {
-	    boost::format fmt
-	      ("invalid size for initial joint trajectory"
-	       " (expected is %d but size is %d");
-	    fmt % (nFrames * nDofs) % initialJointsTrajectory.size ();
-	    throw std::runtime_error (fmt.str ());
-	  }
-
 	// Set vectors to zero.
 	markerPositions_.setZero ();
 	originalLaplacianCoordinates_.setZero ();
@@ -244,8 +229,8 @@ namespace roboptim
 
 	    // Compute the current marker position
 	    markerPositions_.setZero ();
-	    jointToMarkerOrigin_->frameId () = frameId;
-	    jointToMarkerOrigin_->shouldUpdate ();
+	    jointToMarker_->frameId () = frameId;
+	    jointToMarker_->shouldUpdate ();
 	    (*jointToMarker_)
 	      (markerPositions_,
 	       x.segment (frameId * nDofs_, nDofs_));
@@ -333,8 +318,8 @@ namespace roboptim
 	  << nFrames_ << decindent << iendl;
 
 	o << "Joint to marker" << incindent << iendl;
-	if (jointToMarkerOrigin_)
-	  o << (*jointToMarkerOrigin_);
+	if (jointToMarker_)
+	  o << (*jointToMarker_);
 	else
 	  o << "empty";
 	o << decindent << iendl;
@@ -378,9 +363,8 @@ namespace roboptim
       std::size_t nDofs_;
       std::size_t nFrames_;
 
-      boost::shared_ptr<GenericDifferentiableFunction<T> > jointToMarker_;
       boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
-      jointToMarkerOrigin_;
+      jointToMarker_;
       mutable result_t markerPositions_;
 
       result_t originalLaplacianCoordinates_;

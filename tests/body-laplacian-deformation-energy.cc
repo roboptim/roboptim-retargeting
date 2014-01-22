@@ -93,8 +93,7 @@ BOOST_AUTO_TEST_CASE (simple)
     cost =
     boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
       EigenMatrixDense> >
-    (mesh, nEnabledDofs, bodyMotion->getNumFrames (), x,
-     jointToMarker, jointToMarker);
+    (mesh, x, jointToMarker);
 
   std::cout << "Body Laplacian Deformation Energy" << std::endl;
   std::cout << (*cost) (x) << std::endl;
@@ -216,21 +215,15 @@ BOOST_AUTO_TEST_CASE (reduced)
 
   boost::shared_ptr<JointToMarkerPositionChoreonoid<
     EigenMatrixDense> >
-    jointToMarkerOrigin =
+    jointToMarker =
     boost::make_shared<JointToMarkerPositionChoreonoid<
       EigenMatrixDense> > (mesh, 0);
-  boost::shared_ptr<DifferentiableFunction>
-    jointToMarker = jointToMarkerOrigin;
-  jointToMarker = bind (jointToMarker, boundDofs);
-
 
   boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid<
     EigenMatrixDense> >
     cost =
     boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
-      EigenMatrixDense> >
-    (mesh, nEnabledDofs, bodyMotion->getNumFrames (), x,
-     jointToMarker, jointToMarkerOrigin);
+      EigenMatrixDense> > (mesh, x, jointToMarker);
 
   boost::shared_ptr<DifferentiableFunction>
     costFiltered = bind<DifferentiableFunction> (cost, boundDofsAllFrames);

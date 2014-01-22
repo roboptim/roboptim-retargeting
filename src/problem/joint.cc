@@ -249,18 +249,13 @@ namespace roboptim
 	// reference trajectory and the current trajectory.
 	boost::shared_ptr<JointToMarkerPositionChoreonoid<
 	  EigenMatrixDense> >
-	  jointToMarkerOrigin =
+	  jointToMarker =
 	  boost::make_shared<JointToMarkerPositionChoreonoid<
 	    EigenMatrixDense> > (mesh, 0);
-	boost::shared_ptr<DifferentiableFunction>
-	  jointToMarker = jointToMarkerOrigin;
-	jointToMarker = bind (jointToMarker, boundDofs);
 
 	minimumJerk->cost_ =
 	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
-	    EigenMatrixDense> >
-	  (mesh, nEnabledDofs, initialMotion->getNumFrames (), xComplete,
-	   jointToMarker, jointToMarkerOrigin);
+	    EigenMatrixDense> > (mesh, xComplete, jointToMarker);
 	minimumJerk->cost_ = bind (minimumJerk->cost_, boundDofsAllFrames);
 
 	// Clone the vector interpolation object so that it can be used by
