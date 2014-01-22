@@ -731,7 +731,7 @@ namespace roboptim
 	solver.parameters ()["ipopt.print_level"].value = 5;
 	solver.parameters ()["ipopt.expect_infeasible_problem"].value = "no";
 	solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
-	solver.parameters ()["ipopt.tol"].value = 1e-4;
+	solver.parameters ()["ipopt.tol"].value = 1e-10;
 	solver.parameters ()["ipopt.derivative_test"].value = "first-order";
 
 	solver.parameters ()["nag.verify-level"].value = 99;
