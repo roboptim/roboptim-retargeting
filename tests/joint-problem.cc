@@ -44,18 +44,6 @@ using namespace roboptim::retargeting;
 
 using boost::test_tools::output_test_stream;
 
-static boost::array<double, 6 + 44> standardPose = {{
-    0, 0, 0.6, 0, 0, 0, //FIXME: double check robot height
-
-    0, 0, -25, 50, -25, 0, 0,
-    0, 0, -25, 50, -25, 0, 0,
-    0, 0, 0,
-    0, 0, 0,
-    -1.0, 1.0, 0, 0, 0, -1.0, 1.0, -1.0,
-    5, -10, 0, -15, 0,  10,  1.0, 0,
-    5,  10, 0, -15, 0, -10, -1.0, 0
-  }};
-
 void writeBodyMotion (const std::string& filename,
 		      boost::shared_ptr<VectorInterpolation > result)
 {
@@ -276,8 +264,8 @@ BOOST_AUTO_TEST_CASE (simple)
 	{
 	  if (enabledDofs[jointId])
 	    finalX[frameId * (6 + 44) + jointId] = finalXReduced[frameId * (6 + 44 - nEnabledDofs) + jointIdReduced++];
-	  else
-	    finalX[frameId * (6 + 44) + jointId] = standardPose[jointId];
+	  else // FIXME: if we disable free floating THIS WILL NOT WORK
+	    finalX[frameId * (6 + 44) + jointId] = bodyMotion->jointPosSeq ()->frame (0)[jointId];
 	}
     }
 

@@ -31,19 +31,6 @@
 #include <cnoid/Body>
 #include "../model/hrp4g2.hh"
 
-
-static boost::array<double, 6 + 44> standardPose = {{
-    0, 0, 0.6, 0, 0, 0, //FIXME: double check robot height
-
-    0, 0, -25, 50, -25, 0, 0,
-    0, 0, -25, 50, -25, 0, 0,
-    0, 0, 0,
-    0, 0, 0,
-    -1.0, 1.0, 0, 0, 0, -1.0, 1.0, -1.0,
-    5, -10, 0, -15, 0,  10,  1.0, 0,
-    5,  10, 0, -15, 0, -10, -1.0, 0
-  }};
-
 namespace roboptim
 {
   namespace retargeting
@@ -189,28 +176,30 @@ namespace roboptim
 	    enabledDofs,
 	    additionalCallback));
 
+	std::size_t oneFrameFullSize = 6 + 44;
+
 	// Compute bound Dofs.
 	typedef roboptim::Function::value_type value_type;
 	std::vector<boost::optional<value_type> > boundDofs
-	  (standardPose.size ());
-	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
-	  if (!enabledDofs[jointId])
-	    boundDofs[jointId] = standardPose[jointId];
+	  (oneFrameFullSize);
+	for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
+	  if (!enabledDofs[jointId]) //FIXME: do not work if free floating joint
+	    boundDofs[jointId] = initialMotion->jointPosSeq ()->frame (0)[jointId];
 
 	std::size_t nFrames = initialMotion->getNumFrames ();
 	std::vector<bool> enabledDofsAllFrames
-	  (nFrames * standardPose.size (), true);
+	  (nFrames * oneFrameFullSize, true);
 	std::vector<boost::optional<value_type> > boundDofsAllFrames
-	  (nFrames * standardPose.size ());
+	  (nFrames * oneFrameFullSize);
 	for (std::size_t frame = 0; frame < nFrames; ++frame)
 	  for (std::size_t jointId = 0;
-	       jointId < standardPose.size (); ++jointId)
+	       jointId < oneFrameFullSize; ++jointId)
 	    {
-	      enabledDofsAllFrames[frame * standardPose.size () + jointId] =
+	      enabledDofsAllFrames[frame * oneFrameFullSize + jointId] =
 		enabledDofs[jointId];
 	      if (!enabledDofs[jointId])
-		boundDofsAllFrames[frame * standardPose.size () + jointId]
-		  = standardPose[jointId];
+		boundDofsAllFrames[frame * oneFrameFullSize + jointId]
+		  = initialMotion->jointPosSeq ()->frame (0)[jointId];
 	    }
 
         // Compute the initial trajectory (whole body)
@@ -230,10 +219,10 @@ namespace roboptim
 	vector_t xComplete = initialTrajectory->parameters ();
 	for (std::size_t frame = 0; frame < initialMotion->numFrames (); ++frame)
 	  for (std::size_t jointId = 0;
-	       jointId < standardPose.size (); ++jointId)
+	       jointId < oneFrameFullSize; ++jointId)
 	    if (!enabledDofs[jointId])
-	      xComplete[frame * standardPose.size () + jointId] =
-		standardPose[jointId];
+	      xComplete[frame * oneFrameFullSize + jointId] =
+		initialMotion->jointPosSeq ()->frame (0)[jointId];
 
 
 	// Prune the starting point from useless DOFs
@@ -241,9 +230,9 @@ namespace roboptim
 	size_t i = 0;
 	for (std::size_t frame = 0; frame < initialMotion->numFrames (); ++frame)
 	  for (std::size_t jointId = 0;
-	       jointId < standardPose.size (); ++jointId)
+	       jointId < oneFrameFullSize; ++jointId)
 	    if (enabledDofs[jointId])
-	      x[i++] = xComplete[frame * standardPose.size () + jointId];
+	      x[i++] = xComplete[frame * oneFrameFullSize + jointId];
 
 	// Build the cost function as the difference between the
 	// reference trajectory and the current trajectory.
@@ -336,6 +325,7 @@ namespace roboptim
 	bool useMetapodTorque = true;
 	bool useMetapodZmp = false;
 
+	std::size_t oneFrameFullSize = enabledDofs_.size ();
 	std::size_t nEnabledDofs =
 	  std::count (enabledDofs_.begin (), enabledDofs_.end (), true);
 	if (nEnabledDofs == 0)
@@ -344,71 +334,72 @@ namespace roboptim
 	// Compute bound Dofs.
 	typedef roboptim::Function::value_type value_type;
 	std::vector<boost::optional<value_type> > boundDofs
-	  (standardPose.size ());
-	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	  (oneFrameFullSize);
+	for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	  if (!enabledDofs_[jointId])
-	    boundDofs[jointId] = standardPose[jointId];
+	    boundDofs[jointId] =
+	      initialMotion_->jointPosSeq ()->frame (0)[jointId];
 
 	std::vector<bool> enabledDofsAllFrames
-	  (nFrames_ * standardPose.size (), true);
+	  (nFrames_ * oneFrameFullSize, true);
 	std::vector<boost::optional<value_type> > boundDofsAllFrames
-	  (nFrames_ * standardPose.size ());
+	  (nFrames_ * oneFrameFullSize);
 	for (std::size_t frame = 0; frame < nFrames_; ++frame)
 	  for (std::size_t jointId = 0;
-	       jointId < standardPose.size (); ++jointId)
+	       jointId < oneFrameFullSize; ++jointId)
 	    {
-	      enabledDofsAllFrames[frame * standardPose.size () + jointId] =
+	      enabledDofsAllFrames[frame * oneFrameFullSize + jointId] =
 		enabledDofs_[jointId];
 	      if (!enabledDofs_[jointId])
-		boundDofsAllFrames[frame * standardPose.size () + jointId]
-		  = standardPose[jointId];
+		boundDofsAllFrames[frame * oneFrameFullSize + jointId]
+		  = initialMotion_->jointPosSeq ()->frame (0)[jointId];
 	    }
 
 	// Compute enabled and bound Dofs for state functions using
 	// first derivative.
-	std::vector<bool> enabledDofsStateFunction2 (standardPose.size () * 2);
-	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	std::vector<bool> enabledDofsStateFunction2 (oneFrameFullSize * 2);
+	for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	  {
-	    enabledDofsStateFunction2[0 * standardPose.size () + jointId]
+	    enabledDofsStateFunction2[0 * oneFrameFullSize + jointId]
 	      = enabledDofs_[jointId];
-	    enabledDofsStateFunction2[1 * standardPose.size () + jointId]
+	    enabledDofsStateFunction2[1 * oneFrameFullSize + jointId]
 	      = enabledDofs_[jointId];
 	  }
 
 	std::vector<boost::optional<value_type> > boundDofsStateFunction2
-	  (standardPose.size () * 2);
-	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	  (oneFrameFullSize * 2);
+	for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	  if (!enabledDofs_[jointId])
 	    {
-	      boundDofsStateFunction2[0 * standardPose.size () + jointId]
-		= standardPose[jointId];
-	      boundDofsStateFunction2[1 * standardPose.size () + jointId]
+	      boundDofsStateFunction2[0 * oneFrameFullSize + jointId]
+		= initialMotion_->jointPosSeq ()->frame (0)[jointId];
+	      boundDofsStateFunction2[1 * oneFrameFullSize + jointId]
 		= 0.;
 	    }
 
 	// Compute enabled and bound Dofs for state functions using first and
 	// second order derivatives.
-	std::vector<bool> enabledDofsStateFunction3 (standardPose.size () * 3);
-	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	std::vector<bool> enabledDofsStateFunction3 (oneFrameFullSize * 3);
+	for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	  {
-	    enabledDofsStateFunction3[0 * standardPose.size () + jointId]
+	    enabledDofsStateFunction3[0 * oneFrameFullSize + jointId]
 	      = enabledDofs_[jointId];
-	    enabledDofsStateFunction3[1 * standardPose.size () + jointId]
+	    enabledDofsStateFunction3[1 * oneFrameFullSize + jointId]
 	      = enabledDofs_[jointId];
-	    enabledDofsStateFunction3[2 * standardPose.size () + jointId]
+	    enabledDofsStateFunction3[2 * oneFrameFullSize + jointId]
 	      = enabledDofs_[jointId];
 	  }
 
 	std::vector<boost::optional<value_type> > boundDofsStateFunction3
-	  (standardPose.size () * 3);
-	for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	  (oneFrameFullSize * 3);
+	for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	  if (!enabledDofs_[jointId])
 	    {
-	      boundDofsStateFunction3[0 * standardPose.size () + jointId]
-		= standardPose[jointId];
-	      boundDofsStateFunction3[1 * standardPose.size () + jointId]
+	      boundDofsStateFunction3[0 * oneFrameFullSize + jointId]
+		= initialMotion_->jointPosSeq ()->frame (0)[jointId];
+	      boundDofsStateFunction3[1 * oneFrameFullSize + jointId]
 		= 0.;
-	      boundDofsStateFunction3[2 * standardPose.size () + jointId]
+	      boundDofsStateFunction3[2 * oneFrameFullSize + jointId]
 		= 0.;
 	    }
 
@@ -448,7 +439,7 @@ namespace roboptim
 	    vector_t b (nDofs_);
 
 	    std::size_t jointIdFiltered = 0;
-	    for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
+	    for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	      {
 		if (!enabledDofs_[jointId])
 		  continue;
@@ -480,7 +471,7 @@ namespace roboptim
 		if (enabledDofs_[dofId])
 		  qInitial[dofId] = (*problem_->startingPoint ())[dofIdReduced++];
 		else
-		  qInitial[dofId] = standardPose[dofId];
+		  qInitial[dofId] = initialMotion_->jointPosSeq ()->frame (0)[dofId];
 	      }
 
 	    typedef ForwardGeometryChoreonoid<EigenMatrixDense>
