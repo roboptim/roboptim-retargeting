@@ -75,7 +75,8 @@ BOOST_AUTO_TEST_CASE (simple)
   if (!mesh->initialize ())
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
-  std::vector<bool> enabledDofs (6 + 44, true);
+  std::vector<bool> enabledDofs
+    (6 + bodyMotion->jointPosSeq ()->numParts (), true);
   std::size_t nEnabledDofs =
     std::count (enabledDofs.begin (), enabledDofs.end (), true);
 

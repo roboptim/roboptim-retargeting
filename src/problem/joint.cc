@@ -176,7 +176,8 @@ namespace roboptim
 	    enabledDofs,
 	    additionalCallback));
 
-	std::size_t oneFrameFullSize = 6 + 44;
+	std::size_t oneFrameFullSize =
+	  6 + initialMotion->jointPosSeq ()->numParts ();
 
 	// Compute bound Dofs.
 	typedef roboptim::Function::value_type value_type;
