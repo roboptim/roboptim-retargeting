@@ -182,7 +182,8 @@ BOOST_AUTO_TEST_CASE (simple)
   bool enableTorque = false;
   bool enableZmp = false;
   std::string solverName = "cfsqp";
-  std::vector<bool> enabledDofs (6 + 44, true);
+  std::size_t oneFrameFullSize = 6 + bodyMotion->jointPosSeq ()->numParts ();
+  std::vector<bool> enabledDofs (oneFrameFullSize, true);
 
   // Disable useless dofs.
   enabledDofs[6 + 17] = false; // NECK_Y
