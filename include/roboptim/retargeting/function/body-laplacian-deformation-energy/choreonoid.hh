@@ -279,9 +279,9 @@ namespace roboptim
 	computeLaplacianCoordinates (currentLaplacianCoordinates_, x);
 
 	// Compute Laplacian Deformation Energy
-	result[0] =
+	result[0] = .5 *
 	  (originalLaplacianCoordinates_ -
-	   currentLaplacianCoordinates_).norm ();
+	   currentLaplacianCoordinates_).squaredNorm ();
       }
 
       void
