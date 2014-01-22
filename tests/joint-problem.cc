@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE (simple)
 	{
 	  if (enabledDofs[jointId])
 	    finalX[frameId * oneFrameFullSize + jointId] =
-	      finalXReduced[frameId * (oneFrameFullSize - nEnabledDofs) + jointIdReduced++];
+	      finalXReduced[frameId * nEnabledDofs + jointIdReduced++];
 	  else // FIXME: if we disable free floating THIS WILL NOT WORK
 	    finalX[frameId * oneFrameFullSize + jointId] =
 	      bodyMotion->jointPosSeq ()->frame (0)[jointId];
