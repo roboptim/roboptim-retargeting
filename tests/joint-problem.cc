@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE (simple)
   boost::shared_ptr<VectorInterpolation >
     finalTrajectoryFct;
 
-  Function::vector_t finalX ((6 + 44) * bodyMotion->numFrames ());
+  Function::vector_t finalX (oneFrameFullSize * bodyMotion->numFrames ());
   finalX.setZero ();
   Function::vector_t finalXReduced;
 
@@ -261,18 +261,20 @@ BOOST_AUTO_TEST_CASE (simple)
   for (std::size_t frameId = 0; frameId < bodyMotion->numFrames (); ++frameId)
     {
       std::size_t jointIdReduced = 0;
-      for (std::size_t jointId = 0; jointId < 6 + 44; ++jointId)
+      for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	{
 	  if (enabledDofs[jointId])
-	    finalX[frameId * (6 + 44) + jointId] = finalXReduced[frameId * (6 + 44 - nEnabledDofs) + jointIdReduced++];
+	    finalX[frameId * oneFrameFullSize + jointId] =
+	      finalXReduced[frameId * (oneFrameFullSize - nEnabledDofs) + jointIdReduced++];
 	  else // FIXME: if we disable free floating THIS WILL NOT WORK
-	    finalX[frameId * (6 + 44) + jointId] = bodyMotion->jointPosSeq ()->frame (0)[jointId];
+	    finalX[frameId * oneFrameFullSize + jointId] =
+	      bodyMotion->jointPosSeq ()->frame (0)[jointId];
 	}
     }
 
   finalTrajectoryFct =
     vectorInterpolation
-    (finalX, 6 + 44,
+    (finalX, oneFrameFullSize,
      jointProblem->dt ());
 
   assert (!!finalTrajectoryFct);
