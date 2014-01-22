@@ -18,6 +18,8 @@
 
 #define BOOST_TEST_MODULE choreonoid_body_trajectory
 
+#include <fstream>
+
 #include <boost/array.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
@@ -46,19 +48,6 @@ std::string modelFilePath
 ("/home/moulard/HRP4C-release/HRP4Cg2.yaml");
 std::string bodyMotionPath
 ("/home/moulard/29_07-hrp4c-initial-short.yaml");
-
-static boost::array<double, 6 + 44> standardPose = {{
-    0, 0, 0.6, 0, 0, 0, //FIXME: double check robot height
-
-    0, 0, -25, 50, -25, 0, 0,
-    0, 0, -25, 50, -25, 0, 0,
-    0, 0, 0,
-    0, 0, 0,
-    -1.0, 1.0, 0, 0, 0, -1.0, 1.0, -1.0,
-    5, -10, 0, -15, 0,  10,  1.0, 0,
-    5,  10, 0, -15, 0, -10, -1.0, 0
-  }};
-
 
 BOOST_AUTO_TEST_CASE (simple)
 {
@@ -132,9 +121,23 @@ BOOST_AUTO_TEST_CASE (simple)
 
   std::cout << "Cost Function Display" << std::endl;
   std::cout << (*cost) << std::endl;
+
+  std::cout << "Body Laplacian Deformation Energy Jacobian" << std::endl;
+  std::cout << cost->jacobian (x) << std::endl;
+
+  std::ofstream file ("/tmp/body-laplacian-deformation-energy-jac-nodisableddofs.txt");
+  file << cost->jacobian (x);
 }
 
 
+/*
+  Jacobian can be compared using:
+
+  dwdiff --color --delimiters='[],()' \
+  /tmp/body-laplacian-deformation-energy-jac-full.txt \
+  /tmp/body-laplacian-deformation-energy-jac-reduced.txt
+
+ */
 BOOST_AUTO_TEST_CASE (reduced)
 {
   // Configure log4cxx
@@ -161,7 +164,10 @@ BOOST_AUTO_TEST_CASE (reduced)
   if (!mesh->initialize ())
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
-  std::vector<bool> enabledDofs (standardPose.size (), true);
+  std::size_t nFrames = bodyMotion->numFrames ();
+  std::size_t oneFrameFullSize =
+    6 + bodyMotion->jointPosSeq ()->frame(0).size ();
+  std::vector<bool> enabledDofs (oneFrameFullSize, true);
 
   // Disable useless dofs.
   enabledDofs[6 + 17] = false; // NECK_Y
@@ -183,36 +189,30 @@ BOOST_AUTO_TEST_CASE (reduced)
   std::size_t nEnabledDofs =
     std::count (enabledDofs.begin (), enabledDofs.end (), true);
 
-  typedef roboptim::Function::value_type value_type;
-  std::vector<boost::optional<value_type> > boundDofs
-    (standardPose.size ());
-  for (std::size_t jointId = 0; jointId < standardPose.size (); ++jointId)
-    if (!enabledDofs[jointId])
-      boundDofs[jointId] = standardPose[jointId];
-
-
-  std::vector<boost::optional<value_type> > boundDofsAllFrames
-    (bodyMotion->numFrames () * enabledDofs.size ());
-  for (std::size_t frame = 0; frame < bodyMotion->numFrames (); ++frame)
-    for (std::size_t jointId = 0;
-	 jointId < standardPose.size (); ++jointId)
-      if (!enabledDofs[jointId])
-	boundDofsAllFrames[frame * standardPose.size () + jointId]
-	  = standardPose[jointId];
-
   // X vector (full form)
-  Function::vector_t xOrigin (bodyMotion->numFrames () * standardPose.size ());
-  xOrigin.setZero ();
-  for (std::size_t frame = 0; frame < bodyMotion->numFrames (); ++frame)
-    for (std::size_t jointId = 0;
-	 jointId < standardPose.size (); ++jointId)
-      if (!enabledDofs[jointId])
-	xOrigin[frame * standardPose.size () + jointId]
-	  = standardPose[jointId];
+  Function::vector_t x (nFrames * oneFrameFullSize);
+  x.setZero ();
 
   // X vector (reduced form)
-  Function::vector_t x (bodyMotion->numFrames () * nEnabledDofs);
-  x.setZero ();
+  Function::vector_t xReduced (nFrames * nEnabledDofs);
+  xReduced.setZero ();
+
+
+  typedef roboptim::Function::value_type value_type;
+  std::vector<boost::optional<value_type> > boundDofs
+    (oneFrameFullSize);
+  for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
+    if (!enabledDofs[jointId])
+      boundDofs[jointId] = x[jointId];
+
+  std::vector<boost::optional<value_type> > boundDofsAllFrames
+    (nFrames * oneFrameFullSize);
+  for (std::size_t frame = 0; frame < nFrames; ++frame)
+    for (std::size_t jointId = 0;
+	 jointId < oneFrameFullSize; ++jointId)
+      if (!enabledDofs[jointId])
+	boundDofsAllFrames[frame * oneFrameFullSize + jointId]
+	  = x[jointId];
 
   boost::shared_ptr<JointToMarkerPositionChoreonoid<
     EigenMatrixDense> >
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE (reduced)
     cost =
     boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
       EigenMatrixDense> >
-    (mesh, nEnabledDofs, bodyMotion->getNumFrames (), xOrigin,
+    (mesh, nEnabledDofs, bodyMotion->getNumFrames (), x,
      jointToMarker, jointToMarkerOrigin);
 
   boost::shared_ptr<DifferentiableFunction>
@@ -238,9 +238,23 @@ BOOST_AUTO_TEST_CASE (reduced)
   std::cout << "X (input)" << std::endl;
   std::cout << x << std::endl;
 
+  std::cout << "X (input, reduced)" << std::endl;
+  std::cout << xReduced << std::endl;
+
   std::cout << "Body Laplacian Deformation Energy" << std::endl;
-  std::cout << (*costFiltered) (x) << std::endl;
+  std::cout << (*costFiltered) (xReduced) << std::endl;
 
   std::cout << "Cost Function Display" << std::endl;
   std::cout << (*costFiltered) << std::endl;
+
+  std::cout << "Body Laplacian Deformation Energy Jacobian (full)" << std::endl;
+  std::cout << cost->jacobian (x) << std::endl;
+
+  std::cout << "Body Laplacian Deformation Energy Jacobian (bound)" << std::endl;
+  std::cout << costFiltered->jacobian (xReduced) << std::endl;
+
+  std::ofstream file ("/tmp/body-laplacian-deformation-energy-jac-full.txt");
+  file << cost->jacobian (x);
+  std::ofstream file2 ("/tmp/body-laplacian-deformation-energy-jac-reduced.txt");
+  file2 << costFiltered->jacobian (xReduced);
 }

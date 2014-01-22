@@ -228,9 +228,6 @@ namespace roboptim
 	// Compute initial Laplacian coordinates.
 	computeLaplacianCoordinates
 	  (originalLaplacianCoordinates_, initialJointsTrajectory);
-	mesh_->update ();
-	computeLaplacianCoordinates
-	  (originalLaplacianCoordinates_, initialJointsTrajectory);
       }
 
       virtual ~BodyLaplacianDeformationEnergyChoreonoid () throw ()
