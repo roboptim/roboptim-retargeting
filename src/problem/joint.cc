@@ -481,7 +481,7 @@ namespace roboptim
 	    // Left foot.
 	    positions_[0] =
 	      boost::make_shared<forwardGeometry_t>
-	      (robot_, std::string ("L_TOE_P"));
+	      (robot_, std::string ("L_ANKLE_R"));
 
 	    forwardGeometry_t::vector_t leftFootPosition =
 	      (*positions_[0]) (qInitial);
@@ -495,7 +495,7 @@ namespace roboptim
 	    // Right foot.
 	    positions_[1] =
 	      boost::make_shared<forwardGeometry_t>
-	      (robot_, std::string ("R_TOE_P"));
+	      (robot_, std::string ("R_ANKLE_R"));
 
 	    forwardGeometry_t::vector_t rightFootPosition =
 	      (*positions_[1]) (qInitial);
