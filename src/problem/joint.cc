@@ -411,7 +411,7 @@ namespace roboptim
 	    {
 	      std::size_t id = 0;
 	      for (std::size_t jointId = 0;
-		   jointId < 6 + robot_->numJoints (); ++jointId)
+		   jointId < oneFrameFullSize; ++jointId)
 		{
 		  if (!enabledDofs_[jointId])
 		    continue;
@@ -465,7 +465,7 @@ namespace roboptim
 	  {
 	    unsigned nConstraints = nFrames_ - 2;
 
-	    vector_t qInitial (6 + robot_->numJoints ());
+	    vector_t qInitial (oneFrameFullSize);
 	    size_t dofIdReduced = 0;
 	    for (std::size_t dofId = 0; dofId < qInitial.size (); ++dofId)
 	      {
@@ -535,14 +535,12 @@ namespace roboptim
 	  {
 	    unsigned nConstraints = nFrames_ - 2;
 
-	    matrix_t A (6 + robot_->numJoints (),
-			2 * (6 + robot_->numJoints ()));
+	    matrix_t A (oneFrameFullSize, 2 * oneFrameFullSize);
 	    A.setZero ();
 	    A.block
-	      (0, 6 + robot_->numJoints (),
-	       6 + robot_->numJoints (),
-	       6 + robot_->numJoints ()).setIdentity ();
-	    vector_t b (6 + robot_->numJoints ());
+	      (0, oneFrameFullSize,
+	       oneFrameFullSize, oneFrameFullSize).setIdentity ();
+	    vector_t b (oneFrameFullSize);
 	    b.setZero ();
 	    velocityOneFrame =
 	      boost::make_shared<
@@ -551,7 +549,7 @@ namespace roboptim
 
 	    std::vector<interval_t> velocityBounds (nEnabledDofs);
 	    std::size_t id = 0;
-	    for (std::size_t jointId = 0; jointId < 6 + robot_->numJoints (); ++jointId)
+	    for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
 	      {
 		if (jointId < 6)
 		  velocityBounds[id++] = Function::makeInfiniteInterval ();
@@ -591,7 +589,7 @@ namespace roboptim
 	    torque_ = selectionById (torque_, enabledDofsStateFunction3);
 
 
-	    std::vector<interval_t> torqueBounds (6 + robot_->numJoints ());
+	    std::vector<interval_t> torqueBounds (oneFrameFullSize);
 	    // FIXME: should we constraint the free floating?
 	    // static const double g = 9.81;
 	    torqueBounds[0] = std::make_pair (-Function::infinity(), Function::infinity()); // FREE FLOATING X
