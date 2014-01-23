@@ -722,16 +722,18 @@ namespace roboptim
 	   interval_, trajectory, zmp_, additionalCallback_);
 
 	// Set solver parameters.
-	solver.parameters ()["max-iterations"].value = 100;
+	solver.parameters ()["max-iterations"].value = 1000;
 
 	solver.parameters ()["ipopt.output_file"].value =
 	  "/tmp/ipopt.log";
 	solver.parameters ()["ipopt.print_level"].value = 5;
 	solver.parameters ()["ipopt.expect_infeasible_problem"].value = "no";
 	solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
-	solver.parameters ()["ipopt.tol"].value = 1e-10;
-	solver.parameters ()["ipopt.derivative_test"].value = "first-order";
+	solver.parameters ()["ipopt.tol"].value = 1e-3;
+	solver.parameters ()["ipopt.dual_inf_tol"].value = 1.;
+	solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-3;
 
+	solver.parameters ()["ipopt.derivative_test"].value = "first-order";
 	solver.parameters ()["nag.verify-level"].value = 99;
 
 	std::cerr << solver << std::endl;
