@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 
+#include <roboptim/core/finite-difference-gradient.hh>
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/retargeting/function/zmp/choreonoid.hh>
 #include <roboptim/trajectory/vector-interpolation.hh>
@@ -12,6 +13,7 @@
 #include <boost/test/output_test_stream.hpp>
 
 #include "tests-config.h"
+
 
 using boost::test_tools::output_test_stream;
 
@@ -40,6 +42,9 @@ BOOST_AUTO_TEST_CASE (rnd)
   x.setZero ();
 
   vector_t res;
+
+  // Make sure we always have the same sequence of random numbers.
+  srand (0);
 
   // check that the center of mass and the ZMP are at the same
   // position if velocity and acceleration is null.
@@ -180,6 +185,8 @@ BOOST_AUTO_TEST_CASE (minimum_jerk)
     (initialTrajectory,
      static_cast<size_type> (6 + robot->numJoints ()), dt);
 
+  std::size_t goodGradient = 0;
+  std::size_t badGradient  = 0;
   for (value_type t = tmin; (t + dt) < tmax; t += dt)
     {
       std::cout << "t = " << t << incindent << iendl;
@@ -196,5 +203,24 @@ BOOST_AUTO_TEST_CASE (minimum_jerk)
 
       zmp.printQuantities (std::cerr);
       std::cerr << iendl;
+
+      for (std::size_t i = 0; i  < zmp.outputSize (); ++i)
+	BOOST_CHECK_NO_THROW
+	  (try
+	    {
+	      checkGradientAndThrow (zmp, i, state);
+	      ++goodGradient;
+	    }
+	  catch (const roboptim::BadGradient<EigenMatrixDense>& e)
+	    {
+	      ++badGradient;
+	      std::cerr << e << std::endl;
+	      throw;
+	    }
+	   );
     }
+
+  std::cout << "Gradients (good/bad/total): "
+	    << goodGradient << " / " << badGradient << " / "
+	    << (goodGradient + badGradient) << std::endl;
 }
