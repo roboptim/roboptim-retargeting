@@ -155,9 +155,10 @@ namespace roboptim
 
 	for (std::size_t i = 1; i < states_.size (); ++i)
 	  {
-	    // Store q + delta * dq
+	    // Store q + delta * dq + .5 * ddq + delta^2
 	    states_[i].x = states_[i - 1].x;
 	    states_[i].x += delta_ * this->dq (x);
+	    states_[i].x += .5 * this->ddq (x) * delta_ * delta_;
 
 	    // Update robot position (dq, ddq are unchanged).
 	    for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
