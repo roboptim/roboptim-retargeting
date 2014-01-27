@@ -43,6 +43,31 @@ namespace roboptim
 	  states_[i].x.resize (6 + robot->numJoints ());
       }
 
+      explicit ZMPChoreonoid (const ZMPChoreonoid<T>& zmp) throw ()
+	: ZMP<T> (6 + zmp.robot_->numJoints (), "choreonoid"),
+	  robot_ (zmp.robot_),
+	  g_ (zmp.g_),
+	  delta_ (zmp.delta_),
+	  m_ (zmp.m_),
+	  states_ (zmp.states_)
+      {
+	for (std::size_t i = 0; i < states_.size (); ++i)
+	  states_[i].x.resize (6 + robot_->numJoints ());
+      }
+
+      ZMPChoreonoid<T>& operator= (const ZMPChoreonoid<T>& rhs)
+      {
+	if (this == &rhs)
+	  return *this;
+
+	this->robot_ = rhs.robot_;
+	this->g_ = rhs.g_;
+	this->delta_ = rhs.delta_;
+	this->m_ = rhs.m_;
+	this->states_ = rhs.states_;
+	return *this;
+      }
+
       virtual ~ZMPChoreonoid () throw ()
       {}
 
