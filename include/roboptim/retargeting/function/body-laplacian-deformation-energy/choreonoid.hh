@@ -252,7 +252,6 @@ namespace roboptim
 	    	       markerPositions_.segment (neighborId * 3, 3)).norm ();
 	    	    if (std::abs (weight) > 1e-8)
 	    	      weight = 1. / weight;
-		    weight = 1.; //FIXME: WEIGHTS ARE DISABLED FOR NOW !!!!!!!
 
 	    	    result.segment
 	    	      (frameId * mesh_->numMarkers () * 3 + markerId * 3, 3) -=
