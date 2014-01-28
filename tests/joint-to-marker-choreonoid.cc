@@ -57,7 +57,6 @@ boost::shared_ptr<JointToMarker_t> JointToMarkerShPtr_t;
 Function::vector_t evaluateAndPrintTestResult
 (std::ostream& o, JointToMarkerShPtr_t jointToMarker, Function::vector_t& x)
 {
-  jointToMarker->shouldUpdate ();
   Function::vector_t result = (*jointToMarker) (x);
   Function::vector_t result2 = (*jointToMarker) (x);
 
@@ -98,7 +97,7 @@ BOOST_AUTO_TEST_CASE (simple)
   Function::result_t result;
   Function::vector_t previousResult;
   JointToMarkerShPtr_t jointToMarker =
-    boost::make_shared<JointToMarker_t> (mesh, 0);
+    boost::make_shared<JointToMarker_t> (mesh);
 
   // Printing object
   {
@@ -174,8 +173,6 @@ BOOST_AUTO_TEST_CASE (simple)
     {
       std::cout << "Frame: " << frameId << iendl;
 
-      jointToMarker->frameId () = frameId;
-
       {
 	x.segment(0, 3) =
 	  bodyMotion->linkPosSeq ()->frame (frameId)[0].translation ();
@@ -192,6 +189,8 @@ BOOST_AUTO_TEST_CASE (simple)
 	std::cout
 	  << "Gradient:" << incindent << iendl
 	  << jointToMarker->gradient (x) << decindent << iendl
+	  << "Jacobian:" << incindent << iendl
+	  << jointToMarker->jacobian (x) << decindent << iendl
 	  << iendl;
 	std::cout << iendl;
 

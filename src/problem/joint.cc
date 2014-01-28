@@ -241,7 +241,7 @@ namespace roboptim
 	  EigenMatrixDense> >
 	  jointToMarker =
 	  boost::make_shared<JointToMarkerPositionChoreonoid<
-	    EigenMatrixDense> > (mesh, 0);
+	    EigenMatrixDense> > (mesh);
 
 	minimumJerk->cost_ =
 	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
@@ -733,8 +733,9 @@ namespace roboptim
 	solver.parameters ()["ipopt.dual_inf_tol"].value = 1.;
 	solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-3;
 
+	// first-order
 	solver.parameters ()["ipopt.derivative_test"].value = "first-order";
-	solver.parameters ()["nag.verify-level"].value = 99;
+	solver.parameters ()["nag.verify-level"].value = 0;
 
 	std::cerr << solver << std::endl;
 

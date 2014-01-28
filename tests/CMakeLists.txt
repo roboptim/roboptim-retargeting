@@ -39,12 +39,7 @@ ENDMACRO()
 SET(TESTS_DATA_DIR "${CMAKE_SOURCE_DIR}/share/roboptim/retargeting")
 CONFIG_FILES(tests-config.h)
 
-ROBOPTIM_RETARGETING_TEST(bone-length)
-ROBOPTIM_RETARGETING_TEST(acceleration-energy)
-ROBOPTIM_RETARGETING_TEST(laplacian-coordinate)
-ROBOPTIM_RETARGETING_TEST(laplacian-deformation-energy)
-ROBOPTIM_RETARGETING_TEST(animated-interaction-mesh)
-ROBOPTIM_RETARGETING_TEST(problem-marker)
+ROBOPTIM_RETARGETING_TEST(laplacian-coordinate-choreonoid)
 
 ROBOPTIM_RETARGETING_TEST(joint-problem)
 

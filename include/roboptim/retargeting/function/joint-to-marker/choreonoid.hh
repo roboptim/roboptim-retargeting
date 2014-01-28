@@ -6,6 +6,7 @@
 # include <roboptim/core/finite-difference-gradient.hh>
 
 # include <cnoid/BodyIMesh>
+# include <cnoid/Link>
 
 namespace roboptim
 {
@@ -29,13 +30,11 @@ namespace roboptim
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (GenericDifferentiableFunction<T>);
 
       explicit JointToMarkerPositionChoreonoid
-      (cnoid::BodyIMeshPtr mesh, size_type frameId)
+      (cnoid::BodyIMeshPtr mesh)
 	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
 	  (6 + mesh->bodyInfo (0).body->numJoints (), 3 * mesh->numMarkers (),
 	   "JointToMarkerPosition"),
-	  frameId_ (frameId),
-	  shouldUpdate_ (true),
 	  mesh_ (mesh),
 	  markerPositions_ (mesh->numMarkers ())
       {
@@ -51,23 +50,7 @@ namespace roboptim
       }
 
       virtual ~JointToMarkerPositionChoreonoid () throw ()
-      {
-      }
-
-      const size_type& frameId () const throw ()
-      {
-	return frameId_;
-      }
-
-      size_type& frameId () throw ()
-      {
-	return frameId_;
-      }
-
-      void shouldUpdate () throw ()
-      {
-	shouldUpdate_ = true;
-      }
+      {}
 
     protected:
       void
@@ -75,50 +58,56 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
-	assert (mesh_->numBodies () == 1);
-
-	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
-	cnoid::BodyMotionPtr motion = bodyInfo.motion;
-
-	std::size_t offset = 6;
-	std::size_t nDofs = offset + motion->numJoints ();
-
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-	if (shouldUpdate_)
+	assert (mesh_->numBodies () == 1);
+
+	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
+	cnoid::BodyPtr& body = bodyInfo.body;
+	cnoid::Link* rootLink = body->rootLink ();
+
+	std::size_t offset = 6;
+
+	// Update q in choreonoid model.
+
+	// free floating
+	rootLink->p() = x.segment (0, 3);
+
+	value_type norm = x.segment (3, 3).norm ();
+	if (norm < 1e-10)
+	  rootLink->R ().setIdentity ();
+	else
+	  rootLink->R () =
+	    Eigen::AngleAxisd
+	    (norm,
+	     x.segment (3, 3).normalized ()
+	     ).toRotationMatrix ();
+
+	// joints
+	for (int dofId = 0; dofId < body->numJoints (); ++dofId)
+	  body->joint (dofId)->q () = x[offset + dofId];
+
+	// compute forward kinematics
+	body->calcForwardKinematics(true, true);
+
+	// combine forward geometry with marker offset
+        const std::vector<cnoid::BodyIMesh::MarkerPtr>&
+	  markers = bodyInfo.markers;
+
+	std::size_t vertexIndex = 0;
+        for(std::size_t j = 0; j < markers.size (); ++j)
 	  {
-	    if (frameId_ < motion->linkPosSeq ()->numFrames ())
-	      {
-		motion->linkPosSeq ()->frame (frameId_)[0].translation () =
-		  x.segment (0, 3);
-
-		value_type norm = x.segment (3, 3).norm ();
-
-		if (norm < 1e-10)
-		  motion->linkPosSeq ()->frame
-		    (frameId_)[0].rotation ().setIdentity ();
-		else
-		  motion->linkPosSeq ()->frame
-		    (frameId_)[0].rotation () =
-		    Eigen::AngleAxisd
-		    (norm,
-		     x.segment (3, 3).normalized ()
-		     );
-	      }
-
-	      for (int dofId = 0; dofId < motion->numJoints (); ++dofId)
-		motion->jointPosSeq ()->frame (frameId_)[dofId] =
-		  x[offset + dofId];
-
-	      //mesh_->update ();
-	      mesh_->getVertices (frameId_, markerPositions_);
-	      shouldUpdate_ = false;
+            const cnoid::BodyIMesh::MarkerPtr& marker = markers[j];
+            if(marker->localPos)
+	      result.segment (vertexIndex * 3, 3) =
+		marker->link->p ()
+		+ marker->link->attitude () * (*marker->localPos);
+            else
+	      result.segment (vertexIndex * 3, 3) = marker->link->p ();
+            ++vertexIndex;
 	  }
-
-	for (int markerId = 0; markerId < mesh_->numMarkers (); ++markerId)
-	  result.segment (markerId * 3, 3) = markerPositions_[markerId];
 
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (false);
@@ -143,8 +132,6 @@ namespace roboptim
       }
 
     private:
-      size_type frameId_;
-      mutable bool shouldUpdate_;
       cnoid::BodyIMeshPtr mesh_;
       mutable std::vector<cnoid::Vector3> markerPositions_;
     };

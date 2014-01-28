@@ -75,19 +75,16 @@ BOOST_AUTO_TEST_CASE (simple)
   if (!mesh->initialize ())
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
-  std::vector<bool> enabledDofs
-    (6 + bodyMotion->jointPosSeq ()->numParts (), true);
-  std::size_t nEnabledDofs =
-    std::count (enabledDofs.begin (), enabledDofs.end (), true);
+  std::size_t nDofs = 6 + bodyMotion->jointPosSeq ()->numParts ();
 
-  Function::vector_t x (bodyMotion->numFrames () * nEnabledDofs);
+  Function::vector_t x (bodyMotion->numFrames () * nDofs);
   x.setZero ();
 
   boost::shared_ptr<JointToMarkerPositionChoreonoid<
     EigenMatrixDense> >
     jointToMarker =
     boost::make_shared<JointToMarkerPositionChoreonoid<
-      EigenMatrixDense> > (mesh, 0);
+      EigenMatrixDense> > (mesh);
 
   boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid<
     EigenMatrixDense> >
@@ -96,34 +93,71 @@ BOOST_AUTO_TEST_CASE (simple)
       EigenMatrixDense> >
     (mesh, x, jointToMarker);
 
-  std::cout << "Body Laplacian Deformation Energy" << std::endl;
-  std::cout << (*cost) (x) << std::endl;
+  x.setIdentity ();
 
-  Function::vector_t laplacianCoordinates
-    (mesh->getNumFrames () * mesh->numMarkers () * 3);
-  cost->computeLaplacianCoordinates (laplacianCoordinates, x);
-  std::cout << "Laplacian Coordinates" << std::endl;
-  std::cout << laplacianCoordinates << std::endl;
-  std::cout << "X" << std::endl;
-  std::cout << x << std::endl;
+  std::cout << "Cost Function Display" << '\n';
+  std::cout << (*cost) << '\n';
 
-  std::cout << "Laplacian Coordinates (again)" << std::endl;
-  cost->computeLaplacianCoordinates (laplacianCoordinates, x);
-  std::cout << laplacianCoordinates << std::endl;
-  std::cout << "X (again)" << std::endl;
-  std::cout << x << std::endl;
+  Function::vector_t markerPositions (mesh->numMarkers () * 3);
 
-  std::cout << "Laplacian Coordinates (again)" << std::endl;
-  cost->computeLaplacianCoordinates (laplacianCoordinates, x);
-  std::cout << laplacianCoordinates << std::endl;
-  std::cout << "X (again)" << std::endl;
-  std::cout << x << std::endl;
+  for (std::size_t frameId = 0; frameId < mesh->getNumFrames (); ++frameId)
+    {
+      markerPositions = (*jointToMarker) (x.segment(frameId * nDofs, nDofs));
+      std::cout
+	<< "Frame " << frameId << '\n'
 
-  std::cout << "Cost Function Display" << std::endl;
-  std::cout << (*cost) << std::endl;
+	<< "Joint to Marker\n"
+	<< markerPositions << '\n'
+	<< "Joint to Marker Jacobian\n"
+	<< jointToMarker->jacobian (x.segment(frameId * nDofs, nDofs)) << '\n'
 
-  std::cout << "Body Laplacian Deformation Energy Jacobian" << std::endl;
-  std::cout << cost->jacobian (x) << std::endl;
+	<< "Laplacian Coordinates\n"
+	<< (*cost->laplacianCoordinate ()[frameId])
+	(markerPositions)
+	<< '\n'
+	<< "Laplacian Coordinates Jacobian\n"
+	<< cost->laplacianCoordinate ()[frameId]->jacobian (markerPositions)
+	<< '\n'
+
+	<< "Chain LC\n"
+	<< (*cost->chainLc ()[frameId])
+	(x.segment(frameId * nDofs, nDofs))
+	<< '\n'
+	<< "Chain LC Jacobian\n"
+	<< cost->chainLc ()[frameId]->jacobian
+	(x.segment(frameId * nDofs, nDofs))
+	<< '\n'
+
+	<< "LDE\n"
+	<< (*cost->lde ()[frameId])
+	((*cost->chainLc ()[frameId])
+	 (x.segment(frameId * nDofs, nDofs)))
+	<< '\n'
+        << "LDE Jacobian\n"
+	<< (cost->lde ()[frameId])->jacobian
+	((*cost->chainLc ()[frameId])
+	 (x.segment(frameId * nDofs, nDofs)))
+        << '\n'
+
+	<< "Chain\n"
+	<< (*cost->chain ()[frameId])
+	(x.segment(frameId * nDofs, nDofs))
+	<< '\n'
+	<< "Chain Jacobian\n"
+	<< cost->chain ()[frameId]->jacobian
+	(x.segment(frameId * nDofs, nDofs))
+	<< '\n'
+
+
+	<< "\n\n\n";
+    }
+
+  std::cout << "Body Laplacian Deformation Energy" << '\n';
+  std::cout << (*cost) (x) << '\n';
+
+
+  std::cout << "Body Laplacian Deformation Energy Jacobian" << '\n';
+  std::cout << cost->jacobian (x) << '\n';
 
   std::ofstream file ("/tmp/body-laplacian-deformation-energy-jac-nodisableddofs.txt");
   file << cost->jacobian (x);
@@ -218,7 +252,7 @@ BOOST_AUTO_TEST_CASE (reduced)
     EigenMatrixDense> >
     jointToMarker =
     boost::make_shared<JointToMarkerPositionChoreonoid<
-      EigenMatrixDense> > (mesh, 0);
+      EigenMatrixDense> > (mesh);
 
   boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid<
     EigenMatrixDense> >
@@ -229,23 +263,23 @@ BOOST_AUTO_TEST_CASE (reduced)
   boost::shared_ptr<DifferentiableFunction>
     costFiltered = bind<DifferentiableFunction> (cost, boundDofsAllFrames);
 
-  std::cout << "X (input)" << std::endl;
-  std::cout << x << std::endl;
+  std::cout << "X (input)\n";
+  std::cout << x << '\n';
 
-  std::cout << "X (input, reduced)" << std::endl;
-  std::cout << xReduced << std::endl;
+  std::cout << "X (input, reduced)\n";
+  std::cout << xReduced << '\n';
 
-  std::cout << "Body Laplacian Deformation Energy" << std::endl;
-  std::cout << (*costFiltered) (xReduced) << std::endl;
+  std::cout << "Body Laplacian Deformation Energy\n";
+  std::cout << (*costFiltered) (xReduced) << '\n';
 
-  std::cout << "Cost Function Display" << std::endl;
-  std::cout << (*costFiltered) << std::endl;
+  std::cout << "Cost Function Display\n";
+  std::cout << (*costFiltered) << '\n';
 
-  std::cout << "Body Laplacian Deformation Energy Jacobian (full)" << std::endl;
-  std::cout << cost->jacobian (x) << std::endl;
+  std::cout << "Body Laplacian Deformation Energy Jacobian (full)\n";
+  std::cout << cost->jacobian (x) << '\n';
 
-  std::cout << "Body Laplacian Deformation Energy Jacobian (bound)" << std::endl;
-  std::cout << costFiltered->jacobian (xReduced) << std::endl;
+  std::cout << "Body Laplacian Deformation Energy Jacobian (bound)\n";
+  std::cout << costFiltered->jacobian (xReduced) << '\n';
 
   std::ofstream file ("/tmp/body-laplacian-deformation-energy-jac-full.txt");
   file << cost->jacobian (x);

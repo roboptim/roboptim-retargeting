@@ -5,9 +5,12 @@
 # include <boost/make_shared.hpp>
 
 # include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/filter/chain.hh>
 # include <roboptim/core/finite-difference-gradient.hh>
+# include <roboptim/core/numeric-quadratic-function.hh>
 # include <roboptim/core/util.hh>
 
+# include <roboptim/retargeting/function/laplacian-coordinate/choreonoid.hh>
 # include <roboptim/retargeting/function/joint-to-marker/choreonoid.hh>
 
 # include <cnoid/BodyIMesh>
@@ -128,7 +131,7 @@ namespace roboptim
 
       o << "Number of markers: " << bodyInfo.markers.size () << iendl;
 
-      for (int markerId = 0;
+      for (std::size_t markerId = 0;
 	   markerId < bodyInfo.markers.size (); ++markerId)
 	o << "Marker id " << markerId << incindent << iendl
 	  << (*bodyInfo.markers[markerId]) << decindent << iendl;
@@ -167,8 +170,69 @@ namespace roboptim
       return o;
     }
 
+    /// \brief Body Laplacian Deformation Energy (from laplacian
+    ///        coordinates, for one frame)
+    ///
+    /// This function takes as input the Laplacian Coordinates of all
+    /// markers concatenated for one frame.
+    ///
+    /// It returns the squared norm of the difference between this
+    /// original value and the current input (i.e. the current
+    /// Laplacian Coordinates) and is expressed as a quadratic
+    /// function.
+    ///
+    /// f(x) = || S - X ||^2 = (S - X)^T . (S - X)
+    ///      = S^2 - 2 . S . X + X^2
+    ///
+    /// A = I
+    /// B = -2 * S
+    /// C = S^T * S
+    ///
+    /// f(x) = X^T * I * X + B * X + C
+    ///      = X^2 - 2 * S * X + S^2
+    ///
+    /// Input:
+    /// x = [LC_x0, LC_y0, LC_z0, ..., LC_xN, LC_yN, LC_zN]
+    ///
+    /// Output:
+    /// f(x) = [cost]
+    ///
+    /// \param originalLaplacianCoordinates Laplacian Coordinates of the
+    ///        marker before any modification, this function will reach its
+    ///        minimum value at this point.
+    ///
+    /// \tparam T Function traits type
+    template <typename T>
+    class BodyLaplacianDeformationEnergyChoreonoid2
+      : public GenericNumericQuadraticFunction<T>
+    {
+    public:
+      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
+      (GenericDifferentiableFunction<T>);
+
+      explicit BodyLaplacianDeformationEnergyChoreonoid2
+      (const vector_t& originalLaplacianCoordinates)
+	throw (std::runtime_error) :
+	GenericNumericQuadraticFunction<T>
+	(matrix_t (originalLaplacianCoordinates.size (),
+		   originalLaplacianCoordinates.size ()),
+	 vector_t (originalLaplacianCoordinates.size ()))
+      {
+	this->A ().setIdentity ();
+
+	this->b () = originalLaplacianCoordinates;
+	this->b () *= -2.;
+
+	this->c () =
+	  originalLaplacianCoordinates.adjoint () * originalLaplacianCoordinates;
+      }
+    };
+
     /// \brief Laplacian Deformation Energy computed using Choreonoid
     ///        Motion Capture plug-in.
+    ///
+    /// The cost function is the sum for all the Laplacian Deformation Energies
+    /// for all frames:
     ///
     /// Input:
     ///  x = [q]
@@ -176,91 +240,167 @@ namespace roboptim
     /// Output:
     ///  result = [cost]
     ///
+    /// f(x) = \sum f_i(x_i)
+    ///
+    /// f_i(x_i) = lde(laplacianCoordinate(jointToMarker(x)))
+    ///
+    /// Implementation notes:
+    /// ---------------------
+    ///
+    /// This function is implemented as the sum of three chained function.
+    ///
+    /// * JointToMarker is a non-linear function computing the marker
+    ///   position from a specific configuration (for one frame).
+    ///
+    /// * LaplacianCoordinate computes the Laplacian Coordinates of each
+    ///   marker (for one frame).
+    ///
+    /// * LaplacianDeformationEnergy (or lde) is computing the squared norm
+    ///   of the difference between the current markers Laplacian Coordinates
+    ///   and the reference Laplacian Coordinates. Most of the work is done
+    ///   by the other sub-function so it is only defined as a quadratic
+    ///   function computing .5 * ||A - X||^2 where A is set to the original
+    ///   Laplacian Coordinates of the markers.
+    ///
+    /// Efficiency:
+    /// -----------
+    ///
+    /// This function could be optimized by removing the use of the
+    /// chain filter to avoid computing JointToMarker several
+    /// times. Actually, the smarter way would be to change the code
+    /// so that a frame-by-frame joint to marker function could be
+    /// used.
+    ///
     /// \tparam T Function traits type
     template <typename T>
     class BodyLaplacianDeformationEnergyChoreonoid
       : public GenericDifferentiableFunction<T>
     {
     public:
+      /// \name Useful type aliases.
+      /// \{
+
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
       (GenericDifferentiableFunction<T>);
 
+      typedef boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
+      JointToMarkerShPtr_t;
+
+      typedef boost::shared_ptr<LaplacianCoordinateChoreonoid<T> >
+      LaplacianCoordinateShPtr_t;
+      typedef std::vector<LaplacianCoordinateShPtr_t>
+      LaplacianCoordinatesShPtr_t;
+
+      typedef boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid2<T> >
+      LaplacianDeformationEnergy_t;
+      typedef std::vector<LaplacianDeformationEnergy_t>
+      LaplacianDeformationEnergies_t;
+
+      typedef boost::shared_ptr<GenericDifferentiableFunction<T> >
+      DifferentiableFunctionShPtr_t;
+
+      typedef std::vector<DifferentiableFunctionShPtr_t>
+      DifferentiableFunctionsShPtr_t;
+
+      /// \}
+
+
+      /// \name Constructor, destructor.
+      /// \{
+
+      /// \brief Build the cost function.
+      ///
+      /// \param mesh Interaction Mesh
+      /// \param initialJointsTrajectory initial articular trajectory
+      ///        for the whole motion (all frames).
+      ///
+      /// \param jointToMarker shared pointer to the JointToMarker
+      ///        function.
       explicit BodyLaplacianDeformationEnergyChoreonoid
       (cnoid::BodyIMeshPtr mesh,
        const vector_t& initialJointsTrajectory,
-       boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
-       jointToMarker)
+       JointToMarkerShPtr_t jointToMarker)
 	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
 	  (initialJointsTrajectory.size (), 1,
 	   "BodyLaplacianDeformationEnergyChoreonoid"),
 	  mesh_ (mesh),
-	  nFrames_ (mesh_->getNumFrames ()),
-	  nDofs_ (initialJointsTrajectory.size () / mesh_->getNumFrames ()),
+	  nFrames_ (mesh->getNumFrames ()),
+	  nDofs_ (initialJointsTrajectory.size () / nFrames_),
 	  jointToMarker_ (jointToMarker),
-	  markerPositions_ (mesh_->numMarkers () * 3),
-
-	  originalLaplacianCoordinates_
-	  (mesh_->getNumFrames () * mesh_->numMarkers () * 3),
-	  currentLaplacianCoordinates_
-	  (mesh_->getNumFrames () * mesh_->numMarkers () * 3)
+	  laplacianCoordinate_ (mesh->getNumFrames ()),
+	  lde_ (mesh->getNumFrames ()),
+	  chainLc_ (mesh->getNumFrames ()),
+	  chain_ (mesh->getNumFrames ()),
+	  markerPositions_ (mesh->numMarkers () * 3)
       {
-	// Set vectors to zero.
-	markerPositions_.setZero ();
-	originalLaplacianCoordinates_.setZero ();
-	currentLaplacianCoordinates_.setZero ();
+	// Fill array and create necessary functions for each frame.
+	for (int frameId = 0; frameId < nFrames_; ++frameId)
+	  {
+	    // Compute marker position for the original configuration.
+	    (*jointToMarker)
+	      (markerPositions_,
+	       initialJointsTrajectory.segment (frameId * nDofs_, nDofs_));
 
-	// Compute initial Laplacian coordinates.
-	computeLaplacianCoordinates
-	  (originalLaplacianCoordinates_, initialJointsTrajectory);
+	    // Create Laplacian Coordinate object, original markers positions
+	    // are required to compute the weights.
+	    laplacianCoordinate_[frameId] = boost::make_shared<
+	      LaplacianCoordinateChoreonoid<T> >
+	      (mesh, frameId, markerPositions_);
+
+	    // Create the quadratic function computing ||A-X||^2
+	    lde_[frameId] = boost::make_shared<
+	      BodyLaplacianDeformationEnergyChoreonoid2<T> >
+	      ((*laplacianCoordinate_[frameId]) (markerPositions_));
+
+	    // Chain the three functions together.
+	    chainLc_[frameId] = roboptim::chain
+	      <GenericDifferentiableFunction<T>,
+	       GenericDifferentiableFunction<T>
+	       >
+	      (laplacianCoordinate_[frameId], jointToMarker_);
+	    chain_[frameId] = roboptim::chain
+	      <GenericDifferentiableFunction<T>,
+	       GenericDifferentiableFunction<T>
+	       >
+	      (lde_[frameId], chainLc_[frameId]);
+	  }
       }
 
       virtual ~BodyLaplacianDeformationEnergyChoreonoid () throw ()
       {}
 
-      void computeLaplacianCoordinates (vector_t& result,
-					const argument_t& x) const throw ()
+      /// \}
+
+      /// \name Internal sub-objects getter for debugging purpose.
+      /// \{
+
+      const LaplacianCoordinatesShPtr_t&
+      laplacianCoordinate () const throw ()
       {
-	result.setZero ();
-	for (int frameId = 0; frameId < nFrames_; ++frameId)
-	  {
-	    const cnoid::BodyIMesh::Frame& neighborLists =
-	      mesh_->frame (frameId);
-
-	    // Compute the current marker position
-	    markerPositions_.setZero ();
-	    jointToMarker_->frameId () = frameId;
-	    jointToMarker_->shouldUpdate ();
-	    (*jointToMarker_)
-	      (markerPositions_,
-	       x.segment (frameId * nDofs_, nDofs_));
-
-	    // Compute Laplacian Coordinates of each marker.
-	    result.segment
-	      (frameId * mesh_->numMarkers () * 3,
-	       mesh_->numMarkers () * 3) = markerPositions_;
-
-	    for (int markerId = 0; markerId < mesh_->numMarkers (); ++markerId)
-	      {
-	    	const cnoid::BodyIMesh::NeighborList&
-	    	  neighbors = neighborLists[markerId];
-	    	for (int l = 0; l < neighbors.size (); ++l)
-	    	  {
-	    	    int neighborId = neighbors[l];
-	    	    double weight =
-	    	      (markerPositions_.segment (markerId * 3, 3) -
-	    	       markerPositions_.segment (neighborId * 3, 3)).norm ();
-	    	    if (std::abs (weight) > 1e-8)
-	    	      weight = 1. / weight;
-
-	    	    result.segment
-	    	      (frameId * mesh_->numMarkers () * 3 + markerId * 3, 3) -=
-	    	      weight *
-	    	      markerPositions_.segment (neighborId * 3, 3);
-	    	  }
-	      }
-	  }
+	return laplacianCoordinate_;
       }
+
+      const LaplacianDeformationEnergies_t&
+      lde () const throw ()
+      {
+	return lde_;
+      }
+
+      const DifferentiableFunctionsShPtr_t&
+      chainLc () const throw ()
+      {
+	return chainLc_;
+      }
+
+      const DifferentiableFunctionsShPtr_t&
+      chain () const throw ()
+      {
+	return chain_;
+      }
+
+      /// \}
+
 
     protected:
       void
@@ -272,15 +412,24 @@ namespace roboptim
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-	currentLaplacianCoordinates_.setZero ();
+	assert (chain_.size () == nFrames_);
 
-	// Compute Laplacian Coordinates for current x
-	computeLaplacianCoordinates (currentLaplacianCoordinates_, x);
+	typename DifferentiableFunctionsShPtr_t::const_iterator it;
 
-	// Compute Laplacian Deformation Energy
-	result[0] = .5 *
-	  (originalLaplacianCoordinates_ -
-	   currentLaplacianCoordinates_).squaredNorm ();
+	result.setZero ();
+
+	size_type frameId = 0;
+	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
+	  {
+	    assert ((*it)->inputSize () == nDofs_);
+	    assert ((*it)->outputSize () == result.size ());
+	    result += (*it)->operator ()
+	      (x.segment (frameId * nDofs_, nDofs_));
+	  }
+
+	result *= .5;
+
+	assert (frameId == nFrames_);
       }
 
       void
@@ -293,11 +442,23 @@ namespace roboptim
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-	roboptim::GenericFiniteDifferenceGradient<
-	  T,
-	  finiteDifferenceGradientPolicies::Simple<T> >
-	  fdg (*this);
-	fdg.gradient (gradient, x, i);
+	assert (chain_.size () == nFrames_);
+
+	typename DifferentiableFunctionsShPtr_t::const_iterator it;
+
+	gradient.setZero ();
+
+	size_type frameId = 0;
+	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
+	  {
+	    gradient.segment (frameId * nDofs_, nDofs_)
+	      += (*it)->gradient
+	      (x.segment (frameId * nDofs_, nDofs_));
+	  }
+
+	gradient *= .5;
+
+	assert (frameId == nFrames_);
       }
 
       virtual std::ostream& print (std::ostream& o) const throw ()
@@ -310,12 +471,6 @@ namespace roboptim
 	else
 	  o << "empty";
 
-	o << "Number of DOFs" << incindent << iendl
-	  << nDofs_ << decindent << iendl;
-
-	o << "Number of frames" << incindent << iendl
-	  << nFrames_ << decindent << iendl;
-
 	o << "Joint to marker" << incindent << iendl;
 	if (jointToMarker_)
 	  o << (*jointToMarker_);
@@ -323,16 +478,8 @@ namespace roboptim
 	  o << "empty";
 	o << decindent << iendl;
 
-	o << "Original Laplacian Coordinates" << incindent << iendl;
-	printMatrix (o, originalLaplacianCoordinates_);
-	o<< decindent << iendl;
-
-	o << "Last Computed Laplacian Coordinates" << incindent << iendl;
-	printMatrix (o, currentLaplacianCoordinates_);
-	o << decindent << iendl;
-
 	o << "Neighbors" << incindent << iendl;
-	for (int frameId = 0; frameId < nFrames_; ++frameId)
+	for (int frameId = 0; frameId < mesh_->getNumFrames (); ++frameId)
 	  {
 	    o << "frame " << frameId << incindent << iendl;
 	    const cnoid::BodyIMesh::Frame& neighborLists =
@@ -358,16 +505,54 @@ namespace roboptim
       }
 
     private:
+      /// \brief Pointer to interaction mesh.
       cnoid::BodyIMeshPtr mesh_;
-      std::size_t nDofs_;
-      std::size_t nFrames_;
 
-      boost::shared_ptr<JointToMarkerPositionChoreonoid<T> >
-      jointToMarker_;
+      /// \brief Number of frames
+      size_type nFrames_;
+      /// \brief Number of DOFs
+      size_type nDofs_;
+
+      /// \brief Pointer to joint to marker function.
+      JointToMarkerShPtr_t jointToMarker_;
+
+      /// \brief Array of Laplacian Coordinates (one for each frame).
+      ///
+      /// Weights depend on the frame so we keep one per frame.
+      LaplacianCoordinatesShPtr_t laplacianCoordinate_;
+
+      /// \brief Array of Laplacian Deformation Energy (one for each
+      ///        frame).
+      ///
+      /// This function computes || A - X ||^2 and hence is frame
+      /// independent.
+      ///
+      /// A is frame dependent so we keep one per frame.
+      LaplacianDeformationEnergies_t lde_;
+
+      /// \brief Laplacian Coordinate from configuration.
+      ///
+      /// For each frame:
+      /// f(x) = laplacianCoordinate(jointToMarker(x))
+      ///
+      /// roboptim-core "chain" filter is used here.
+      DifferentiableFunctionsShPtr_t chainLc_;
+
+      /// \brief Final computation expressed through a chain.
+      ///
+      /// For each frame:
+      /// f(x) = lde_(chainLc(x))
+      ///
+      /// i.e.
+      ///  f(x) = lde(laplacianCoordinate(jointToMarker(x)))
+      ///
+      ///
+      /// roboptim-core "chain" filter is used here.
+      DifferentiableFunctionsShPtr_t chain_;
+
+      /// \brief Mutable buffer to store the marker position as
+      ///        computed by jointToMarker for the current frame.
       mutable result_t markerPositions_;
-
-      result_t originalLaplacianCoordinates_;
-      mutable result_t currentLaplacianCoordinates_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
