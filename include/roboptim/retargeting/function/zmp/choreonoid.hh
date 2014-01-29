@@ -8,6 +8,9 @@
 
 # include <roboptim/retargeting/function/zmp.hh>
 
+// For update configuration function.
+# include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
+
 namespace roboptim
 {
   namespace retargeting
@@ -122,36 +125,17 @@ namespace roboptim
 	states_[0].x = this->q (x, true);
 	assert (states_[0].x.size () == x.size () / 3);
 
-	// Set root link position.
-	rootLinkPosition_.translation () = this->translation (x);
+	// Set the robot configuration.
+	updateRobotConfiguration (robot_, x);
 
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	value_type norm = this->rotation (x).norm ();
-
-	if (norm < 1e-10)
-	  rootLinkPosition_.linear ().setIdentity ();
-	else
-	  rootLinkPosition_.linear () =
-	    Eigen::AngleAxisd
-	    (norm,
-	     this->rotation (x).normalized ()).toRotationMatrix ();
-
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (false);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	robot_->rootLink ()->position () = rootLinkPosition_;
-
-	// Set q, dq, ddq.
+	// Set dq, ddq.
 	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  {
 	    robot_->joint (dofId)->q () = this->q (x, false)[dofId];
 	    robot_->joint (dofId)->dq () = this->dq (x, false)[dofId];
 	    robot_->joint (dofId)->ddq () = this->ddq (x, false)[dofId];
 	  }
+
 	robot_->calcForwardKinematics (true, true);
 	states_[0].com = robot_->calcCenterOfMass ();
 	robot_->calcTotalMomentum (states_[0].P, states_[0].L);
