@@ -7,6 +7,9 @@
 
 # include <roboptim/retargeting/function/torque.hh>
 
+// For update configuration function.
+# include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
+
 namespace roboptim
 {
   namespace retargeting
@@ -24,7 +27,8 @@ namespace roboptim
 	// Add a fictional free floating joint at the beginning.
 	: Torque<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
-	  forwardDynamics_ ()
+	  forwardDynamics_ (),
+	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {}
 
       virtual ~TorqueChoreonoid () throw ()
@@ -35,37 +39,17 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
-	// Set root link position.
-	rootLinkPosition_.translation () = this->translation (x);
+	// Set the robot configuration.
+	updateRobotConfiguration (robot_, x);
 
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	value_type norm = this->rotation (x).norm ();
-
-	if (norm < 1e-10)
-	  rootLinkPosition_.linear ().setIdentity ();
-	else
-	  rootLinkPosition_.linear () =
-	    Eigen::AngleAxisd
-	    (norm,
-	     this->rotation (x).normalized ()).toRotationMatrix ();
-
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (false);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	robot_->rootLink ()->position () = rootLinkPosition_;
-
-	// Set q, dq, ddq.
+	// Set dq, ddq.
 	for(int dofId = 0; dofId < robot_->numJoints (); ++dofId)
 	  {
 	    robot_->joint (dofId)->q () = this->q (x, false)[dofId];
 	    robot_->joint (dofId)->dq () = this->dq (x, false)[dofId];
 	    robot_->joint (dofId)->ddq () = this->ddq (x, false)[dofId];
 	  }
-	robot_->calcForwardKinematics (true, true);
+
 	result.setZero ();
 
 	//FIXME:
@@ -77,15 +61,7 @@ namespace roboptim
 		     size_type i)
 	const throw ()
       {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	roboptim::GenericFiniteDifferenceGradient<
-	  T,
-	  finiteDifferenceGradientPolicies::Simple<T> >
-	  fdg (*this);
-	fdg.gradient (gradient, x, i);
+	fd_->gradient (gradient, x, i);
       }
 
     private:
@@ -98,6 +74,14 @@ namespace roboptim
       /// \brief Choreonoid Forward Dynamics object implementing Roy
       ///        Featherstone's articulated body algorithm.
       boost::shared_ptr<cnoid::ForwardDynamics> forwardDynamics_;
+
+      // Temporary - finite difference gradient.
+      // Currently the simple policy generates precision errors,
+      // one may want to switch to five point rules.
+      typedef roboptim::GenericFiniteDifferenceGradient<
+	T, finiteDifferenceGradientPolicies::Simple<T> >
+      fdFunction_t;
+      boost::shared_ptr<fdFunction_t> fd_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
