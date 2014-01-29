@@ -37,7 +37,8 @@ namespace roboptim
 	  g_ (9.81),
 	  delta_ (1e-5),
 	  m_ (robot->mass ()),
-	  states_ ()
+	  states_ (),
+	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {
 	for (std::size_t i = 0; i < states_.size (); ++i)
 	  states_[i].x.resize (6 + robot->numJoints ());
@@ -49,7 +50,8 @@ namespace roboptim
 	  g_ (zmp.g_),
 	  delta_ (zmp.delta_),
 	  m_ (zmp.m_),
-	  states_ (zmp.states_)
+	  states_ (zmp.states_),
+	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {
 	for (std::size_t i = 0; i < states_.size (); ++i)
 	  states_[i].x.resize (6 + robot_->numJoints ());
@@ -65,6 +67,7 @@ namespace roboptim
 	this->delta_ = rhs.delta_;
 	this->m_ = rhs.m_;
 	this->states_ = rhs.states_;
+	this->fd_ = boost::make_shared<fdFunction_t> (*this);
 	return *this;
       }
 
@@ -207,12 +210,7 @@ namespace roboptim
 		     size_type i)
 	const throw ()
       {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	GenericFiniteDifferenceGradient<T> fdg (*this);
-	fdg.gradient (gradient, x, i);
+	fd_->gradient (gradient, x, i);
       }
 
     private:
@@ -248,6 +246,15 @@ namespace roboptim
       ///
       /// [ \dot{\delta_y}, \dot{\delta_x}]
       mutable cnoid::Vector2 dL_reordered_;
+
+      // Temporary - finite difference gradient.
+      // Currently the simple policy generates precision errors,
+      // one may want to switch to five point rules.
+      typedef roboptim::GenericFiniteDifferenceGradient<
+	T, finiteDifferenceGradientPolicies::Simple<T> >
+      fdFunction_t;
+      boost::shared_ptr<fdFunction_t> fd_;
+
 
     public:
       EIGEN_MAKE_ALIGNED_OPERATOR_NEW
