@@ -1,6 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # include <boost/format.hpp>
+# include <boost/make_shared.hpp>
 
 # include <cnoid/Body>
 # include <cnoid/JointPath>

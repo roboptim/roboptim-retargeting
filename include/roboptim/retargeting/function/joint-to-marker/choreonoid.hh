@@ -5,6 +5,9 @@
 # include <roboptim/core/differentiable-function.hh>
 # include <roboptim/core/finite-difference-gradient.hh>
 
+// For update configuration function.
+# include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
+
 # include <cnoid/BodyIMesh>
 # include <cnoid/Link>
 
@@ -36,7 +39,8 @@ namespace roboptim
 	  (6 + mesh->bodyInfo (0).body->numJoints (), 3 * mesh->numMarkers (),
 	   "JointToMarkerPosition"),
 	  mesh_ (mesh),
-	  markerPositions_ (mesh->numMarkers ())
+	  markerPositions_ (mesh->numMarkers ()),
+	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {
 	if (mesh_->numBodies () != 1)
 	  {
@@ -58,10 +62,6 @@ namespace roboptim
       (result_t& result, const argument_t& x)
 	const throw ()
       {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
 	assert (mesh_->numBodies () == 1);
 
 	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
@@ -70,27 +70,11 @@ namespace roboptim
 
 	std::size_t offset = 6;
 
-	// Update q in choreonoid model.
+	// Set the robot configuration.
+	updateRobotConfiguration (body, x);
 
-	// free floating
-	rootLink->p() = x.segment (0, 3);
-
-	value_type norm = x.segment (3, 3).norm ();
-	if (norm < 1e-10)
-	  rootLink->R ().setIdentity ();
-	else
-	  rootLink->R () =
-	    Eigen::AngleAxisd
-	    (norm,
-	     x.segment (3, 3).normalized ()
-	     ).toRotationMatrix ();
-
-	// joints
-	for (int dofId = 0; dofId < body->numJoints (); ++dofId)
-	  body->joint (dofId)->q () = x[offset + dofId];
-
-	// compute forward kinematics
-	body->calcForwardKinematics(true, true);
+	// Update body positions
+	body->calcForwardKinematics ();
 
 	// combine forward geometry with marker offset
         const std::vector<cnoid::BodyIMesh::MarkerPtr>&
@@ -101,17 +85,15 @@ namespace roboptim
 	  {
             const cnoid::BodyIMesh::MarkerPtr& marker = markers[j];
             if(marker->localPos)
-	      result.segment (vertexIndex * 3, 3) =
-		marker->link->p ()
-		+ marker->link->attitude () * (*marker->localPos);
-            else
+	      {
+		result.segment (vertexIndex * 3, 3) = marker->link->p ();
+		result.segment (vertexIndex * 3, 3) +=
+		  marker->link->attitude () * (*marker->localPos);
+	      }
+	    else
 	      result.segment (vertexIndex * 3, 3) = marker->link->p ();
-            ++vertexIndex;
+	    ++vertexIndex;
 	  }
-
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (false);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
       }
 
       void
@@ -120,20 +102,18 @@ namespace roboptim
 		     size_type i)
 	const throw ()
       {
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
-	roboptim::GenericFiniteDifferenceGradient<
-	  T,
-	  finiteDifferenceGradientPolicies::Simple<T> >
-	  fdg (*this);
-	fdg.gradient (gradient, x, i);
+	fd_->gradient (gradient, x, i);
       }
 
     private:
       cnoid::BodyIMeshPtr mesh_;
       mutable std::vector<cnoid::Vector3> markerPositions_;
+
+      // Temporary - finite difference gradient.
+      typedef roboptim::GenericFiniteDifferenceGradient<
+	T, finiteDifferenceGradientPolicies::Simple<T> >
+      fdFunction_t;
+      boost::shared_ptr<fdFunction_t> fd_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
