@@ -57,7 +57,6 @@ namespace roboptim
 		  weight = 1. / weight;
 		else
 		  weight = 0.;
-		weight = 1.;
 
 		// if i > j w(i,j) becomes w(j,i) as we will have i is
 		// a neighbor of j and j is a neighbor of i, divide by

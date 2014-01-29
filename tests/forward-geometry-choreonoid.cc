@@ -1,5 +1,7 @@
+#include <boost/format.hpp>
 #include <boost/make_shared.hpp>
 
+#include <roboptim/core/terminal-color.hh>
 #include <roboptim/retargeting/function/minimum-jerk-trajectory.hh>
 #include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
 #include <roboptim/trajectory/vector-interpolation.hh>
@@ -69,7 +71,7 @@ BOOST_AUTO_TEST_CASE (root_link)
   for (std::size_t i = 0; i < 3; ++i)
     BOOST_CHECK_CLOSE (res[i], x[i], 1e-5);
 
-  // Jacobian is identity.
+  // Jacobian is identity for free-floating.
   x.setRandom (x.size ());
   std::cout
     << "X:" << incindent << iendl
@@ -81,4 +83,118 @@ BOOST_AUTO_TEST_CASE (root_link)
 
   for (std::size_t i = 0; i < 6; ++i)
     BOOST_CHECK_CLOSE (jacobian (i, i), 1., 1e-5);
+}
+
+#define CHECK_GRADIENT(F, I, X)						\
+  BOOST_CHECK_NO_THROW							\
+  (									\
+   try									\
+     {									\
+       checkGradientAndThrow ((F), (I), (X));				\
+     }									\
+   catch(const BadGradient<EigenMatrixDense>& e)			\
+     {									\
+       std::cerr << #F << " (" << I << "):\n" << e << std::endl;	\
+       throw;								\
+     } )
+
+#define CHECK_JACOBIAN(F, X)				\
+  BOOST_CHECK_NO_THROW					\
+  (							\
+   try							\
+     {							\
+       checkJacobianAndThrow ((F), (X));		\
+     }							\
+   catch(const BadJacobian<EigenMatrixDense>& e)	\
+     {							\
+       std::cerr << #F << ":\n" << e << std::endl;	\
+       throw;						\
+     } )
+
+
+template <typename T>
+void displayMatrix (std::ostream& o, const T& m)
+{
+  std::size_t w = 3;
+  o << std::setprecision (w - 1);
+  std::size_t nEltsPerLine = 80 / (2 * w);
+
+  std::size_t offset = 0;
+
+  while (offset < m.cols ())
+    {
+      for (std::size_t i = 0; i < 6; ++i)
+	{
+	  for (std::size_t j = offset; j < offset + nEltsPerLine; ++j)
+	    {
+	      if (j >= m.cols ())
+		break;
+
+	      if (j < 3)
+		o << roboptim::fg::green;
+	      else if (j < 6)
+		o << roboptim::fg::red;
+
+	      o << boost::format ("% 4.2f") % m (i, j) << ",";
+	      o << roboptim::fg::reset;
+	    }
+	  o << iendl;
+	}
+
+      o << iendl;
+      offset += nEltsPerLine;
+    }
+  o << iendl;
+}
+
+BOOST_AUTO_TEST_CASE (lleg_link)
+{
+  configureLog4cxx ();
+
+  // Loading robot.
+  cnoid::BodyLoader loader;
+  cnoid::BodyPtr robot = loader.load (modelFilePath);
+  if (!robot)
+    throw std::runtime_error ("failed to load model");
+
+  typedef ForwardGeometryChoreonoid<EigenMatrixDense>::jacobian_t jacobian_t;
+  typedef ForwardGeometryChoreonoid<EigenMatrixDense>::vector_t vector_t;
+  ForwardGeometryChoreonoid<EigenMatrixDense> forwardGeometry (robot, "L_ANKLE_R");
+
+  GenericFiniteDifferenceGradient<EigenMatrixDense> fdfunction (forwardGeometry);
+
+  vector_t x (6 + robot->numJoints ());
+  vector_t res (6);
+  jacobian_t jacobian (6, x.size ());
+  jacobian_t jacobianFd (6, x.size ());
+
+  // Check jacobian
+  for (std::size_t trial = 0; trial < 1; ++trial)
+    {
+      //x.setRandom ();
+      x.setZero ();
+      //x.segment(0, 3).setRandom ();
+      //x[1] = 1.;
+      //x[0] = 1.;
+      x[4] = 1.;
+
+      forwardGeometry (res, x);
+      forwardGeometry.jacobian (jacobian, x);
+      fdfunction.jacobian (jacobianFd, x);
+
+      std::cout
+	<< "X:" << incindent << iendl
+	<< x << decindent << iendl
+	<< "ForwardGeometry(X): " << incindent << iendl
+	<< res << decindent << iendl
+	<< "ForwardGeometry(X) Jacobian: " << iendl;
+
+      displayMatrix (std::cout, jacobian);
+
+      std::cout << "Finite Differences Jacobian: " << iendl;
+      displayMatrix (std::cout, jacobianFd);
+
+      for (std::size_t functionId = 0; functionId < 3; ++functionId)
+	CHECK_GRADIENT (forwardGeometry, functionId, x);
+    }
 }
