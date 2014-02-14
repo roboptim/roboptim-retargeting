@@ -58,7 +58,7 @@ namespace roboptim
 
       // Set joints values.
       for(int dofId = 0; dofId < robot->numJoints (); ++dofId)
-	robot->joint (dofId)->q () = x[dofId];
+	robot->joint (dofId)->q () = x[dofId + 6];
     }
 
     /// \brief Compute forward geometry for a particular robot model.
