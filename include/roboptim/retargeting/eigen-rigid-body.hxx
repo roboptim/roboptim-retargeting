@@ -13,9 +13,9 @@ eulerToTransform (Eigen::MatrixBase<Derived> const& linear,
   // cr means cos roll, sy sin yaw, etc.
   // sincos computes sinus and cosinus in parallel
   double cr, sr, cp, sp, cy, sy;
-  sincos (eulerAngles (0), &sr, &cr);
-  sincos (eulerAngles (1), &sp, &cp);
-  sincos (eulerAngles (2), &sy, &cy);
+  sincos (eulerAngles[0], &sr, &cr);
+  sincos (eulerAngles[1], &sp, &cp);
+  sincos (eulerAngles[2], &sy, &cy);
 
   Eigen::MatrixBase<Derived>& linear_ =
     const_cast<Eigen::MatrixBase<Derived>&> (linear);
@@ -110,7 +110,7 @@ transformToVector (Eigen::MatrixBase<Derived> const& result,
 		   const Eigen::Transform<typename Derived::RealScalar,
 					  _Dim, _Mode, _Options>& transform)
 {
-  //EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
+  EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
   assert (result.size () == 6);
 
   Eigen::MatrixBase<Derived>& result_ =
