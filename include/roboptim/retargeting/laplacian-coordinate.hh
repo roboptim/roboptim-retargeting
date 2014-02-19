@@ -19,9 +19,7 @@ namespace roboptim
     /// Compute the Laplacian coordinates of a node from a particular
     /// interactive mesh.
     ///
-    /// \f[
-    /// L(p_j) = p_j - \sum_{l \in N_j} w_l^j p_l
-    /// \f]
+    /// \f$ L(p_j) = p_j - \sum_{l \in N_j} w_l^j p_l \f$
     class LaplacianCoordinate : public roboptim::LinearFunction
       {
       public:
