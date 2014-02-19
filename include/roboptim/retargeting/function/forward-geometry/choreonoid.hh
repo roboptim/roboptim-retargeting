@@ -8,8 +8,10 @@
 # include <cnoid/Jacobian>
 
 # include <roboptim/retargeting/function/forward-geometry.hh>
+# include <roboptim/retargeting/eigen-rigid-body.hh>
 
 # include <roboptim/core/finite-difference-gradient.hh>
+
 
 namespace roboptim
 {
@@ -33,28 +35,16 @@ namespace roboptim
     /// \param robot Choreonoid robot
     /// \param x configuration vector which size must correspond to
     ///          the robot number of DOFs plus six.
-    template <typename T>
+    template <typename Derived>
     void
     updateRobotConfiguration (const cnoid::BodyPtr& robot,
-			      const Eigen::MatrixBase<T>& x)
+			      const Eigen::MatrixBase<Derived>& x)
     {
       // Set root link position.
-      robot->rootLink ()->position ().translation () = x.segment (0, 3);
-
-      typename T::RealScalar norm = x.segment(3, 3).norm ();
-
-      if (norm < 1e-10)
-	robot->rootLink ()->position ().linear ().setIdentity ();
-      else
-	{
-	  Eigen::Vector3d normalizedAxis = x.segment (3, 3);
-	  normalizedAxis /= norm;
-
-	  Eigen::AngleAxisd angleAxisBuffer
-	    (norm, normalizedAxis);
-	  robot->rootLink ()->position ().linear ().setIdentity ();
-	  robot->rootLink ()->position ().rotate (angleAxisBuffer);
-	}
+      robot->rootLink ()->position ().translation () =
+	x.template segment<3> (0);
+      eulerToTransform
+	(robot->rootLink ()->position ().linear (), x.template segment<3> (3));
 
       // Set joints values.
       for(int dofId = 0; dofId < robot->numJoints (); ++dofId)
@@ -134,26 +124,15 @@ namespace roboptim
       {}
 
     protected:
-
-      // FIXME: once again we make the assumption that all joints are
-      // 1-DOFs joints.
       void
       impl_compute
       (result_t& result, const argument_t& x)
 	const throw ()
       {
-	// Set the robot configuration.
 	updateRobotConfiguration (robot_, x);
-
-	// Update positions.
 	robot_->calcForwardKinematics ();
-
-	// Convert rotation matrix to angle axis temporary buffer.
-	angleAxis_.fromRotationMatrix (jointPath_.endLink ()->R ());
-
-	// Copy the result back.
-	result.segment (0, 3) = jointPath_.endLink ()->p ();
-	result.segment (3, 3) = angleAxis_.angle () * angleAxis_.axis ();
+	transformToVector
+	  (result, jointPath_.endLink ()->position ());
       }
 
 
@@ -201,7 +180,6 @@ namespace roboptim
 	// Update positions.
 	robot_->calcForwardKinematics ();
 
-
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
@@ -209,35 +187,11 @@ namespace roboptim
 	gradient.setZero ();
 
 	// Free floating (columns 0 to 5).
-
-	// 6x6 first block diagonal is identity
-	gradient[functionId] = 1.;
-
-	if (functionId < 3)
-	  {
-	    std::cout
-	      << "result:\n"
-	      << this->operator () (x) << '\n'
-	      << "base link position:\n"
-	      << jointPath_.baseLink ()->p () << '\n'
-	      << "end link position:\n"
-	      << jointPath_.endLink ()->p () << '\n'
-	      << "base link rotation:\n"
-	      << jointPath_.baseLink ()->R () << '\n'
-	      << "end link rotation:\n"
-	      << jointPath_.endLink ()->R () << '\n';
-
-
-	    cnoid::Vector3 arm =
-	      jointPath_.endLink ()->p () - jointPath_.baseLink ()->p ();
-	    cnoid::Vector3 omega (3);
-	    for (std::size_t i = 0; i < 3; ++i)
-	      {
-		omega.setZero ();
-		omega[i] = 1.;
-		gradient[3 + i] = omega.cross (arm)[functionId];
-	      }
-	  }
+	Eigen::Matrix<double, 6, 6> adj;
+	cnoid::Position tmp =
+	  jointPath_.endLink ()->T ().inverse () * jointPath_.baseLink ()->T ();
+	adjoint (adj, tmp);
+	gradient.segment (0, 6) = adj.row (functionId);
 
 	// DOF (all columns > 5).
 
@@ -253,8 +207,7 @@ namespace roboptim
 	std::size_t jointId = 0;
 	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
-	    //FIXME: why should we remove one here !?
-	    jointId = jointPath_.joint(jacobianId)->index () - 1;
+	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
 	    assert (jointId < gradient.size ());
 	    assert (jointId >= 6);
 
@@ -275,7 +228,6 @@ namespace roboptim
     private:
       cnoid::BodyPtr robot_;
       int bodyId_;
-
 
       mutable cnoid::JointPath jointPath_;
       /// \brief Root link position
