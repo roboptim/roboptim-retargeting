@@ -1,5 +1,6 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
+# include <cmath>
 # include <boost/format.hpp>
 # include <boost/make_shared.hpp>
 
@@ -187,11 +188,73 @@ namespace roboptim
 	gradient.setZero ();
 
 	// Free floating (columns 0 to 5).
-	Eigen::Matrix<double, 6, 6> adj;
-	cnoid::Position tmp =
-	  jointPath_.endLink ()->T ().inverse () * jointPath_.baseLink ()->T ();
-	adjoint (adj, tmp);
-	gradient.segment (0, 6) = adj.row (functionId);
+
+	// columns 0 to 2 (translation)
+	if (functionId < 3.)
+	  gradient[functionId] = 1.;
+
+	// columns 3 to 6 (rotation)
+	const typename cnoid::Position::LinearPart& R0 =
+	  jointPath_.baseLink ()->T ().linear ();
+	const typename cnoid::Position::LinearPart& R =
+	  jointPath_.endLink ()->T ().linear ();
+
+	const typename cnoid::Position::TranslationPart& t0 =
+	  jointPath_.baseLink ()->T ().translation ();
+	const typename cnoid::Position::TranslationPart& tk =
+	  jointPath_.endLink ()->T ().translation ();
+
+	double cr, sr, cp, sp, cy, sy;
+	sincos (x[3], &sr, &cr);
+	sincos (x[4], &sp, &cp);
+	sincos (x[5], &sy, &cy);
+
+	Eigen::Matrix<double, 3, 3> dR1, dR2, dR3;
+
+	dR1 <<
+	  0., cy * -sp, -sy * cp,
+	  0., sy * -sp, cy * sp,
+	  0., -cp, 0.;
+	dR2 <<
+	  cy * sp * cr - sy * -sr,
+	  cy * cp * sr,
+	  -sy * sp * sr + cy * cr,
+
+	  sy * sp * cr + cy * -sr,
+	  sy * cp * sr,
+	  cy * sp * sr - sy * cr,
+
+	  cp * cr, -sp * cr, 0.;
+	dR3 <<
+	  cy * sp * -sr + sy * cr,
+	  cy * cp * cr,
+	  -sy * sp * cr + cy * sr,
+
+	  sy * sp * sr - cy * cr,
+	  sy * cp * cr,
+	  cy * sp * cr - sy * sr,
+
+	  cp * sr, sp * cr, 0.;
+
+	Eigen::Matrix<double, 3, 3> J_global =
+	  R0.col (2) * R0.col (1).transpose () * dR1 +
+	  R0.col (1) * R0.col (0).transpose () * dR3 +
+	  R0.col (0) * R0.col (2).transpose () * dR2;
+
+	if (functionId < 3)
+	  {
+	    Eigen::Vector3d p = tk - t0;
+	    Eigen::Matrix<double, 3, 3> hatp;
+	    hat (hatp, p);
+
+	    Eigen::Matrix<double, 3, 3> Jt = -hatp * J_global;
+	    gradient.template segment<3> (3) = Jt.row (functionId);
+	  }
+	else
+	  {
+	    Eigen::Matrix<double, 3, 3> Jr = J_global;
+	    gradient.template segment<3> (3) = Jr.row (functionId - 3);
+	  }
 
 	// DOF (all columns > 5).
 
@@ -199,6 +262,14 @@ namespace roboptim
 	//jointPath_.calcJacobian (J_);
 	cnoid::setJacobian<0x3f, 0, 0>
 	  (this->jointPath_, this->jointPath_.endLink (), J_);
+
+	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	  {
+	    J_.template block <3, 1> (0, jacobianId) =
+	      R0 * J_.template block <3, 1> (0, jacobianId);
+	    J_.template block <3, 1> (3, jacobianId) =
+	      R0 * J_.template block <3, 1> (3, jacobianId);
+	  }
 
 	// And we replace at the right position. The jacobian of the
 	// joint path is incomplete so we have to copy the values to
