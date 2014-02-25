@@ -181,10 +181,6 @@ namespace roboptim
 	// Update positions.
 	robot_->calcForwardKinematics ();
 
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
 	gradient.setZero ();
 
 	// Free floating (columns 0 to 5).
@@ -193,9 +189,16 @@ namespace roboptim
 	if (functionId < 3.)
 	  gradient[functionId] = 1.;
 
+#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+	Eigen::internal::set_is_malloc_allowed (true);
+#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
+
 	// columns 3 to 6 (rotation)
-	const typename cnoid::Position::LinearPart& R0 =
-	  jointPath_.baseLink ()->T ().linear ();
+	Eigen::Matrix3d R0;
+	eulerToTransform (R0, x.template segment<3> (3));
+
+	// const typename cnoid::Position::LinearPart& R0 =
+	//   jointPath_.baseLink ()->T ().linear ();
 	const typename cnoid::Position::LinearPart& R =
 	  jointPath_.endLink ()->T ().linear ();
 
@@ -212,38 +215,42 @@ namespace roboptim
 	Eigen::Matrix<double, 3, 3> dR1, dR2, dR3;
 
 	dR1 <<
-	  0., cy * -sp, -sy * cp,
-	  0., sy * -sp, cy * sp,
-	  0., -cp, 0.;
-	dR2 <<
-	  cy * sp * cr - sy * -sr,
-	  cy * cp * sr,
-	  -sy * sp * sr + cy * cr,
+	  0.,  -cy * sp,  -sy * cp,
+	  0.,  -sy * sp,  cy * cp,
+	  0.,  -cp,       0.;
 
-	  sy * sp * cr + cy * -sr,
+	dR2 <<
+	  cy * sp * cr + sy * sr,
+	  cy * cp * sr,
+	  -sy * sp * sr - cy * cr,
+
+	  sy * sp * cr - cy * sr,
 	  sy * cp * sr,
 	  cy * sp * sr - sy * cr,
 
-	  cp * cr, -sp * cr, 0.;
+	  cp * cr, -sp * sr, 0.;
 	dR3 <<
-	  cy * sp * -sr + sy * cr,
+	  -cy * sp * sr + sy * cr,
 	  cy * cp * cr,
 	  -sy * sp * cr + cy * sr,
 
-	  sy * sp * sr - cy * cr,
+	  - sy * sp * sr - cy * cr,
 	  sy * cp * cr,
-	  cy * sp * cr - sy * sr,
+	  cy * sp * cr + sy * sr,
 
-	  cp * sr, sp * cr, 0.;
+	  -cp * sr, -sp * cr, 0.;
 
-	Eigen::Matrix<double, 3, 3> J_global =
+	Eigen::Matrix<double, 3, 3> J_local =
 	  R0.col (2) * R0.col (1).transpose () * dR1 +
 	  R0.col (1) * R0.col (0).transpose () * dR3 +
 	  R0.col (0) * R0.col (2).transpose () * dR2;
 
+	Eigen::Matrix<double, 3, 3> J_global = J_local;
+
 	if (functionId < 3)
 	  {
-	    Eigen::Vector3d p = tk - t0;
+	    Eigen::Vector3d p_;
+	    Eigen::Vector3d p = tk + R * p_ - t0;
 	    Eigen::Matrix<double, 3, 3> hatp;
 	    hat (hatp, p);
 
@@ -252,7 +259,7 @@ namespace roboptim
 	  }
 	else
 	  {
-	    Eigen::Matrix<double, 3, 3> Jr = J_global;
+	    Eigen::Matrix<double, 3, 3> Jr = R0.transpose () * J_global;
 	    gradient.template segment<3> (3) = Jr.row (functionId - 3);
 	  }
 
@@ -265,10 +272,8 @@ namespace roboptim
 
 	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
-	    J_.template block <3, 1> (0, jacobianId) =
-	      R0 * J_.template block <3, 1> (0, jacobianId);
 	    J_.template block <3, 1> (3, jacobianId) =
-	      R0 * J_.template block <3, 1> (3, jacobianId);
+	      R0.transpose () * J_.template block <3, 1> (3, jacobianId);
 	  }
 
 	// And we replace at the right position. The jacobian of the
