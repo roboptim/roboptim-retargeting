@@ -21,9 +21,8 @@
 #include <boost/test/output_test_stream.hpp>
 
 #include <roboptim/core/indent.hh>
-#include <roboptim/core/visualization/gnuplot.hh>
-#include <roboptim/core/visualization/gnuplot-commands.hh>
-#include <roboptim/core/visualization/gnuplot-function.hh>
+#include <roboptim/core/finite-difference-gradient.hh>
+#include <roboptim/core/terminal-color.hh>
 
 #include "roboptim/retargeting/function/joint-to-marker/choreonoid.hh"
 
@@ -37,7 +36,6 @@
 #include "tests-config.h"
 
 using namespace roboptim;
-using namespace roboptim::visualization;
 using namespace roboptim::retargeting;
 
 using boost::test_tools::output_test_stream;
@@ -53,6 +51,7 @@ typedef
 JointToMarkerPositionChoreonoid<EigenMatrixDense> JointToMarker_t;
 typedef
 boost::shared_ptr<JointToMarker_t> JointToMarkerShPtr_t;
+
 
 Function::vector_t evaluateAndPrintTestResult
 (std::ostream& o, JointToMarkerShPtr_t jointToMarker, Function::vector_t& x)
@@ -74,6 +73,17 @@ BOOST_AUTO_TEST_CASE (simple)
 {
   // Configure log4cxx
   configureLog4cxx ();
+
+  // Initialize ROS.
+  int argc = 1;
+  char* argv[] = {"joint-to-marker-choreonoid"};
+  ros::init(argc, argv, "roboptim_retargeting");
+
+  if (!ros::master::check ())
+    {
+      std::cout << "no ROS core is running, skipping test" << std::endl;
+      return;
+    }
 
   // Loading robot.
   cnoid::BodyLoader loader;
@@ -105,10 +115,7 @@ BOOST_AUTO_TEST_CASE (simple)
     std::cout << iendl;
   }
 
-  // Initialize ROS.
-  int argc = 1;
-  char* argv[] = {"joint-to-marker-choreonoid"};
-  ros::init(argc, argv, "roboptim_retargeting");
+  // ROS
   ros::NodeHandle n;
   ros::Rate r(1);
   ros::Publisher markerPub =
@@ -227,5 +234,140 @@ BOOST_AUTO_TEST_CASE (simple)
 	if (!ros::ok ())
 	  return;
       }
+    }
+}
+
+
+
+
+template <typename Derived>
+void displayMatrix (std::ostream& o, const Eigen::MatrixBase<Derived>& m)
+{
+  std::size_t w = 3;
+  o << std::setprecision (w - 1);
+  std::size_t nEltsPerLine = 80 / (2 * w);
+
+  std::size_t offset = 0;
+
+  while (offset < m.cols ())
+    {
+      for (std::size_t i = 0; i < 6; ++i)
+	{
+	  for (std::size_t j = offset; j < offset + nEltsPerLine; ++j)
+	    {
+	      if (j >= m.cols ())
+		break;
+
+	      if (j < 3)
+		o << roboptim::fg::green;
+	      else if (j < 6)
+		o << roboptim::fg::red;
+
+	      o << boost::format ("% 4.2f") % m (i, j) << ",";
+	      o << roboptim::fg::reset;
+	    }
+	  o << iendl;
+	}
+
+      o << iendl;
+      offset += nEltsPerLine;
+    }
+  o << iendl;
+}
+
+
+#define CHECK_GRADIENT(F, I, X)						\
+  BOOST_CHECK_NO_THROW							\
+  (									\
+   try									\
+     {									\
+       checkGradientAndThrow ((F), (I), (X));				\
+     }									\
+   catch(const BadGradient<EigenMatrixDense>& e)			\
+     {									\
+       std::cerr << #F << " (" << I << "):\n" << e << std::endl;	\
+       throw;								\
+     } )
+
+#define CHECK_JACOBIAN(F, X)				\
+  BOOST_CHECK_NO_THROW					\
+  (							\
+   try							\
+     {							\
+       checkJacobianAndThrow ((F), (X));		\
+     }							\
+   catch(const BadJacobian<EigenMatrixDense>& e)	\
+     {							\
+       std::cerr << #F << ":\n" << e << std::endl;	\
+       throw;						\
+     } )
+
+
+
+BOOST_AUTO_TEST_CASE (jacobian)
+{
+  typedef JointToMarkerPositionChoreonoid<EigenMatrixDense>::jacobian_t
+    jacobian_t;
+  typedef JointToMarkerPositionChoreonoid<EigenMatrixDense>::vector_t
+    vector_t;
+
+  // Configure log4cxx
+  configureLog4cxx ();
+
+  // Loading robot.
+  cnoid::BodyLoader loader;
+  cnoid::BodyPtr robot = loader.load (modelFilePath);
+  if (!robot)
+    throw std::runtime_error ("failed to load model");
+
+  // Loading the motion.
+  cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
+  bodyMotion->loadStandardYAMLformat (bodyMotionPath);
+
+  // Body Interaction Mesh
+  cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
+  if (!mesh->addBody (robot, bodyMotion))
+    throw std::runtime_error ("failed to add body to body interaction mesh");
+  if (!mesh->initialize ())
+    throw std::runtime_error ("failed to initialize body interaction mesh");
+
+  JointToMarkerShPtr_t jointToMarker =
+    boost::make_shared<JointToMarker_t> (mesh);
+  GenericFiniteDifferenceGradient<EigenMatrixDense>
+    fdfunction (*jointToMarker);
+
+  vector_t x
+    (jointToMarker->inputSize ());
+  vector_t res
+    (jointToMarker->outputSize ());
+  jacobian_t jacobian
+    (jointToMarker->outputSize (), jointToMarker->inputSize ());
+  jacobian_t jacobianFd
+        (jointToMarker->outputSize (), jointToMarker->inputSize ());
+
+  // Check jacobian
+  for (std::size_t trial = 0; trial < 1; ++trial)
+    {
+      x.setRandom ();
+
+      (*jointToMarker) (res, x);
+      jointToMarker->jacobian (jacobian, x);
+      fdfunction.jacobian (jacobianFd, x);
+
+      std::cout
+	<< "X:" << incindent << iendl
+	<< x << decindent << iendl
+	<< "JointToMarker(X): " << incindent << iendl
+	<< res << decindent << iendl
+	<< "JointToMarker(X) Jacobian: " << iendl;
+
+      displayMatrix (std::cout, jacobian);
+
+      std::cout << "Finite Differences Jacobian: " << iendl;
+      displayMatrix (std::cout, jacobianFd);
+
+      // for (std::size_t functionId = 0;
+      // 	   functionId < jointToMarker->outputSize (); ++functionId)
+      // 	CHECK_GRADIENT (*jointToMarker, functionId, x);
     }
 }

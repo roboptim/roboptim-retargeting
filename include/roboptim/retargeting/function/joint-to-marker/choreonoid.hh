@@ -3,7 +3,6 @@
 # include <stdexcept>
 
 # include <roboptim/core/differentiable-function.hh>
-# include <roboptim/core/finite-difference-gradient.hh>
 
 // For update configuration function.
 # include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
@@ -40,7 +39,9 @@ namespace roboptim
 	   "JointToMarkerPosition"),
 	  mesh_ (mesh),
 	  markerPositions_ (mesh->numMarkers ()),
-	  fd_ (boost::make_shared<fdFunction_t> (*this))
+	  jointPath_ (),
+	  J_ (),
+	  dR_ ()
       {
 	if (mesh_->numBodies () != 1)
 	  {
@@ -51,6 +52,11 @@ namespace roboptim
 	    fmt % mesh_->numBodies ();
 	    throw std::runtime_error (fmt.str ());
 	  }
+
+	J_.resize (3, mesh->bodyInfo (0).body->numJoints ());
+	dR_[0].setZero ();
+	dR_[1].setZero ();
+	dR_[2].setZero ();
       }
 
       virtual ~JointToMarkerPositionChoreonoid () throw ()
@@ -99,21 +105,218 @@ namespace roboptim
       void
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
-		     size_type i)
+		     size_type functionId)
 	const throw ()
       {
-	fd_->gradient (gradient, x, i);
+	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
+	cnoid::BodyPtr& body = bodyInfo.body;
+	cnoid::Link* rootLink = body->rootLink ();
+
+	// Determine which marker matches this
+	//
+	// dim means which dimension (0 is x, 1 is y, 2 is z)
+	//
+	// markerId is the marker index that has to be considered
+	std::size_t dim = functionId % 3;
+	std::size_t markerId = (functionId - dim) / 3;
+
+	gradient.template segment<3> (0).setZero ();
+	gradient[dim] = 1.;
+
+	// look for marker information
+        const std::vector<cnoid::BodyIMesh::MarkerPtr>&
+	  markers = bodyInfo.markers;
+
+	const cnoid::BodyIMesh::MarkerPtr& marker = markers[markerId];
+
+	// Update paths.
+	jointPath_.setPath (rootLink, marker->link);
+
+	// Set the robot configuration.
+	updateRobotConfiguration (body, x);
+
+	// Update body positions
+	body->calcForwardKinematics ();
+
+	// Compute the jacobian.
+	Eigen::Vector3d localPos;
+	if(marker->localPos)
+	  localPos = *marker->localPos;
+	else
+	  localPos.setZero ();
+
+	cnoid::setJacobian<0x7, 0, 0, true>
+	  (jointPath_, marker->link, localPos, J_);
+
+	const typename cnoid::Position::LinearPart& R0 =
+	  jointPath_.baseLink ()->T ().linear ();
+	const typename cnoid::Position::LinearPart& R =
+	  jointPath_.endLink ()->T ().linear ();
+	const typename cnoid::Position::TranslationPart& t0 =
+	  jointPath_.baseLink ()->T ().translation ();
+	const typename cnoid::Position::TranslationPart& tk =
+	  jointPath_.endLink ()->T ().translation ();
+
+	updateDR (x.template segment<3> (3));
+
+	Eigen::Matrix<value_type, 3, 3> J_global =
+	  R0.col (2) * R0.col (1).transpose () * dR_[0] +
+	  R0.col (1) * R0.col (0).transpose () * dR_[2] +
+	  R0.col (0) * R0.col (2).transpose () * dR_[1];
+
+	Eigen::Matrix<value_type, 3, 1> p = tk + R * localPos - t0;
+	Eigen::Matrix<value_type, 3, 3> hatp;
+	hat (hatp, p);
+
+	gradient.template segment<3> (3) = (-hatp * J_global).row (dim);
+
+	// DOF (all columns > 5).
+
+	// First we compute the jacobian for the current joint path.
+
+	// And we replace at the right position. The jacobian of the
+	// joint path is incomplete so we have to copy the values to
+	// the right location manually. All the joints which are not
+	// in the joint path will not have any effect.
+	std::size_t jointId = 0;
+	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	  {
+	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
+	    assert (jointId < gradient.size ());
+	    assert (jointId >= 6);
+
+	    gradient[jointId] = J_ (dim, jacobianId);
+	  }
+
+      }
+
+      void
+      impl_jacobian (jacobian_t& jacobian,
+		     const argument_t& x)
+	const throw ()
+      {
+	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
+	cnoid::BodyPtr& body = bodyInfo.body;
+	cnoid::Link* rootLink = body->rootLink ();
+	const std::vector<cnoid::BodyIMesh::MarkerPtr>&
+	  markers = bodyInfo.markers;
+
+	jacobian.setZero ();
+
+	// Set the robot configuration.
+	updateRobotConfiguration (body, x);
+
+	// Update body positions
+	body->calcForwardKinematics ();
+
+	for (std::size_t markerId = 0;
+	     markerId < markers.size (); ++markerId)
+	{
+	  jacobian.template block<3, 3> (markerId * 3, 0).setIdentity ();
+
+	  const cnoid::BodyIMesh::MarkerPtr& marker = markers[markerId];
+
+	  // Update paths.
+	  jointPath_.setPath (rootLink, marker->link);
+
+	  // Compute the jacobian.
+	  Eigen::Vector3d localPos;
+	  if(marker->localPos)
+	    localPos = *marker->localPos;
+	  else
+	    localPos.setZero ();
+
+	  cnoid::setJacobian<0x7, 0, 0, true>
+	    (jointPath_, marker->link, localPos, J_);
+
+	  const typename cnoid::Position::LinearPart& R0 =
+	    jointPath_.baseLink ()->T ().linear ();
+	  const typename cnoid::Position::LinearPart& R =
+	    jointPath_.endLink ()->T ().linear ();
+	  const typename cnoid::Position::TranslationPart& t0 =
+	    jointPath_.baseLink ()->T ().translation ();
+	  const typename cnoid::Position::TranslationPart& tk =
+	    jointPath_.endLink ()->T ().translation ();
+
+	  updateDR (x.template segment<3> (3));
+
+	  Eigen::Matrix<value_type, 3, 3> J_global =
+	    R0.col (2) * R0.col (1).transpose () * dR_[0] +
+	    R0.col (1) * R0.col (0).transpose () * dR_[2] +
+	    R0.col (0) * R0.col (2).transpose () * dR_[1];
+
+	  Eigen::Matrix<value_type, 3, 1> p = tk + R * localPos - t0;
+	  Eigen::Matrix<value_type, 3, 3> hatp;
+	  hat (hatp, p);
+
+	  jacobian.template block<3, 3> (markerId * 3, 3) = -hatp * J_global;
+
+	  // DOF (all columns > 5).
+
+	  // First we compute the jacobian for the current joint path.
+
+	  // And we replace at the right position. The jacobian of the
+	  // joint path is incomplete so we have to copy the values to
+	  // the right location manually. All the joints which are not
+	  // in the joint path will not have any effect.
+	  std::size_t jointId = 0;
+	  for (std::size_t jacobianId = 0;
+	       jacobianId < jointPath_.numJoints (); ++jacobianId)
+	    {
+	      jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
+	      assert (jointId < jacobian.cols ());
+	      assert (jointId >= 6);
+
+	      jacobian.template block<3, 1> (markerId * 3, jointId) =
+		J_.col (jacobianId);
+	    }
+	}
+      }
+
+      // See doc/sympy/euler-angles.py
+      template <typename Derived>
+      void updateDR (const typename Eigen::MatrixBase<Derived>& x) const throw ()
+      {
+	value_type cr, sr, cp, sp, cy, sy;
+	sincos (x[0], &sr, &cr);
+	sincos (x[1], &sp, &cp);
+	sincos (x[2], &sy, &cy);
+
+	dR_[0] <<
+	  0.,  -cy * sp,  -sy * cp,
+	  0.,  -sy * sp,  cy * cp,
+	  0.,  -cp,       0.;
+
+	dR_[1] <<
+	  cy * sp * cr + sy * sr,
+	  cy * cp * sr,
+	  -sy * sp * sr - cy * cr,
+
+	  sy * sp * cr - cy * sr,
+	  sy * cp * sr,
+	  cy * sp * sr - sy * cr,
+
+	  cp * cr, -sp * sr, 0.;
+
+	dR_[2] <<
+	  -cy * sp * sr + sy * cr,
+	  cy * cp * cr,
+	  -sy * sp * cr + cy * sr,
+
+	  - sy * sp * sr - cy * cr,
+	  sy * cp * cr,
+	  cy * sp * cr + sy * sr,
+
+	  -cp * sr, -sp * cr, 0.;
       }
 
     private:
       cnoid::BodyIMeshPtr mesh_;
       mutable std::vector<cnoid::Vector3> markerPositions_;
 
-      // Temporary - finite difference gradient.
-      typedef roboptim::GenericFiniteDifferenceGradient<
-	T, finiteDifferenceGradientPolicies::Simple<T> >
-      fdFunction_t;
-      boost::shared_ptr<fdFunction_t> fd_;
+      mutable cnoid::JointPath jointPath_;
+      mutable cnoid::MatrixXd J_;
+      mutable boost::array<Eigen::Matrix<value_type, 3, 3>, 3> dR_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
