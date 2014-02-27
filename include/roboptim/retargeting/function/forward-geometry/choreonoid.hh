@@ -1,6 +1,7 @@
 #ifndef ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FORWARD_GEOMETRY_CHOREONOID_HH
 # include <cmath>
+# include <boost/array.hpp>
 # include <boost/format.hpp>
 # include <boost/make_shared.hpp>
 
@@ -72,6 +73,7 @@ namespace roboptim
 	  jointPath_ (robot->rootLink ()),
 	  angleAxis_ (),
 	  J_ (),
+	  dR_ (),
 	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {
 	if (bodyId >= robot->numLinks () || robot->link (bodyId_) == 0)
@@ -85,6 +87,9 @@ namespace roboptim
 
 	jointPath_.setPath (robot->rootLink (), robot->link (bodyId_));
 	J_.resize(6, jointPath_.numJoints ());
+	dR_[0].setZero ();
+	dR_[1].setZero ();
+	dR_[2].setZero ();
       }
 
       explicit ForwardGeometryChoreonoid
@@ -94,6 +99,7 @@ namespace roboptim
 	  bodyId_ (0),
 	  jointPath_ (robot->rootLink ()),
 	  J_ (),
+	  dR_ (),
 	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {
 	cnoid::Link* link = robot->link (bodyName.c_str ());
@@ -118,6 +124,9 @@ namespace roboptim
 
 	jointPath_.setPath (robot->rootLink (), robot->link (bodyId_));
 	J_.resize(6, jointPath_.numJoints ());
+	dR_[0].setZero ();
+	dR_[1].setZero ();
+	dR_[2].setZero ();
       }
 
 
@@ -181,85 +190,43 @@ namespace roboptim
 	// Update positions.
 	robot_->calcForwardKinematics ();
 
-	gradient.setZero ();
-
 	// Free floating (columns 0 to 5).
 
 	// columns 0 to 2 (translation)
+	gradient.template segment<3> (0).setZero ();
 	if (functionId < 3.)
 	  gradient[functionId] = 1.;
 
-#ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-	Eigen::internal::set_is_malloc_allowed (true);
-#endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
-
 	// columns 3 to 6 (rotation)
-	Eigen::Matrix3d R0;
-	eulerToTransform (R0, x.template segment<3> (3));
-
-	// const typename cnoid::Position::LinearPart& R0 =
-	//   jointPath_.baseLink ()->T ().linear ();
+	const typename cnoid::Position::LinearPart& R0 =
+	  jointPath_.baseLink ()->T ().linear ();
 	const typename cnoid::Position::LinearPart& R =
 	  jointPath_.endLink ()->T ().linear ();
-
 	const typename cnoid::Position::TranslationPart& t0 =
 	  jointPath_.baseLink ()->T ().translation ();
 	const typename cnoid::Position::TranslationPart& tk =
 	  jointPath_.endLink ()->T ().translation ();
 
-	double cr, sr, cp, sp, cy, sy;
-	sincos (x[3], &sr, &cr);
-	sincos (x[4], &sp, &cp);
-	sincos (x[5], &sy, &cy);
+	updateDR (x.template segment<3> (3));
 
-	Eigen::Matrix<double, 3, 3> dR1, dR2, dR3;
-
-	dR1 <<
-	  0.,  -cy * sp,  -sy * cp,
-	  0.,  -sy * sp,  cy * cp,
-	  0.,  -cp,       0.;
-
-	dR2 <<
-	  cy * sp * cr + sy * sr,
-	  cy * cp * sr,
-	  -sy * sp * sr - cy * cr,
-
-	  sy * sp * cr - cy * sr,
-	  sy * cp * sr,
-	  cy * sp * sr - sy * cr,
-
-	  cp * cr, -sp * sr, 0.;
-	dR3 <<
-	  -cy * sp * sr + sy * cr,
-	  cy * cp * cr,
-	  -sy * sp * cr + cy * sr,
-
-	  - sy * sp * sr - cy * cr,
-	  sy * cp * cr,
-	  cy * sp * cr + sy * sr,
-
-	  -cp * sr, -sp * cr, 0.;
-
-	Eigen::Matrix<double, 3, 3> J_local =
-	  R0.col (2) * R0.col (1).transpose () * dR1 +
-	  R0.col (1) * R0.col (0).transpose () * dR3 +
-	  R0.col (0) * R0.col (2).transpose () * dR2;
-
-	Eigen::Matrix<double, 3, 3> J_global = J_local;
+	Eigen::Matrix<value_type, 3, 3> J_global =
+	  R0.col (2) * R0.col (1).transpose () * dR_[0] +
+	  R0.col (1) * R0.col (0).transpose () * dR_[2] +
+	  R0.col (0) * R0.col (2).transpose () * dR_[1];
 
 	if (functionId < 3)
 	  {
-	    Eigen::Vector3d p_;
-	    Eigen::Vector3d p = tk + R * p_ - t0;
-	    Eigen::Matrix<double, 3, 3> hatp;
+	    Eigen::Matrix<value_type, 3, 1> p_;
+	    Eigen::Matrix<value_type, 3, 1> p = tk + R * p_ - t0;
+	    Eigen::Matrix<value_type, 3, 3> hatp;
 	    hat (hatp, p);
 
-	    Eigen::Matrix<double, 3, 3> Jt = -hatp * J_global;
+	    Eigen::Matrix<value_type, 3, 3> Jt = -hatp * J_global;
 	    gradient.template segment<3> (3) = Jt.row (functionId);
 	  }
 	else
 	  {
-	    Eigen::Matrix<double, 3, 3> Jr = R0.transpose () * J_global;
+	    Eigen::Matrix<value_type, 3, 3> Jr = R0.transpose () * J_global;
 	    gradient.template segment<3> (3) = Jr.row (functionId - 3);
 	  }
 
@@ -273,7 +240,7 @@ namespace roboptim
 	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    J_.template block <3, 1> (3, jacobianId) =
-	      R0.transpose () * J_.template block <3, 1> (3, jacobianId);
+	      R0.transpose() * J_.template block <3, 1> (3, jacobianId);
 	  }
 
 	// And we replace at the right position. The jacobian of the
@@ -291,6 +258,74 @@ namespace roboptim
 	  }
       }
 
+      virtual void impl_jacobian2 (jacobian_t& J, const argument_t& x)
+	const throw ()
+      {
+	// Set the robot configuration.
+	updateRobotConfiguration (robot_, x);
+
+	// Update positions.
+	robot_->calcForwardKinematics ();
+
+	// Free floating (columns 0 to 5).
+
+	// columns 3 to 6 (rotation)
+	const typename cnoid::Position::LinearPart& R0 =
+	  jointPath_.baseLink ()->T ().linear ();
+	const typename cnoid::Position::LinearPart& R =
+	  jointPath_.endLink ()->T ().linear ();
+	const typename cnoid::Position::TranslationPart& t0 =
+	  jointPath_.baseLink ()->T ().translation ();
+	const typename cnoid::Position::TranslationPart& tk =
+	  jointPath_.endLink ()->T ().translation ();
+
+	updateDR (x.template segment<3> (3));
+
+	Eigen::Matrix<value_type, 3, 3> J_global =
+	  R0.col (2) * R0.col (1).transpose () * dR_[0] +
+	  R0.col (1) * R0.col (0).transpose () * dR_[2] +
+	  R0.col (0) * R0.col (2).transpose () * dR_[1];
+
+	Eigen::Matrix<value_type, 3, 1> p_;
+	Eigen::Matrix<value_type, 3, 1> p = tk + R * p_ - t0;
+	Eigen::Matrix<value_type, 3, 3> hatp;
+	hat (hatp, p);
+
+	J.template block<3, 3> (0, 0).setIdentity ();
+	J.template block<3, 3> (3, 0).setZero ();
+
+	J.template block<3, 3> (0, 3) = -hatp * J_global;
+	J.template block<3, 3> (3, 3) = R0.transpose () * J_global;
+
+	// DOF (all columns > 5).
+
+	// First we compute the jacobian for the current joint path.
+	//jointPath_.calcJacobian (J_);
+	cnoid::setJacobian<0x3f, 0, 0>
+	  (this->jointPath_, this->jointPath_.endLink (), J_);
+
+	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	  {
+	    J_.template block <3, 1> (3, jacobianId) =
+	      R0.transpose() * J_.template block <3, 1> (3, jacobianId);
+	  }
+
+	// And we replace at the right position. The jacobian of the
+	// joint path is incomplete so we have to copy the values to
+	// the right location manually. All the joints which are not
+	// in the joint path will not have any effect.
+	std::size_t jointId = 0;
+	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	  {
+	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
+	    assert (jointId < J.cols ());
+	    assert (jointId >= 6);
+
+	    J.col (jointId) = J_.col (jacobianId);
+	  }
+
+      }
+
       // temporary version using finite differences gradient.
       void
       impl_gradient (gradient_t& gradient,
@@ -299,6 +334,43 @@ namespace roboptim
 	const throw ()
       {
 	fd_->gradient (gradient, x, functionId);
+      }
+
+      // See doc/sympy/euler-angles.py
+      template <typename Derived>
+      void updateDR (const typename Eigen::MatrixBase<Derived>& x) const throw ()
+      {
+	value_type cr, sr, cp, sp, cy, sy;
+	sincos (x[0], &sr, &cr);
+	sincos (x[1], &sp, &cp);
+	sincos (x[2], &sy, &cy);
+
+	dR_[0] <<
+	  0.,  -cy * sp,  -sy * cp,
+	  0.,  -sy * sp,  cy * cp,
+	  0.,  -cp,       0.;
+
+	dR_[1] <<
+	  cy * sp * cr + sy * sr,
+	  cy * cp * sr,
+	  -sy * sp * sr - cy * cr,
+
+	  sy * sp * cr - cy * sr,
+	  sy * cp * sr,
+	  cy * sp * sr - sy * cr,
+
+	  cp * cr, -sp * sr, 0.;
+
+	dR_[2] <<
+	  -cy * sp * sr + sy * cr,
+	  cy * cp * cr,
+	  -sy * sp * cr + cy * sr,
+
+	  - sy * sp * sr - cy * cr,
+	  sy * cp * cr,
+	  cy * sp * cr + sy * sr,
+
+	  -cp * sr, -sp * cr, 0.;
       }
 
     private:
@@ -314,6 +386,19 @@ namespace roboptim
       /// \brief Jacobian computed by Choreonoid (buffer).
       mutable cnoid::MatrixXd J_;
 
+      /// \brief Variation of the derivation w.r.t parameters.
+      ///
+      /// Jacobian of the function which associates to the rotation
+      /// parameters the rotation matrix.
+      ///
+      /// Jacobian value is expressed at R0 the rotation of the base
+      /// link (i.e. waist).
+      ///
+      /// dR_[0] is:
+      /// \f$\frac{\partial R_{0}}{\partial \theta}(\theta)\f$
+      ///
+      /// \f$R_0\f$ is the rotation matrix first column.
+      mutable boost::array<Eigen::Matrix<value_type, 3, 3>, 3> dR_;
 
       // Temporary - finite difference gradient.
       typedef roboptim::GenericFiniteDifferenceGradient<
@@ -321,6 +406,8 @@ namespace roboptim
       fdFunction_t;
       boost::shared_ptr<fdFunction_t> fd_;
 
+    public:
+      EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
