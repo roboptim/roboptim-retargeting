@@ -38,7 +38,28 @@ eulerToTransform (Eigen::MatrixBase<Derived> const& transform,
 		  const Eigen::MatrixBase<OtherDerived>& eulerAngles);
 
 /// \brief Set the rotational part of a transformation from
-///        Euler angles parameters.
+///        U\f$\theta\f$ parameters (three parameters version).
+///
+///
+/// The three parameters encodes the rotation axis:
+///
+/// \f$\vec{v} = (\alpha, \beta, \gamma)\f$
+///
+/// The vector norm encodes the amount of rotation around the rotation
+/// axis.
+///
+/// A notation exception is that if the norm is inferior to a
+/// threshold the rotation matrix is set to identity.
+///
+/// \param[out] utheta vector \f$(\gamma, \beta, \alpha)\f$
+/// \param[in] transform store results
+template <typename Derived, typename OtherDerived>
+void
+uthetaToTransform (Eigen::MatrixBase<Derived> const& transform,
+		   const Eigen::MatrixBase<OtherDerived>& utheta);
+
+
+/// \brief Compute Euler angles parameters from a rotation matrix.
 ///
 /// \b Notation
 ///
@@ -61,12 +82,25 @@ eulerToTransform (Eigen::MatrixBase<Derived> const& transform,
 ///
 /// This implementation is an adaptation of the one in sot-core.
 ///
-/// \param[out] linear rotation matrix
-/// \param[in] eulerAngles vector \f$(\gamma, \beta, \alpha)\f$
+/// \param[out] eulerAngles vector \f$(\gamma, \beta, \alpha)\f$
+/// \param[in] linear rotation matrix
 template <typename Derived, typename OtherDerived>
 void
 transformToEuler (Eigen::MatrixBase<Derived> const& eulerAngles,
 		  const Eigen::MatrixBase<OtherDerived>& linear);
+
+/// \brief Compute U\f$\theta\f$ parameters from a rotation matrix.
+///
+/// \f$\vec{v} = (\alpha, \beta, \gamma)\f$
+///
+/// This relies on the Eigen::AngleAxis class.
+///
+/// \param[out] utheta vector \f$(\gamma, \beta, \alpha)\f$
+/// \param[in] linear rotation matrix
+template <typename Derived, typename OtherDerived>
+void
+transformToUTheta (Eigen::MatrixBase<Derived> const& utheta,
+		   const Eigen::MatrixBase<OtherDerived>& linear);
 
 /// \brief Build a skew-symmetric matrix from vector of size 3.
 ///
@@ -140,6 +174,23 @@ transformToVector (Eigen::MatrixBase<Derived> const& result,
 		   const Eigen::Transform<typename Derived::RealScalar,
 					  _Dim, _Mode, _Options>& transform);
 
+/// \brief Store a transformation as a vector.
+///
+/// The output vector contains three parameters for translation and
+/// three for the rotation (\f$U\theta\f$).
+///
+/// \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
+///
+/// \see uthetaToTransform transformToUtheta
+/// \param[out] result result vector
+///                    \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
+/// \param[in]  transform input transformation
+template <typename Derived, int _Dim, int _Mode, int _Options>
+void
+transformToUtheta (Eigen::MatrixBase<Derived> const& result,
+		       const Eigen::Transform<typename Derived::RealScalar,
+					      _Dim, _Mode, _Options>& transform);
+
 /// \brief Convert a vector to a transform.
 ///
 /// The input vector must three parameters for translation and
@@ -148,14 +199,31 @@ transformToVector (Eigen::MatrixBase<Derived> const& result,
 /// \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
 ///
 /// \see eulerToTransform transformToEuler
-/// \param[in]  transform output transformation
-/// \param[out] result parameters vector
+/// \param[out] transform output transformation
+/// \param[in]  parameters vector
 ///             \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
 template <typename Derived, int _Dim, int _Mode, int _Options>
 void
 vectorToTransform (Eigen::Transform<typename Derived::RealScalar,
 				    _Dim, _Mode, _Options>& transform,
 		   const Eigen::MatrixBase<Derived>& result);
+
+/// \brief Convert a vector to a transform.
+///
+/// The input vector must three parameters for translation and
+/// three for the rotation (U\f$\theta\f$).
+///
+/// \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
+///
+/// \see uthetaToTransform transformToUTheta
+/// \param[out]  transform output transformation
+/// \param[in]   parameters vector
+///              \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
+template <typename Derived, int _Dim, int _Mode, int _Options>
+void
+uthetaPoseToTransform (Eigen::Transform<typename Derived::RealScalar,
+					_Dim, _Mode, _Options>& transform,
+		       const Eigen::MatrixBase<Derived>& result);
 
 # include <roboptim/retargeting/eigen-rigid-body.hxx>
 #endif //! ROBOPTIM_RETARGETING_EIGEN_RIGID_BODY_HH

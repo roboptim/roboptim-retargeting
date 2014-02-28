@@ -33,6 +33,29 @@ eulerToTransform (Eigen::MatrixBase<Derived> const& linear,
 
 template <typename Derived, typename OtherDerived>
 void
+uthetaToTransform (Eigen::MatrixBase<Derived> const& linear,
+		   const Eigen::MatrixBase<OtherDerived>& utheta)
+{
+  EIGEN_STATIC_ASSERT_MATRIX_SPECIFIC_SIZE (Derived, 3, 3);
+  EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE (OtherDerived, 3);
+
+  Eigen::MatrixBase<Derived>& linear_ =
+    const_cast<Eigen::MatrixBase<Derived>&> (linear);
+
+  typename Derived::RealScalar angle = utheta.norm ();
+
+  if (angle < 1e-6)
+    linear_.setIdentity ();
+  else
+    {
+      Eigen::Matrix<typename Derived::RealScalar, 3, 1> axis = utheta / angle;
+      Eigen::AngleAxis<typename Derived::RealScalar> angleAxis (angle, axis);
+      angleAxis.toRotationMatix (linear_);
+    }
+}
+
+template <typename Derived, typename OtherDerived>
+void
 transformToEuler (Eigen::MatrixBase<Derived> const& eulerAngles,
 		  const Eigen::MatrixBase<OtherDerived>& linear)
 {
@@ -50,6 +73,24 @@ transformToEuler (Eigen::MatrixBase<Derived> const& eulerAngles,
 			       std::sqrt (ny * ny + nx * nx));
   eulerAngles_[2] = std::atan2 (linear (1, 0), linear (0, 0));
 }
+
+template <typename Derived, typename OtherDerived>
+void
+transformToUTheta (Eigen::MatrixBase<Derived> const& utheta,
+		   const Eigen::MatrixBase<OtherDerived>& linear)
+{
+  EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE (Derived, 3);
+  EIGEN_STATIC_ASSERT_MATRIX_SPECIFIC_SIZE (OtherDerived, 3, 3);
+
+  Eigen::MatrixBase<Derived>& utheta_ =
+    const_cast<Eigen::MatrixBase<Derived>&> (utheta);
+
+  Eigen::AngleAxis<typename Derived::RealScalar> angleAxis (linear);
+
+  utheta_ = angleAxis.axis ();
+  utheta_ *= angleAxis.angle ();
+}
+
 
 template <typename Derived, typename OtherDerived>
 void
@@ -122,6 +163,23 @@ transformToVector (Eigen::MatrixBase<Derived> const& result,
 
 template <typename Derived, int _Dim, int _Mode, int _Options>
 void
+transformToUtheta (Eigen::MatrixBase<Derived> const& result,
+		       const Eigen::Transform<typename Derived::RealScalar,
+					      _Dim, _Mode, _Options>& transform)
+{
+  EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
+  assert (result.size () == 6);
+
+  Eigen::MatrixBase<Derived>& result_ =
+    const_cast<Eigen::MatrixBase<Derived>&> (result);
+
+  result_.template segment<3> (0) = transform.translation ();
+  transformToUTheta (result_.template segment<3> (3), transform.linear ());
+}
+
+
+template <typename Derived, int _Dim, int _Mode, int _Options>
+void
 vectorToTransform (Eigen::Transform<typename Derived::RealScalar,
 				    _Dim, _Mode, _Options>& transform,
 		   const Eigen::MatrixBase<Derived>& result)
@@ -131,6 +189,20 @@ vectorToTransform (Eigen::Transform<typename Derived::RealScalar,
 
   transform.translation () = result.template segment<3> (0);
   eulerToTransform (transform.linear (), result.template segment<3> (3));
+}
+
+
+template <typename Derived, int _Dim, int _Mode, int _Options>
+void
+uthetaPoseToTransform (Eigen::Transform<typename Derived::RealScalar,
+					_Dim, _Mode, _Options>& transform,
+		       const Eigen::MatrixBase<Derived>& result)
+{
+  EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
+  assert (result.size () == 6);
+
+  transform.translation () = result.template segment<3> (0);
+  uthetaToTransform (transform.linear (), result.template segment<3> (3));
 }
 
 #endif //! ROBOPTIM_RETARGETING_EIGEN_RIGID_BODY_HXX
