@@ -134,6 +134,8 @@ void displayMatrix (std::ostream& o, const T& m)
 		o << roboptim::fg::green;
 	      else if (j < 6)
 		o << roboptim::fg::red;
+	      else if (i >= 3)
+		o << roboptim::fg::orange;
 
 	      o << boost::format ("% 4.2f") % m (i, j) << ",";
 	      o << roboptim::fg::reset;

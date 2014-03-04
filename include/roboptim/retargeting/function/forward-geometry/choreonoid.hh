@@ -154,25 +154,21 @@ namespace roboptim
       /// | function id || tx | ty | tz | rx | ry | rz | dof0 | ... | dofN |
       /// ------------------------------------------------------------------
       /// | 0 (tx)      || 1  | 0  | 0  |              |                   |
-      /// | 1 (ty)      || 0  | 1  | 0  |      ?       | IMPLEMENTED USING |
-      /// | 2 (tz)      || 0  | 0  | 1  |              |    CHOREONOID     |
+      /// | 1 (ty)      || 0  | 1  | 0  |      [1]     |     Choreonoid    |
+      /// | 2 (tz)      || 0  | 0  | 1  |              |                   |
       /// | 3 (rx)      || 0  | 0  | 0  |              |                   |
-      /// | 4 (ry)      || 0  | 0  | 0  |      ?       | ROTATION PART IS  |
-      /// | 5 (rz)      || 0  | 0  | 0  |              | CURRENTLY WRONG   |
+      /// | 4 (ry)      || 0  | 0  | 0  |      [2]     |     Choreonoid    |
+      /// | 5 (rz)      || 0  | 0  | 0  |              |                   |
       /// ------------------------------------------------------------------
       ///
       /// I.e. influence of configuration change on the body position.
       ///
       /// In our case, we only compute one line of this array.
       ///
-      ///
-      /// Issues:
-      /// -------
-      ///
-      /// - rotational part not known
-      ///
-      /// - rotation representations in RobOptim and Choreonoid are not
-      ///   the same
+      /// Formula [1] and [2] are available in "On the Dynamics
+      /// Modeling of Free-Floating-Base Articulated Mechanisms and
+      /// Applications to Humanoid Whole-Body Dynamics and Control",
+      /// K. Bouyarmane, A. Kheddar.
       ///
       ///
       /// \param gradient Gradient
