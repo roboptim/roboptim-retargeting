@@ -175,33 +175,33 @@ BOOST_AUTO_TEST_CASE (simple)
   if (!mesh->initialize ())
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
-  bool enableFreeze = false;
-  bool enableVelocity = false;
+  bool enableFreeze = true;
+  bool enableVelocity = true;
   bool enablePosition = false;
   bool enableCollision = false;
   bool enableTorque = false;
   bool enableZmp = false;
-  std::string solverName = "cfsqp";
+  std::string solverName = "ipopt";
   std::size_t oneFrameFullSize = 6 + bodyMotion->jointPosSeq ()->numParts ();
   std::vector<bool> enabledDofs (oneFrameFullSize, true);
 
   // Disable useless dofs.
-  enabledDofs[6 + 17] = false; // NECK_Y
-  enabledDofs[6 + 18] = false; // NECK_R
-  enabledDofs[6 + 19] = false; // NECK_P
-  enabledDofs[6 + 20] = false; // EYEBROW_P
-  enabledDofs[6 + 21] = false; // EYELID_P
-  enabledDofs[6 + 22] = false; // EYE_P
-  enabledDofs[6 + 23] = false; // EYE_Y
-  enabledDofs[6 + 24] = false; // MOUTH_P
-  enabledDofs[6 + 25] = false; // LOWERLIP_P
-  enabledDofs[6 + 26] = false; // UPPERLIP_P
-  enabledDofs[6 + 27] = false; // CHEEK_P
-  enabledDofs[6 + 28] = false; // FIXME - PROBLEMATIC DOF disabled velocity too large R_SHOULDER_P
-  enabledDofs[6 + 34] = false; // R_HAND_J0
-  enabledDofs[6 + 35] = false; // R_HAND_J1
-  enabledDofs[6 + 42] = false; // L_HAND_J0
-  enabledDofs[6 + 43] = false; // L_HAND_J1
+  // enabledDofs[6 + 17] = false; // NECK_Y
+  // enabledDofs[6 + 18] = false; // NECK_R
+  // enabledDofs[6 + 19] = false; // NECK_P
+  // enabledDofs[6 + 20] = false; // EYEBROW_P
+  // enabledDofs[6 + 21] = false; // EYELID_P
+  // enabledDofs[6 + 22] = false; // EYE_P
+  // enabledDofs[6 + 23] = false; // EYE_Y
+  // enabledDofs[6 + 24] = false; // MOUTH_P
+  // enabledDofs[6 + 25] = false; // LOWERLIP_P
+  // enabledDofs[6 + 26] = false; // UPPERLIP_P
+  // enabledDofs[6 + 27] = false; // CHEEK_P
+  // enabledDofs[6 + 28] = false; // FIXME - PROBLEMATIC DOF disabled velocity too large R_SHOULDER_P
+  // enabledDofs[6 + 34] = false; // R_HAND_J0
+  // enabledDofs[6 + 35] = false; // R_HAND_J1
+  // enabledDofs[6 + 42] = false; // L_HAND_J0
+  // enabledDofs[6 + 43] = false; // L_HAND_J1
 
   typedef problem::Joint::size_type size_type;
   typedef problem::Joint::solver_t solver_t;

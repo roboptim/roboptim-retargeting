@@ -175,7 +175,7 @@ namespace roboptim
       /// \param x configuration (free floating then DOF values)
       /// \param functionId jacobian line to be computed
       void
-      impl_gradient2 (gradient_t& gradient,
+      impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type functionId)
 	const throw ()
@@ -236,7 +236,7 @@ namespace roboptim
 	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    J_.template block <3, 1> (3, jacobianId) =
-	      R0.transpose() * J_.template block <3, 1> (3, jacobianId);
+	      R0 * J_.template block <3, 1> (3, jacobianId);
 	  }
 
 	// And we replace at the right position. The jacobian of the
@@ -254,7 +254,7 @@ namespace roboptim
 	  }
       }
 
-      virtual void impl_jacobian2 (jacobian_t& J, const argument_t& x)
+      virtual void impl_jacobian (jacobian_t& J, const argument_t& x)
 	const throw ()
       {
 	// Set the robot configuration.
@@ -303,7 +303,7 @@ namespace roboptim
 	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    J_.template block <3, 1> (3, jacobianId) =
-	      R0.transpose() * J_.template block <3, 1> (3, jacobianId);
+	      R0 * J_.template block <3, 1> (3, jacobianId);
 	  }
 
 	// And we replace at the right position. The jacobian of the
@@ -319,12 +319,11 @@ namespace roboptim
 
 	    J.col (jointId) = J_.col (jacobianId);
 	  }
-
       }
 
       // temporary version using finite differences gradient.
       void
-      impl_gradient (gradient_t& gradient,
+      impl_gradient2 (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type functionId)
 	const throw ()

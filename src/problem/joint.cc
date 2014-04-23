@@ -733,7 +733,7 @@ namespace roboptim
 	solver.parameters ()["ipopt.dual_inf_tol"].value = 1.;
 	solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-3;
 
-	// first-order
+	// first-order / none
 	solver.parameters ()["ipopt.derivative_test"].value = "first-order";
 	solver.parameters ()["nag.verify-level"].value = 0;
 
