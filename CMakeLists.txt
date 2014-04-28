@@ -52,6 +52,8 @@ SET(BOOST_COMPONENTS date_time filesystem system
   thread program_options unit_test_framework)
 SEARCH_FOR_BOOST()
 
+ADD_REQUIRED_DEPENDENCY("libmocap")
+
 ADD_REQUIRED_DEPENDENCY("roboptim-core >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-trajectory >= 0.5")
@@ -71,6 +73,7 @@ HEADER_INSTALL("${HEADERS}")
 
 ADD_SUBDIRECTORY(share)
 ADD_SUBDIRECTORY(src)
+#ADD_SUBDIRECTORY(bin)
 ADD_SUBDIRECTORY(tests)
 
 SETUP_PROJECT_FINALIZE()
