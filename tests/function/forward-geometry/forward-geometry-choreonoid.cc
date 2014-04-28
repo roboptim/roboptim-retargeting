@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE (root_link)
     << "ForwardGeometry(X): " << incindent << iendl
     << res << decindent << iendl;
 
-  for (std::size_t i = 0; i < 6; ++i)
+  for (vector_t::Index i = 0; i < 6; ++i)
     BOOST_CHECK_EQUAL (res[i], 0.);
 
   // 1, 2, 3, Zero*N
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE (root_link)
     << "ForwardGeometry(X): " << incindent << iendl
     << res << decindent << iendl;
 
-  for (std::size_t i = 0; i < 3; ++i)
+  for (vector_t::Index i = 0; i < 3; ++i)
     BOOST_CHECK_CLOSE (res[i], x[i], 1e-5);
 
   // Jacobian is identity for free-floating.
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE (root_link)
     << "ForwardGeometry.jacobian(X): " << incindent << iendl
     << jacobian << decindent << iendl;
 
-  for (std::size_t i = 0; i < 6; ++i)
+  for (vector_t::Index i = 0; i < 6; ++i)
     BOOST_CHECK_CLOSE (jacobian (i, i), 1., 1e-5);
 }
 
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE (lleg_link)
       std::cout << "Finite Differences Jacobian: " << iendl;
       displayMatrix (std::cout, jacobianFd);
 
-      for (std::size_t functionId = 0; functionId < 3; ++functionId)
+      for (vector_t::Index functionId = 0; functionId < 3; ++functionId)
 	CHECK_GRADIENT (forwardGeometry, functionId, x);
     }
 }

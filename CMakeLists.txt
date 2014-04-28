@@ -71,9 +71,11 @@ ADD_REQUIRED_DEPENDENCY("choreonoid-body-plugin")
 
 HEADER_INSTALL("${HEADERS}")
 
+# Order matters here: the library (in src) _must_ be compiled before
+# the cli tools and the tests.
 ADD_SUBDIRECTORY(share)
 ADD_SUBDIRECTORY(src)
-#ADD_SUBDIRECTORY(bin)
+ADD_SUBDIRECTORY(bin)
 ADD_SUBDIRECTORY(tests)
 
 SETUP_PROJECT_FINALIZE()

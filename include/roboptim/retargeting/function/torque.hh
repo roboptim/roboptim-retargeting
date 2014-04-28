@@ -80,7 +80,7 @@ namespace roboptim
       q (const Eigen::MatrixBase<Derived>& x,
 	 bool withBaseLink = true) const throw ()
       {
-	std::size_t offset = 0;
+	typename Eigen::VectorBlock<const Derived>::Index offset = 0;
 	if (!withBaseLink)
 	  offset += 6;
 	return x.segment
@@ -92,7 +92,7 @@ namespace roboptim
       q (Eigen::MatrixBase<Derived>& x,
 	 bool withBaseLink = true) const throw ()
       {
-	std::size_t offset = 0;
+	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
 	  offset += 6;
 	return x.segment
@@ -104,7 +104,7 @@ namespace roboptim
       dq (const Eigen::MatrixBase<Derived>& x,
 	  bool withBaseLink = true) const throw ()
       {
-	std::size_t offset = 0;
+	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
 	  offset += 6;
 	return x.segment
@@ -129,7 +129,7 @@ namespace roboptim
       ddq (const Eigen::MatrixBase<Derived>& x,
 	   bool withBaseLink = true) const throw ()
       {
-	std::size_t offset = 0;
+	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
 	  offset += 6;
 	return x.segment

@@ -54,7 +54,7 @@ namespace roboptim
       static vector_t computeParametersFromBodyMotion
       (cnoid::BodyMotionPtr bodyMotion, bool addFreeFloating)
       {
-	std::size_t freeFloatingOffset = 0;
+	vector_t::Index freeFloatingOffset = 0;
 	if (addFreeFloating)
 	  freeFloatingOffset = 6;
 	vector_t x

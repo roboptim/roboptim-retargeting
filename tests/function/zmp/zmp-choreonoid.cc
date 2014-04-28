@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE (minimum_jerk)
   value_type tmin = 0.;
   value_type tmax = 1.;
   value_type nFrames = (tmax - tmin) / dt;
-  std::size_t nFrames_ = static_cast<std::size_t> (nFrames);
+  vector_t::Index nFrames_ = static_cast<vector_t::Index> (nFrames);
 
   // Compute the initial trajectory (whole body)
   vector_t initialTrajectory (nFrames_ * (6 + robot->numJoints ()));
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE (minimum_jerk)
   minimumJerkTrajectory->setParameters (x);
 
   // Build the starting point
-  for (std::size_t frameId = 0; frameId < nFrames; ++frameId)
+  for (vector_t::Index frameId = 0; frameId < nFrames; ++frameId)
     initialTrajectory[frameId * (6 + robot->numJoints ()) + dofId] =
       (*minimumJerkTrajectory)
       (static_cast<value_type> (frameId) * dt)[0];
@@ -196,7 +196,8 @@ BOOST_AUTO_TEST_CASE (minimum_jerk)
       zmp.printQuantities (std::cerr);
       std::cerr << iendl;
 
-      for (std::size_t i = 0; i  < static_cast<std::size_t> (zmp.outputSize ()); ++i)
+      for (vector_t::Index i = 0;
+	   i  < static_cast<vector_t::Index> (zmp.outputSize ()); ++i)
 	BOOST_CHECK_NO_THROW
 	  (try
 	    {

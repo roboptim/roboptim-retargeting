@@ -21,9 +21,9 @@ implemented using this library.
 It provides three command-line tools which are in fact the three steps
 of the conversion process:
 
-- roboptim-retargeting-marker-optimization
+- roboptim-retargeting-markers
 - roboptim-retargeting-marker-to-joint-converter
-- roboptim-retargeting-joint-optimization
+- roboptim-retargeting-joints
 
 
 The marker optimization optimizes the markers positions in the
