@@ -3,35 +3,37 @@
 // FIXME: to include Eigen correctly.
 # include <roboptim/core/function.hh>
 
-/// \brief Set the rotational part of a transformation from
-///        Euler angles parameters.
-///
-/// \b Formula
-///
-/// \f$\alpha\f$ is the yaw parameter (rotation around Z axis)
-/// \f$\beta\f$ is the pitch parameter (rotation around Y axis)
-/// \f$\gamma\f$ is the roll parameter (rotation around X axis)
-///
-/// \f$ \left( \begin{array}{ccc}
-/// \cos(\alpha) \cos(\beta) &
-/// \cos(\alpha) \sin(\beta) \sin(\gamma) - \sin(\alpha) \cos(\gamma) &
-/// \cos(\alpha) \sin(\beta) \cos(\gamma) + \sin(\alpha) \sin(\gamma) \\
-/// \sin(\alpha) \cos(\beta) &
-/// \sin(\alpha) \sin(\beta) \sin(\gamma) + \cos(\alpha) \cos(\gamma) &
-/// \sin(\alpha) \sin(\beta) \cos(\gamma) - \cos(\alpha) \sin(\gamma) \\
-/// -\sin(\beta) &
-/// \cos(\beta) \sin(\gamma) &
-/// \cos(\beta) \cos(\gamma)
-/// \end{array} \right) \f$
-///
-/// \b Sources
-///
-/// http://planning.cs.uiuc.edu/node102.html
-///
-/// This implementation is an adaptation of the one in sot-core.
-///
-/// \param[out] eulerAngles vector \f$(\gamma, \beta, \alpha)\f$
-/// \param[in] transform store results
+/**
+   \brief Set the rotational part of a transformation from
+          Euler angles parameters.
+
+   \b Formula
+
+   \f$\alpha\f$ is the yaw parameter (rotation around Z axis)
+   \f$\beta\f$ is the pitch parameter (rotation around Y axis)
+   \f$\gamma\f$ is the roll parameter (rotation around X axis)
+
+   \f$ \left( \begin{array}{ccc}
+   \cos(\alpha) \cos(\beta) &
+   \cos(\alpha) \sin(\beta) \sin(\gamma) - \sin(\alpha) \cos(\gamma) &
+   \cos(\alpha) \sin(\beta) \cos(\gamma) + \sin(\alpha) \sin(\gamma) \	\
+   \sin(\alpha) \cos(\beta) &
+   \sin(\alpha) \sin(\beta) \sin(\gamma) + \cos(\alpha) \cos(\gamma) &
+   \sin(\alpha) \sin(\beta) \cos(\gamma) - \cos(\alpha) \sin(\gamma) \	\
+   -\sin(\beta) &
+   \cos(\beta) \sin(\gamma) &
+   \cos(\beta) \cos(\gamma)
+   \end{array} \right) \f$
+
+   \b Sources
+
+   http://planning.cs.uiuc.edu/node102.html
+
+   This implementation is an adaptation of the one in sot-core.
+
+   \param[out] eulerAngles vector \f$(\gamma, \beta, \alpha)\f$
+   \param[in] transform store results
+*/
 template <typename Derived, typename OtherDerived>
 void
 eulerToTransform (Eigen::MatrixBase<Derived> const& transform,
@@ -102,24 +104,26 @@ void
 transformToUTheta (Eigen::MatrixBase<Derived> const& utheta,
 		   const Eigen::MatrixBase<OtherDerived>& linear);
 
-/// \brief Build a skew-symmetric matrix from vector of size 3.
-///
-/// \b Formula
-///
-/// \f$ \left( \begin{array}{ccc}
-/// 0 &
-/// -\mathbf{v}_2 &
-/// \mathbf{v}_1 \\
-/// \mathbf{v}_2 &
-/// 0 &
-/// -\mathbf{v}_0 \\
-/// -\mathbf{v}_1 &
-/// \mathbf{v}_0 &
-/// 0
-/// \end{array} \right) \f$
-///
-/// \param[out] result matrix (size 3x3)
-/// \param[in] vector \f$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)\f$
+/**
+ \brief Build a skew-symmetric matrix from vector of size 3.
+
+ \b Formula
+
+ \f$ \left( \begin{array}{ccc}
+ 0 &
+ -\mathbf{v}_2 &
+ \mathbf{v}_1 \\
+ \mathbf{v}_2 &
+ 0 &
+ -\mathbf{v}_0 \\
+ -\mathbf{v}_1 &
+ \mathbf{v}_0 &
+ 0
+ \end{array} \right) \f$
+
+ \param[out] result matrix (size 3x3)
+ \param[in] vector \f$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)\f$
+ */
 template <typename Derived, typename OtherDerived>
 void hat (Eigen::MatrixBase<Derived> const& result,
 	  const Eigen::MatrixBase<OtherDerived>& p);
@@ -133,24 +137,26 @@ template <typename Derived>
 Eigen::Matrix<typename Derived::RealScalar, 3, 3> hat
 (const Eigen::MatrixBase<Derived>& p);
 
-/// \brief Build a transformation adjoint.
-///
-/// It must be applied to a twist written as:
-/// \f$ \mathbf{\xi} = (\mathbf{v}, \mathbf{\omega}) \f$
-/// where \f$\mathbf{v}\f$ is the
-///
-/// \b Formula
-///
-/// \f$\mathbf{R}\f$ is the transformation rotation matrix (3x3).
-/// \f$\mathbf{p}\f$ is the transformation translation vector (size 3).
-///
-/// \f$ \left( \begin{array}{cc}
-/// \mathbf{R} & \hat{\mathbf{p}} \mathbf{R} \\
-/// \mathbf{0} & \mathbf{R}
-/// \end{array} \right) \f$
-///
-/// \param[out] adjoint adjoint matrix (size 6x6)
-/// \param[in]  transform transformation
+/**
+ \brief Build a transformation adjoint.
+
+ It must be applied to a twist written as:
+ \f$ \mathbf{\xi} = (\mathbf{v}, \mathbf{\omega}) \f$
+ where \f$\mathbf{v}\f$ is the
+
+ \b Formula
+
+ \f$\mathbf{R}\f$ is the transformation rotation matrix (3x3).
+ \f$\mathbf{p}\f$ is the transformation translation vector (size 3).
+
+ \f$ \left( \begin{array}{cc}
+ \mathbf{R} & \hat{\mathbf{p}} \mathbf{R} \\
+ \mathbf{0} & \mathbf{R}
+ \end{array} \right) \f$
+
+ \param[out] adjoint adjoint matrix (size 6x6)
+ \param[in]  transform transformation
+*/
 template <typename Derived, int _Dim, int _Mode, int _Options>
 void
 adjoint (Eigen::MatrixBase<Derived> const& adjoint,

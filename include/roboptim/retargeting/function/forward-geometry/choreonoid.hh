@@ -300,7 +300,7 @@ namespace roboptim
 	cnoid::setJacobian<0x3f, 0, 0>
 	  (this->jointPath_, this->jointPath_.endLink (), J_);
 
-	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	for (int jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    J_.template block <3, 1> (3, jacobianId) =
 	      R0.transpose() * J_.template block <3, 1> (3, jacobianId);
@@ -310,8 +310,8 @@ namespace roboptim
 	// joint path is incomplete so we have to copy the values to
 	// the right location manually. All the joints which are not
 	// in the joint path will not have any effect.
-	std::size_t jointId = 0;
-	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	int jointId = 0;
+	for (int jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
 	    assert (jointId < J.cols ());
@@ -403,7 +403,7 @@ namespace roboptim
       boost::shared_ptr<fdFunction_t> fd_;
 
     public:
-      EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+      EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

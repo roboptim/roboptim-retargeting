@@ -97,14 +97,14 @@ namespace roboptim
 
     template <typename T>
     typename MinimumJerkTrajectory<T>::jacobian_t
-    MinimumJerkTrajectory<T>::variationConfigWrtParam (double t) const throw ()
+    MinimumJerkTrajectory<T>::variationConfigWrtParam (double) const throw ()
     {
       throw std::runtime_error ("NOT IMPLEMENTED");
     }
 
     template <typename T>
     typename MinimumJerkTrajectory<T>::jacobian_t
-    MinimumJerkTrajectory<T>::variationDerivWrtParam (double t, size_type order)
+    MinimumJerkTrajectory<T>::variationDerivWrtParam (double, size_type)
       const throw ()
     {
       throw std::runtime_error ("NOT IMPLEMENTED");
@@ -119,17 +119,21 @@ namespace roboptim
 
     template <typename T>
     typename MinimumJerkTrajectory<T>::vector_t
-    MinimumJerkTrajectory<T>::derivBeforeSingularPoint (size_type rank, size_type order) const
-    {}
+    MinimumJerkTrajectory<T>::derivBeforeSingularPoint (size_type, size_type) const
+    {
+      throw std::runtime_error ("NOT IMPLEMENTED");
+    }
 
     template <typename T>
     typename MinimumJerkTrajectory<T>::vector_t
-    MinimumJerkTrajectory<T>::derivAfterSingularPoint (size_type rank, size_type order) const
-    {}
+    MinimumJerkTrajectory<T>::derivAfterSingularPoint (size_type, size_type) const
+    {
+      throw std::runtime_error ("NOT IMPLEMENTED");
+    }
 
     template <typename T>
     typename MinimumJerkTrajectory<T>::jacobian_t
-    MinimumJerkTrajectory<T>::variationConfigWrtParam (StableTimePoint tp) const throw ()
+    MinimumJerkTrajectory<T>::variationConfigWrtParam (StableTimePoint) const throw ()
     {
       throw std::runtime_error ("NOT IMPLEMENTED");
     }
@@ -137,7 +141,7 @@ namespace roboptim
     template <typename T>
     typename MinimumJerkTrajectory<T>::jacobian_t
     MinimumJerkTrajectory<T>::variationDerivWrtParam
-    (StableTimePoint tp, size_type order) const throw ()
+    (StableTimePoint, size_type) const throw ()
     {
       throw std::runtime_error ("NOT IMPLEMENTED");
     }
@@ -185,7 +189,7 @@ namespace roboptim
 
     template <typename T>
     void
-    MinimumJerkTrajectory<T>::impl_derivative (gradient_t& g, StableTimePoint, size_type order)
+    MinimumJerkTrajectory<T>::impl_derivative (gradient_t&, StableTimePoint, size_type)
       const throw ()
     {
       throw std::runtime_error ("NOT IMPLEMENTED");
@@ -193,7 +197,7 @@ namespace roboptim
 
     template <typename T>
     Trajectory<3>*
-    MinimumJerkTrajectory<T>::resize (interval_t timeRange)
+    MinimumJerkTrajectory<T>::resize (interval_t)
       const throw ()
     {
       throw std::runtime_error ("NOT IMPLEMENTED");

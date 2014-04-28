@@ -1,0 +1,1 @@
+ROBOPTIM_RETARGETING_TEST(forward-geometry-choreonoid)

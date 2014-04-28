@@ -24,23 +24,31 @@ SET(PROJECT_NAME roboptim-retargeting)
 SET(PROJECT_DESCRIPTION "RobOptim retargeting")
 SET(PROJECT_URL "http://github.com/thomas-moulard/roboptim-retargeting")
 
-SET(CXX_DISABLE_WERROR 1)
-
 SET(PKG_CONFIG_ADDITIONAL_VARIABLES plugindir ${PKG_CONFIG_ADDITIONAL_VARIABLES})
 
 SET(CSD ${CMAKE_SOURCE_DIR})
 SET(HEADERS
-  ${CSD}/include/roboptim/retargeting/acceleration-energy.hh
-  ${CSD}/include/roboptim/retargeting/animated-interaction-mesh.hh
-  ${CSD}/include/roboptim/retargeting/bone.hh
-  ${CSD}/include/roboptim/retargeting/bone-length.hh
-  ${CSD}/include/roboptim/retargeting/collision.hh
-  ${CSD}/include/roboptim/retargeting/laplacian-coordinate.hh
-  ${CSD}/include/roboptim/retargeting/laplacian-deformation-energy.hh
-  ${CSD}/include/roboptim/retargeting/position.hh
-  ${CSD}/include/roboptim/retargeting/problem/marker.hh
-  ${CSD}/include/roboptim/retargeting/torque.hh
-  )
+${CSD}/include/roboptim/retargeting/function/body-laplacian-deformation-energy/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/torque.hh
+${CSD}/include/roboptim/retargeting/function/zmp/inverted-pendulum.hh
+${CSD}/include/roboptim/retargeting/function/zmp/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/zmp/metapod.hh
+${CSD}/include/roboptim/retargeting/function/minimum-jerk-trajectory.hxx
+${CSD}/include/roboptim/retargeting/function/torque/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/torque/metapod.hh
+${CSD}/include/roboptim/retargeting/function/forward-geometry/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/zmp.hh
+${CSD}/include/roboptim/retargeting/function/joint-to-marker/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/laplacian-coordinate/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/acceleration.hh
+${CSD}/include/roboptim/retargeting/function/choreonoid-body-trajectory.hh
+${CSD}/include/roboptim/retargeting/function/forward-geometry.hh
+${CSD}/include/roboptim/retargeting/function/cost-reference-trajectory.hh
+${CSD}/include/roboptim/retargeting/function/marker-laplacian-deformation-energy/choreonoid.hh
+${CSD}/include/roboptim/retargeting/function/minimum-jerk-trajectory.hh
+${CSD}/include/roboptim/retargeting/eigen-rigid-body.hh
+${CSD}/include/roboptim/retargeting/eigen-rigid-body.hxx
+)
 
 SETUP_PROJECT()
 
@@ -57,17 +65,9 @@ ADD_REQUIRED_DEPENDENCY("libmocap")
 ADD_REQUIRED_DEPENDENCY("roboptim-core >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-core-plugin-ipopt >= 0.5")
 ADD_REQUIRED_DEPENDENCY("roboptim-trajectory >= 0.5")
-ADD_REQUIRED_DEPENDENCY("yaml-cpp")
-ADD_REQUIRED_DEPENDENCY("liblog4cxx >= 0.10.0")
-ADD_REQUIRED_DEPENDENCY("metapod")
 
 ADD_REQUIRED_DEPENDENCY("choreonoid")
 ADD_REQUIRED_DEPENDENCY("choreonoid-body-plugin")
-
-ADD_REQUIRED_DEPENDENCY("rosconsole")
-ADD_REQUIRED_DEPENDENCY("roscpp")
-ADD_REQUIRED_DEPENDENCY("sensor_msgs")
-ADD_REQUIRED_DEPENDENCY("visualization_msgs")
 
 HEADER_INSTALL("${HEADERS}")
 
