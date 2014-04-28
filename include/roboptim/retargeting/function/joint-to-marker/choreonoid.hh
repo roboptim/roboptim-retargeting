@@ -72,9 +72,6 @@ namespace roboptim
 
 	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
 	cnoid::BodyPtr& body = bodyInfo.body;
-	cnoid::Link* rootLink = body->rootLink ();
-
-	std::size_t offset = 6;
 
 	// Set the robot configuration.
 	updateRobotConfiguration (body, x);
@@ -178,8 +175,9 @@ namespace roboptim
 	// joint path is incomplete so we have to copy the values to
 	// the right location manually. All the joints which are not
 	// in the joint path will not have any effect.
-	std::size_t jointId = 0;
-	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
+	int jointId = 0;
+	for (int jacobianId = 0;
+	     jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
 	    assert (jointId < gradient.size ());
@@ -259,8 +257,8 @@ namespace roboptim
 	  // joint path is incomplete so we have to copy the values to
 	  // the right location manually. All the joints which are not
 	  // in the joint path will not have any effect.
-	  std::size_t jointId = 0;
-	  for (std::size_t jacobianId = 0;
+	  int jointId = 0;
+	  for (int jacobianId = 0;
 	       jacobianId < jointPath_.numJoints (); ++jacobianId)
 	    {
 	      jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;

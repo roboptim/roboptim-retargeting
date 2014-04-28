@@ -47,7 +47,7 @@ namespace roboptim
 	  {
 	    const cnoid::BodyIMesh::NeighborList&
 	      neighbors = neighborLists[markerId];
-	    for (int l = 0; l < neighbors.size (); ++l)
+	    for (std::size_t l = 0; l < neighbors.size (); ++l)
 	      {
 		const int neighborId = neighbors[l];
 		double weight =

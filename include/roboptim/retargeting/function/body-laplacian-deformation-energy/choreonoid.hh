@@ -335,7 +335,7 @@ namespace roboptim
 	  markerPositions_ (mesh->numMarkers () * 3)
       {
 	// Fill array and create necessary functions for each frame.
-	for (int frameId = 0; frameId < nFrames_; ++frameId)
+	for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
 	  {
 	    // Compute marker position for the original configuration.
 	    (*jointToMarker)
@@ -418,7 +418,7 @@ namespace roboptim
 
 	result.setZero ();
 
-	size_type frameId = 0;
+	std::size_t frameId = 0;
 	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
 	  {
 	    assert ((*it)->inputSize () == nDofs_);
@@ -435,7 +435,7 @@ namespace roboptim
       void
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
-		     size_type i)
+		     size_type)
 	const throw ()
       {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
@@ -448,7 +448,7 @@ namespace roboptim
 
 	gradient.setZero ();
 
-	size_type frameId = 0;
+	std::size_t frameId = 0;
 	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
 	  {
 	    gradient.segment (frameId * nDofs_, nDofs_)
@@ -489,7 +489,7 @@ namespace roboptim
 		o << "marker " << markerId << incindent << iendl;
 		const cnoid::BodyIMesh::NeighborList&
 		  neighbors = neighborLists[markerId];
-		for (int l = 0; l < neighbors.size (); ++l)
+		for (std::size_t l = 0; l < neighbors.size (); ++l)
 		  {
 		    if (l != 0)
 		      o << ", ";
@@ -509,7 +509,7 @@ namespace roboptim
       cnoid::BodyIMeshPtr mesh_;
 
       /// \brief Number of frames
-      size_type nFrames_;
+      std::size_t nFrames_;
       /// \brief Number of DOFs
       size_type nDofs_;
 

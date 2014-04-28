@@ -40,7 +40,6 @@ BOOST_AUTO_TEST_CASE (simple)
   // Loading the motion.
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
-  //FIXME: we should embed the copy.
   bodyMotion->loadStandardYAMLformat
     (DATA_DIR "/29_07-hrp4c-initial-short.yaml");
 
