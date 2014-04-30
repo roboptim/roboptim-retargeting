@@ -14,8 +14,8 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
-#ifndef ROBOPTIM_RETARGETING_PROBLEM_MARKER_PROBLEM_BUILDER_HH
-# define ROBOPTIM_RETARGETING_PROBLEM_MARKER_PROBLEM_BUILDER_HH
+#ifndef ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HH
+# define ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HH
 # include <boost/shared_ptr.hpp>
 
 # include <roboptim/retargeting/problem/problem-builder.hh>
@@ -24,27 +24,20 @@ namespace roboptim
 {
   namespace retargeting
   {
-    /// \brief Marker optimization problem description.
+    /// \brief Joint optimization problem description.
     ///
     /// This structure contains the instruction to build the problem.
     /// I.e. which data should be loaded, what strategy should be
     /// chosen from resolution, etc.
-    struct MarkerProblemOptions
+    struct JointProblemOptions
     {
-      /// \brief Marker set filename.
+      /// \brief Joints trajectory.
       ///
-      /// Any format supported by libmocap is acceptable.
-      /// e.g. ".mars" Cortex file can be used
-      std::string markerSet;
-
-      /// \brief Markers trajectories.
-      ///
-      /// Markers trajectories which will be used as the initial input
+      /// Joints trajectories which will be used as the initial input
       /// of the optimization problem.
       ///
-      /// Any format supported by libmocap is acceptable.
-      /// e.g. ".trc" Cortex file can be used.
-      std::string markersTrajectory;
+      /// The Choreonoid YAML file format is expected here.
+      std::string jointsTrajectory;
 
       /// \brief What type of trajectory should be used?
       ///
@@ -58,6 +51,8 @@ namespace roboptim
       /// \brief Robot model to be used.
       ///
       /// The robot model is used to determine the segment length.
+      ///
+      /// The Choreonoid file format is expected here.
       std::string robotModel;
 
       /// \brief Solver plug-in name.
@@ -71,30 +66,29 @@ namespace roboptim
     };
 
     // Defined in function-factory.hh
-    struct MarkerFunctionData;
+    struct JointFunctionData;
 
-    /// \brief Build marker problem data from problem description.
+    /// \brief Build joint problem data from problem description.
     ///
-    /// The MarkerProblemData structure contains the real loaded data
-    /// where the MarkerProblemOptions just describe the problem a set
-    /// of strings (usually retrieved from the user).
+    /// The JointProblemData structure contains the loaded data
+    /// whereas the JointProblemOptions just describe the problem a
+    /// set of strings (usually retrieved from the user).
     ///
-    /// This function will load the motion capture data, robot model,
+    /// This function will load the joints trajectories, robot model,
     /// etc.
     ///
-    /// \note A failure at this stage is not fatal. Robot model for
-    /// instance may be omitted if the segment length constraint is
-    /// disabled. However, a fatal error however may occur when the
-    /// constraints are allocated if a required data is missing from
-    /// this structure.
+    /// \note A failure at this stage is not fatal. Some data loading
+    /// may be skipped with a warning message. However, a fatal error
+    /// however may occur when the constraints are allocated if a
+    /// required data is missing from this structure.
     ///
     /// \param[out] data structure to contain the loaded data
     /// \param[in] options problem description
     inline void
-    buildDataFromOptions (MarkerFunctionData& data,
-			  const MarkerProblemOptions& options);
+    buildJointDataFromOptions (JointFunctionData& data,
+			       const JointProblemOptions& options);
 
-    /// \brief Build a marker retargeting problem.
+    /// \brief Build a joint retargeting problem.
     ///
     /// This class is in charge of building the optimization problem:
     /// the cost function, the constraints (function, intervals,
@@ -109,7 +103,7 @@ namespace roboptim
     ///
     /// \tparam T problem type
     template <typename T>
-    class MarkerProblemBuilder : public ProblemBuilder<T>
+    class JointProblemBuilder : public ProblemBuilder<T>
     {
     public:
       /// \brief Constructor and destructor
@@ -121,8 +115,8 @@ namespace roboptim
       /// object lifespan much be longer than the one of this object.
       ///
       /// \param[in] options problem description
-      MarkerProblemBuilder (const MarkerProblemOptions& options);
-      ~MarkerProblemBuilder ();
+      JointProblemBuilder (const JointProblemOptions& options);
+      ~JointProblemBuilder ();
       /// \}
 
       /// \brief Instantiate the problem and return it.
@@ -134,10 +128,10 @@ namespace roboptim
 
     private:
       /// \brief Problem description.
-      const MarkerProblemOptions& options_;
+      const JointProblemOptions& options_;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 
-# include <roboptim/retargeting/problem/marker-problem-builder.hxx>
-#endif //! ROBOPTIM_RETARGETING_PROBLEM_MARKER_PROBLEM_BUILDER_HH
+# include <roboptim/retargeting/problem/joint-problem-builder.hxx>
+#endif //! ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HH

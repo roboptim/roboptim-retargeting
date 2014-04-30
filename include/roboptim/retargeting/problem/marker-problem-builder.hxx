@@ -23,11 +23,63 @@
 
 # include <roboptim/core/problem.hh>
 
+# include <roboptim/trajectory/vector-interpolation.hh>
+
+# include <roboptim/retargeting/problem/marker-function-factory.hh>
+
 
 namespace roboptim
 {
   namespace retargeting
   {
+    /// \brief Convert markers trajectories to a RobOptim trajectory.
+    ///
+    /// The trajectory output size matches the number of marker, the
+    /// input size is time.
+    ///
+    /// The data from libmocap is copied frame per frame into the new
+    /// object.
+    template <typename T>
+    boost::shared_ptr<T>
+    convertToTrajectory (const libmocap::MarkerTrajectory& raw)
+    {
+      typename T::vector_t parameters
+	(raw.numFrames () * raw.numMarkers () * 3);
+
+      std::vector<std::vector<double> >::const_iterator it;
+      std::ptrdiff_t nFrame = 0;
+
+      for (it = raw.positions ().begin (); it != raw.positions ().end ();
+	   nFrame = (++it) - raw.positions ().begin())
+	{
+	  Eigen::Map<const typename T::vector_t>
+	    positions (&(*it)[0], raw.numMarkers () * 3);
+	  parameters.segment
+	    (nFrame * raw.numMarkers (), raw.numMarkers () * 3) = positions;
+	}
+
+      return
+	boost::make_shared<T>
+	(parameters, raw.numMarkers (), 1. / raw.dataRate ());
+    }
+
+    void
+    buildDataFromOptions (MarkerFunctionData& data,
+			  const MarkerProblemOptions& options)
+    {
+      data.markerSet =
+	libmocap::MarkerSetFactory ().load (options.markerSet);
+      data.markersTrajectory =
+	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
+
+      if (options.trajectoryType == "discrete")
+	data.trajectory =
+	  convertToTrajectory<VectorInterpolation> (data.markersTrajectory);
+      else
+	throw std::runtime_error ("invalid trajectory type");
+    }
+
+
     template <typename T>
     MarkerProblemBuilder<T>::MarkerProblemBuilder
     (const MarkerProblemOptions& options)
@@ -39,25 +91,39 @@ namespace roboptim
     {}
 
     template <typename T>
-    boost::shared_ptr<T>
+    std::pair<boost::shared_ptr<T>,
+	      boost::shared_ptr<typename T::function_t> >
     MarkerProblemBuilder<T>::operator () ()
     {
-      libmocap::MarkerSet markerSet =
-	libmocap::MarkerSetFactory ().load (options_.markerSet);
-      libmocap::MarkerTrajectory traectory =
-	libmocap::MarkerTrajectoryFactory ().load (options_.markersTrajectory);
+      std::pair<boost::shared_ptr<T>,
+		boost::shared_ptr<typename T::function_t > > result;
+      MarkerFunctionData data;
+      buildDataFromOptions (data, options_);
 
-      boost::shared_ptr<DifferentiableFunction> cost;
+      MarkerFunctionFactory factory (data);
 
-      // create cost from function factory
+      boost::shared_ptr<DifferentiableFunction> cost =
+	factory.buildFunction<DifferentiableFunction> (options_.cost);
 
       boost::shared_ptr<T> problem = boost::make_shared<T> (*cost);
 
-      // iterate on constraint, create each from function factory
+      std::vector<std::string>::const_iterator it;
+      for (it = options_.constraints.begin ();
+	   it != options_.constraints.end (); ++it)
+	{
+	  Constraint<DifferentiableFunction> constraint =
+	    factory.buildConstraint<DifferentiableFunction> (*it);
+	  problem->addConstraint
+	    (constraint.function,
+	     constraint.intervals,
+	     constraint.scales);
+	}
 
-      // set starting point
+      problem->startingPoint () = data.trajectory->parameters ();
 
-      return problem;
+      result.first = problem;
+      result.second = cost;
+      return result;
     }
   } // end of namespace retargeting.
 } // end of namespace roboptim.

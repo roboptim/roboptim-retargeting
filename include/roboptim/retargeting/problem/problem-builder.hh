@@ -67,7 +67,9 @@ namespace roboptim
       virtual ~ProblemBuilder ()
       {}
 
-      virtual boost::shared_ptr<T> operator () () = 0;
+      virtual std::pair<boost::shared_ptr<T>,
+			boost::shared_ptr<typename T::function_t> >
+      operator () () = 0;
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.

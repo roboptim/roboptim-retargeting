@@ -38,7 +38,7 @@ namespace roboptim
 	  (6 + mesh->bodyInfo (0).body->numJoints (), 3 * mesh->numMarkers (),
 	   "JointToMarkerPosition"),
 	  mesh_ (mesh),
-	  markerPositions_ (mesh->numMarkers ()),
+	  markerPositions_ (static_cast<size_type> (mesh->numMarkers ())),
 	  jointPath_ (),
 	  J_ (),
 	  dR_ ()

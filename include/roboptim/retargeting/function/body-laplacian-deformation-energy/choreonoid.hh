@@ -325,7 +325,7 @@ namespace roboptim
 	  (initialJointsTrajectory.size (), 1,
 	   "BodyLaplacianDeformationEnergyChoreonoid"),
 	  mesh_ (mesh),
-	  nFrames_ (mesh->getNumFrames ()),
+	  nFrames_ (static_cast<size_type> (mesh->getNumFrames ())),
 	  nDofs_ (initialJointsTrajectory.size () / nFrames_),
 	  jointToMarker_ (jointToMarker),
 	  laplacianCoordinate_ (mesh->getNumFrames ()),
