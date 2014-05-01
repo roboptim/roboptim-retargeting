@@ -42,6 +42,13 @@ namespace roboptim
       /// \brief markers trajectory as loaded by libmocap
       libmocap::MarkerTrajectory markersTrajectory;
 
+      /// \brief Robot model loaded through Choreonoid
+      ///
+      /// Robot model contains the robot description of joints and
+      /// bodies associated with limits such as joints positions,
+      /// velocities limits, etc.
+      cnoid::BodyPtr robotModel;
+
       /// \brief RobOptim trajectory
       boost::shared_ptr<roboptim::Trajectory<3> > trajectory;
     };

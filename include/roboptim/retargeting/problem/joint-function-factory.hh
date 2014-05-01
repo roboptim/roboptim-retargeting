@@ -19,6 +19,8 @@
 # define  ROBOPTIM_RETARGETING_JOINT_FUNCTION_FACTORY_HH
 # include <boost/shared_ptr.hpp>
 
+# include <cnoid/BodyMotion>
+
 # include <roboptim/trajectory/trajectory.hh>
 
 # include <roboptim/retargeting/problem/function-factory.hh>
@@ -33,8 +35,37 @@ namespace roboptim
     /// functions parameters are set.
     struct JointFunctionData
     {
+      /// \brief Joints Trajectory as loaded by Choreonoid
+      ///
+      /// This file both contains the joints parameters at each frame
+      /// as well as the base position at each frame.
+      ///
+      /// This trajectory contains the full motion.
+      cnoid::BodyMotionPtr jointsTrajectory;
+
+      /// \brief Robot model loaded through Choreonoid
+      ///
+      /// Robot model contains the robot description of joints and
+      /// bodies associated with limits such as joints positions,
+      /// velocities limits, etc.
+      cnoid::BodyPtr robotModel;
+
       /// \brief RobOptim trajectory
+      ///
+      /// This trajectory is the full trajectory, it also contains the
+      /// disabled joints information.
       boost::shared_ptr<roboptim::Trajectory<3> > trajectory;
+
+
+      /// \brief Reduced RobOptim trajectory
+      ///
+      /// This trajectory contained the reduce motion.
+      /// I.e. this does not include the disabled joints.
+      boost::shared_ptr<roboptim::Trajectory<3> > filteredTrajectory;
+
+      /// \brief Number of DOFs,including free floating, excluding
+      /// disabled joints.
+      std::size_t nDofs;
     };
 
     /// \brief Creates functions from their name for joint-joint

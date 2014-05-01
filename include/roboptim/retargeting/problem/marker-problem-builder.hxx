@@ -18,6 +18,9 @@
 # define ROBOPTIM_RETARGETING_PROBLEM_MARKER_PROBLEM_BUILDER_HXX
 # include <boost/make_shared.hpp>
 
+# include <cnoid/BodyLoader>
+# include <cnoid/BodyMotion>
+
 # include <libmocap/marker-set-factory.hh>
 # include <libmocap/marker-trajectory-factory.hh>
 
@@ -67,10 +70,13 @@ namespace roboptim
     buildDataFromOptions (MarkerFunctionData& data,
 			  const MarkerProblemOptions& options)
     {
+      cnoid::BodyLoader loader;
+
       data.markerSet =
 	libmocap::MarkerSetFactory ().load (options.markerSet);
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
+      data.robotModel = loader.load (options.robotModel);
 
       if (options.trajectoryType == "discrete")
 	data.trajectory =

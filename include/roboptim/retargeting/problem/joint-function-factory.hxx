@@ -19,7 +19,7 @@
 # define  ROBOPTIM_RETARGETING_JOINT_FUNCTION_FACTORY_HXX
 # include <stdexcept>
 
-# include <roboptim/core/function/constant.hh>
+# include <roboptim/core/numeric-linear-function.hh>
 
 # include <roboptim/retargeting/function/body-laplacian-deformation-energy/choreonoid.hh>
 
@@ -31,9 +31,42 @@ namespace roboptim
     {
       template <typename T>
       boost::shared_ptr<T>
-      null (const JointFunctionData&)
+      null (const JointFunctionData& data)
       {
-	return boost::shared_ptr<T> ();
+	if (!data.trajectory)
+	  throw std::runtime_error
+	    ("failed to create null function: no joint trajectory");
+	if (data.trajectory->parameters ().size () == 0)
+	  throw std::runtime_error
+	    ("failed to create null function:"
+	     " empty parameters vector in joint trajectory");
+
+	typename T::matrix_t A
+	  (1, data.trajectory->parameters ().size ());
+	A.setZero ();
+	typename T::vector_t b (1);
+	b.setZero ();
+
+	return boost::make_shared<
+	  GenericNumericLinearFunction<typename T::traits_t> >
+	  (A, b);
+      }
+
+      template <typename T>
+      boost::shared_ptr<T>
+      freeze (const JointFunctionData& data)
+      {
+	typename T::matrix_t A (data.nDofs,
+		    data.filteredTrajectory->parameters ().size ());
+	A.setZero ();
+	A.block (0, 0, data.nDofs, data.nDofs).setIdentity ();
+
+	typename T::vector_t b (data.nDofs);
+	b.setZero ();
+
+	return boost::make_shared<
+	  GenericNumericLinearFunction<typename T::traits_t> >
+	  (A, b);
       }
 
       template <typename T>

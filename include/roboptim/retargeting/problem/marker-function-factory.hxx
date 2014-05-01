@@ -19,7 +19,7 @@
 # define  ROBOPTIM_RETARGETING_MARKER_FUNCTION_FACTORY_HXX
 # include <stdexcept>
 
-# include <roboptim/core/function/constant.hh>
+# include <roboptim/core/numeric-linear-function.hh>
 
 //# include <roboptim/retargeting/function/bone-length.hh>
 # include <roboptim/retargeting/function/marker-laplacian-deformation-energy/choreonoid.hh>
@@ -36,14 +36,17 @@ namespace roboptim
       {
 	if (!data.trajectory)
 	  throw std::runtime_error
-	    ("failed to create null function: no marker trajectory");
+	    ("failed to create null function: no joint trajectory");
 
-	typename T::vector_t offset
-	  (data.trajectory->parameters ().size ());
-	offset.setZero ();
+	typename T::matrix_t A
+	  (1, data.trajectory->parameters ().size ());
+	A.setZero ();
+	typename T::vector_t b (1);
+	b.setZero ();
+
 	return boost::make_shared<
-	  GenericConstantFunction<typename T::traits_t> >
-	  (offset);
+	  GenericNumericLinearFunction<typename T::traits_t> >
+	  (A, b);
       }
 
       template <typename T>

@@ -16,6 +16,9 @@
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HH
 # define ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HH
+# include <string>
+# include <vector>
+
 # include <boost/shared_ptr.hpp>
 
 # include <roboptim/retargeting/problem/problem-builder.hh>
@@ -63,6 +66,12 @@ namespace roboptim
 
       /// \brief Constraints functions names.
       std::vector<std::string> constraints;
+
+      /// \brief Disabled joints
+      ///
+      /// Disabled DOFs will be excluded from the optimization problem
+      /// and hence reduce the overall size of the problem.
+      std::vector<std::string> disabledJoints;
     };
 
     // Defined in function-factory.hh
