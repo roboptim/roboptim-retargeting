@@ -17,6 +17,7 @@
 
 #ifndef ROBOPTIM_RETARGETING_JOINT_FUNCTION_FACTORY_HH
 # define  ROBOPTIM_RETARGETING_JOINT_FUNCTION_FACTORY_HH
+# include <boost/optional.hpp>
 # include <boost/shared_ptr.hpp>
 
 # include <cnoid/BodyMotion>
@@ -63,9 +64,59 @@ namespace roboptim
       /// I.e. this does not include the disabled joints.
       boost::shared_ptr<roboptim::Trajectory<3> > filteredTrajectory;
 
-      /// \brief Number of DOFs,including free floating, excluding
-      /// disabled joints.
-      std::size_t nDofs;
+      /// \brief Interaction Mesh (loaded by Choreonoid)
+      cnoid::BodyIMeshPtr interactionMesh;
+
+      /// \brief Configuration of the disabled joints (one frame)
+      ///
+      ///
+      std::vector<boost::optional<Function::value_type> >
+      disabledJointsConfiguration;
+
+      /// \brief Configuration of the disabled joints (all frames)
+      ///
+      ///
+      std::vector<boost::optional<Function::value_type> >
+      disabledJointsTrajectory;
+
+
+
+      Function::vector_t::Index nDofsFull () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->trajectory->parameters ().size ())
+	  / static_cast<Function::vector_t::Index>
+	  (this->trajectory->outputSize ());
+      }
+      Function::vector_t::Index nDofsFiltered () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->filteredTrajectory->parameters ().size ())
+	  / static_cast<Function::vector_t::Index>
+	  (this->filteredTrajectory->outputSize ());
+      }
+
+      Function::vector_t::Index nParametersFull () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->trajectory->parameters ().size ());
+      }
+      Function::vector_t::Index nParametersFiltered () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->filteredTrajectory->parameters ().size ());
+      }
+      Function::vector_t::Index nFrames () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->trajectory->parameters ().size ())
+	  / this->nDofsFull ();
+      }
     };
 
     /// \brief Creates functions from their name for joint-joint

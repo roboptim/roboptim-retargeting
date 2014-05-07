@@ -325,22 +325,26 @@ namespace roboptim
 	  (initialJointsTrajectory.size (), 1,
 	   "BodyLaplacianDeformationEnergyChoreonoid"),
 	  mesh_ (mesh),
-	  nFrames_ (static_cast<size_type> (mesh->getNumFrames ())),
-	  nDofs_ (initialJointsTrajectory.size () / nFrames_),
+	  nFrames_ (static_cast<std::size_t> (mesh->getNumFrames ())),
+	  nDofs_ (initialJointsTrajectory.size ()
+		  / static_cast<size_type> (nFrames_)),
 	  jointToMarker_ (jointToMarker),
-	  laplacianCoordinate_ (mesh->getNumFrames ()),
-	  lde_ (mesh->getNumFrames ()),
-	  chainLc_ (mesh->getNumFrames ()),
-	  chain_ (mesh->getNumFrames ()),
+	  laplacianCoordinate_ (static_cast<std::size_t> (mesh->getNumFrames ())),
+	  lde_ (static_cast<std::size_t> (mesh->getNumFrames ())),
+	  chainLc_ (static_cast<std::size_t> (mesh->getNumFrames ())),
+	  chain_ (static_cast<std::size_t> (mesh->getNumFrames ())),
 	  markerPositions_ (mesh->numMarkers () * 3)
       {
 	// Fill array and create necessary functions for each frame.
 	for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
 	  {
+	    typename vector_t::Index frameId_ =
+	      static_cast<typename vector_t::Index> (frameId);
+
 	    // Compute marker position for the original configuration.
 	    (*jointToMarker)
 	      (markerPositions_,
-	       initialJointsTrajectory.segment (frameId * nDofs_, nDofs_));
+	       initialJointsTrajectory.segment (frameId_ * nDofs_, nDofs_));
 
 	    // Create Laplacian Coordinate object, original markers positions
 	    // are required to compute the weights.
@@ -418,7 +422,7 @@ namespace roboptim
 
 	result.setZero ();
 
-	std::size_t frameId = 0;
+	typename vector_t::Index frameId = 0;
 	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
 	  {
 	    assert ((*it)->inputSize () == nDofs_);
@@ -429,7 +433,7 @@ namespace roboptim
 
 	result *= .5;
 
-	assert (frameId == nFrames_);
+	assert (static_cast<std::size_t> (frameId) == nFrames_);
       }
 
       void
@@ -448,7 +452,7 @@ namespace roboptim
 
 	gradient.setZero ();
 
-	std::size_t frameId = 0;
+	typename vector_t::Index frameId = 0;
 	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
 	  {
 	    gradient.segment (frameId * nDofs_, nDofs_)
@@ -458,7 +462,7 @@ namespace roboptim
 
 	gradient *= .5;
 
-	assert (frameId == nFrames_);
+	assert (static_cast<std::size_t> (frameId) == nFrames_);
       }
 
       virtual std::ostream& print (std::ostream& o) const throw ()

@@ -38,7 +38,8 @@ namespace roboptim
 	  (6 + mesh->bodyInfo (0).body->numJoints (), 3 * mesh->numMarkers (),
 	   "JointToMarkerPosition"),
 	  mesh_ (mesh),
-	  markerPositions_ (static_cast<size_type> (mesh->numMarkers ())),
+	  markerPositions_
+	  (static_cast<std::size_t> (mesh->numMarkers ())),
 	  jointPath_ (),
 	  J_ (),
 	  dR_ ()
@@ -83,7 +84,7 @@ namespace roboptim
         const std::vector<cnoid::BodyIMesh::MarkerPtr>&
 	  markers = bodyInfo.markers;
 
-	std::size_t vertexIndex = 0;
+	typename result_t::Index vertexIndex = 0;
         for(std::size_t j = 0; j < markers.size (); ++j)
 	  {
             const cnoid::BodyIMesh::MarkerPtr& marker = markers[j];
@@ -114,8 +115,9 @@ namespace roboptim
 	// dim means which dimension (0 is x, 1 is y, 2 is z)
 	//
 	// markerId is the marker index that has to be considered
-	std::size_t dim = functionId % 3;
-	std::size_t markerId = (functionId - dim) / 3;
+	typename gradient_t::Index dim = functionId % 3;
+	std::size_t markerId =
+	  static_cast<std::size_t> (functionId - dim) / 3;
 
 	gradient.template segment<3> (0).setZero ();
 	gradient[dim] = 1.;
@@ -210,7 +212,10 @@ namespace roboptim
 	for (std::size_t markerId = 0;
 	     markerId < markers.size (); ++markerId)
 	{
-	  jacobian.template block<3, 3> (markerId * 3, 0).setIdentity ();
+	  typename jacobian_t::Index markerId_ =
+	    static_cast<typename jacobian_t::Index> (markerId);
+
+	  jacobian.template block<3, 3> (markerId_ * 3, 0).setIdentity ();
 
 	  const cnoid::BodyIMesh::MarkerPtr& marker = markers[markerId];
 
@@ -247,7 +252,7 @@ namespace roboptim
 	  Eigen::Matrix<value_type, 3, 3> hatp;
 	  hat (hatp, p);
 
-	  jacobian.template block<3, 3> (markerId * 3, 3) = -hatp * J_global;
+	  jacobian.template block<3, 3> (markerId_ * 3, 3) = -hatp * J_global;
 
 	  // DOF (all columns > 5).
 
@@ -265,7 +270,7 @@ namespace roboptim
 	      assert (jointId < jacobian.cols ());
 	      assert (jointId >= 6);
 
-	      jacobian.template block<3, 1> (markerId * 3, jointId) =
+	      jacobian.template block<3, 1> (markerId_ * 3, jointId) =
 		J_.col (jacobianId);
 	    }
 	}

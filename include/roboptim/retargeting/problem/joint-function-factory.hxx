@@ -20,6 +20,7 @@
 # include <stdexcept>
 
 # include <roboptim/core/numeric-linear-function.hh>
+# include <roboptim/core/filter/bind.hh>
 
 # include <roboptim/retargeting/function/body-laplacian-deformation-energy/choreonoid.hh>
 
@@ -56,12 +57,13 @@ namespace roboptim
       boost::shared_ptr<T>
       freeze (const JointFunctionData& data)
       {
-	typename T::matrix_t A (data.nDofs,
-		    data.filteredTrajectory->parameters ().size ());
+	typename T::matrix_t A
+	  (data.nDofsFiltered (), data.nParametersFiltered ());
 	A.setZero ();
-	A.block (0, 0, data.nDofs, data.nDofs).setIdentity ();
+	A.block
+	  (0, 0, data.nDofsFiltered (), data.nDofsFiltered ()).setIdentity ();
 
-	typename T::vector_t b (data.nDofs);
+	typename T::vector_t b (data.nDofsFiltered ());
 	b.setZero ();
 
 	return boost::make_shared<
@@ -71,23 +73,67 @@ namespace roboptim
 
       template <typename T>
       boost::shared_ptr<T>
-      feet (const JointFunctionData&)
+      leftFoot (const JointFunctionData& data)
       {
-	return boost::shared_ptr<T> ();
+	return boost::make_shared<ForwardGeometryChoreonoid<typename T::traits_t> >
+	  (data.robotModel, "L_ANKLE_R");
       }
 
       template <typename T>
       boost::shared_ptr<T>
-      jointsLimits (const JointFunctionData&)
+      rightFoot (const JointFunctionData& data)
       {
-	return boost::shared_ptr<T> ();
+	return boost::make_shared<ForwardGeometryChoreonoid<typename T::traits_t> >
+	  (data.robotModel, "R_ANKLE_R");
       }
 
       template <typename T>
       boost::shared_ptr<T>
-      laplacianDeformationEnergy (const JointFunctionData&)
+      jointsLimits (const JointFunctionData& data)
       {
-	return boost::shared_ptr<T> ();
+	typename T::matrix_t A
+	  (data.nDofsFiltered () * 2, data.nParametersFiltered ());
+	A.setZero ();
+	A.block
+	  (0, 0, data.nDofsFiltered (), data.nDofsFiltered ()).setIdentity ();
+	A.block
+	  (0, data.nDofsFiltered (),
+	   data.nDofsFiltered (), data.nDofsFiltered ()).setIdentity ();
+
+	typename T::vector_t b (data.nDofsFiltered ());
+	b.setZero ();
+
+	return boost::make_shared<
+	  GenericNumericLinearFunction<typename T::traits_t> >
+	  (A, b);
+      }
+
+      template <typename T>
+      boost::shared_ptr<T>
+      laplacianDeformationEnergy (const JointFunctionData& data)
+      {
+	// the joint to marker function maps one particular robot
+	// configuration to a vector containing all the markers
+	// positions in this particular configuration
+	typedef JointToMarkerPositionChoreonoid<typename T::traits_t>
+	  jointToMarker_t;
+	boost::shared_ptr<jointToMarker_t>
+          jointToMarker =
+          boost::make_shared<jointToMarker_t>
+	  (data.interactionMesh);
+
+	// create the cost function using the full trajectory
+	boost::shared_ptr<T> cost =
+	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
+            typename T::traits_t> >
+	  (data.interactionMesh,
+	   data.trajectory->parameters (),
+	  jointToMarker);
+
+        // bind the joints that must not be taken into account
+	cost = bind (cost, data.disabledJointsTrajectory);
+
+        return cost;
       }
 
       template <typename T>
@@ -121,8 +167,10 @@ namespace roboptim
 	return detail::null<T> (data_);
       else if (name == "lde")
 	return detail::laplacianDeformationEnergy<T> (data_);
-      else if (name == "feet")
-	return detail::feet<T> (data_);
+      else if (name == "left-foot")
+	return detail::leftFoot<T> (data_);
+      else if (name == "right-foot")
+	return detail::rightFoot<T> (data_);
       else if (name == "joints-limits")
 	return detail::jointsLimits<T> (data_);
       else if (name == "torque")

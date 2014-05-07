@@ -16,13 +16,19 @@
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HXX
 # define ROBOPTIM_RETARGETING_PROBLEM_JOINT_PROBLEM_BUILDER_HXX
+# include <algorithm>
+
 # include <boost/format.hpp>
 # include <boost/make_shared.hpp>
+# include <boost/optional.hpp>
 
+# include <cnoid/BodyIMesh>
 # include <cnoid/BodyLoader>
 # include <cnoid/BodyMotion>
 
 # include <roboptim/core/problem.hh>
+
+# include <roboptim/trajectory/vector-interpolation.hh>
 
 # include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
 
@@ -33,15 +39,35 @@ namespace roboptim
 {
   namespace retargeting
   {
-    /// \brief Copy a trajectory while excluding some joints.
+    /// \brief Store which joints are disabled and what value they
+    ///        should be set in this case.
     ///
-    /// \param[in] originalTrajectory original, full, trajectory
-    /// \param[in] disabledJoints list of joints to be excluded
-    /// \param[in] robot robot model
-    boost::shared_ptr<Trajectory<3> >
-    filterTrajectory (boost::shared_ptr<Trajectory<3> > originalTrajectory,
-		      const std::vector<std::string>& disabledJoints,
-		      cnoid::BodyPtr robot)
+    /// By default, all joints are enabled.
+    ///
+    /// The user can also pass a set of joints to be filtered out before
+    /// starting the optimization process. The joints are described by
+    /// their name.
+    ///
+    /// Invalid joint names or duplicated joint are illegal.
+    ///
+    /// This function build the set of enabled joints from this vector
+    /// of strings. This is represented by a vector of boolean
+    /// value. The index is the joint id (0...6 is free-floating then
+    /// the joints configurations).
+    ///
+    /// \param[in] disabledJoints list of joints to be excluded from the
+    ///            optimization process and identified by their name
+    /// \param[in] originalTrajectory full joint trajectory
+    /// \param[in] robotModel robot model loaded by Choreonoid and
+    ///            providing the joint name to index mapping
+    /// \return vector of enabled and disabled joints (true means that
+    ///         joint is enabled, i.e. to be taken into account during the
+    ///         optimization process).
+    std::vector<boost::optional<Function::value_type> >
+    disabledJointsConfiguration
+    (const std::vector<std::string>& disabledJoints,
+     boost::shared_ptr<Trajectory<3> > originalTrajectory,
+     cnoid::BodyPtr robotModel)
     {
       std::set<std::string> disabledJointsSet
 	(disabledJoints.begin (), disabledJoints.end ());
@@ -49,21 +75,20 @@ namespace roboptim
 	throw std::runtime_error ("disabled joints are not unique");
 
       if (disabledJointsSet.size () ==
-	  static_cast<std::size_t> (robot->numJoints ()))
+	  static_cast<std::size_t> (robotModel->numJoints ()))
 	throw std::runtime_error ("all joints are disabled");
 
-      // FIXME: put that in a separate method.
-      std::vector<bool> enabledDofs
-	(6 + static_cast<std::size_t> (robot->numJoints ()), true);
+      std::vector<boost::optional<Function::value_type> > configuration
+	(6 + static_cast<std::size_t> (robotModel->numJoints ()), true);
 
       std::set<std::string>::const_iterator it;
       for (it = disabledJointsSet.begin (); it != disabledJointsSet.end (); ++it)
 	{
-	  cnoid::Link* link = robot->link (*it);
+	  cnoid::Link* link = robotModel->link (*it);
 	  if (!link)
 	    {
-	      boost::format fmt ("joint ``%s'' does not exist in robot ``%s''");
-	      fmt % *it % robot->modelName ();
+	      boost::format fmt ("joint ``%s'' does not exist in robotModel ``%s''");
+	      fmt % *it % robotModel->modelName ();
 	      throw std::runtime_error (fmt.str ());
 	    }
 
@@ -73,61 +98,101 @@ namespace roboptim
 	  if (id < 0)
 	    throw std::runtime_error ("conversion from body name"
 				      " to index failed (negative index)");
-	  enabledDofs[static_cast<std::size_t> (id)] = false;
-	  }
-
-      //FIXME: fix and clean this.
-      std::size_t nDofsFull = enabledDofs.size ();
-      std::size_t nDofsReduced = nDofsFull - disabledJointsSet.size ();
-
-      Trajectory<3>::vector_t::Index reducedTrajectoryParametersSize =
-	nDofsReduced * static_cast<Trajectory<3>::vector_t::Index>
-	((originalTrajectory->parameters ().size ()) / nDofsFull));
-      Trajectory<3>::vector_t reducedTrajectoryParameters (reducedTrajectoryParametersSize);
-
-      Trajectory<3>::vector_t::const_iterator itParam;
-      std::size_t idx = 0;
-      for (itParam = originalTrajectory->parameters ().begin ();
-	   itParam != originalTrajectory->parameters ().end (); ++itParam)
-	if (enabledDofs[(itParam - originalTrajectory->parameters ().begin ()) % nDofsFull])
-	  reducedTrajectoryParameters[idx] = *itParam;
-
-
+	  configuration[static_cast<std::size_t> (id)] =
+	    originalTrajectory->parameters ()[id];
+	}
+      return configuration;
     }
 
+    /// \brief Copy a trajectory while excluding some joints.
+    ///
+    /// \param[in] originalTrajectory original, full, trajectory
+    /// \param[in] disabledJoints list of joints to be excluded
+    /// \param[in] robot robot model
+    boost::shared_ptr<Trajectory<3> >
+    filterTrajectory (boost::shared_ptr<Trajectory<3> > originalTrajectory,
+		      const std::vector<boost::optional<Function::value_type> >&
+		      disabledJointsConfiguration)
+    {
+      typedef Trajectory<3>::vector_t::Index index_t;
+
+      index_t nDofsFull =
+	static_cast<index_t> (disabledJointsConfiguration.size ());
+      index_t nDofsReduced =
+	std::count (disabledJointsConfiguration.begin (),
+		    disabledJointsConfiguration.end (),
+		    boost::optional<Function::value_type> ());
+      index_t nFrames =
+	static_cast<index_t> (originalTrajectory->parameters ().size ())
+	/ nDofsFull;
+      index_t reducedTrajectoryParametersSize = nDofsReduced * nFrames;
+
+      Trajectory<3>::vector_t
+	reducedTrajectoryParameters (reducedTrajectoryParametersSize);
+
+      index_t idx = 0;
+      index_t idxOriginal = 0;
+      while (idx < reducedTrajectoryParametersSize &&
+	     idxOriginal < originalTrajectory->parameters ().size ())
+	{
+	  if (disabledJointsConfiguration[static_cast<std::size_t> (idxOriginal % nDofsFull)])
+	    reducedTrajectoryParameters[idx++] = originalTrajectory->parameters ()[idxOriginal];
+	  idxOriginal++;
+	}
+
+      boost::shared_ptr<Trajectory<3> > reducedTrajectory =
+	boost::make_shared<VectorInterpolation>
+	(reducedTrajectoryParameters,
+	 nDofsReduced, originalTrajectory->length () / nDofsFull);
+
+      return reducedTrajectory;
+    }
+
+    // Warning: be particularly cautious regarding the loading order
+    // as data is inter-dependent.
     void
     buildJointDataFromOptions (JointFunctionData& data,
 			       const JointProblemOptions& options)
     {
       cnoid::BodyLoader loader;
 
-      //FIXME: check that data.disabledDofs contains unique elements
-      //which are existing joints.
-
       data.jointsTrajectory = boost::make_shared<cnoid::BodyMotion> ();
       data.jointsTrajectory->loadStandardYAMLformat (options.jointsTrajectory);
 
       data.robotModel = loader.load (options.robotModel);
 
-      // There is an equivalence between joints and degrees of freedom
-      // in Choreonoid due to the fact it only supports one dof
-      // joints.
-      data.nDofs =
-	6 + static_cast<std::size_t> (data.robotModel->numJoints ())
-	- options.disabledJoints.size ();
+      // Create the interaction mesh
+      data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();
+      if (!data.interactionMesh->addBody (data.robotModel, data.jointsTrajectory))
+	throw std::runtime_error ("failed to add body to body interaction mesh");
+      if (!data.interactionMesh->initialize ())
+        throw std::runtime_error ("failed to initialize body interaction mesh");
 
 
+      // Load the trajectory
       if (options.trajectoryType == "discrete")
 	{
 	  data.trajectory = boost::make_shared<ChoreonoidBodyTrajectory>
 	    (data.jointsTrajectory, true);
-	  data.filteredTrajectory =
-	    filterTrajectory
-	    (data.trajectory, options.disabledJoints, data.robotModel);
 	}
       else
       	throw std::runtime_error ("invalid trajectory type");
 
+      // Filter the trajectory (do not re-order as the initial trajectory is needed!)
+
+      data.disabledJointsConfiguration =
+	disabledJointsConfiguration
+	(options.disabledJoints, data.trajectory, data.robotModel);
+
+      for (Function::vector_t::Index frame = 0; frame < data.nFrames (); ++frame)
+	data.disabledJointsTrajectory.insert
+	  (data.disabledJointsTrajectory.end (),
+	   data.disabledJointsConfiguration.begin (),
+	   data.disabledJointsConfiguration.end ());
+
+      data.filteredTrajectory =
+	filterTrajectory
+	(data.trajectory, data.disabledJointsConfiguration);
 
     }
 
