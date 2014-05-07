@@ -79,22 +79,24 @@ namespace roboptim
       std::vector<boost::optional<Function::value_type> >
       disabledJointsTrajectory;
 
+      /// \brief Shared pointer to cost function.
+      ///
+      /// The oldest part of RobOptim do not rely on shared pointers
+      /// and therefore we need to store the cost function shared
+      /// pointer manually to dellocating it.
+      boost::shared_ptr<DifferentiableFunction> cost;
 
 
       Function::vector_t::Index nDofsFull () const
       {
 	return
 	  static_cast<Function::vector_t::Index>
-	  (this->trajectory->parameters ().size ())
-	  / static_cast<Function::vector_t::Index>
 	  (this->trajectory->outputSize ());
       }
       Function::vector_t::Index nDofsFiltered () const
       {
 	return
 	  static_cast<Function::vector_t::Index>
-	  (this->filteredTrajectory->parameters ().size ())
-	  / static_cast<Function::vector_t::Index>
 	  (this->filteredTrajectory->outputSize ());
       }
 

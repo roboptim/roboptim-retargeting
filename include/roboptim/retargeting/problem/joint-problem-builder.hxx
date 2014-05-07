@@ -27,7 +27,9 @@
 # include <cnoid/BodyMotion>
 
 # include <roboptim/core/problem.hh>
+# include <roboptim/core/filter/bind.hh>
 
+# include <roboptim/trajectory/state-function.hh>
 # include <roboptim/trajectory/vector-interpolation.hh>
 
 # include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
@@ -51,18 +53,25 @@ namespace roboptim
     /// Invalid joint names or duplicated joint are illegal.
     ///
     /// This function build the set of enabled joints from this vector
-    /// of strings. This is represented by a vector of boolean
-    /// value. The index is the joint id (0...6 is free-floating then
-    /// the joints configurations).
+    /// of strings. This is represented by a vector of optional
+    /// values. The index is the joint id (0...6 is free-floating then
+    /// the joints configurations). The vector value is either empty
+    /// (the joint value will be determined by the optimization
+    /// process) or defined to a constant. In the latter case, the
+    /// joint is excluded from the optimization process and will
+    /// always be equal to this value. The constant (default) value of
+    /// the joint is the value of its joint in the first frame of the
+    /// joint trajectory.
     ///
     /// \param[in] disabledJoints list of joints to be excluded from the
     ///            optimization process and identified by their name
     /// \param[in] originalTrajectory full joint trajectory
     /// \param[in] robotModel robot model loaded by Choreonoid and
     ///            providing the joint name to index mapping
-    /// \return vector of enabled and disabled joints (true means that
-    ///         joint is enabled, i.e. to be taken into account during the
-    ///         optimization process).
+    /// \return vector of enabled and disabled joints (no value means that
+    ///         joint is disabled, i.e. not to be taken into account during the
+    ///         optimization process and a value means this joint will be excluded
+    ///         from the optimization process and always take this value).
     std::vector<boost::optional<Function::value_type> >
     disabledJointsConfiguration
     (const std::vector<std::string>& disabledJoints,
@@ -79,7 +88,8 @@ namespace roboptim
 	throw std::runtime_error ("all joints are disabled");
 
       std::vector<boost::optional<Function::value_type> > configuration
-	(6 + static_cast<std::size_t> (robotModel->numJoints ()), true);
+	(6 + static_cast<std::size_t> (robotModel->numJoints ()),
+	 boost::none_t ());
 
       std::set<std::string>::const_iterator it;
       for (it = disabledJointsSet.begin (); it != disabledJointsSet.end (); ++it)
@@ -118,10 +128,13 @@ namespace roboptim
 
       index_t nDofsFull =
 	static_cast<index_t> (disabledJointsConfiguration.size ());
+
       index_t nDofsReduced =
 	std::count (disabledJointsConfiguration.begin (),
 		    disabledJointsConfiguration.end (),
-		    boost::optional<Function::value_type> ());
+		    boost::none_t ());
+      if (nDofsReduced < 1)
+	  throw std::runtime_error ("all DOFs have been disabled");
       index_t nFrames =
 	static_cast<index_t> (originalTrajectory->parameters ().size ())
 	/ nDofsFull;
@@ -129,13 +142,14 @@ namespace roboptim
 
       Trajectory<3>::vector_t
 	reducedTrajectoryParameters (reducedTrajectoryParametersSize);
+      reducedTrajectoryParameters.setZero ();
 
       index_t idx = 0;
       index_t idxOriginal = 0;
       while (idx < reducedTrajectoryParametersSize &&
 	     idxOriginal < originalTrajectory->parameters ().size ())
 	{
-	  if (disabledJointsConfiguration[static_cast<std::size_t> (idxOriginal % nDofsFull)])
+	  if (!disabledJointsConfiguration[static_cast<std::size_t> (idxOriginal % nDofsFull)])
 	    reducedTrajectoryParameters[idx++] = originalTrajectory->parameters ()[idxOriginal];
 	  idxOriginal++;
 	}
@@ -208,21 +222,22 @@ namespace roboptim
     {}
 
     template <typename T>
-    std::pair<boost::shared_ptr<T>,
-	      boost::shared_ptr<typename T::function_t> >
-    JointProblemBuilder<T>::operator () ()
+    void
+    JointProblemBuilder<T>::operator () (boost::shared_ptr<T>& problem,
+					 JointFunctionData& data)
     {
-      std::pair<boost::shared_ptr<T>,
-		boost::shared_ptr<typename T::function_t > > result;
-      JointFunctionData data;
       buildJointDataFromOptions (data, options_);
+
+      std::size_t nConstraints =
+	static_cast<std::size_t> (data.nFrames ()) - 2;
+
 
       JointFunctionFactory factory (data);
 
-      boost::shared_ptr<DifferentiableFunction> cost =
+      data.cost =
 	factory.buildFunction<DifferentiableFunction> (options_.cost);
 
-      boost::shared_ptr<T> problem = boost::make_shared<T> (*cost);
+      problem = boost::make_shared<T> (*data.cost);
 
       std::vector<std::string>::const_iterator it;
       for (it = options_.constraints.begin ();
@@ -230,17 +245,45 @@ namespace roboptim
 	{
 	  Constraint<DifferentiableFunction> constraint =
 	    factory.buildConstraint<DifferentiableFunction> (*it);
-	  problem->addConstraint
-	    (constraint.function,
-	     constraint.intervals,
-	     constraint.scales);
+
+	  switch (constraint.type)
+	    {
+	    case Constraint<T>::CONSTRAINT_TYPE_ONCE:
+	      {
+		problem->addConstraint
+		  (constraint.function,
+		   constraint.intervals,
+		   constraint.scales);
+		break;
+	      }
+	    case Constraint<T>::CONSTRAINT_TYPE_PER_FRAME:
+	      {
+		for (std::size_t i = 0; i < nConstraints; ++i)
+		  {
+		    const Function::value_type t =
+		      (i + 1.) / (nConstraints + 1.);
+		    assert (t > 0. && t < 1.);
+
+		    boost::shared_ptr<DifferentiableFunction> f
+		      (new roboptim::StateFunction<Trajectory<3> >
+		       (*data.filteredTrajectory,
+			constraint.function,
+			t * tMax,
+			static_cast<Function::size_type>
+			(constraint.stateFunctionOrder)));
+
+		    f = bind (f, data.disabledJointsTrajectory);
+		    problem->addConstraint
+		      (f, constraint.intervals, constraint.scales);
+		  }
+		break;
+	      }
+	    default:
+	      assert (0 && "should never happen");
+	    }
 	}
 
-      problem->startingPoint () = data.trajectory->parameters ();
-
-      result.first = problem;
-      result.second = cost;
-      return result;
+      problem->startingPoint () = data.filteredTrajectory->parameters ();
     }
   } // end of namespace retargeting.
 } // end of namespace roboptim.

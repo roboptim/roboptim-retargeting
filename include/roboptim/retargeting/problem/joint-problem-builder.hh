@@ -131,9 +131,8 @@ namespace roboptim
       /// \brief Instantiate the problem and return it.
       ///
       /// \return shared pointer containing the newly created problem.
-      std::pair<boost::shared_ptr<T>,
-		boost::shared_ptr<typename T::function_t> >
-      operator () ();
+      void operator () (boost::shared_ptr<T>& problem,
+			JointFunctionData& data);
 
     private:
       /// \brief Problem description.
