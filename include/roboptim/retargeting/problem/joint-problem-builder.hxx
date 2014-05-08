@@ -157,7 +157,7 @@ namespace roboptim
       boost::shared_ptr<Trajectory<3> > reducedTrajectory =
 	boost::make_shared<VectorInterpolation>
 	(reducedTrajectoryParameters,
-	 nDofsReduced, originalTrajectory->length () / nDofsFull);
+	 nDofsReduced, static_cast<index_t> (originalTrajectory->length ()) / nDofsFull);
 
       return reducedTrajectory;
     }
@@ -261,7 +261,8 @@ namespace roboptim
 		for (std::size_t i = 0; i < nConstraints; ++i)
 		  {
 		    const Function::value_type t =
-		      (i + 1.) / (nConstraints + 1.);
+		      (static_cast<Function::value_type> (i) + 1.) /
+		      (static_cast<Function::value_type> (nConstraints) + 1.);
 		    assert (t > 0. && t < 1.);
 
 		    boost::shared_ptr<DifferentiableFunction> f

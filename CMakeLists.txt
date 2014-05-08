@@ -69,6 +69,8 @@ ADD_REQUIRED_DEPENDENCY("roboptim-trajectory >= 0.5")
 ADD_REQUIRED_DEPENDENCY("choreonoid")
 ADD_REQUIRED_DEPENDENCY("choreonoid-body-plugin")
 
+ADD_REQUIRED_DEPENDENCY("yaml-cpp")
+
 HEADER_INSTALL("${HEADERS}")
 
 # Order matters here: the library (in src) _must_ be compiled before

@@ -72,6 +72,12 @@ namespace roboptim
       /// Disabled DOFs will be excluded from the optimization problem
       /// and hence reduce the overall size of the problem.
       std::vector<std::string> disabledJoints;
+
+      /// \brief Final joint trajectory filename
+      ///
+      /// This file will be written at the end of the optimization
+      /// process if it terminates successfully (or with warnings).
+      std::string outputFile;
     };
 
     // Defined in function-factory.hh
