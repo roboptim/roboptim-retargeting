@@ -162,6 +162,13 @@ namespace roboptim
       /// \tparam T function type (e.g. DifferentiableFunction)
       template <typename T>
       Constraint<T> buildConstraint (const std::string& name);
+
+      /// \brief List supported functions.
+      ///
+      /// Each element of this string can be passed to buildFunction
+      /// method to create the corresponding function.
+      static std::vector<std::string>
+      listFunctions ();
     private:
       /// \brief Problem data (trajectories, etc.)
       const JointFunctionData& data_;

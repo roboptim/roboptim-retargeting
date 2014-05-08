@@ -158,6 +158,36 @@ namespace roboptim
 	  (data.robotModel);
       }
 
+      /// \brief Map function name to the function used to allocate
+      /// them.
+      template <typename T>
+      struct JointFunctionFactoryMapping
+      {
+	/// \brief Pair (name, pointer to allocator function)
+	struct Mapping
+	{
+	  const char* name;
+	  boost::shared_ptr<T> (*factory) (const JointFunctionData&);
+	};
+
+	/// \brief Static map between function names and their
+	/// allocator function.
+	static const Mapping map[];
+      };
+
+      template <typename T>
+      const typename JointFunctionFactoryMapping<T>::Mapping
+      JointFunctionFactoryMapping<T>::map[] = {
+	{"null", &null<T>},
+	{"freeze", &freeze<T>},
+	{"lde", &laplacianDeformationEnergy<T>},
+	{"left-foot", &leftFoot},
+	{"right-foot", &rightFoot},
+	{"joint-limits", &jointsLimits},
+	{"torque", &torque},
+	{"zmp", &zmp},
+	{0, 0}
+      };
     } // end of namespace detail.
 
     JointFunctionFactory::JointFunctionFactory (const JointFunctionData& data)
@@ -171,22 +201,16 @@ namespace roboptim
     boost::shared_ptr<T>
     JointFunctionFactory::buildFunction (const std::string& name)
     {
-      if (name == "null")
-	return detail::null<T> (data_);
-      else if (name == "freeze")
-	return detail::freeze<T> (data_);
-      else if (name == "lde")
-	return detail::laplacianDeformationEnergy<T> (data_);
-      else if (name == "left-foot")
-	return detail::leftFoot<T> (data_);
-      else if (name == "right-foot")
-	return detail::rightFoot<T> (data_);
-      else if (name == "joints-limits")
-	return detail::jointsLimits<T> (data_);
-      else if (name == "torque")
-	return detail::torque<T> (data_);
-      else if (name == "zmp")
-	return detail::zmp<T> (data_);
+      const typename detail::JointFunctionFactoryMapping<T>::Mapping* element =
+	detail::JointFunctionFactoryMapping<T>::map;
+
+      while (element && element->name)
+	{
+	  if (element->name == name)
+	    if (element->factory)
+	      return (*element->factory) (data_);
+	  element++;
+	}
       throw std::runtime_error ("invalid function name");
     }
 
@@ -337,6 +361,23 @@ namespace roboptim
 	}
 
       return constraint;
+    }
+
+    inline std::vector<std::string>
+    JointFunctionFactory::listFunctions ()
+    {
+      std::vector<std::string> functions;
+
+      const detail::JointFunctionFactoryMapping<
+	DifferentiableFunction>::Mapping*
+	element =
+	detail::JointFunctionFactoryMapping<DifferentiableFunction>::map;
+      while (element && element->name)
+	{
+	  functions.push_back (element->name);
+	  element++;
+	}
+      return functions;
     }
   } // end of namespace retargeting.
 } // end of namespace roboptim.
