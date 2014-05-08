@@ -26,6 +26,7 @@
 
 # include <roboptim/core/problem.hh>
 
+# include <roboptim/trajectory/state-function.hh>
 # include <roboptim/trajectory/vector-interpolation.hh>
 
 # include <roboptim/retargeting/problem/marker-function-factory.hh>
@@ -97,21 +98,22 @@ namespace roboptim
     {}
 
     template <typename T>
-    std::pair<boost::shared_ptr<T>,
-	      boost::shared_ptr<typename T::function_t> >
-    MarkerProblemBuilder<T>::operator () ()
+    void
+    MarkerProblemBuilder<T>::operator ()
+      (boost::shared_ptr<T>& problem,
+       MarkerFunctionData& data)
     {
-      std::pair<boost::shared_ptr<T>,
-		boost::shared_ptr<typename T::function_t > > result;
-      MarkerFunctionData data;
       buildDataFromOptions (data, options_);
+
+      std::size_t nConstraints =
+	static_cast<std::size_t> (data.nFrames ()) - 2;
 
       MarkerFunctionFactory factory (data);
 
-      boost::shared_ptr<DifferentiableFunction> cost =
+      data.cost =
 	factory.buildFunction<DifferentiableFunction> (options_.cost);
 
-      boost::shared_ptr<T> problem = boost::make_shared<T> (*cost);
+      problem = boost::make_shared<T> (*data.cost);
 
       std::vector<std::string>::const_iterator it;
       for (it = options_.constraints.begin ();
@@ -119,17 +121,43 @@ namespace roboptim
 	{
 	  Constraint<DifferentiableFunction> constraint =
 	    factory.buildConstraint<DifferentiableFunction> (*it);
-	  problem->addConstraint
-	    (constraint.function,
-	     constraint.intervals,
-	     constraint.scales);
+
+	  switch (constraint.type)
+	    {
+	    case Constraint<T>::CONSTRAINT_TYPE_ONCE:
+	      {
+		problem->addConstraint
+		  (constraint.function,
+		   constraint.intervals,
+		   constraint.scales);
+		break;
+	      }
+	    case Constraint<T>::CONSTRAINT_TYPE_PER_FRAME:
+	      {
+		for (std::size_t i = 0; i < nConstraints; ++i)
+		  {
+		    const Function::value_type t =
+		      (static_cast<Function::value_type> (i) + 1.) /
+		      (static_cast<Function::value_type> (nConstraints) + 1.);
+		    assert (t > 0. && t < 1.);
+
+		    boost::shared_ptr<DifferentiableFunction> f
+		      (new roboptim::StateFunction<Trajectory<3> >
+		       (*data.trajectory,
+			constraint.function,
+			t * tMax,
+			static_cast<Function::size_type>
+			(constraint.stateFunctionOrder)));
+		    problem->addConstraint
+		      (f, constraint.intervals, constraint.scales);
+		  }
+		break;
+	      }
+	    default:
+	      assert (0 && "should never happen");
+	    }
 	}
-
       problem->startingPoint () = data.trajectory->parameters ();
-
-      result.first = problem;
-      result.second = cost;
-      return result;
     }
   } // end of namespace retargeting.
 } // end of namespace roboptim.

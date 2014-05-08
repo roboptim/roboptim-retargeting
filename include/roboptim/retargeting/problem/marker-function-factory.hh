@@ -51,6 +51,29 @@ namespace roboptim
 
       /// \brief RobOptim trajectory
       boost::shared_ptr<roboptim::Trajectory<3> > trajectory;
+
+      /// \brief Shared pointer to cost function.
+      ///
+      /// The oldest part of RobOptim do not rely on shared pointers
+      /// and therefore we need to store the cost function shared
+      /// pointer manually to dellocating it.
+      boost::shared_ptr<DifferentiableFunction> cost;
+
+      Function::vector_t::Index nMarkers () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->trajectory->outputSize ());
+      }
+
+      Function::vector_t::Index nFrames () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->trajectory->parameters ().size ())
+	  / this->nMarkers ();
+      }
+
     };
 
     /// \brief Creates functions from their name for marker-joint
@@ -94,6 +117,14 @@ namespace roboptim
       /// \tparam T function type (e.g. DifferentiableFunction)
       template <typename T>
       Constraint<T> buildConstraint (const std::string& name);
+
+      /// \brief List supported functions.
+      ///
+      /// Each element of this string can be passed to buildFunction
+      /// method to create the corresponding function.
+      static std::vector<std::string>
+      listFunctions ();
+
     private:
       /// \brief Problem data (trajectories, etc.)
       const MarkerFunctionData& data_;

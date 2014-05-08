@@ -63,6 +63,32 @@ namespace roboptim
 	return boost::shared_ptr<T> ();
       }
 
+      /// \brief Map function name to the function used to allocate
+      /// them.
+      template <typename T>
+      struct MarkerFunctionFactoryMapping
+      {
+	/// \brief Pair (name, pointer to allocator function)
+	struct Mapping
+	{
+	  const char* name;
+	  boost::shared_ptr<T> (*factory) (const MarkerFunctionData&);
+	};
+
+	/// \brief Static map between function names and their
+	/// allocator function.
+	static const Mapping map[];
+      };
+
+      template <typename T>
+      const typename MarkerFunctionFactoryMapping<T>::Mapping
+      MarkerFunctionFactoryMapping<T>::map[] = {
+	{"null", &null<T>},
+	{"lde", &laplacianDeformationEnergy<T>},
+	{"bone-length", &boneLength<T>},
+	{0, 0}
+      };
+
     } // end of namespace detail.
 
     MarkerFunctionFactory::MarkerFunctionFactory (const MarkerFunctionData& data)
@@ -76,12 +102,16 @@ namespace roboptim
     boost::shared_ptr<T>
     MarkerFunctionFactory::buildFunction (const std::string& name)
     {
-      if (name == "null")
-	return detail::null<T> (data_);
-      else if (name == "lde")
-	return detail::laplacianDeformationEnergy<T> (data_);
-      else if (name == "bone-length")
-	return detail::boneLength<T> (data_);
+      const typename detail::MarkerFunctionFactoryMapping<T>::Mapping* element =
+	detail::MarkerFunctionFactoryMapping<T>::map;
+
+      while (element && element->name)
+	{
+	  if (element->name == name)
+	    if (element->factory)
+	      return (*element->factory) (data_);
+	  element++;
+	}
       throw std::runtime_error ("invalid function name");
     }
 
@@ -91,7 +121,40 @@ namespace roboptim
     {
       Constraint<T> constraint;
       constraint.function = this->buildFunction<T> (name);
+
+      constraint.intervals.resize
+	(static_cast<std::size_t> (constraint.function->outputSize ()),
+	 Function::makeInfiniteInterval ());
+      constraint.scales.resize
+	(static_cast<std::size_t> (constraint.function->outputSize ()),
+	 1.);
+      constraint.type = Constraint<T>::CONSTRAINT_TYPE_ONCE;
+      constraint.stateFunctionOrder = 0;
+
+      if (name == "bone-length")
+	{
+	}
+      else
+	throw std::runtime_error ("unknown constraint");
+
       return constraint;
+    }
+
+    inline std::vector<std::string>
+    MarkerFunctionFactory::listFunctions ()
+    {
+      std::vector<std::string> functions;
+
+      const detail::MarkerFunctionFactoryMapping<
+	DifferentiableFunction>::Mapping*
+	element =
+	detail::MarkerFunctionFactoryMapping<DifferentiableFunction>::map;
+      while (element && element->name)
+	{
+	  functions.push_back (element->name);
+	  element++;
+	}
+      return functions;
     }
   } // end of namespace retargeting.
 } // end of namespace roboptim.

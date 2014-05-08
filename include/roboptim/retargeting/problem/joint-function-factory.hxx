@@ -359,6 +359,8 @@ namespace roboptim
 	  constraint.type = Constraint<T>::CONSTRAINT_TYPE_PER_FRAME;
 	  constraint.stateFunctionOrder = 2;
 	}
+      else
+	throw std::runtime_error ("unknown constraint");
 
       return constraint;
     }
