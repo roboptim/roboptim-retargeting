@@ -27,68 +27,17 @@
 #include <libmocap/marker-trajectory.hh>
 #include <libmocap/marker-trajectory-factory.hh>
 
+#include <roboptim/core/solver.hh>
+#include <roboptim/core/solver-factory.hh>
+#include <roboptim/core/result.hh>
+#include <roboptim/core/result-with-warnings.hh>
+
 #include <roboptim/trajectory/trajectory.hh>
 
-
-namespace roboptim
-{
-  namespace retargeting
-  {
-    struct MarkerToJointOptions
-    {
-      std::string markerSet;
-      std::string markersTrajectory;
-
-      std::string outputFile;
-
-      std::string robotModel;
-    };
-
-    struct MarkerToJointData
-    {
-      /// \brief marker set loaded by libmocap
-      libmocap::MarkerSet markerSet;
-
-      /// \brief markers trajectory as loaded by libmocap
-      libmocap::MarkerTrajectory markersTrajectory;
-
-      /// \brief Robot model loaded through Choreonoid
-      ///
-      /// Robot model contains the robot description of joints and
-      /// bodies associated with limits such as joints positions,
-      /// velocities limits, etc.
-      cnoid::BodyPtr robotModel;
-
-      /// \brief RobOptim markers trajectory
-      boost::shared_ptr<roboptim::Trajectory<3> > inputTrajectory;
-
-      /// \brief RobOPtim joints trajectory to be generated
-      boost::shared_ptr<roboptim::Trajectory<3> > outputTrajectory;
-    };
-
-    void
-    buildJointDataFromOptions (MarkerToJointData& data,
-			       const MarkerToJointOptions& options);
-
-    inline void
-    buildJointDataFromOptions (MarkerToJointData& data,
-			       const MarkerToJointOptions& options)
-    {
-      cnoid::BodyLoader loader;
-
-      data.markerSet =
-	libmocap::MarkerSetFactory ().load (options.markerSet);
-      data.markersTrajectory =
-	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
-      data.robotModel = loader.load (options.robotModel);
-    }
-
-
-  } // end of namespace retargeting
-} // end of namespace roboptim
+#include <roboptim/retargeting/problem/marker-to-joint-problem-builder.hh>
 
 static bool parseOptions
-(roboptim::retargeting::MarkerToJointOptions& options,
+(roboptim::retargeting::MarkerToJointProblemOptions& options,
  int argc, const char* argv[])
 {
   namespace po = boost::program_options;
@@ -136,16 +85,76 @@ static bool parseOptions
 
 int safeMain (int argc, const char* argv[])
 {
-  roboptim::retargeting::MarkerToJointOptions options;
+  typedef roboptim::retargeting::denseProblem_t problem_t;
+  typedef roboptim::Solver<
+    roboptim::GenericDifferentiableFunction<roboptim::EigenMatrixDense>,
+    boost::mpl::vector<
+      roboptim::GenericLinearFunction<roboptim::EigenMatrixDense>,
+      roboptim::GenericDifferentiableFunction<roboptim::EigenMatrixDense>
+      >
+    >
+    solver_t;
+
+  roboptim::retargeting::MarkerToJointProblemOptions options;
 
   if (!parseOptions (options, argc, argv))
     return 0;
 
-  roboptim::retargeting::MarkerToJointData data;
-  buildJointDataFromOptions (data, options);
+  // Build problem.
+  roboptim::retargeting::MarkerToJointProblemBuilder<problem_t>
+    builder (options);
 
-  //FIXME: for each frame apply IK
+  boost::shared_ptr<problem_t> problem;
+  roboptim::retargeting::MarkerToJointFunctionData data;
+  builder (problem, data);
 
+  if (!problem)
+    throw std::runtime_error ("failed to build problem");
+
+  roboptim::SolverFactory<solver_t>
+    factory (options.plugin, *problem);
+  solver_t& solver = factory ();
+
+  // Set solver parameters.
+  solver.parameters ()["max-iterations"].value = 1000;
+
+  solver.parameters ()["ipopt.output_file"].value =
+    "/tmp/ipopt.log";
+  solver.parameters ()["ipopt.print_level"].value = 5;
+  solver.parameters ()["ipopt.expect_infeasible_problem"].value = "no";
+  solver.parameters ()["ipopt.nlp_scaling_method"].value = "none";
+  solver.parameters ()["ipopt.tol"].value = 1e-3;
+  solver.parameters ()["ipopt.dual_inf_tol"].value = 1.;
+  solver.parameters ()["ipopt.constr_viol_tol"].value = 1e-3;
+
+  // first-order
+  solver.parameters ()["ipopt.derivative_test"].value = "first-order";
+  solver.parameters ()["nag.verify-level"].value = 0;
+
+  std::cout << solver << std::endl;
+
+  const solver_t::result_t& result = solver.minimum ();
+
+  if (result.which () == solver_t::SOLVER_VALUE_WARNINGS)
+    {
+      std::cout << "Optimization finished. Warnings have been issued\n";
+      roboptim::ResultWithWarnings result_ =
+        boost::get<roboptim::ResultWithWarnings> (result);
+      std::cerr << result << std::endl;
+    }
+  else if (result.which () == solver_t::SOLVER_VALUE)
+    {
+      std::cout << "Optimization finished successfully.\n";
+      roboptim::Result result_ =
+        boost::get<roboptim::Result> (result);
+      std::cerr << result << std::endl;
+    }
+  else
+    {
+      throw std::runtime_error ("Optimization failed");
+    }
+
+  //writeBodyMotion (options.outputFile, finalTrajectory);
   return 0;
 }
 
