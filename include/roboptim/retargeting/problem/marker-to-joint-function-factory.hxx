@@ -32,32 +32,32 @@ namespace roboptim
     {
       template <typename T>
       boost::shared_ptr<T>
-      null (const MarkerToJointFunctionData&)
+      null (const MarkerToJointFunctionData& data)
       {
-	// if (!data.trajectory)
-	//   throw std::runtime_error
-	//     ("failed to create null function: no joint trajectory");
-	// if (data.trajectory->parameters ().size () == 0)
-	//   throw std::runtime_error
-	//     ("failed to create null function:"
-	//      " empty parameters vector in joint trajectory");
+	if (!data.outputTrajectoryReduced)
+	  throw std::runtime_error
+	    ("failed to create null function: no reduced joint trajectory");
+	if (data.outputTrajectoryReduced->parameters ().size () == 0)
+	  throw std::runtime_error
+	    ("failed to create null function:"
+	     " empty parameters vector in reduced joint trajectory");
 
-	// typename T::matrix_t A
-	//   (1, data.trajectory->parameters ().size ());
-	// A.setZero ();
-	// typename T::vector_t b (1);
-	// b.setZero ();
+	typename T::matrix_t A
+	  (1, data.outputTrajectoryReduced->parameters ().size ());
+	A.setZero ();
+	typename T::vector_t b (1);
+	b.setZero ();
 
-	// return boost::make_shared<
-	//   GenericNumericLinearFunction<typename T::traits_t> >
-	//   (A, b);
-	return boost::shared_ptr<T> ();
+	return boost::make_shared<
+	  GenericNumericLinearFunction<typename T::traits_t> >
+	  (A, b);
       }
 
       template <typename T>
       boost::shared_ptr<T>
       forwardGeometry (const MarkerToJointFunctionData&)
       {
+	//FIXME: implement this
 	return boost::shared_ptr<T> ();
       }
 

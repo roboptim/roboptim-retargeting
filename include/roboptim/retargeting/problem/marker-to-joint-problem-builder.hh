@@ -37,6 +37,8 @@ namespace roboptim
       std::string markerSet;
       std::string markersTrajectory;
 
+      std::string trajectoryType;
+
       std::string outputFile;
 
       std::string robotModel;
@@ -44,6 +46,15 @@ namespace roboptim
       std::string cost;
 
       std::string plugin;
+
+      /// \brief Disabled joints
+      ///
+      /// Disabled DOFs will be excluded from the optimization problem
+      /// and hence reduce the overall size of the problem.
+      std::vector<std::string> disabledJoints;
+
+
+      Function::vector_t::Index frameId;
     };
 
     // Defined in function-factory.hh

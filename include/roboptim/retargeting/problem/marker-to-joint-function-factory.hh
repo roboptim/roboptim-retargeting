@@ -53,9 +53,53 @@ namespace roboptim
       boost::shared_ptr<roboptim::Trajectory<3> > inputTrajectory;
 
       /// \brief RobOPtim joints trajectory to be generated
+      boost::shared_ptr<roboptim::Trajectory<3> > outputTrajectoryReduced;
+
+      /// \brief RobOPtim joints trajectory to be generated
       boost::shared_ptr<roboptim::Trajectory<3> > outputTrajectory;
 
       boost::shared_ptr<DifferentiableFunction> cost;
+
+      /// \brief Configuration of the disabled joints (one frame)
+      ///
+      ///
+      std::vector<boost::optional<Function::value_type> >
+      disabledJointsConfiguration;
+
+
+      Function::vector_t::Index nDofsFull () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->outputTrajectory->outputSize ());
+      }
+      Function::vector_t::Index nDofsFiltered () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->outputTrajectoryReduced->outputSize ());
+      }
+
+      Function::vector_t::Index nParametersFull () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->outputTrajectory->parameters ().size ());
+      }
+      Function::vector_t::Index nParametersFiltered () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->outputTrajectoryReduced->parameters ().size ());
+      }
+      Function::vector_t::Index nFrames () const
+      {
+	return
+	  static_cast<Function::vector_t::Index>
+	  (this->outputTrajectory->parameters ().size ())
+	  / this->nDofsFull ();
+      }
+
     };
 
     /// \brief Creates functions from their name for joint-joint
