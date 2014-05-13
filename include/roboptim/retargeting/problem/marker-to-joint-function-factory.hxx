@@ -43,7 +43,7 @@ namespace roboptim
 	     " empty parameters vector in reduced joint trajectory");
 
 	typename T::matrix_t A
-	  (1, data.outputTrajectoryReduced->parameters ().size ());
+	  (1, data.nDofsFiltered ());
 	A.setZero ();
 	typename T::vector_t b (1);
 	b.setZero ();

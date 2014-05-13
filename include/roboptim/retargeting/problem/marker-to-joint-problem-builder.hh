@@ -77,8 +77,9 @@ namespace roboptim
     /// \param[out] data structure to contain the loaded data
     /// \param[in] options problem description
     void
-    buildJointDataFromOptions (MarkerToJointFunctionData& data,
-			       const MarkerToJointProblemOptions& options);
+    buildMarkerToJointDataFromOptions
+    (MarkerToJointFunctionData& data,
+     const MarkerToJointProblemOptions& options);
 
     /// \brief Build a joint retargeting problem.
     ///

@@ -50,8 +50,9 @@ namespace roboptim
     // Warning: be particularly cautious regarding the loading order
     // as data is inter-dependent.
     void
-    buildJointDataFromOptions (MarkerToJointFunctionData& data,
-			       const MarkerToJointProblemOptions& options)
+    buildMarkerToJointDataFromOptions
+    (MarkerToJointFunctionData& data,
+     const MarkerToJointProblemOptions& options)
     {
       cnoid::BodyLoader loader;
 
@@ -109,31 +110,28 @@ namespace roboptim
     MarkerToJointProblemBuilder<T>::operator ()
       (boost::shared_ptr<T>& problem, MarkerToJointFunctionData& data)
     {
-      buildJointDataFromOptions (data, options_);
+      buildMarkerToJointDataFromOptions (data, options_);
       MarkerToJointFunctionFactory factory (data);
       data.cost =
 	factory.buildFunction<DifferentiableFunction> (options_.cost);
       problem = boost::make_shared<T> (*data.cost);
 
-      Function::vector_t::Index nMarkers =
-	static_cast<Function::vector_t::Index>
-	(data.markersTrajectory.numMarkers ());
-      Function::vector_t::Index length =
-	static_cast<Function::vector_t::Index>
-	(nMarkers * 3);
+      Function::vector_t::Index length = data.nDofsFiltered ();
 
       // for first frame, start from half-sitting
       if (options_.frameId == 0)
 	{
 	  //FIXME: zero for now
-	  problem->startingPoint () = Function::vector_t (length);
+	  problem->startingPoint () =
+	    data.outputTrajectoryReduced->parameters ().segment
+	    (0, length);
 	}
       // for other frames, start from previous frame
       else
 	{
 	  Function::vector_t::Index start =
 	    static_cast<Function::vector_t::Index>
-	    ((options_.frameId - 1) * nMarkers * 3);
+	    ((options_.frameId - 1) * length);
 
 	  problem->startingPoint () =
 	    data.outputTrajectoryReduced->parameters ().segment

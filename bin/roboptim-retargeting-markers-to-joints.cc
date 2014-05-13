@@ -156,7 +156,7 @@ static bool parseOptions
   po::options_description desc ("Options");
   desc.add_options ()
     ("help,h", "Print help messages")
-    ("markers-trajectory,m",
+    ("marker-trajectory,m",
      po::value<std::string>
      (&options.markersTrajectory)->required (),
      "input markers trajectory used during Motion Capture"
@@ -170,7 +170,6 @@ static bool parseOptions
      (&options.trajectoryType)->default_value ("discrete"),
      "Trajectory type (discrete)")
 
-
     ("marker-set,s",
      po::value<std::string> (&options.markerSet)->required (),
      "Marker Set used during Motion Capture"
@@ -183,6 +182,13 @@ static bool parseOptions
     ("disable-joint,d",
      po::value<std::vector<std::string> > (&options.disabledJoints),
      "Exclude a joint from the optimization process")
+
+    ("cost,c",
+     po::value<std::string> (&options.cost)->default_value ("null"),
+     "What cost function should be used?")
+    ("plugin,p",
+     po::value<std::string> (&options.plugin)->default_value ("cfsqp"),
+     "RobOptim plug-in to be used")
     ;
 
   po::variables_map vm;
@@ -225,7 +231,10 @@ int safeMain (int argc, const char* argv[])
   roboptim::retargeting::MarkerToJointProblemBuilder<problem_t>
     builder (options);
 
+  boost::shared_ptr<problem_t> problem;
   roboptim::retargeting::MarkerToJointFunctionData data;
+  options.frameId = 0;
+  builder (problem, data);
 
   roboptim::Function::vector_t::Index nFrames =
     static_cast<roboptim::Function::vector_t::Index>
@@ -234,7 +243,6 @@ int safeMain (int argc, const char* argv[])
   for (options.frameId = 0; options.frameId < nFrames; ++options.frameId)
     {
       std::cout << "*** Frame " << options.frameId << std::endl;
-      boost::shared_ptr<problem_t> problem;
       builder (problem, data);
 
       if (!problem)
@@ -267,15 +275,10 @@ int safeMain (int argc, const char* argv[])
       roboptim::Function::vector_t parameters =
 	data.outputTrajectoryReduced->parameters ();
 
-      roboptim::Function::vector_t::Index nMarkers =
-	static_cast<roboptim::Function::vector_t::Index>
-	(data.markersTrajectory.numMarkers ());
-      roboptim::Function::vector_t::Index length =
-	static_cast<roboptim::Function::vector_t::Index>
-	(nMarkers * 3);
+      roboptim::Function::vector_t::Index length = data.nDofsFiltered ();
       roboptim::Function::vector_t::Index start =
 	static_cast<roboptim::Function::vector_t::Index>
-	(options.frameId * nMarkers * 3);
+	(options.frameId * length);
 
 
       if (result.which () == solver_t::SOLVER_VALUE_WARNINGS)
