@@ -34,6 +34,7 @@
 #include <roboptim/core/solver-factory.hh>
 #include <roboptim/core/result.hh>
 #include <roboptim/core/result-with-warnings.hh>
+#include <roboptim/core/util.hh>
 
 #include <roboptim/trajectory/trajectory.hh>
 
@@ -242,7 +243,7 @@ int safeMain (int argc, const char* argv[])
 
   for (options.frameId = 0; options.frameId < nFrames; ++options.frameId)
     {
-      std::cout << "*** Frame " << options.frameId << std::endl;
+      std::cout << "*** Frame " << options.frameId << roboptim::iendl;
       builder (problem, data);
 
       if (!problem)
@@ -268,7 +269,7 @@ int safeMain (int argc, const char* argv[])
       solver.parameters ()["ipopt.derivative_test"].value = "first-order";
       solver.parameters ()["nag.verify-level"].value = 0;
 
-      std::cout << solver << std::endl;
+      std::cout << solver << roboptim::resetindent << roboptim::iendl;
 
       const solver_t::result_t& result = solver.minimum ();
 
@@ -286,7 +287,7 @@ int safeMain (int argc, const char* argv[])
 	  std::cout << "Optimization finished. Warnings have been issued\n";
 	  roboptim::ResultWithWarnings result_ =
 	    boost::get<roboptim::ResultWithWarnings> (result);
-	  std::cerr << result << std::endl;
+	  std::cerr << result << roboptim::iendl;
 
 	  parameters.segment (start, length) = result_.x;
 	}
@@ -295,7 +296,7 @@ int safeMain (int argc, const char* argv[])
 	  std::cout << "Optimization finished successfully.\n";
 	  roboptim::Result result_ =
 	    boost::get<roboptim::Result> (result);
-	  std::cerr << result << std::endl;
+	  std::cerr << result << roboptim::iendl;
 
 	  parameters.segment (start, length) = result_.x;
 	}
@@ -339,7 +340,7 @@ int main (int argc, const char* argv[])
     }
   catch (const std::exception& e)
     {
-      std::cerr << e.what () << std::endl;
+      std::cerr << e.what () << roboptim::iendl;
       return 1;
     }
 }

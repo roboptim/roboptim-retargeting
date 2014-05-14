@@ -62,11 +62,14 @@ namespace roboptim
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
       data.robotModel = loader.load (options.robotModel);
 
-      if (options.trajectoryType == "discrete")
-	data.inputTrajectory =
-	  convertToTrajectory<VectorInterpolation> (data.markersTrajectory);
-      else
-	throw std::runtime_error ("invalid trajectory type");
+      if (!data.inputTrajectory)
+	{
+	  if (options.trajectoryType == "discrete")
+	    data.inputTrajectory =
+	      convertToTrajectory<VectorInterpolation> (data.markersTrajectory);
+	  else
+	    throw std::runtime_error ("invalid trajectory type");
+	}
 
       Function::size_type nFrames =
 	static_cast<Function::size_type> (data.markersTrajectory.numFrames ());
@@ -78,13 +81,15 @@ namespace roboptim
       Function::size_type nDofsReduced =
 	static_cast<Function::size_type> (nDofsFull - 0); //FIXME:
 
-      data.outputTrajectoryReduced =
-	boost::make_shared<VectorInterpolation>
-	(Function::vector_t (nDofsReduced * nFrames),
-	 nDofsReduced, dt);
-      data.outputTrajectory =
-	boost::make_shared<VectorInterpolation>
-	(Function::vector_t (nDofsFull), nDofsReduced, dt);
+      if (!data.outputTrajectoryReduced)
+	data.outputTrajectoryReduced =
+	  boost::make_shared<VectorInterpolation>
+	  (Function::vector_t (nDofsReduced * nFrames),
+	   nDofsReduced, dt);
+      if (!data.outputTrajectory)
+	data.outputTrajectory =
+	  boost::make_shared<VectorInterpolation>
+	  (Function::vector_t (nDofsFull), nDofsReduced, dt);
 
       //FIXME: first frame value of outputTrajectory will be used for
       //joints defaults value, we probably want to set it to
