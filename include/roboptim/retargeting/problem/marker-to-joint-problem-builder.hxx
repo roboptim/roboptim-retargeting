@@ -56,11 +56,21 @@ namespace roboptim
     {
       cnoid::BodyLoader loader;
 
+      data.frameId = options.frameId;
+
       data.markerSet =
 	libmocap::MarkerSetFactory ().load (options.markerSet);
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
       data.robotModel = loader.load (options.robotModel);
+
+      // Create the interaction mesh
+      data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();
+      //FIXME:
+      // if (!data.interactionMesh->addBody (data.robotModel, data.jointsTrajectory))
+      //   throw std::runtime_error ("failed to add body to body interaction mesh");
+      if (!data.interactionMesh->initialize ())
+        throw std::runtime_error ("failed to initialize body interaction mesh");
 
       if (!data.inputTrajectory)
 	{

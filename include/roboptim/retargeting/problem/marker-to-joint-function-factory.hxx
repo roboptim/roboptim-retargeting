@@ -23,6 +23,7 @@
 # include <roboptim/core/filter/bind.hh>
 
 # include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
+# include <roboptim/retargeting/function/distance-to-marker.hh>
 
 namespace roboptim
 {
@@ -55,10 +56,24 @@ namespace roboptim
 
       template <typename T>
       boost::shared_ptr<T>
-      forwardGeometry (const MarkerToJointFunctionData&)
+      distanceToMarker (const MarkerToJointFunctionData& data)
       {
-	//FIXME: implement this
-	return boost::shared_ptr<T> ();
+	boost::shared_ptr<
+	  JointToMarkerPositionChoreonoid<typename T::traits_t> >
+	  jointToMarker =
+	  boost::make_shared<
+	    JointToMarkerPositionChoreonoid<typename T::traits_t> >
+	  (data.interactionMesh);
+
+	//FIXME: frameId will always be 0, how to update?
+	Function::vector_t referencePositions =
+	  data.inputTrajectory->parameters ().segment
+	  (data.frameId * jointToMarker->outputSize (),
+	   jointToMarker->outputSize ());
+
+	return boost::make_shared<
+	  DistanceToMarker<typename T::traits_t> >
+	  (jointToMarker, referencePositions);
       }
 
       /// \brief Map function name to the function used to allocate
@@ -82,7 +97,7 @@ namespace roboptim
       const typename MarkerToJointFunctionFactoryMapping<T>::Mapping
       MarkerToJointFunctionFactoryMapping<T>::map[] = {
 	{"null", &null<T>},
-	{"forward-geometry", &forwardGeometry<T>},
+	{"distance-to-marker", &distanceToMarker<T>},
 	{0, 0}
       };
     } // end of namespace detail.

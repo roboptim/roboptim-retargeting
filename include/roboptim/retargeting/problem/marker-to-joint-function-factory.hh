@@ -66,6 +66,11 @@ namespace roboptim
       std::vector<boost::optional<Function::value_type> >
       disabledJointsConfiguration;
 
+      /// \brief Interaction Mesh (loaded by Choreonoid)
+      cnoid::BodyIMeshPtr interactionMesh;
+
+      Function::vector_t::Index frameId;
+
 
       Function::vector_t::Index nDofsFull () const
       {
