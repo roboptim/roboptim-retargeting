@@ -66,9 +66,10 @@ namespace roboptim
 
       // Create the interaction mesh
       data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();
-      //FIXME:
-      // if (!data.interactionMesh->addBody (data.robotModel, data.jointsTrajectory))
-      //   throw std::runtime_error ("failed to add body to body interaction mesh");
+      //FIXME: is this ok?
+      if (!data.interactionMesh->addBody
+	  (data.robotModel, cnoid::BodyMotionPtr ()))
+        throw std::runtime_error ("failed to add body to body interaction mesh");
       if (!data.interactionMesh->initialize ())
         throw std::runtime_error ("failed to initialize body interaction mesh");
 
@@ -88,8 +89,10 @@ namespace roboptim
 	(1. / data.markersTrajectory.dataRate ());
       Function::size_type nDofsFull =
 	static_cast<Function::size_type> (6 + data.robotModel->numJoints ());
-      Function::size_type nDofsReduced =
-	static_cast<Function::size_type> (nDofsFull - 0); //FIXME:
+      //FIXME: unsafe if vector is ill-formed
+      Function::size_type nDofsReduced = nDofsFull -
+	static_cast<Function::size_type>
+	(data.disabledJointsConfiguration.size ());
 
       if (!data.outputTrajectoryReduced)
 	data.outputTrajectoryReduced =
@@ -130,6 +133,19 @@ namespace roboptim
       data.cost =
 	factory.buildFunction<DifferentiableFunction> (options_.cost);
       problem = boost::make_shared<T> (*data.cost);
+
+
+      std::vector<std::string>::const_iterator it;
+      for (it = options_.constraints.begin ();
+	   it != options_.constraints.end (); ++it)
+	{
+	  Constraint<DifferentiableFunction> constraint =
+	    factory.buildConstraint<DifferentiableFunction> (*it);
+	  problem->addConstraint
+	    (constraint.function,
+	     constraint.intervals,
+	     constraint.scales);
+	}
 
       Function::vector_t::Index length = data.nDofsFiltered ();
 

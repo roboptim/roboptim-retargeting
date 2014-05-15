@@ -139,6 +139,17 @@ namespace roboptim
       template <typename T>
       boost::shared_ptr<T> buildFunction (const std::string& name);
 
+      /// \brief Instantiate a constraint from its name.
+      ///
+      /// This method creates a constraint object from the constraint
+      /// name.
+      ///
+      /// \param[in] name function name
+      /// \return newly created constraint object
+      /// \tparam T function type (e.g. DifferentiableFunction)
+      template <typename T>
+      Constraint<T> buildConstraint (const std::string& name);
+
       /// \brief List supported functions.
       ///
       /// Each element of this string can be passed to buildFunction

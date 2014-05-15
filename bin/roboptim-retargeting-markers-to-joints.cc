@@ -180,6 +180,10 @@ static bool parseOptions
      po::value<std::string> (&options.robotModel)->required (),
      "Robot Model (Choreonoid YAML file)")
 
+    ("constraint,C",
+     po::value<std::vector<std::string> > (&options.constraints),
+     "Which constraints should be used?")
+
     ("disable-joint,d",
      po::value<std::vector<std::string> > (&options.disabledJoints),
      "Exclude a joint from the optimization process")
@@ -306,6 +310,11 @@ int safeMain (int argc, const char* argv[])
 	}
 
       data.outputTrajectoryReduced->setParameters (parameters);
+
+      // Normalize angles in the trajectory (except base position)
+      for (roboptim::Function::size_type dofId = 0;
+	   dofId < data.nDofsFiltered () - 3; ++dofId)
+	data.outputTrajectoryReduced->normalizeAngles (3 + dofId);
     }
 
   // Re-expend trajectory.

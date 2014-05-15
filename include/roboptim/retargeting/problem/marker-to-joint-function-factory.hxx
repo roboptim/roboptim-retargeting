@@ -76,6 +76,21 @@ namespace roboptim
 	  (jointToMarker, referencePositions);
       }
 
+      template <typename T>
+      boost::shared_ptr<T>
+      jointsLimits (const MarkerToJointFunctionData& data)
+      {
+	typename T::matrix_t A
+	  (data.nDofsFiltered (), data.nDofsFiltered ());
+	A.setIdentity ();
+	typename T::vector_t b (data.nDofsFiltered ());
+	b.setZero ();
+	return
+	  boost::make_shared<
+	    GenericNumericLinearFunction<typename T::traits_t> >
+	  (A, b);
+      }
+
       /// \brief Map function name to the function used to allocate
       /// them.
       template <typename T>
@@ -98,6 +113,7 @@ namespace roboptim
       MarkerToJointFunctionFactoryMapping<T>::map[] = {
 	{"null", &null<T>},
 	{"distance-to-marker", &distanceToMarker<T>},
+	{"joints-limits", &jointsLimits<T>},
 	{0, 0}
       };
     } // end of namespace detail.
@@ -125,6 +141,45 @@ namespace roboptim
 	  element++;
 	}
       throw std::runtime_error ("invalid function name");
+    }
+
+    template <typename T>
+    Constraint<T>
+    MarkerToJointFunctionFactory::buildConstraint (const std::string& name)
+    {
+      Constraint<T> constraint;
+      constraint.function = this->buildFunction<T> (name);
+
+      constraint.intervals.resize
+	(static_cast<std::size_t> (constraint.function->outputSize ()),
+	 Function::makeInfiniteInterval ());
+      constraint.scales.resize
+	(static_cast<std::size_t> (constraint.function->outputSize ()),
+	 1.);
+      constraint.type = Constraint<T>::CONSTRAINT_TYPE_ONCE;
+      constraint.stateFunctionOrder = 0;
+
+      if (name == "joints-limits")
+	{
+	  std::size_t id = 0;
+	  for (std::size_t jointId = 0;
+	       jointId < static_cast<std::size_t> (data_.nDofsFull ()); ++jointId)
+	    {
+	      if (data_.disabledJointsConfiguration[jointId])
+		{
+		  int jointId_ = static_cast<int> (jointId);
+		  if (jointId < 6)
+		    constraint.intervals[id++] = Function::makeInfiniteInterval ();
+		  else
+		    constraint.intervals[id++] = Function::makeInterval
+		      (data_.robotModel->joint (jointId_ - 6)->q_lower (),
+		       data_.robotModel->joint (jointId_ - 6)->q_upper ());
+		}
+	    }
+	}
+      else
+	throw std::runtime_error ("unknown constraint");
+      return constraint;
     }
 
     inline std::vector<std::string>

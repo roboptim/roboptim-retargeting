@@ -44,6 +44,7 @@ namespace roboptim
       std::string robotModel;
 
       std::string cost;
+      std::vector<std::string> constraints;
 
       std::string plugin;
 

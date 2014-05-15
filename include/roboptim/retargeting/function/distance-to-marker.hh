@@ -20,6 +20,7 @@
 # include <string>
 
 # include <roboptim/core/differentiable-function.hh>
+# include <roboptim/core/finite-difference-gradient.hh>
 
 # include <roboptim/retargeting/function/joint-to-marker/choreonoid.hh>
 
@@ -53,7 +54,8 @@ namespace roboptim
 	: GenericDifferentiableFunction<T>
 	  (jointToMarker->inputSize (), 1, "DistanceToMarker"),
 	  jointToMarker_ (jointToMarker),
-	  markersReferencePosition_ (markersReferencePosition)
+	  markersReferencePosition_ (markersReferencePosition),
+	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {}
 
       virtual ~DistanceToMarker ()
@@ -83,16 +85,25 @@ namespace roboptim
 
       void
       impl_gradient (gradient_t& gradient,
-		     const argument_t&,
-		     size_type)
+		     const argument_t& x,
+		     size_type i)
 	const
       {
-	gradient[0] = 1.; //FIXME:
+	fd_->gradient (gradient, x, i);
       }
 
     private:
       JointToMarkerShPtr_t jointToMarker_;
       vector_t markersReferencePosition_;
+
+      // Temporary - finite difference gradient.
+      // Currently the simple policy generates precision errors,
+      // one may want to switch to five point rules.
+      typedef roboptim::GenericFiniteDifferenceGradient<
+	T, finiteDifferenceGradientPolicies::Simple<T> >
+      fdFunction_t;
+      boost::shared_ptr<fdFunction_t> fd_;
+
     };
   } // end of namespace retargeting.
 } // end of namespace roboptim.
