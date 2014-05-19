@@ -20,6 +20,10 @@ MACRO(ROBOPTIM_RETARGETING_TEST NAME)
   # Choreonoid
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid-body-plugin)
+
+  # Unfortunately, the motion capture part does not provide any
+  # pkg-config file.
+  TARGET_LINK_LIBRARIES(${NAME} CnoidMocap CnoidMocapPlugin)
 ENDMACRO()
 
 

@@ -80,7 +80,10 @@ namespace roboptim
 	    result[0] += delta.squaredNorm ();
 	  }
 
-	result[0] *= 2.;
+	result[0] *= 1. / 2.;
+
+	// normalize result
+	result[0] /= nMarkers;
       }
 
       void
