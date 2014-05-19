@@ -82,6 +82,18 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
   DistanceToMarker<EigenMatrixDense> distance
     (jointToMarker, referencePositions);
 
+  // Translate +/- one meter in X, Y, Z
+  for (Function::vector_t::Index i = 0; i < 3; ++i)
+    {
+      x[i] = 1.;
+      // the result is 1/2 (1/2 * \sum 1^2)
+      BOOST_CHECK_CLOSE (distance(x)[0], 0.5, 1e-6);
+      x[i] = -1.;
+      // the result is 1/2 (1/2 * \sum 1^2)
+      BOOST_CHECK_CLOSE (distance(x)[0], 0.5, 1e-6);
+    }
+
+
   for (std::size_t i = 0; i < 10; ++i)
     {
       o << "➔ sampling configuration" << iendl;
