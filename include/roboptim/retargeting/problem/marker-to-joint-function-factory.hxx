@@ -165,7 +165,7 @@ namespace roboptim
 	  for (std::size_t jointId = 0;
 	       jointId < static_cast<std::size_t> (data_.nDofsFull ()); ++jointId)
 	    {
-	      if (data_.disabledJointsConfiguration[jointId])
+	      if (!data_.disabledJointsConfiguration[jointId])
 		{
 		  int jointId_ = static_cast<int> (jointId);
 		  if (jointId < 6)

@@ -152,10 +152,23 @@ namespace roboptim
       // for first frame, start from half-sitting
       if (options_.frameId == 0)
 	{
-	  //FIXME: zero for now
-	  problem->startingPoint () =
-	    data.outputTrajectoryReduced->parameters ().segment
-	    (0, length);
+	  // FIXME: this "reference pose" should be loaded and filtered correctly.
+	  const cnoid::Listing& pose =
+	    *data.robotModel->info ()->findListing ("standardPose");
+	  Function::vector_t referencePose (length);
+	  referencePose.template segment<6> (0).setZero ();
+	  for (int i = 0; i < length - 6; ++i)
+	    {
+	      std::stringstream stream;
+	      stream << pose.at (i)->toString ();
+	      double value;
+	      stream >> value;
+
+	      // convert degree into radian here
+	      referencePose[i + 6] = value * (M_PI / 180.);
+	    }
+
+	  problem->startingPoint () = referencePose;
 	}
       // for other frames, start from previous frame
       else

@@ -34,6 +34,9 @@ namespace roboptim
     /// chosen from resolution, etc.
     struct MarkerToJointProblemOptions
     {
+      int startFrame;
+      int length;
+
       std::string markerSet;
       std::string markersTrajectory;
 

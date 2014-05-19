@@ -18,6 +18,7 @@
 #include <fstream>
 #include <string>
 
+#include <boost/format.hpp>
 #include <boost/program_options.hpp>
 
 #include <yaml-cpp/yaml.h>
@@ -194,6 +195,15 @@ static bool parseOptions
     ("plugin,p",
      po::value<std::string> (&options.plugin)->default_value ("cfsqp"),
      "RobOptim plug-in to be used")
+
+    ("start-frame,S",
+     po::value<int> (&options.startFrame)->default_value (0),
+     "From what frame should we start converting?")
+    ("length,l",
+     po::value<int> (&options.length)->default_value (0),
+     "How many frames? (0 means all frames, "
+     "negative number means exclude N last frames)")
+
     ;
 
   po::variables_map vm;
@@ -245,9 +255,27 @@ int safeMain (int argc, const char* argv[])
     static_cast<roboptim::Function::vector_t::Index>
     (data.markersTrajectory.numFrames ());
 
-  for (options.frameId = 0; options.frameId < nFrames; ++options.frameId)
+  if (options.length == 0)
+    options.length = static_cast<int> (nFrames);
+  else if (options.length < 0)
+    options.length = static_cast<int> (nFrames) - options.length;
+  if (options.length <= 0)
+    throw std::runtime_error
+      ("less than 0 frame or zero frame have been selected");
+
+  std::ostream& o = std::cout;
+
+  for (options.frameId = options.startFrame;
+       options.frameId < options.length; ++options.frameId)
     {
-      std::cout << "*** Frame " << options.frameId << roboptim::iendl;
+      o << "╔═════════════════════╤═════════════════╗" << roboptim::iendl
+	<< (boost::format
+	    ("║ Optimizing Frame... │ %-6d / %-6d ║")
+	    % options.frameId
+	    % (options.length - 1)).str () << roboptim::iendl
+	<< "╚═════════════════════╧═════════════════╝" << roboptim::iendl
+	;
+
       builder (problem, data);
 
       if (!problem)
@@ -330,13 +358,18 @@ int safeMain (int argc, const char* argv[])
           if (data.disabledJointsConfiguration
 	      [static_cast<std::size_t> (jointId)])
 	    finalTrajectoryParameters[frameId * data.nDofsFull () + jointId] =
-              data.outputTrajectory->parameters ()
-	      [frameId * data.nDofsFiltered () + jointIdReduced++];
+	      *(data.disabledJointsConfiguration)
+	      [static_cast<std::size_t> (jointId)];
+	  else
+	    {
+	      finalTrajectoryParameters[frameId * data.nDofsFull () + jointId] =
+		data.outputTrajectoryReduced->parameters ()
+		[frameId * data.nDofsFiltered () + jointIdReduced++];
+	    }
         }
     }
   data.outputTrajectory->setParameters (finalTrajectoryParameters);
   writeBodyMotion (options.outputFile, data.outputTrajectory);
-
   return 0;
 }
 
