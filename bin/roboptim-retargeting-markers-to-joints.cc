@@ -56,6 +56,7 @@ writeBodyMotion (const std::string& filename,
   int numFrames =
     static_cast<int> (result->parameters ().size () / result->outputSize ());
   double dt = result->length () / numFrames;
+
   int nDofs = static_cast<int> (result->outputSize ());
 
   YAML::Emitter out;
@@ -88,7 +89,6 @@ writeBodyMotion (const std::string& filename,
     {
       roboptim::VectorInterpolation::vector_t
 	oneFrame = (*result) (frameId * dt);
-
       out << YAML::Flow << YAML::BeginSeq;
       for (int dofId = 6; dofId < result->outputSize (); ++dofId)
 	out << oneFrame[dofId];
@@ -349,7 +349,7 @@ int safeMain (int argc, const char* argv[])
   roboptim::Function::vector_t finalTrajectoryParameters =
     data.outputTrajectory->parameters ();
   for (roboptim::Function::vector_t::Index frameId = 0;
-       frameId < data.nFrames (); ++frameId)
+       frameId < nFrames; ++frameId)
     {
       roboptim::Function::vector_t::Index jointIdReduced = 0;
       for (roboptim::Function::vector_t::Index jointId = 0;

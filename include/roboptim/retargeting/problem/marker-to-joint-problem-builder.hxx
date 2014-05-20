@@ -84,9 +84,10 @@ namespace roboptim
 
       Function::size_type nFrames =
 	static_cast<Function::size_type> (data.markersTrajectory.numFrames ());
-      Function::size_type dt =
-	static_cast<Function::size_type>
+      Function::value_type dt =
+	static_cast<Function::value_type>
 	(1. / data.markersTrajectory.dataRate ());
+
       Function::size_type nDofsFull =
 	static_cast<Function::size_type> (6 + data.robotModel->numJoints ());
       //FIXME: unsafe if vector is ill-formed
@@ -100,13 +101,28 @@ namespace roboptim
 	  (Function::vector_t (nDofsReduced * nFrames),
 	   nDofsReduced, dt);
       if (!data.outputTrajectory)
-	data.outputTrajectory =
-	  boost::make_shared<VectorInterpolation>
-	  (Function::vector_t (nDofsFull), nDofsReduced, dt);
+	{
+	  Function::vector_t parameters (nDofsFull * nFrames);
+	  parameters.setZero ();
 
-      //FIXME: first frame value of outputTrajectory will be used for
-      //joints defaults value, we probably want to set it to
-      //half-sitting to avoid issues.
+	  const cnoid::Listing& pose =
+	    *data.robotModel->info ()->findListing ("standardPose");
+	  for (int i = 0; i < nDofsFull - 6; ++i)
+	    {
+	      std::stringstream stream;
+	      stream << pose.at (i)->toString ();
+	      double value;
+	      stream >> value;
+
+	      // convert degree into radian here
+	      parameters[i + 6] = value * (M_PI / 180.);
+	    }
+
+	  data.outputTrajectory =
+	    boost::make_shared<VectorInterpolation>
+	    (parameters, nDofsReduced, dt);
+	}
+
       data.disabledJointsConfiguration =
 	disabledJointsConfiguration
 	(options.disabledJoints, data.outputTrajectory, data.robotModel);
