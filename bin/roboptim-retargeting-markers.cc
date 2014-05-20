@@ -47,9 +47,9 @@ static void writeTRC (const std::string& filename,
     static_cast<index_t> (trajectory->outputSize () / 3);
   index_t numFrames =
     static_cast<index_t>
-    (trajectory->length () / trajectory->outputSize ());
+    (static_cast<index_t>(trajectory->length ()) / trajectory->outputSize ());
   index_t dataRate = static_cast<index_t>
-    (trajectory->length () / numFrames);
+    (static_cast<index_t>(trajectory->length ()) / numFrames);
 
   boost::format headerFormat (headerFormatStr);
   headerFormat

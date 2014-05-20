@@ -141,10 +141,20 @@ namespace roboptim
 	{
 	  Constraint<DifferentiableFunction> constraint =
 	    factory.buildConstraint<DifferentiableFunction> (*it);
-	  problem->addConstraint
-	    (constraint.function,
-	     constraint.intervals,
-	     constraint.scales);
+
+	  boost::shared_ptr<LinearFunction> linearConstraint =
+	    boost::dynamic_pointer_cast<LinearFunction>
+	    (constraint.function);
+	  if (linearConstraint)
+	    problem->template addConstraint<LinearFunction>
+	      (linearConstraint,
+	       constraint.intervals,
+	       constraint.scales);
+	  else
+	    problem->addConstraint
+	      (constraint.function,
+	       constraint.intervals,
+	       constraint.scales);
 	}
 
       Function::vector_t::Index length = data.nDofsFiltered ();

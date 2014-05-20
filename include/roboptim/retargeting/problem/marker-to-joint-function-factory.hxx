@@ -91,6 +91,9 @@ namespace roboptim
 	  (A, b);
       }
 
+      template <typename T = GenericFunction<EigenMatrixDense> >
+      struct MarkerToJointFunctionFactoryMapping;
+
       /// \brief Map function name to the function used to allocate
       /// them.
       template <typename T>
@@ -187,10 +190,9 @@ namespace roboptim
     {
       std::vector<std::string> functions;
 
-      const detail::MarkerToJointFunctionFactoryMapping<
-	DifferentiableFunction>::Mapping*
+      const detail::MarkerToJointFunctionFactoryMapping<>::Mapping*
 	element =
-	detail::MarkerToJointFunctionFactoryMapping<DifferentiableFunction>::map;
+	detail::MarkerToJointFunctionFactoryMapping<>::map;
       while (element && element->name)
 	{
 	  functions.push_back (element->name);

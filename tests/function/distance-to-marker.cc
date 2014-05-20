@@ -34,6 +34,18 @@ jointToMarker_t;
 
 std::string modelFilePath (HRP4C_YAML_FILE);
 
+#define CHECK_GRADIENT(F, I, X)						\
+  BOOST_CHECK_NO_THROW							\
+  (									\
+   try									\
+     {									\
+       roboptim::checkGradientAndThrow ((F), (I), (X));			\
+     }									\
+   catch(const roboptim::BadGradient<EigenMatrixDense>& e)		\
+     {									\
+       std::cerr << #F << " (" << I << "):\n" << e << std::endl;	\
+       throw;								\
+     } )
 
 BOOST_AUTO_TEST_CASE (distance_to_marker)
 {
@@ -85,6 +97,7 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
   // Translate +/- one meter in X, Y, Z
   for (Function::vector_t::Index i = 0; i < 3; ++i)
     {
+      x.setZero ();
       x[i] = 1.;
       // the result is 1/2 (1/2 * \sum 1^2)
       BOOST_CHECK_CLOSE (distance(x)[0], 0.5, 1e-6);
@@ -253,5 +266,7 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
 	<< "Average Absolute Deviation: " << 2 * std::sqrt (distance (x)[0]) << iendl
 	<< iendl << iendl
 	;
+
+      CHECK_GRADIENT (distance, 0, x);
     }
 }
