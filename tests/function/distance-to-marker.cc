@@ -17,6 +17,8 @@
 
 #define BOOST_TEST_MODULE distance_to_marker
 
+#include <fstream>
+
 #include <boost/test/unit_test.hpp>
 
 #include <cnoid/BodyIMesh>
@@ -24,6 +26,9 @@
 #include <cnoid/BodyMotion>
 
 #include <roboptim/core/indent.hh>
+#include <roboptim/core/filter/bind.hh>
+#include <roboptim/core/visualization/gnuplot.hh>
+#include <roboptim/core/visualization/gnuplot-function.hh>
 #include <roboptim/retargeting/function/distance-to-marker.hh>
 
 using namespace roboptim;
@@ -94,6 +99,45 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
   DistanceToMarker<EigenMatrixDense> distance
     (jointToMarker, referencePositions);
 
+  // Display function.
+  {
+    x = Function::vector_t::Random (6 + robotModel->numJoints ());
+    referencePositions = (*jointToMarker) (x);
+    boost::shared_ptr<roboptim::DifferentiableFunction> f_ =
+      boost::make_shared<DistanceToMarker<EigenMatrixDense> >
+      (jointToMarker, referencePositions);
+
+    for (std::size_t i = 0;
+	 i < static_cast<std::size_t> (f_->inputSize ()); ++i)
+      {
+      roboptim::Function::vector_t::Index i_ =
+	static_cast<roboptim::Function::vector_t::Index> (i);
+      roboptim::visualization::Gnuplot gnuplot =
+	roboptim::visualization::Gnuplot::make_interactive_gnuplot ();
+
+      roboptim::Function::value_type delta = 2 * M_PI;
+      roboptim::Function::discreteInterval_t window
+	(x[i_] - delta, x[i_] + delta, 0.1);
+
+      std::vector<boost::optional<roboptim::Function::value_type> >
+	values (static_cast<std::size_t> (f_->inputSize ()));
+      for (std::size_t j = 0;
+	    j < static_cast<std::size_t> (f_->inputSize ()); ++j)
+	 if (i != j)
+	   values[j] =
+	     x[static_cast<roboptim::Function::vector_t::Index> (j)];
+
+       boost::shared_ptr<roboptim::Function> f = roboptim::bind (f_, values);
+       gnuplot << roboptim::visualization::gnuplot::set
+	 ((boost::format ("arrow from %1%,-100 to %1%,100 nohead lc rgb 'red'")
+	   % x[i_]).str ().c_str ())
+	       << roboptim::visualization::gnuplot::plot (*f, window);
+       std::ofstream file
+	 ((boost::format ("/tmp/distance-to-marker-%d.gp") % i).str ().c_str ());
+       file << gnuplot;
+    }
+  }
+
   // Translate +/- one meter in X, Y, Z
   for (Function::vector_t::Index i = 0; i < 3; ++i)
     {
@@ -105,7 +149,6 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
       // the result is 1/2 (1/2 * \sum 1^2)
       BOOST_CHECK_CLOSE (distance(x)[0], 0.5, 1e-6);
     }
-
 
   for (std::size_t i = 0; i < 10; ++i)
     {
