@@ -36,6 +36,8 @@ namespace roboptim
     /// functions parameters are set.
     struct MarkerToJointFunctionData
     {
+      bool initialized;
+
       /// \brief marker set loaded by libmocap
       libmocap::MarkerSet markerSet;
 

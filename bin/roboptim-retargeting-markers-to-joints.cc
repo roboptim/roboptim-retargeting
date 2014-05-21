@@ -248,6 +248,7 @@ int safeMain (int argc, const char* argv[])
 
   boost::shared_ptr<problem_t> problem;
   roboptim::retargeting::MarkerToJointFunctionData data;
+  data.initialized = false;
   options.frameId = 0;
   builder (problem, data);
 

@@ -54,9 +54,13 @@ namespace roboptim
     (MarkerToJointFunctionData& data,
      const MarkerToJointProblemOptions& options)
     {
-      cnoid::BodyLoader loader;
-
       data.frameId = options.frameId;
+
+      if (data.initialized)
+	return;
+      data.initialized = true;
+
+      cnoid::BodyLoader loader;
 
       data.markerSet =
 	libmocap::MarkerSetFactory ().load (options.markerSet);
