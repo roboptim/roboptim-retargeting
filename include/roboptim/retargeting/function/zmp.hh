@@ -11,7 +11,7 @@ namespace roboptim
     /// \brief Abstract class for Computing the ZMP position.
     ///
     /// Input:
-    ///  x = [q, \dot{q}, \ddot{q}]
+    /// \f$ x = [q, \dot{q}, \ddot{q}] \f$
     ///
     /// ...where q is [x, y, z, alpha, beta, gamma, q0, qN]
     ///
@@ -20,7 +20,7 @@ namespace roboptim
     /// (q0, ..., qN) are the joints values
     ///
     /// Output:
-    ///  result = [zmp_x, zmp_y]
+    /// \f$ result = [zmp_x, zmp_y] \f$
     ///
     /// Implementation must be done in zmp/*.hh depending on how the
     /// computation is done (metapod, choreonoid or linear model)

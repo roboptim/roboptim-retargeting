@@ -122,7 +122,7 @@ transformToUTheta (Eigen::MatrixBase<Derived> const& utheta,
  \end{array} \right) \f$
 
  \param[out] result matrix (size 3x3)
- \param[in] vector \f$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)\f$
+ \param[in] p \f$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)\f$
  */
 template <typename Derived, typename OtherDerived>
 void hat (Eigen::MatrixBase<Derived> const& result,
@@ -131,8 +131,8 @@ void hat (Eigen::MatrixBase<Derived> const& result,
 /// \brief Build a skew-symmetric matrix from vector of size 3.
 ///
 /// \see hat(eulerAngles, transform)
-/// \param[out] result matrix
-/// \param[in] vector \f$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)\f$
+/// \param[in] p \f$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)\f$
+/// \return hat matrix
 template <typename Derived>
 Eigen::Matrix<typename Derived::RealScalar, 3, 3> hat
 (const Eigen::MatrixBase<Derived>& p);
@@ -206,13 +206,13 @@ transformToUtheta (Eigen::MatrixBase<Derived> const& result,
 ///
 /// \see eulerToTransform transformToEuler
 /// \param[out] transform output transformation
-/// \param[in]  parameters vector
+/// \param[in]  vector vector
 ///             \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
 template <typename Derived, int _Dim, int _Mode, int _Options>
 void
 vectorToTransform (Eigen::Transform<typename Derived::RealScalar,
 				    _Dim, _Mode, _Options>& transform,
-		   const Eigen::MatrixBase<Derived>& result);
+		   const Eigen::MatrixBase<Derived>& vector);
 
 /// \brief Convert a vector to a transform.
 ///
@@ -223,7 +223,7 @@ vectorToTransform (Eigen::Transform<typename Derived::RealScalar,
 ///
 /// \see uthetaToTransform transformToUTheta
 /// \param[out]  transform output transformation
-/// \param[in]   parameters vector
+/// \param[in]   result     vector
 ///              \f$v = (x, y, z, \gamma, \beta, \alpha)\f$
 template <typename Derived, int _Dim, int _Mode, int _Options>
 void

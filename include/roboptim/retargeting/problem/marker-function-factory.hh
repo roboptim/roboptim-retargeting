@@ -89,7 +89,7 @@ namespace roboptim
 
       /// \brief Constructor
       ///
-      /// \param problem data (trajectories, etc.)
+      /// \param data problem data (trajectories, etc.)
       explicit MarkerFunctionFactory (const MarkerFunctionData& data);
 
       ~MarkerFunctionFactory ();

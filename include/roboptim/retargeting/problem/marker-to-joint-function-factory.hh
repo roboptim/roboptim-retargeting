@@ -122,7 +122,7 @@ namespace roboptim
 
       /// \brief Constructor
       ///
-      /// \param problem data (trajectories, etc.)
+      /// \param data problem data (trajectories, etc.)
       explicit MarkerToJointFunctionFactory
       (const MarkerToJointFunctionData& data);
 

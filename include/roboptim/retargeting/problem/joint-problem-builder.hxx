@@ -117,8 +117,8 @@ namespace roboptim
     /// \brief Copy a trajectory while excluding some joints.
     ///
     /// \param[in] originalTrajectory original, full, trajectory
-    /// \param[in] disabledJoints list of joints to be excluded
-    /// \param[in] robot robot model
+    /// \param[in] disabledJointsConfiguration list of joints to be excluded
+    /// \return filtered trajectory
     boost::shared_ptr<Trajectory<3> >
     filterTrajectory (boost::shared_ptr<Trajectory<3> > originalTrajectory,
 		      const std::vector<boost::optional<Function::value_type> >&

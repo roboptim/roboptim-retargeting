@@ -11,7 +11,7 @@ namespace roboptim
     /// \brief Compute the Torque of each joint.
     ///
     /// Input:
-    ///  x = [q, \dot{q}, \ddot{q}]
+    /// \f$ x = [q, \dot{q}, \ddot{q}] \f$
     ///
     /// ...where q is [x, y, z, alpha, beta, gamma, q0, qN]
     ///
@@ -20,7 +20,7 @@ namespace roboptim
     /// (q0, ..., qN) are the joints values
     ///
     /// Output:
-    ///  result = [\tau_0, \tau_1, ..., \tau_N]
+    /// \f$ result = [\tau_0, \tau_1, ..., \tau_N] \f$
     ///
     /// \tparam T Function traits type
     template <typename T>

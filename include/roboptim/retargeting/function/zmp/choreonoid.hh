@@ -222,13 +222,13 @@ namespace roboptim
       /// \brief Variation of the kinetic momentum around the center
       ///        of mass.
       ///
-      /// \dot{L}
+      /// \f$ \dot{L} \f$
       mutable cnoid::Vector3 dL_;
 
       /// \brief The equation need dL in another order, so reorder and
       ///        store it here for direct use in the final expression.
       ///
-      /// [ \dot{\delta_y}, \dot{\delta_x}]
+      /// \f$ [ \dot{\delta_y}, \dot{\delta_x}] \f$
       mutable cnoid::Vector2 dL_reordered_;
 
       // Temporary - finite difference gradient.

@@ -40,7 +40,7 @@ namespace roboptim
       /// (by chaining JointToMarker and this class).
       ///
       /// Input: x (size: reference vector size)
-      /// Output: \sum (x_i - r_i)^2 (size: 1)
+      /// Output: \f$ \sum (x_i - r_i)^2 \f$ (size: 1)
       ///
       /// This should be probably promoted as a generic class in
       /// RobOptim Core at some point.

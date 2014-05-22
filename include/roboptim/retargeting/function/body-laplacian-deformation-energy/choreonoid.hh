@@ -240,9 +240,9 @@ namespace roboptim
     /// Output:
     ///  result = [cost]
     ///
-    /// f(x) = \sum f_i(x_i)
+    /// \f$ f(x) = \sum f_i(x_i) \f$
     ///
-    /// f_i(x_i) = lde(laplacianCoordinate(jointToMarker(x)))
+    /// \f$ f_i(x_i) = lde(laplacianCoordinate(jointToMarker(x))) \f$
     ///
     /// Implementation notes:
     /// ---------------------
