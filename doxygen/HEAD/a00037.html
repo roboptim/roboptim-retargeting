@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>metapod::hrp4g2::Node19 Class Reference</title>
+<title>roboptim::retargeting::ZMP&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,66 +56,93 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">metapod::hrp4g2::Node19 Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::ZMP&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="metapod::hrp4g2::Node19" -->
-<p><code>#include &lt;model/hrp4g2.hh&gt;</code></p>
+<!-- doxytag: class="roboptim::retargeting::ZMP" -->
+<p>Abstract class for Computing the <a class="el" href="a00037.html" title="Abstract class for Computing the ZMP position.">ZMP</a> position.  
+ <a href="a00037.html#details">More...</a></p>
+
+<p><code>#include &lt;roboptim/retargeting/function/zmp.hh&gt;</code></p>
 <div class="dynheader">
-Collaboration diagram for metapod::hrp4g2::Node19:</div>
+Inheritance diagram for roboptim::retargeting::ZMP&lt; T &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="a00279.png" border="0" usemap="#metapod_1_1hrp4g2_1_1_node19_coll__map" alt="Collaboration graph"/></div>
-<map name="metapod_1_1hrp4g2_1_1_node19_coll__map" id="metapod_1_1hrp4g2_1_1_node19_coll__map">
-<area shape="rect" id="node2" title="STL class." alt="" coords="55,89,135,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="11,6,179,37"/></map>
+<div class="center"><img src="a00174.png" border="0" usemap="#roboptim_1_1retargeting_1_1_z_m_p_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_z_m_p_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_z_m_p_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node3" href="a00038.html" title="ZMP position computed through Choreonoid." alt="" coords="288,5,573,35"/><area shape="rect" id="node5" href="a00039.html" title="ZMP position computed using the Inverted Pendulum model." alt="" coords="269,58,592,89"/><area shape="rect" id="node7" href="a00040.html" title="ZMP position computed through Metapod." alt="" coords="296,111,565,142"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00280.html">List of all members.</a></p>
+<p><a href="a00175.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef RevoluteAxisAnyJoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#aabb954cf0569edc74c46bbcddd90575e">Joint</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a55a69c4fce1f60e6e8be72c8883760f3">Node19</a> ()</td></tr>
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::rm_mul_op<br class="typebreak"/>
-&lt; Spatial::RotationMatrix, <br class="typebreak"/>
-Spatial::RotationMatrixIdentity &gt;<br class="typebreak"/>
-::rm &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#ab373a3c89d740c5c6e998e0110f3b46e">sXp</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; FloatType, <br class="typebreak"/>
-6, Joint::NBDOF &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#ae51aa6b951135103dae07002fedce0dc">joint_F</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00037.html#aabb954cf0569edc74c46bbcddd90575e">Joint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#ad050b5fe6c0a28345aabaf6abbbbc435">joint</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Body&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#ad779769e7f91710e7ee894eac282b5d4">body</a></td></tr>
-<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#ae6b0f9d466b89b0c9644de2b7f1b4b9c">id</a> = 19</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#afe752d00e27a5ab9153bfd2fb76b5630">joint_name</a> = std::string(&quot;CHEEK_P&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a2eb5b796daa376436d126ae4daa0f7f3">body_name</a> = std::string(&quot;CHEEK_P_LINK&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const <br class="typebreak"/>
-Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::RotationMatrixIdentity &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a75a617babf085c3dd7419810c13a9234">Xt</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#aa8e0b26e6abefea9d564d6bc96aaa954">q_idx</a> = 19</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a958fffa93a78d6a967d903dcbf43c790">parent_id</a> = 18</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a300c71e0798d301404773dee6cc72f9f">child0_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#aeee9182ffaf66149fae8620703d714c2">child1_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a93aea06c8f83cc2fe4ee7835e9c7b4a3">child2_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#adef8f16f55832a50dc57d06b04ff01bb">child3_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a93a1c27b02ebbbfe591053857dc2b3e6">child4_id</a> = -2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#a979a7d9636ad11dc04b1d26c8b8e9cd3">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#ae16b91a4aaadd49cd8c0c227aa1965bb">ZMP</a> (size_type nDofs, std::string title)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00037.html#aaa652f3e1b728d6018d6c15278a3e207">~ZMP</a> ()  throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">configurationLength</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#a388585644c50cb72cb24d296b6433800">translation</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#ae195f098a72b3d7952ce6714c2fb04aa">translation</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#af325ac35b4220ae73b45c9c026db1c62">rotation</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#a75c42eb73e9caa83fcc0bcdf2b1fa630">rotation</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#a3486dc9da4d0c2c28f8c8d336ef0d75b">q</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#acbdb64adc7abf43426b51246080fbe05">q</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#a5cc83832cf840578470796ae75007b21">dq</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#afdb9ecacf6db85d55b7ce38ce30815ef">dq</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#ac14b9aad570b15420e617a03bad59403">ddq</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00037.html#a5d5dde6619b1f12fa17a158df526c740">ddq</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
 </table>
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="aabb954cf0569edc74c46bbcddd90575e"></a><!-- doxytag: member="metapod::hrp4g2::Node19::Joint" ref="aabb954cf0569edc74c46bbcddd90575e" args="" -->
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::ZMP&lt; T &gt;</h3>
+
+<p>Abstract class for Computing the <a class="el" href="a00037.html" title="Abstract class for Computing the ZMP position.">ZMP</a> position. </p>
+<p>Input: <img class="formulaInl" alt="$ x = [q, \dot{q}, \ddot{q}] $" src="form_24.png"/></p>
+<p>...where q is [x, y, z, alpha, beta, gamma, q0, qN]</p>
+<p>(x, y, z) is the base position (alpha, beta, gamma) is base attitude using angle axis representation (q0, ..., qN) are the joints values</p>
+<p>Output: <img class="formulaInl" alt="$ result = [zmp_x, zmp_y] $" src="form_26.png"/></p>
+<p>Implementation must be done in zmp/*.hh depending on how the computation is done (metapod, choreonoid or linear model)</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Function traits type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ae16b91a4aaadd49cd8c0c227aa1965bb"></a><!-- doxytag: member="roboptim::retargeting::ZMP::ZMP" ref="ae16b91a4aaadd49cd8c0c227aa1965bb" args="(size_type nDofs, std::string title)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef RevoluteAxisAnyJoint <a class="el" href="a00037.html#aabb954cf0569edc74c46bbcddd90575e">metapod::hrp4g2::Node19::Joint</a></td>
+          <td class="memname"><a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html">ZMP</a> </td>
+          <td>(</td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>nDofs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>title</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>  throw ()<code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -123,14 +150,262 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a55a69c4fce1f60e6e8be72c8883760f3"></a><!-- doxytag: member="metapod::hrp4g2::Node19::Node19" ref="a55a69c4fce1f60e6e8be72c8883760f3" args="()" -->
+<a class="anchor" id="aaa652f3e1b728d6018d6c15278a3e207"></a><!-- doxytag: member="roboptim::retargeting::ZMP::~ZMP" ref="aaa652f3e1b728d6018d6c15278a3e207" args="()" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00037.html#a55a69c4fce1f60e6e8be72c8883760f3">metapod::hrp4g2::Node19::Node19</a> </td>
+          <td class="memname">virtual <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::~<a class="el" href="a00037.html">ZMP</a> </td>
           <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>  throw ()<code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a311274d4c656eaf633ff2647522073f5"></a><!-- doxytag: member="roboptim::retargeting::ZMP::configurationLength" ref="a311274d4c656eaf633ff2647522073f5" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">size_type <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">configurationLength</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="a00037.html#ac14b9aad570b15420e617a03bad59403">roboptim::retargeting::ZMP&lt; T &gt;::ddq()</a>, <a class="el" href="a00037.html#a5cc83832cf840578470796ae75007b21">roboptim::retargeting::ZMP&lt; T &gt;::dq()</a>, and <a class="el" href="a00037.html#a3486dc9da4d0c2c28f8c8d336ef0d75b">roboptim::retargeting::ZMP&lt; T &gt;::q()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac14b9aad570b15420e617a03bad59403"></a><!-- doxytag: member="roboptim::retargeting::ZMP::ddq" ref="ac14b9aad570b15420e617a03bad59403" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#ac14b9aad570b15420e617a03bad59403">ddq</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">roboptim::retargeting::ZMP&lt; T &gt;::configurationLength()</a>.</p>
+
+<p>Referenced by <a class="el" href="a00038.html#a77e3887bbc99d84fd143407c8c16532e">roboptim::retargeting::ZMPChoreonoid&lt; T &gt;::fillStates()</a>, and <a class="el" href="a00040.html#a1c3c13fac3600f04517ee12d5584916c">roboptim::retargeting::ZMPMetapod&lt; T, R &gt;::impl_compute()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5d5dde6619b1f12fa17a158df526c740"></a><!-- doxytag: member="roboptim::retargeting::ZMP::ddq" ref="a5d5dde6619b1f12fa17a158df526c740" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#ac14b9aad570b15420e617a03bad59403">ddq</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">roboptim::retargeting::ZMP&lt; T &gt;::configurationLength()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5cc83832cf840578470796ae75007b21"></a><!-- doxytag: member="roboptim::retargeting::ZMP::dq" ref="a5cc83832cf840578470796ae75007b21" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a5cc83832cf840578470796ae75007b21">dq</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">roboptim::retargeting::ZMP&lt; T &gt;::configurationLength()</a>.</p>
+
+<p>Referenced by <a class="el" href="a00038.html#a77e3887bbc99d84fd143407c8c16532e">roboptim::retargeting::ZMPChoreonoid&lt; T &gt;::fillStates()</a>, and <a class="el" href="a00040.html#a1c3c13fac3600f04517ee12d5584916c">roboptim::retargeting::ZMPMetapod&lt; T, R &gt;::impl_compute()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afdb9ecacf6db85d55b7ce38ce30815ef"></a><!-- doxytag: member="roboptim::retargeting::ZMP::dq" ref="afdb9ecacf6db85d55b7ce38ce30815ef" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a5cc83832cf840578470796ae75007b21">dq</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">roboptim::retargeting::ZMP&lt; T &gt;::configurationLength()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3486dc9da4d0c2c28f8c8d336ef0d75b"></a><!-- doxytag: member="roboptim::retargeting::ZMP::q" ref="a3486dc9da4d0c2c28f8c8d336ef0d75b" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a3486dc9da4d0c2c28f8c8d336ef0d75b">q</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">roboptim::retargeting::ZMP&lt; T &gt;::configurationLength()</a>.</p>
+
+<p>Referenced by <a class="el" href="a00038.html#a77e3887bbc99d84fd143407c8c16532e">roboptim::retargeting::ZMPChoreonoid&lt; T &gt;::fillStates()</a>, and <a class="el" href="a00040.html#a1c3c13fac3600f04517ee12d5584916c">roboptim::retargeting::ZMPMetapod&lt; T, R &gt;::impl_compute()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acbdb64adc7abf43426b51246080fbe05"></a><!-- doxytag: member="roboptim::retargeting::ZMP::q" ref="acbdb64adc7abf43426b51246080fbe05" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a3486dc9da4d0c2c28f8c8d336ef0d75b">q</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00037.html#a311274d4c656eaf633ff2647522073f5">roboptim::retargeting::ZMP&lt; T &gt;::configurationLength()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a979a7d9636ad11dc04b1d26c8b8e9cd3"></a><!-- doxytag: member="roboptim::retargeting::ZMP::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a979a7d9636ad11dc04b1d26c8b8e9cd3" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a979a7d9636ad11dc04b1d26c8b8e9cd3">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td>(</td>
+          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -140,13 +415,20 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="ad779769e7f91710e7ee894eac282b5d4"></a><!-- doxytag: member="metapod::hrp4g2::Node19::body" ref="ad779769e7f91710e7ee894eac282b5d4" args="" -->
+<a class="anchor" id="af325ac35b4220ae73b45c9c026db1c62"></a><!-- doxytag: member="roboptim::retargeting::ZMP::rotation" ref="af325ac35b4220ae73b45c9c026db1c62" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Body <a class="el" href="a00037.html#ad779769e7f91710e7ee894eac282b5d4">metapod::hrp4g2::Node19::body</a></td>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#af325ac35b4220ae73b45c9c026db1c62">rotation</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -154,12 +436,20 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<a class="anchor" id="a2eb5b796daa376436d126ae4daa0f7f3"></a><!-- doxytag: member="metapod::hrp4g2::Node19::body_name" ref="a2eb5b796daa376436d126ae4daa0f7f3" args="" -->
+<a class="anchor" id="a75c42eb73e9caa83fcc0bcdf2b1fa630"></a><!-- doxytag: member="roboptim::retargeting::ZMP::rotation" ref="a75c42eb73e9caa83fcc0bcdf2b1fa630" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const std::string <a class="el" href="a00037.html#a2eb5b796daa376436d126ae4daa0f7f3">metapod::hrp4g2::Node19::body_name</a> = std::string(&quot;CHEEK_P_LINK&quot;)<code> [static]</code></td>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#af325ac35b4220ae73b45c9c026db1c62">rotation</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -167,12 +457,20 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<a class="anchor" id="a300c71e0798d301404773dee6cc72f9f"></a><!-- doxytag: member="metapod::hrp4g2::Node19::child0_id" ref="a300c71e0798d301404773dee6cc72f9f" args="" -->
+<a class="anchor" id="a388585644c50cb72cb24d296b6433800"></a><!-- doxytag: member="roboptim::retargeting::ZMP::translation" ref="a388585644c50cb72cb24d296b6433800" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#a300c71e0798d301404773dee6cc72f9f">metapod::hrp4g2::Node19::child0_id</a> = -2<code> [static]</code></td>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a388585644c50cb72cb24d296b6433800">translation</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -180,163 +478,25 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<a class="anchor" id="aeee9182ffaf66149fae8620703d714c2"></a><!-- doxytag: member="metapod::hrp4g2::Node19::child1_id" ref="aeee9182ffaf66149fae8620703d714c2" args="" -->
+<a class="anchor" id="ae195f098a72b3d7952ce6714c2fb04aa"></a><!-- doxytag: member="roboptim::retargeting::ZMP::translation" ref="ae195f098a72b3d7952ce6714c2fb04aa" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#aeee9182ffaf66149fae8620703d714c2">metapod::hrp4g2::Node19::child1_id</a> = -2<code> [static]</code></td>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00037.html">roboptim::retargeting::ZMP</a>&lt; T &gt;::<a class="el" href="a00037.html#a388585644c50cb72cb24d296b6433800">translation</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a93aea06c8f83cc2fe4ee7835e9c7b4a3"></a><!-- doxytag: member="metapod::hrp4g2::Node19::child2_id" ref="a93aea06c8f83cc2fe4ee7835e9c7b4a3" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#a93aea06c8f83cc2fe4ee7835e9c7b4a3">metapod::hrp4g2::Node19::child2_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="adef8f16f55832a50dc57d06b04ff01bb"></a><!-- doxytag: member="metapod::hrp4g2::Node19::child3_id" ref="adef8f16f55832a50dc57d06b04ff01bb" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#adef8f16f55832a50dc57d06b04ff01bb">metapod::hrp4g2::Node19::child3_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a93a1c27b02ebbbfe591053857dc2b3e6"></a><!-- doxytag: member="metapod::hrp4g2::Node19::child4_id" ref="a93a1c27b02ebbbfe591053857dc2b3e6" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#a93a1c27b02ebbbfe591053857dc2b3e6">metapod::hrp4g2::Node19::child4_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae6b0f9d466b89b0c9644de2b7f1b4b9c"></a><!-- doxytag: member="metapod::hrp4g2::Node19::id" ref="ae6b0f9d466b89b0c9644de2b7f1b4b9c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#ae6b0f9d466b89b0c9644de2b7f1b4b9c">metapod::hrp4g2::Node19::id</a> = 19<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ad050b5fe6c0a28345aabaf6abbbbc435"></a><!-- doxytag: member="metapod::hrp4g2::Node19::joint" ref="ad050b5fe6c0a28345aabaf6abbbbc435" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00037.html#aabb954cf0569edc74c46bbcddd90575e">Joint</a> <a class="el" href="a00037.html#ad050b5fe6c0a28345aabaf6abbbbc435">metapod::hrp4g2::Node19::joint</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae51aa6b951135103dae07002fedce0dc"></a><!-- doxytag: member="metapod::hrp4g2::Node19::joint_F" ref="ae51aa6b951135103dae07002fedce0dc" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::Matrix&lt;FloatType, 6, Joint::NBDOF&gt; <a class="el" href="a00037.html#ae51aa6b951135103dae07002fedce0dc">metapod::hrp4g2::Node19::joint_F</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="afe752d00e27a5ab9153bfd2fb76b5630"></a><!-- doxytag: member="metapod::hrp4g2::Node19::joint_name" ref="afe752d00e27a5ab9153bfd2fb76b5630" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="a00037.html#afe752d00e27a5ab9153bfd2fb76b5630">metapod::hrp4g2::Node19::joint_name</a> = std::string(&quot;CHEEK_P&quot;)<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a958fffa93a78d6a967d903dcbf43c790"></a><!-- doxytag: member="metapod::hrp4g2::Node19::parent_id" ref="a958fffa93a78d6a967d903dcbf43c790" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#a958fffa93a78d6a967d903dcbf43c790">metapod::hrp4g2::Node19::parent_id</a> = 18<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa8e0b26e6abefea9d564d6bc96aaa954"></a><!-- doxytag: member="metapod::hrp4g2::Node19::q_idx" ref="aa8e0b26e6abefea9d564d6bc96aaa954" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00037.html#aa8e0b26e6abefea9d564d6bc96aaa954">metapod::hrp4g2::Node19::q_idx</a> = 19<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab373a3c89d740c5c6e998e0110f3b46e"></a><!-- doxytag: member="metapod::hrp4g2::Node19::sXp" ref="ab373a3c89d740c5c6e998e0110f3b46e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Spatial::TransformT&lt;Spatial::rm_mul_op&lt;Spatial::RotationMatrix, Spatial::RotationMatrixIdentity&gt;::rm&gt; <a class="el" href="a00037.html#ab373a3c89d740c5c6e998e0110f3b46e">metapod::hrp4g2::Node19::sXp</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a75a617babf085c3dd7419810c13a9234"></a><!-- doxytag: member="metapod::hrp4g2::Node19::Xt" ref="a75a617babf085c3dd7419810c13a9234" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const Spatial::TransformT&lt; Spatial::RotationMatrixIdentity &gt; <a class="el" href="a00037.html#a75a617babf085c3dd7419810c13a9234">metapod::hrp4g2::Node19::Xt</a><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment"> Spatial::TransformT&lt;Spatial::RotationMatrixIdentity&gt;(
-    Spatial::RotationMatrixIdentity(),
-    Vector3d(-0.026516, 0, 0.025576))
-</pre></div>
 </div>
 </div>
 </div><!-- contents -->
@@ -346,7 +506,7 @@ Spatial::TransformT<br class="typebreak"/>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -357,8 +517,8 @@ Spatial::TransformT<br class="typebreak"/>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00171.html">metapod</a>      </li>
-      <li class="navelem"><a class="el" href="a00013.html">hrp4g2</a>      </li>
-      <li class="navelem"><a class="el" href="a00037.html">Node19</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00037.html">ZMP</a>      </li>
 </body>
 </html>

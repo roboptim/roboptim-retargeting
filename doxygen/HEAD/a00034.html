@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>metapod::hrp4g2::Node16 Class Reference</title>
+<title>roboptim::retargeting::Torque&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,66 +56,92 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">metapod::hrp4g2::Node16 Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::Torque&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="metapod::hrp4g2::Node16" -->
-<p><code>#include &lt;model/hrp4g2.hh&gt;</code></p>
+<!-- doxytag: class="roboptim::retargeting::Torque" -->
+<p>Compute the <a class="el" href="a00034.html" title="Compute the Torque of each joint.">Torque</a> of each joint.  
+ <a href="a00034.html#details">More...</a></p>
+
+<p><code>#include &lt;roboptim/retargeting/function/torque.hh&gt;</code></p>
 <div class="dynheader">
-Collaboration diagram for metapod::hrp4g2::Node16:</div>
+Inheritance diagram for roboptim::retargeting::Torque&lt; T &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="a00273.png" border="0" usemap="#metapod_1_1hrp4g2_1_1_node16_coll__map" alt="Collaboration graph"/></div>
-<map name="metapod_1_1hrp4g2_1_1_node16_coll__map" id="metapod_1_1hrp4g2_1_1_node16_coll__map">
-<area shape="rect" id="node2" title="STL class." alt="" coords="55,89,135,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="11,6,179,37"/></map>
+<div class="center"><img src="a00162.png" border="0" usemap="#roboptim_1_1retargeting_1_1_torque_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_torque_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_torque_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node3" href="a00035.html" title="Torque position computed through Choreonoid." alt="" coords="287,5,588,35"/><area shape="rect" id="node5" href="a00036.html" title="Torque position computed through Metapod." alt="" coords="296,58,579,89"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00274.html">List of all members.</a></p>
+<p><a href="a00163.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef RevoluteAxisAnyJoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a3feab7f9cab7abf1d6659c032c15761e">Joint</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a778a4f2521097816652eb6fa43e3b83d">Node16</a> ()</td></tr>
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::rm_mul_op<br class="typebreak"/>
-&lt; Spatial::RotationMatrix, <br class="typebreak"/>
-Spatial::RotationMatrixIdentity &gt;<br class="typebreak"/>
-::rm &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a2ed40a20395c93c4d6378e1347a4ca3b">sXp</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; FloatType, <br class="typebreak"/>
-6, Joint::NBDOF &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a39395c1a3313a156af4f0ab03d7deea6">joint_F</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00034.html#a3feab7f9cab7abf1d6659c032c15761e">Joint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#ada507b2952569249569c4ea701506691">joint</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Body&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#ad135a259340e52f5f9115863934fb821">body</a></td></tr>
-<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a6f90402d27bccd05ccf917c288c3a1b5">id</a> = 16</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a99308c23aa5ee2fc8b54b05cdc79f4d9">joint_name</a> = std::string(&quot;EYE_P&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a0c51da823cf4328bd92b5e8daf38e3ad">body_name</a> = std::string(&quot;EYE_P_LINK&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const <br class="typebreak"/>
-Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::RotationMatrixIdentity &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a90f6b11f00d0038808ea6b2eebaf7370">Xt</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a5eab6c5a8ec65bcb99c3b86aadc9ee42">q_idx</a> = 16</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#aac7ebea6ab5dda1052945bd643aa7613">parent_id</a> = 13</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#aeb4fe6ad77b1184585cbea3193c9f693">child0_id</a> = 17</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#aea835fd95e00c9c572ef85f44b24ec42">child1_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a1785888ddc0ea1539ac925b4ad61768a">child2_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#aea22df3dee63cb7b4d075e6cd2396020">child3_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a7db9ea4160836637016ee147a5eb5e13">child4_id</a> = -2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#af3bc71843e82069f34a396d79c9643f2">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a824bb191606832bfeffc7aca0ab7855c">Torque</a> (size_type nDofs, std::string title)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00034.html#a050e437e7f9d4559512206900e0bd4a3">~Torque</a> ()  throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">configurationLength</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a35f20c6002b917b3ecda61eed0664d7e">translation</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a55460d12e26b446b0f1e7e49004a7eb3">translation</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a35c746c4d72f345b1b8fce04ed08ca1d">rotation</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a8aa15004e7692ec910a340098b34a46c">rotation</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a1e2ba629b94894722488d9935ecbf050">q</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a5dfe358681b367421d8ccc0a296ff581">q</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a886b7e6b782d90ef69c51fc8b0f778d1">dq</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#adba6e4d3532dfdbc882aa228e2975e6d">dq</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#af5ba29d7b868b17802a4338999b29842">ddq</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00034.html#a4790f41f77d1b9bba3858a34c6a3b9a1">ddq</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
 </table>
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a3feab7f9cab7abf1d6659c032c15761e"></a><!-- doxytag: member="metapod::hrp4g2::Node16::Joint" ref="a3feab7f9cab7abf1d6659c032c15761e" args="" -->
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::Torque&lt; T &gt;</h3>
+
+<p>Compute the <a class="el" href="a00034.html" title="Compute the Torque of each joint.">Torque</a> of each joint. </p>
+<p>Input: <img class="formulaInl" alt="$ x = [q, \dot{q}, \ddot{q}] $" src="form_24.png"/></p>
+<p>...where q is [x, y, z, alpha, beta, gamma, q0, qN]</p>
+<p>(x, y, z) is the base position (alpha, beta, gamma) is base attitude using angle axis representation (q0, ..., qN) are the joints values</p>
+<p>Output: <img class="formulaInl" alt="$ result = [\tau_0, \tau_1, ..., \tau_N] $" src="form_25.png"/></p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Function traits type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a824bb191606832bfeffc7aca0ab7855c"></a><!-- doxytag: member="roboptim::retargeting::Torque::Torque" ref="a824bb191606832bfeffc7aca0ab7855c" args="(size_type nDofs, std::string title)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef RevoluteAxisAnyJoint <a class="el" href="a00034.html#a3feab7f9cab7abf1d6659c032c15761e">metapod::hrp4g2::Node16::Joint</a></td>
+          <td class="memname"><a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html">Torque</a> </td>
+          <td>(</td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>nDofs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>title</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>  throw ()<code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -123,14 +149,262 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a778a4f2521097816652eb6fa43e3b83d"></a><!-- doxytag: member="metapod::hrp4g2::Node16::Node16" ref="a778a4f2521097816652eb6fa43e3b83d" args="()" -->
+<a class="anchor" id="a050e437e7f9d4559512206900e0bd4a3"></a><!-- doxytag: member="roboptim::retargeting::Torque::~Torque" ref="a050e437e7f9d4559512206900e0bd4a3" args="()" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00034.html#a778a4f2521097816652eb6fa43e3b83d">metapod::hrp4g2::Node16::Node16</a> </td>
+          <td class="memname">virtual <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::~<a class="el" href="a00034.html">Torque</a> </td>
           <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>  throw ()<code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a875445bb3df3ae23fdee89b4630bf47f"></a><!-- doxytag: member="roboptim::retargeting::Torque::configurationLength" ref="a875445bb3df3ae23fdee89b4630bf47f" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">size_type <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">configurationLength</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="a00034.html#af5ba29d7b868b17802a4338999b29842">roboptim::retargeting::Torque&lt; T &gt;::ddq()</a>, <a class="el" href="a00034.html#a886b7e6b782d90ef69c51fc8b0f778d1">roboptim::retargeting::Torque&lt; T &gt;::dq()</a>, and <a class="el" href="a00034.html#a1e2ba629b94894722488d9935ecbf050">roboptim::retargeting::Torque&lt; T &gt;::q()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af5ba29d7b868b17802a4338999b29842"></a><!-- doxytag: member="roboptim::retargeting::Torque::ddq" ref="af5ba29d7b868b17802a4338999b29842" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#af5ba29d7b868b17802a4338999b29842">ddq</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">roboptim::retargeting::Torque&lt; T &gt;::configurationLength()</a>.</p>
+
+<p>Referenced by <a class="el" href="a00035.html#a6f3b97979f20552a3ff512dc5ded4faa">roboptim::retargeting::TorqueChoreonoid&lt; T &gt;::impl_compute()</a>, and <a class="el" href="a00036.html#adb4c42d02f17f5a74dd463b7daa78746">roboptim::retargeting::TorqueMetapod&lt; T, R &gt;::impl_compute()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4790f41f77d1b9bba3858a34c6a3b9a1"></a><!-- doxytag: member="roboptim::retargeting::Torque::ddq" ref="a4790f41f77d1b9bba3858a34c6a3b9a1" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#af5ba29d7b868b17802a4338999b29842">ddq</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">roboptim::retargeting::Torque&lt; T &gt;::configurationLength()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a886b7e6b782d90ef69c51fc8b0f778d1"></a><!-- doxytag: member="roboptim::retargeting::Torque::dq" ref="a886b7e6b782d90ef69c51fc8b0f778d1" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a886b7e6b782d90ef69c51fc8b0f778d1">dq</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">roboptim::retargeting::Torque&lt; T &gt;::configurationLength()</a>.</p>
+
+<p>Referenced by <a class="el" href="a00035.html#a6f3b97979f20552a3ff512dc5ded4faa">roboptim::retargeting::TorqueChoreonoid&lt; T &gt;::impl_compute()</a>, and <a class="el" href="a00036.html#adb4c42d02f17f5a74dd463b7daa78746">roboptim::retargeting::TorqueMetapod&lt; T, R &gt;::impl_compute()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adba6e4d3532dfdbc882aa228e2975e6d"></a><!-- doxytag: member="roboptim::retargeting::Torque::dq" ref="adba6e4d3532dfdbc882aa228e2975e6d" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a886b7e6b782d90ef69c51fc8b0f778d1">dq</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">roboptim::retargeting::Torque&lt; T &gt;::configurationLength()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1e2ba629b94894722488d9935ecbf050"></a><!-- doxytag: member="roboptim::retargeting::Torque::q" ref="a1e2ba629b94894722488d9935ecbf050" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a1e2ba629b94894722488d9935ecbf050">q</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">roboptim::retargeting::Torque&lt; T &gt;::configurationLength()</a>.</p>
+
+<p>Referenced by <a class="el" href="a00035.html#a6f3b97979f20552a3ff512dc5ded4faa">roboptim::retargeting::TorqueChoreonoid&lt; T &gt;::impl_compute()</a>, and <a class="el" href="a00036.html#adb4c42d02f17f5a74dd463b7daa78746">roboptim::retargeting::TorqueMetapod&lt; T, R &gt;::impl_compute()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5dfe358681b367421d8ccc0a296ff581"></a><!-- doxytag: member="roboptim::retargeting::Torque::q" ref="a5dfe358681b367421d8ccc0a296ff581" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a1e2ba629b94894722488d9935ecbf050">q</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">roboptim::retargeting::Torque&lt; T &gt;::configurationLength()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af3bc71843e82069f34a396d79c9643f2"></a><!-- doxytag: member="roboptim::retargeting::Torque::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="af3bc71843e82069f34a396d79c9643f2" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#af3bc71843e82069f34a396d79c9643f2">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td>(</td>
+          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -140,13 +414,20 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="ad135a259340e52f5f9115863934fb821"></a><!-- doxytag: member="metapod::hrp4g2::Node16::body" ref="ad135a259340e52f5f9115863934fb821" args="" -->
+<a class="anchor" id="a35c746c4d72f345b1b8fce04ed08ca1d"></a><!-- doxytag: member="roboptim::retargeting::Torque::rotation" ref="a35c746c4d72f345b1b8fce04ed08ca1d" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Body <a class="el" href="a00034.html#ad135a259340e52f5f9115863934fb821">metapod::hrp4g2::Node16::body</a></td>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a35c746c4d72f345b1b8fce04ed08ca1d">rotation</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -154,12 +435,20 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<a class="anchor" id="a0c51da823cf4328bd92b5e8daf38e3ad"></a><!-- doxytag: member="metapod::hrp4g2::Node16::body_name" ref="a0c51da823cf4328bd92b5e8daf38e3ad" args="" -->
+<a class="anchor" id="a8aa15004e7692ec910a340098b34a46c"></a><!-- doxytag: member="roboptim::retargeting::Torque::rotation" ref="a8aa15004e7692ec910a340098b34a46c" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const std::string <a class="el" href="a00034.html#a0c51da823cf4328bd92b5e8daf38e3ad">metapod::hrp4g2::Node16::body_name</a> = std::string(&quot;EYE_P_LINK&quot;)<code> [static]</code></td>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a35c746c4d72f345b1b8fce04ed08ca1d">rotation</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -167,12 +456,20 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<a class="anchor" id="aeb4fe6ad77b1184585cbea3193c9f693"></a><!-- doxytag: member="metapod::hrp4g2::Node16::child0_id" ref="aeb4fe6ad77b1184585cbea3193c9f693" args="" -->
+<a class="anchor" id="a35f20c6002b917b3ecda61eed0664d7e"></a><!-- doxytag: member="roboptim::retargeting::Torque::translation" ref="a35f20c6002b917b3ecda61eed0664d7e" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#aeb4fe6ad77b1184585cbea3193c9f693">metapod::hrp4g2::Node16::child0_id</a> = 17<code> [static]</code></td>
+          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a35f20c6002b917b3ecda61eed0664d7e">translation</a> </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -180,163 +477,25 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<a class="anchor" id="aea835fd95e00c9c572ef85f44b24ec42"></a><!-- doxytag: member="metapod::hrp4g2::Node16::child1_id" ref="aea835fd95e00c9c572ef85f44b24ec42" args="" -->
+<a class="anchor" id="a55460d12e26b446b0f1e7e49004a7eb3"></a><!-- doxytag: member="roboptim::retargeting::Torque::translation" ref="a55460d12e26b446b0f1e7e49004a7eb3" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#aea835fd95e00c9c572ef85f44b24ec42">metapod::hrp4g2::Node16::child1_id</a> = -2<code> [static]</code></td>
+          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00034.html">roboptim::retargeting::Torque</a>&lt; T &gt;::<a class="el" href="a00034.html#a35f20c6002b917b3ecda61eed0664d7e">translation</a> </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a1785888ddc0ea1539ac925b4ad61768a"></a><!-- doxytag: member="metapod::hrp4g2::Node16::child2_id" ref="a1785888ddc0ea1539ac925b4ad61768a" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#a1785888ddc0ea1539ac925b4ad61768a">metapod::hrp4g2::Node16::child2_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aea22df3dee63cb7b4d075e6cd2396020"></a><!-- doxytag: member="metapod::hrp4g2::Node16::child3_id" ref="aea22df3dee63cb7b4d075e6cd2396020" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#aea22df3dee63cb7b4d075e6cd2396020">metapod::hrp4g2::Node16::child3_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a7db9ea4160836637016ee147a5eb5e13"></a><!-- doxytag: member="metapod::hrp4g2::Node16::child4_id" ref="a7db9ea4160836637016ee147a5eb5e13" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#a7db9ea4160836637016ee147a5eb5e13">metapod::hrp4g2::Node16::child4_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6f90402d27bccd05ccf917c288c3a1b5"></a><!-- doxytag: member="metapod::hrp4g2::Node16::id" ref="a6f90402d27bccd05ccf917c288c3a1b5" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#a6f90402d27bccd05ccf917c288c3a1b5">metapod::hrp4g2::Node16::id</a> = 16<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ada507b2952569249569c4ea701506691"></a><!-- doxytag: member="metapod::hrp4g2::Node16::joint" ref="ada507b2952569249569c4ea701506691" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00034.html#a3feab7f9cab7abf1d6659c032c15761e">Joint</a> <a class="el" href="a00034.html#ada507b2952569249569c4ea701506691">metapod::hrp4g2::Node16::joint</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a39395c1a3313a156af4f0ab03d7deea6"></a><!-- doxytag: member="metapod::hrp4g2::Node16::joint_F" ref="a39395c1a3313a156af4f0ab03d7deea6" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::Matrix&lt;FloatType, 6, Joint::NBDOF&gt; <a class="el" href="a00034.html#a39395c1a3313a156af4f0ab03d7deea6">metapod::hrp4g2::Node16::joint_F</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a99308c23aa5ee2fc8b54b05cdc79f4d9"></a><!-- doxytag: member="metapod::hrp4g2::Node16::joint_name" ref="a99308c23aa5ee2fc8b54b05cdc79f4d9" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="a00034.html#a99308c23aa5ee2fc8b54b05cdc79f4d9">metapod::hrp4g2::Node16::joint_name</a> = std::string(&quot;EYE_P&quot;)<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aac7ebea6ab5dda1052945bd643aa7613"></a><!-- doxytag: member="metapod::hrp4g2::Node16::parent_id" ref="aac7ebea6ab5dda1052945bd643aa7613" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#aac7ebea6ab5dda1052945bd643aa7613">metapod::hrp4g2::Node16::parent_id</a> = 13<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a5eab6c5a8ec65bcb99c3b86aadc9ee42"></a><!-- doxytag: member="metapod::hrp4g2::Node16::q_idx" ref="a5eab6c5a8ec65bcb99c3b86aadc9ee42" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00034.html#a5eab6c5a8ec65bcb99c3b86aadc9ee42">metapod::hrp4g2::Node16::q_idx</a> = 16<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a2ed40a20395c93c4d6378e1347a4ca3b"></a><!-- doxytag: member="metapod::hrp4g2::Node16::sXp" ref="a2ed40a20395c93c4d6378e1347a4ca3b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Spatial::TransformT&lt;Spatial::rm_mul_op&lt;Spatial::RotationMatrix, Spatial::RotationMatrixIdentity&gt;::rm&gt; <a class="el" href="a00034.html#a2ed40a20395c93c4d6378e1347a4ca3b">metapod::hrp4g2::Node16::sXp</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a90f6b11f00d0038808ea6b2eebaf7370"></a><!-- doxytag: member="metapod::hrp4g2::Node16::Xt" ref="a90f6b11f00d0038808ea6b2eebaf7370" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const Spatial::TransformT&lt; Spatial::RotationMatrixIdentity &gt; <a class="el" href="a00034.html#a90f6b11f00d0038808ea6b2eebaf7370">metapod::hrp4g2::Node16::Xt</a><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment"> Spatial::TransformT&lt;Spatial::RotationMatrixIdentity&gt;(
-    Spatial::RotationMatrixIdentity(),
-    Vector3d(0.081618, 0.0315, 0.059615))
-</pre></div>
 </div>
 </div>
 </div><!-- contents -->
@@ -346,7 +505,7 @@ Spatial::TransformT<br class="typebreak"/>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -357,8 +516,8 @@ Spatial::TransformT<br class="typebreak"/>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00171.html">metapod</a>      </li>
-      <li class="navelem"><a class="el" href="a00013.html">hrp4g2</a>      </li>
-      <li class="navelem"><a class="el" href="a00034.html">Node16</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00034.html">Torque</a>      </li>
 </body>
 </html>

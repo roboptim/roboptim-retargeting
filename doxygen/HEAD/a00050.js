@@ -1,20 +1,14 @@
 var a00050 =
 [
-    [ "Joint", "a00050.html#ab0e997f4e10fcfa86acc442f0babedf1", null ],
-    [ "Node30", "a00050.html#ad4366a8c4cf1966f48e89533cec3bd57", null ],
-    [ "body", "a00050.html#adcfddc8e62182c4f3364cab3e8428dd3", null ],
-    [ "body_name", "a00050.html#a8cf2152b78d6c52d8485ae8ff23364e9", null ],
-    [ "child0_id", "a00050.html#aee02c3b984e6f6fef16960fe3417d4da", null ],
-    [ "child1_id", "a00050.html#a6dd016cd59334688c207573e933a9c72", null ],
-    [ "child2_id", "a00050.html#a06f2ccf32f4867dbd1068ef745f31e61", null ],
-    [ "child3_id", "a00050.html#a67a94302dbee3f785d0e7be2bd76461d", null ],
-    [ "child4_id", "a00050.html#a662705af8d0538cf4159603d2494c212", null ],
-    [ "id", "a00050.html#aa5c5a5e8b15afddf53fd7adc2b990e3f", null ],
-    [ "joint", "a00050.html#a6bd5296c36593abfa519b5b8e5e3ca06", null ],
-    [ "joint_F", "a00050.html#a10b61df75110fca4b067fa6f21cb669a", null ],
-    [ "joint_name", "a00050.html#a382d9e1c47df435b899168c254f75aec", null ],
-    [ "parent_id", "a00050.html#a326ebb44c70564f759ddd0e56187994f", null ],
-    [ "q_idx", "a00050.html#a54691c5482d4b54e1af89e63bed4cee6", null ],
-    [ "sXp", "a00050.html#a2be2b7d530d30884985dd1002e01ccfb", null ],
-    [ "Xt", "a00050.html#ae23de2eae7a7517c2393c222895b52cd", null ]
+    [ "adjoint", "a00050.html#ac35cce3823d3fbf857938a27d5995b49", null ],
+    [ "eulerToTransform", "a00050.html#ac064619c12eec17aee5840c6c9f56fae", null ],
+    [ "hat", "a00050.html#a9ed7f7cfc049d90dab635f90939e94a5", null ],
+    [ "hat", "a00050.html#a3a6db143bd927531d5afe4fe6ebd0f5f", null ],
+    [ "transformToEuler", "a00050.html#afc7119cd80d3831dd2918c26063ddcc2", null ],
+    [ "transformToUTheta", "a00050.html#a346b522b6f9f5805c8c0ff6f31de6b18", null ],
+    [ "transformToUtheta", "a00050.html#a6d8320f7cbbc7e77f1d50b20e731942d", null ],
+    [ "transformToVector", "a00050.html#a6dde0cc265752f95d52f8b55743b5cd8", null ],
+    [ "uthetaPoseToTransform", "a00050.html#a8a23481b022df913861b87880187e5b9", null ],
+    [ "uthetaToTransform", "a00050.html#ad5830c35f32edf60f1d0e3eb6ea7a065", null ],
+    [ "vectorToTransform", "a00050.html#a0529371b0e6e771044d93fb321a77829", null ]
 ];

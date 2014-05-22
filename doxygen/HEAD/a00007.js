@@ -1,11 +1,5 @@
 var a00007 =
 [
-    [ "discreteInterval_t", "a00007.html#a083273964074f2781aaa9234ab479eed", null ],
-    [ "interval_t", "a00007.html#a517757a27d33a6783cc5fc7813f08d84", null ],
-    [ "trajectory_t", "a00007.html#a2e3cc730c92a46ebe3f03ff37bf6d7f6", null ],
-    [ "CostReferenceTrajectory", "a00007.html#a2cc261a99083e65e985436b994597a84", null ],
-    [ "~CostReferenceTrajectory", "a00007.html#a34f5da50a3a953272f2b7650cb6722fb", null ],
-    [ "impl_compute", "a00007.html#ab1c2866f4645092db63e1d7081275cc5", null ],
-    [ "impl_gradient", "a00007.html#a7a168c542af26f024f9a58749873595f", null ],
-    [ "ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_", "a00007.html#a3690f5f62c13bd99a7f56597200af1d5", null ]
+    [ "DistanceToReference", "a00007.html#aed4254d845d0e43a3d3b15c1d81f16e5", null ],
+    [ "ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_", "a00007.html#affb3d5939d57dfe4b8d30f01f0496555", null ]
 ];

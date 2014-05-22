@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::GraphVertexWriter&lt; Name &gt; Class Template Reference</title>
+<title>roboptim::retargeting::JointFunctionFactory Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,53 +56,89 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::GraphVertexWriter&lt; Name &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::JointFunctionFactory Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::GraphVertexWriter" -->
-<p>Write a vertex using the Graphviz format.  
+<!-- doxytag: class="roboptim::retargeting::JointFunctionFactory" --><!-- doxytag: inherits="roboptim::retargeting::FunctionFactory" -->
+<p>Creates functions from their name for joint-joint optimization.  
  <a href="a00012.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/animated-interaction-mesh.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/joint-function-factory.hh&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for roboptim::retargeting::JointFunctionFactory:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00181.png" border="0" usemap="#roboptim_1_1retargeting_1_1_joint_function_factory_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_joint_function_factory_inherit__map" id="roboptim_1_1retargeting_1_1_joint_function_factory_inherit__map">
+<area shape="rect" id="node2" href="a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="20,6,265,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::JointFunctionFactory:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00182.png" border="0" usemap="#roboptim_1_1retargeting_1_1_joint_function_factory_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_joint_function_factory_coll__map" id="roboptim_1_1retargeting_1_1_joint_function_factory_coll__map">
+<area shape="rect" id="node2" href="a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="20,6,265,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00398.html">List of all members.</a></p>
+<p><a href="a00183.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00012.html#af8081427cbc72c7c56673b10ef3942e6">GraphVertexWriter</a> (Name name, unsigned frameId)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;class Vertex &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00012.html#a8a3289d2bf83d696324d6d856874580b">operator()</a> (std::ostream &amp;out, const <a class="el" href="a00120.html">Vertex</a> &amp;v) const </td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00012.html#a19c3d78caf997b11a8c67c718fc2f34d">buildFunction</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate a function from its name.  <a href="#a19c3d78caf997b11a8c67c718fc2f34d"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="a00004.html">Constraint</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">buildConstraint</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate a constraint from its name.  <a href="#afafcf857b59ac9e0c47e4ef7bf35b55c"></a><br/></td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00012.html#ac11bb6de06a600f278f0df3886a13845">JointFunctionFactory</a> (const <a class="el" href="a00011.html">JointFunctionData</a> &amp;data)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor and Destructor.  <a href="#ac11bb6de06a600f278f0df3886a13845"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00012.html#ab7c87cea9238d3f2132a842c0c7f68a8">~JointFunctionFactory</a> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00012.html#a435dd016ce0536b8846713073d640f9e">listFunctions</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">List supported functions.  <a href="#a435dd016ce0536b8846713073d640f9e"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Name&gt;<br/>
-class roboptim::retargeting::GraphVertexWriter&lt; Name &gt;</h3>
-
-<p>Write a vertex using the Graphviz format. </p>
+<div class="textblock"><p>Creates functions from their name for joint-joint optimization. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="af8081427cbc72c7c56673b10ef3942e6"></a><!-- doxytag: member="roboptim::retargeting::GraphVertexWriter::GraphVertexWriter" ref="af8081427cbc72c7c56673b10ef3942e6" args="(Name name, unsigned frameId)" -->
+<a class="anchor" id="ac11bb6de06a600f278f0df3886a13845"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionFactory::JointFunctionFactory" ref="ac11bb6de06a600f278f0df3886a13845" args="(const JointFunctionData &amp;data)" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class Name &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00012.html">roboptim::retargeting::GraphVertexWriter</a>&lt; Name &gt;::<a class="el" href="a00012.html">GraphVertexWriter</a> </td>
+          <td class="memname"><a class="el" href="a00012.html#ac11bb6de06a600f278f0df3886a13845">roboptim::retargeting::JointFunctionFactory::JointFunctionFactory</a> </td>
           <td>(</td>
-          <td class="paramtype">Name&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
+          <td class="paramtype">const <a class="el" href="a00011.html">JointFunctionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td><code> [explicit]</code></td>
         </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructor and Destructor. </p>
+<p>Constructor</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>problem data (trajectories, etc.) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ab7c87cea9238d3f2132a842c0c7f68a8"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionFactory::~JointFunctionFactory" ref="ab7c87cea9238d3f2132a842c0c7f68a8" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
         <tr>
-          <td class="paramkey"></td>
+          <td class="memname"><a class="el" href="a00012.html#ab7c87cea9238d3f2132a842c0c7f68a8">roboptim::retargeting::JointFunctionFactory::~JointFunctionFactory</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">unsigned&#160;</td>
-          <td class="paramname"><em>frameId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -111,34 +147,100 @@ template&lt;class Name &gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a8a3289d2bf83d696324d6d856874580b"></a><!-- doxytag: member="roboptim::retargeting::GraphVertexWriter::operator()" ref="a8a3289d2bf83d696324d6d856874580b" args="(std::ostream &amp;out, const Vertex &amp;v) const " -->
+<a class="anchor" id="afafcf857b59ac9e0c47e4ef7bf35b55c"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionFactory::buildConstraint" ref="afafcf857b59ac9e0c47e4ef7bf35b55c" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Name &gt; </div>
-<div class="memtemplate">
-template&lt;class Vertex &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="a00012.html">roboptim::retargeting::GraphVertexWriter</a>&lt; Name &gt;::operator() </td>
+          <td class="memname"><a class="el" href="a00004.html">Constraint</a>&lt; T &gt; <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint</a> </td>
           <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="a00120.html">Vertex</a> &amp;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Instantiate a constraint from its name. </p>
+<p>This method creates a constraint object from the constraint name.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>newly created constraint object </dd></dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function type (e.g. DifferentiableFunction) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="a00011.html#af67773587f6321ca9aee179f928a8bcc">roboptim::retargeting::JointFunctionData::disabledJointsConfiguration</a>, <a class="el" href="a00011.html#aa30a90c9d4ec44825a98d200f6f4f3df">roboptim::retargeting::JointFunctionData::filteredTrajectory</a>, <a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">roboptim::retargeting::Constraint&lt; T &gt;::function</a>, <a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">roboptim::retargeting::Constraint&lt; T &gt;::intervals</a>, <a class="el" href="a00011.html#a0e5c91a51055bd4fa0bb40da45e269c9">roboptim::retargeting::JointFunctionData::nDofsFiltered()</a>, <a class="el" href="a00011.html#ae4dc31b8106a531717b33b775d6712d0">roboptim::retargeting::JointFunctionData::nDofsFull()</a>, <a class="el" href="a00011.html#a692486d61e774f98a97080ad8a95a7a3">roboptim::retargeting::JointFunctionData::robotModel</a>, <a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">roboptim::retargeting::Constraint&lt; T &gt;::scales</a>, <a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">roboptim::retargeting::Constraint&lt; T &gt;::stateFunctionOrder</a>, and <a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">roboptim::retargeting::Constraint&lt; T &gt;::type</a>.</p>
+
+<p>Referenced by <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a19c3d78caf997b11a8c67c718fc2f34d"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionFactory::buildFunction" ref="a19c3d78caf997b11a8c67c718fc2f34d" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::shared_ptr&lt; T &gt; <a class="el" href="a00012.html#a19c3d78caf997b11a8c67c718fc2f34d">roboptim::retargeting::JointFunctionFactory::buildFunction</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Instantiate a function from its name. </p>
+<p>This method creates a function (cost or constraint) from its name.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>shared pointer to the newly created function </dd></dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function type (e.g. DifferentiableFunction) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="a00019.html#a626e4e4d963d3d890ab2c0c5aef9dc0a">roboptim::retargeting::detail::JointFunctionFactoryMapping&lt; T &gt;::Mapping::factory</a>, and <a class="el" href="a00019.html#a5c5125f519a5fd8f6a62998c87720e35">roboptim::retargeting::detail::JointFunctionFactoryMapping&lt; T &gt;::Mapping::name</a>.</p>
+
+<p>Referenced by <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a435dd016ce0536b8846713073d640f9e"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionFactory::listFunctions" ref="a435dd016ce0536b8846713073d640f9e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; <a class="el" href="a00012.html#a435dd016ce0536b8846713073d640f9e">roboptim::retargeting::JointFunctionFactory::listFunctions</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>List supported functions. </p>
+<p>Each element of this string can be passed to buildFunction method to create the corresponding function. </p>
 
 </div>
 </div>
@@ -149,7 +251,7 @@ template&lt;class Vertex &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -160,8 +262,8 @@ template&lt;class Vertex &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00012.html">GraphVertexWriter</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00012.html">JointFunctionFactory</a>      </li>
 </body>
 </html>

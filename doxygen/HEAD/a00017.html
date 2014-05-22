@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::InteractionMeshVertex Struct Reference</title>
+<title>roboptim::retargeting::LaplacianCoordinateChoreonoid&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,34 +56,87 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::InteractionMeshVertex Struct Reference</div>  </div>
+<div class="title">roboptim::retargeting::LaplacianCoordinateChoreonoid&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::InteractionMeshVertex" -->
-<p><code>#include &lt;roboptim/retargeting/animated-interaction-mesh.hh&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for roboptim::retargeting::InteractionMeshVertex:</div>
-<div class="dyncontent">
-<div class="center"><img src="a00393.png" border="0" usemap="#roboptim_1_1retargeting_1_1_interaction_mesh_vertex_coll__map" alt="Collaboration graph"/></div>
-<map name="roboptim_1_1retargeting_1_1_interaction_mesh_vertex_coll__map" id="roboptim_1_1retargeting_1_1_interaction_mesh_vertex_coll__map">
-<area shape="rect" id="node2" title="STL class." alt="" coords="108,89,188,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="64,6,232,37"/></map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<!-- doxytag: class="roboptim::retargeting::LaplacianCoordinateChoreonoid" -->
+<p>Laplacian Coordinate of all markers of one frame.  
+ <a href="a00017.html#details">More...</a></p>
 
-<p><a href="a00394.html">List of all members.</a></p>
+<p><code>#include &lt;roboptim/retargeting/function/laplacian-coordinate/choreonoid.hh&gt;</code></p>
+
+<p><a href="a00154.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00017.html#ae1da022911bc163d7d9124ec6b48ef2a">label</a></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00017.html#a773e110f243a5e166430bc07ab4c6f1e">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericNumericLinearFunction&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00017.html#ae869755197afc63fa38e7f4c8ba7fdf2">LaplacianCoordinateChoreonoid</a> (cnoid::BodyIMeshPtr mesh, int frameId, const vector_t &amp;originalMarkerPosition)  throw (std::runtime_error)</td></tr>
 </table>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="ae1da022911bc163d7d9124ec6b48ef2a"></a><!-- doxytag: member="roboptim::retargeting::InteractionMeshVertex::label" ref="ae1da022911bc163d7d9124ec6b48ef2a" args="" -->
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::LaplacianCoordinateChoreonoid&lt; T &gt;</h3>
+
+<p>Laplacian Coordinate of all markers of one frame. </p>
+<p>for N markers, respectively at position (x0, y0, z0), ..., (xN, yN, zN)</p>
+<p>Input: x = [ x0, y0, z0, ... xN, yN, zN ]</p>
+<p>Output: f(x) = [ x0, y0, z0, ... xN, yN, zN ]</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Function traits type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ae869755197afc63fa38e7f4c8ba7fdf2"></a><!-- doxytag: member="roboptim::retargeting::LaplacianCoordinateChoreonoid::LaplacianCoordinateChoreonoid" ref="ae869755197afc63fa38e7f4c8ba7fdf2" args="(cnoid::BodyIMeshPtr mesh, int frameId, const vector_t &amp;originalMarkerPosition)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="a00017.html#ae1da022911bc163d7d9124ec6b48ef2a">roboptim::retargeting::InteractionMeshVertex::label</a></td>
+          <td class="memname"><a class="el" href="a00017.html">roboptim::retargeting::LaplacianCoordinateChoreonoid</a>&lt; T &gt;::<a class="el" href="a00017.html">LaplacianCoordinateChoreonoid</a> </td>
+          <td>(</td>
+          <td class="paramtype">cnoid::BodyIMeshPtr&#160;</td>
+          <td class="paramname"><em>mesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>frameId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector_t &amp;&#160;</td>
+          <td class="paramname"><em>originalMarkerPosition</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>  throw (std::runtime_error)<code> [inline, explicit]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a773e110f243a5e166430bc07ab4c6f1e"></a><!-- doxytag: member="roboptim::retargeting::LaplacianCoordinateChoreonoid::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a773e110f243a5e166430bc07ab4c6f1e" args="(GenericNumericLinearFunction&lt; T &gt;)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00017.html">roboptim::retargeting::LaplacianCoordinateChoreonoid</a>&lt; T &gt;::<a class="el" href="a00017.html#a773e110f243a5e166430bc07ab4c6f1e">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td>(</td>
+          <td class="paramtype">GenericNumericLinearFunction&lt; T &gt;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
@@ -98,7 +151,7 @@ Public Attributes</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -109,8 +162,8 @@ Public Attributes</h2></td></tr>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00017.html">InteractionMeshVertex</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00017.html">LaplacianCoordinateChoreonoid</a>      </li>
 </body>
 </html>

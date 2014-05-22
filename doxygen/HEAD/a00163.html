@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>torque.cc File Reference</title>
+<title>Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -12,8 +12,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -34,8 +34,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -49,88 +51,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-  initNavTree('a00163.html','');
+  initNavTree('a00034.html','');
 </script>
 <div id="doc-content">
 <div class="header">
-  <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">torque.cc File Reference</div>  </div>
+<div class="title">roboptim::retargeting::Torque&lt; T &gt; Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;fstream&gt;</code><br/>
-<code>#include &lt;boost/format.hpp&gt;</code><br/>
-<code>#include &lt;boost/fusion/algorithm/iteration/fold.hpp&gt;</code><br/>
-<code>#include &lt;boost/fusion/include/fold.hpp&gt;</code><br/>
-<code>#include &lt;boost/make_shared.hpp&gt;</code><br/>
-<code>#include &lt;roboptim/core/finite-difference-gradient.hh&gt;</code><br/>
-<code>#include &quot;<a class="el" href="a00165.html">roboptim/retargeting/torque.hh</a>&quot;</code><br/>
-<code>#include &lt;metapod/models/simple_humanoid/simple_humanoid.hh&gt;</code><br/>
-<code>#include &quot;<a class="el" href="a00141.html">model/hrp4g2.hh</a>&quot;</code><br/>
-<code>#include &lt;metapod/tools/print.hh&gt;</code><br/>
-<code>#include &lt;metapod/algos/rnea.hh&gt;</code><br/>
-<code>#include &lt;cnoid/Body&gt;</code><br/>
-<code>#include &lt;cnoid/BodyMotion&gt;</code><br/>
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for torque.cc:</div>
-<div class="dyncontent">
-<div class="center"><img src="a00238.png" border="0" usemap="#torque_8cc" alt=""/></div>
-<map name="torque_8cc" id="torque_8cc">
-<area shape="rect" id="node15" href="a00165.html" title="roboptim/retargeting/torque.hh" alt="" coords="1261,86,1461,117"/><area shape="rect" id="node53" href="a00141.html" title="model/hrp4g2.hh" alt="" coords="1995,86,2115,117"/><area shape="rect" id="node23" href="a00128.html" title="roboptim/retargeting/animated&#45;interaction&#45;mesh.hh" alt="" coords="788,166,1105,197"/><area shape="rect" id="node55" href="a00137.html" title="config.hh" alt="" coords="1865,166,1940,197"/></map>
-</div>
-</div><table class="memberdecls">
-<tr><td colspan="2"><h2><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00172.html">roboptim</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><p>NDEBUG. </p>
-<br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00173.html">roboptim::retargeting</a></td></tr>
-<tr><td colspan="2"><h2><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00013.html">metapod::hrp4g2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00163.html#ae3b9817afc9086e01a603d0e03bb01a0">robot_t</a></td></tr>
-<tr><td colspan="2"><h2><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00173.html#ae4ec1172060dceeb0e6047eff9feccef">roboptim::retargeting::plotQTorque</a> (const std::vector&lt; Torque::robot_t::confVector &gt; &amp;q, const std::vector&lt; Torque::robot_t::confVector &gt; &amp;dq, const std::vector&lt; Torque::robot_t::confVector &gt; &amp;ddq)</td></tr>
-</table>
-<hr/><h2>Typedef Documentation</h2>
-<a class="anchor" id="ae3b9817afc9086e01a603d0e03bb01a0"></a><!-- doxytag: member="torque.cc::robot_t" ref="ae3b9817afc9086e01a603d0e03bb01a0" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="a00013.html">metapod::hrp4g2</a> <a class="el" href="a00163.html#ae3b9817afc9086e01a603d0e03bb01a0">robot_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="ae2b1a60f4a7c817a72cd9ee42c0147d0"></a><!-- doxytag: member="torque.cc::jointName" ref="ae2b1a60f4a7c817a72cd9ee42c0147d0" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="a00163.html#ae2b1a60f4a7c817a72cd9ee42c0147d0">jointName</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
-</div>
+This is the complete list of members for <a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a875445bb3df3ae23fdee89b4630bf47f">configurationLength</a>(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#af5ba29d7b868b17802a4338999b29842">ddq</a>(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a4790f41f77d1b9bba3858a34c6a3b9a1">ddq</a>(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a886b7e6b782d90ef69c51fc8b0f778d1">dq</a>(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#adba6e4d3532dfdbc882aa228e2975e6d">dq</a>(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a1e2ba629b94894722488d9935ecbf050">q</a>(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a5dfe358681b367421d8ccc0a296ff581">q</a>(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#af3bc71843e82069f34a396d79c9643f2">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a>(GenericDifferentiableFunction&lt; T &gt;)</td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a35c746c4d72f345b1b8fce04ed08ca1d">rotation</a>(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a8aa15004e7692ec910a340098b34a46c">rotation</a>(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a824bb191606832bfeffc7aca0ab7855c">Torque</a>(size_type nDofs, std::string title)</td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline, explicit]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a35f20c6002b917b3ecda61eed0664d7e">translation</a>(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a55460d12e26b446b0f1e7e49004a7eb3">translation</a>(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const </td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00034.html#a050e437e7f9d4559512206900e0bd4a3">~Torque</a>()</td><td><a class="el" href="a00034.html">roboptim::retargeting::Torque&lt; T &gt;</a></td><td><code> [inline, virtual]</code></td></tr>
+</table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -139,8 +89,8 @@ Functions</h2></td></tr>
 </iframe>
 </div>
 
+</div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00163.html">torque.cc</a>      </li>
 </body>
 </html>

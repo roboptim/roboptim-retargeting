@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node17" href="$a00138.html" title="roboptim/retargeting/function/cost&#45;reference&#45;trajectory.hh" alt="" coords="950,86,1305,117"/>
-<area shape="rect" id="node25" href="$a00139.html" title="roboptim/retargeting/function/forward&#45;geometry.hh" alt="" coords="611,86,926,117"/>
-<area shape="rect" id="node30" href="$a00155.html" title="roboptim/retargeting/function/minimum&#45;jerk&#45;trajectory.hh" alt="" coords="1379,86,1726,117"/>
-<area shape="rect" id="node39" href="$a00164.html" title="roboptim/retargeting/function/torque.hh" alt="" coords="289,86,537,117"/>
-<area shape="rect" id="node43" href="$a00169.html" title="roboptim/retargeting/function/zmp.hh" alt="" coords="30,86,265,117"/>
-<area shape="rect" id="node36" href="$a00156.html" title="roboptim/retargeting/function/minimum&#45;jerk&#45;trajectory.hxx" alt="" coords="1659,166,2014,197"/>
-</map>

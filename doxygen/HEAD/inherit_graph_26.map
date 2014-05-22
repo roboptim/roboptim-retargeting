@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$a00051.html" title="metapod::hrp4g2::Node31" alt="" coords="5,5,184,35"/>
+<area shape="rect" id="node1" href="$a00037.html" title="Abstract class for Computing the ZMP position." alt="" coords="5,58,221,89"/>
+<area shape="rect" id="node3" href="$a00038.html" title="ZMP position computed through Choreonoid." alt="" coords="288,5,573,35"/>
+<area shape="rect" id="node5" href="$a00039.html" title="ZMP position computed using the Inverted Pendulum model." alt="" coords="269,58,592,89"/>
+<area shape="rect" id="node7" href="$a00040.html" title="ZMP position computed through Metapod." alt="" coords="288,111,573,142"/>
 </map>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::InteractionMeshGraphEdgeWriter&lt; Name &gt; Class Template Reference</title>
+<title>roboptim::retargeting::JointProblemOptions Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,79 +56,186 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::InteractionMeshGraphEdgeWriter&lt; Name &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::JointProblemOptions Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::InteractionMeshGraphEdgeWriter" -->
-<p>Write an edge using the Graphviz format.  
+<!-- doxytag: class="roboptim::retargeting::JointProblemOptions" -->
+<p>Joint optimization problem description.  
  <a href="a00015.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/animated-interaction-mesh.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/joint-problem-builder.hh&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::JointProblemOptions:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00186.png" border="0" usemap="#roboptim_1_1retargeting_1_1_joint_problem_options_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_joint_problem_options_coll__map" id="roboptim_1_1retargeting_1_1_joint_problem_options_coll__map">
+<area shape="rect" id="node2" title="STL class." alt="" coords="64,89,144,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="20,6,188,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00399.html">List of all members.</a></p>
+<p><a href="a00187.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a5ea8dc391c22ece623b764253dd7b0b7">InteractionMeshGraphEdgeWriter</a> (Name name)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;class Edge &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00015.html#a7ea9ee07b147b6efb9f20c0c0bcfe194">operator()</a> (std::ostream &amp;out, const <a class="el" href="a00008.html">Edge</a> &amp;v) const </td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a4e2827f079bfc5ae44cbd711f7306a01">jointsTrajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Joints trajectory.  <a href="#a4e2827f079bfc5ae44cbd711f7306a01"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a76e31bc5266482df36bce8794ecdf1a5">trajectoryType</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">What type of trajectory should be used?  <a href="#a76e31bc5266482df36bce8794ecdf1a5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#ac6b69e6279ba2303e05cd262556330a3">robotModel</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot model to be used.  <a href="#ac6b69e6279ba2303e05cd262556330a3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a5f17a4d5c2984fbb543694182abc422b">plugin</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Solver plug-in name.  <a href="#a5f17a4d5c2984fbb543694182abc422b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#af92bd94fd16de598cdadae5de8e70e89">cost</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Cost function name.  <a href="#af92bd94fd16de598cdadae5de8e70e89"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a55f1233008230e7ddb9ec30bee235f0d">constraints</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constraints functions names.  <a href="#a55f1233008230e7ddb9ec30bee235f0d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#afe8c6e93ea9a34cf687df0ffd3007f41">disabledJoints</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Disabled joints.  <a href="#afe8c6e93ea9a34cf687df0ffd3007f41"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a430f00c0781534e4c8ad00fe6898c59c">outputFile</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Final joint trajectory filename.  <a href="#a430f00c0781534e4c8ad00fe6898c59c"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Name&gt;<br/>
-class roboptim::retargeting::InteractionMeshGraphEdgeWriter&lt; Name &gt;</h3>
-
-<p>Write an edge using the Graphviz format. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a5ea8dc391c22ece623b764253dd7b0b7"></a><!-- doxytag: member="roboptim::retargeting::InteractionMeshGraphEdgeWriter::InteractionMeshGraphEdgeWriter" ref="a5ea8dc391c22ece623b764253dd7b0b7" args="(Name name)" -->
+<div class="textblock"><p>Joint optimization problem description. </p>
+<p>This structure contains the instruction to build the problem. I.e. which data should be loaded, what strategy should be chosen from resolution, etc. </p>
+</div><hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a55f1233008230e7ddb9ec30bee235f0d"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::constraints" ref="a55f1233008230e7ddb9ec30bee235f0d" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class Name &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00015.html">roboptim::retargeting::InteractionMeshGraphEdgeWriter</a>&lt; Name &gt;::<a class="el" href="a00015.html">InteractionMeshGraphEdgeWriter</a> </td>
-          <td>(</td>
-          <td class="paramtype">Name&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td><code> [inline]</code></td>
+          <td class="memname">std::vector&lt;std::string&gt; <a class="el" href="a00015.html#a55f1233008230e7ddb9ec30bee235f0d">roboptim::retargeting::JointProblemOptions::constraints</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Constraints functions names. </p>
+
 </div>
 </div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a7ea9ee07b147b6efb9f20c0c0bcfe194"></a><!-- doxytag: member="roboptim::retargeting::InteractionMeshGraphEdgeWriter::operator()" ref="a7ea9ee07b147b6efb9f20c0c0bcfe194" args="(std::ostream &amp;out, const Edge &amp;v) const " -->
+<a class="anchor" id="af92bd94fd16de598cdadae5de8e70e89"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::cost" ref="af92bd94fd16de598cdadae5de8e70e89" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class Name &gt; </div>
-<div class="memtemplate">
-template&lt;class Edge &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="a00015.html">roboptim::retargeting::InteractionMeshGraphEdgeWriter</a>&lt; Name &gt;::operator() </td>
-          <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="a00008.html">Edge</a> &amp;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const<code> [inline]</code></td>
+          <td class="memname">std::string <a class="el" href="a00015.html#af92bd94fd16de598cdadae5de8e70e89">roboptim::retargeting::JointProblemOptions::cost</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Cost function name. </p>
+
+</div>
+</div>
+<a class="anchor" id="afe8c6e93ea9a34cf687df0ffd3007f41"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::disabledJoints" ref="afe8c6e93ea9a34cf687df0ffd3007f41" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; <a class="el" href="a00015.html#afe8c6e93ea9a34cf687df0ffd3007f41">roboptim::retargeting::JointProblemOptions::disabledJoints</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Disabled joints. </p>
+<p>Disabled DOFs will be excluded from the optimization problem and hence reduce the overall size of the problem. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4e2827f079bfc5ae44cbd711f7306a01"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::jointsTrajectory" ref="a4e2827f079bfc5ae44cbd711f7306a01" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00015.html#a4e2827f079bfc5ae44cbd711f7306a01">roboptim::retargeting::JointProblemOptions::jointsTrajectory</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Joints trajectory. </p>
+<p>Joints trajectories which will be used as the initial input of the optimization problem.</p>
+<p>The Choreonoid YAML file format is expected here. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a430f00c0781534e4c8ad00fe6898c59c"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::outputFile" ref="a430f00c0781534e4c8ad00fe6898c59c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00015.html#a430f00c0781534e4c8ad00fe6898c59c">roboptim::retargeting::JointProblemOptions::outputFile</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Final joint trajectory filename. </p>
+<p>This file will be written at the end of the optimization process if it terminates successfully (or with warnings). </p>
+
+</div>
+</div>
+<a class="anchor" id="a5f17a4d5c2984fbb543694182abc422b"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::plugin" ref="a5f17a4d5c2984fbb543694182abc422b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00015.html#a5f17a4d5c2984fbb543694182abc422b">roboptim::retargeting::JointProblemOptions::plugin</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Solver plug-in name. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac6b69e6279ba2303e05cd262556330a3"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::robotModel" ref="ac6b69e6279ba2303e05cd262556330a3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00015.html#ac6b69e6279ba2303e05cd262556330a3">roboptim::retargeting::JointProblemOptions::robotModel</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Robot model to be used. </p>
+<p>The robot model is used to determine the segment length.</p>
+<p>The Choreonoid file format is expected here. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a76e31bc5266482df36bce8794ecdf1a5"></a><!-- doxytag: member="roboptim::retargeting::JointProblemOptions::trajectoryType" ref="a76e31bc5266482df36bce8794ecdf1a5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00015.html#a76e31bc5266482df36bce8794ecdf1a5">roboptim::retargeting::JointProblemOptions::trajectoryType</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>What type of trajectory should be used? </p>
+<p>Possible options are:</p>
+<ul>
+<li>discrete</li>
+<li>spline</li>
+</ul>
+<p>See roboptim-trajectory documentation for details. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>.</p>
 
 </div>
 </div>
@@ -139,7 +246,7 @@ template&lt;class Edge &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -150,8 +257,8 @@ template&lt;class Edge &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00015.html">InteractionMeshGraphEdgeWriter</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00015.html">JointProblemOptions</a>      </li>
 </body>
 </html>

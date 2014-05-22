@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::MinimumJerkTrajectory&lt; T &gt; Class Template Reference</title>
+<title>roboptim::retargeting::MarkerProblemOptions Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,454 +56,185 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::MinimumJerkTrajectory&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::MarkerProblemOptions Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::MinimumJerkTrajectory" --><!-- doxytag: inherits="Trajectory" -->
-<p>Minimum jerk trajectory computation.  
+<!-- doxytag: class="roboptim::retargeting::MarkerProblemOptions" -->
+<p>Marker optimization problem description.  
  <a href="a00025.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/function/minimum-jerk-trajectory.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/marker-problem-builder.hh&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for roboptim::retargeting::MinimumJerkTrajectory&lt; T &gt;:</div>
+Collaboration diagram for roboptim::retargeting::MarkerProblemOptions:</div>
 <div class="dyncontent">
-<div class="center"><img src="a00415.png" border="0" usemap="#roboptim_1_1retargeting_1_1_minimum_jerk_trajectory_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="roboptim_1_1retargeting_1_1_minimum_jerk_trajectory_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_minimum_jerk_trajectory_3_01_t_01_4_inherit__map">
-<area shape="rect" id="node2" href="a00119.html" title="Trajectory\&lt; 3 \&gt;" alt="" coords="111,6,225,37"/></map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for roboptim::retargeting::MinimumJerkTrajectory&lt; T &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="a00416.png" border="0" usemap="#roboptim_1_1retargeting_1_1_minimum_jerk_trajectory_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="roboptim_1_1retargeting_1_1_minimum_jerk_trajectory_3_01_t_01_4_coll__map" id="roboptim_1_1retargeting_1_1_minimum_jerk_trajectory_3_01_t_01_4_coll__map">
-<area shape="rect" id="node2" href="a00119.html" title="Trajectory\&lt; 3 \&gt;" alt="" coords="111,6,225,37"/></map>
+<div class="center"><img src="a00195.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_problem_options_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_problem_options_coll__map" id="roboptim_1_1retargeting_1_1_marker_problem_options_coll__map">
+<area shape="rect" id="node2" title="STL class." alt="" coords="67,89,147,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="23,6,191,37"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00417.html">List of all members.</a></p>
+<p><a href="a00196.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a6b7ce58ce7ca3b4110bed2d336d04b35">ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericTwiceDifferentiableFunction&lt; T &gt;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a4092138ab147f016a303cadd02747e52">ROBOPTIM_IMPLEMENT_CLONE</a> (<a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a82eea02064be112d474b147e2b498e1e">MinimumJerkTrajectory</a> ()  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a89fb978fd0f319c17adca9f526f7b47e">~MinimumJerkTrajectory</a> ()  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a951216cf8ed6bdb365925cf1fefc88f7">setParameters</a> (const vector_t &amp;)  throw ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Store parameters and update coefficients.  <a href="#a951216cf8ed6bdb365925cf1fefc88f7"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a7037749d9390b5c10b2a1f1de59fca6f">impl_compute</a> (result_t &amp;result, double t) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">jacobian_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#aa8bac5500bb611daa08c5230be290b89">variationConfigWrtParam</a> (double t) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">jacobian_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#aa65f04a003cd4be2f2e33f77b03f2a0e">variationDerivWrtParam</a> (double t, size_type order) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">value_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a91a13ac7f3aba518fe9508704638d996">singularPointAtRank</a> (size_type rank) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">vector_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a4a41d733f9142236316e440c0ba296e5">derivBeforeSingularPoint</a> (size_type rank, size_type order) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">vector_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a48ab2d744cd0a207ab0a1b5a6606ebc5">derivAfterSingularPoint</a> (size_type rank, size_type order) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">jacobian_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a8de6bc2a720be8e12f08ab0312f11f6b">variationConfigWrtParam</a> (StableTimePoint tp) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">jacobian_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a12227d6fc0a5eb89b4af938d6dd69e30">variationDerivWrtParam</a> (StableTimePoint tp, size_type order) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a9dba4690fd979200330e3b51178067b2">impl_derivative</a> (gradient_t &amp;derivative, double argument, size_type order=1) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#ae1c8e9ba79a2f572d543a20e5b7a21ae">impl_derivative</a> (gradient_t &amp;g, StableTimePoint, size_type order) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a63c9a290356b2ef7c64c3302846c83f5">resize</a> (interval_t timeRange) const   throw ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a99b6c9ec1b15909d313247bfaf69bcab">markerSet</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Marker set filename.  <a href="#a99b6c9ec1b15909d313247bfaf69bcab"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#ad9f0ed3c5b84c4ada889710f153ff8d3">markersTrajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Markers trajectories.  <a href="#ad9f0ed3c5b84c4ada889710f153ff8d3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a08bb129c06fc2dcfcb76d9cfef865a2c">trajectoryType</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">What type of trajectory should be used?  <a href="#a08bb129c06fc2dcfcb76d9cfef865a2c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#ad7280ae016bf2f4d39e60d9ca53fe8ad">robotModel</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot model to be used.  <a href="#ad7280ae016bf2f4d39e60d9ca53fe8ad"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a791561980005f65c2549c8a5325de0bc">plugin</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Solver plug-in name.  <a href="#a791561980005f65c2549c8a5325de0bc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#afbc516baaf5bac3a47022b64a3c24e80">cost</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Cost function name.  <a href="#afbc516baaf5bac3a47022b64a3c24e80"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#abf2cf9aec422d680dce28bb1f5b4a24a">constraints</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constraints functions names.  <a href="#abf2cf9aec422d680dce28bb1f5b4a24a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00025.html#a5846d813d1e06b57b9ca0407b6545593">outputFile</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Final joint trajectory filename.  <a href="#a5846d813d1e06b57b9ca0407b6545593"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename T&gt;<br/>
-class roboptim::retargeting::MinimumJerkTrajectory&lt; T &gt;</h3>
+<div class="textblock"><p>Marker optimization problem description. </p>
+<p>This structure contains the instruction to build the problem. I.e. which data should be loaded, what strategy should be chosen from resolution, etc. </p>
+</div><hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="abf2cf9aec422d680dce28bb1f5b4a24a"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::constraints" ref="abf2cf9aec422d680dce28bb1f5b4a24a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; <a class="el" href="a00025.html#abf2cf9aec422d680dce28bb1f5b4a24a">roboptim::retargeting::MarkerProblemOptions::constraints</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
-<p>Minimum jerk trajectory computation. </p>
-<p>The curve is parametrized by a vector of four parameters:</p>
+<p>Constraints functions names. </p>
+
+</div>
+</div>
+<a class="anchor" id="afbc516baaf5bac3a47022b64a3c24e80"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::cost" ref="afbc516baaf5bac3a47022b64a3c24e80" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#afbc516baaf5bac3a47022b64a3c24e80">roboptim::retargeting::MarkerProblemOptions::cost</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Cost function name. </p>
+
+</div>
+</div>
+<a class="anchor" id="a99b6c9ec1b15909d313247bfaf69bcab"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::markerSet" ref="a99b6c9ec1b15909d313247bfaf69bcab" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#a99b6c9ec1b15909d313247bfaf69bcab">roboptim::retargeting::MarkerProblemOptions::markerSet</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Marker set filename. </p>
+<p>Any format supported by libmocap is acceptable. e.g. ".mars" Cortex file can be used </p>
+
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad9f0ed3c5b84c4ada889710f153ff8d3"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::markersTrajectory" ref="ad9f0ed3c5b84c4ada889710f153ff8d3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#ad9f0ed3c5b84c4ada889710f153ff8d3">roboptim::retargeting::MarkerProblemOptions::markersTrajectory</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Markers trajectories. </p>
+<p>Markers trajectories which will be used as the initial input of the optimization problem.</p>
+<p>Any format supported by libmocap is acceptable. e.g. ".trc" Cortex file can be used. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5846d813d1e06b57b9ca0407b6545593"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::outputFile" ref="a5846d813d1e06b57b9ca0407b6545593" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#a5846d813d1e06b57b9ca0407b6545593">roboptim::retargeting::MarkerProblemOptions::outputFile</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Final joint trajectory filename. </p>
+<p>This file will be written at the end of the optimization process if it terminates successfully (or with warnings). </p>
+
+</div>
+</div>
+<a class="anchor" id="a791561980005f65c2549c8a5325de0bc"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::plugin" ref="a791561980005f65c2549c8a5325de0bc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#a791561980005f65c2549c8a5325de0bc">roboptim::retargeting::MarkerProblemOptions::plugin</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Solver plug-in name. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad7280ae016bf2f4d39e60d9ca53fe8ad"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::robotModel" ref="ad7280ae016bf2f4d39e60d9ca53fe8ad" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#ad7280ae016bf2f4d39e60d9ca53fe8ad">roboptim::retargeting::MarkerProblemOptions::robotModel</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Robot model to be used. </p>
+<p>The robot model is used to determine the segment length. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a08bb129c06fc2dcfcb76d9cfef865a2c"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemOptions::trajectoryType" ref="a08bb129c06fc2dcfcb76d9cfef865a2c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="a00025.html#a08bb129c06fc2dcfcb76d9cfef865a2c">roboptim::retargeting::MarkerProblemOptions::trajectoryType</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>What type of trajectory should be used? </p>
+<p>Possible options are:</p>
 <ul>
-<li>position start</li>
-<li>position end</li>
-<li>velocity start</li>
-<li>acceleration start</li>
+<li>discrete</li>
+<li>spline</li>
 </ul>
-<p>This class is a partial implementation of a <a class="el" href="a00119.html">Trajectory</a>. Some methods will return a runtime_error if called. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a82eea02064be112d474b147e2b498e1e"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::MinimumJerkTrajectory" ref="a82eea02064be112d474b147e2b498e1e" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html">MinimumJerkTrajectory</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [explicit]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>See roboptim-trajectory documentation for details. </p>
 
-</div>
-</div>
-<a class="anchor" id="a89fb978fd0f319c17adca9f526f7b47e"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::~MinimumJerkTrajectory" ref="a89fb978fd0f319c17adca9f526f7b47e" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::~<a class="el" href="a00025.html">MinimumJerkTrajectory</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a48ab2d744cd0a207ab0a1b5a6606ebc5"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::derivAfterSingularPoint" ref="a48ab2d744cd0a207ab0a1b5a6606ebc5" args="(size_type rank, size_type order) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::vector_t <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a48ab2d744cd0a207ab0a1b5a6606ebc5">derivAfterSingularPoint</a> </td>
-          <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>order</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4a41d733f9142236316e440c0ba296e5"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::derivBeforeSingularPoint" ref="a4a41d733f9142236316e440c0ba296e5" args="(size_type rank, size_type order) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::vector_t <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a4a41d733f9142236316e440c0ba296e5">derivBeforeSingularPoint</a> </td>
-          <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>order</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a7037749d9390b5c10b2a1f1de59fca6f"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::impl_compute" ref="a7037749d9390b5c10b2a1f1de59fca6f" args="(result_t &amp;result, double t) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a7037749d9390b5c10b2a1f1de59fca6f">impl_compute</a> </td>
-          <td>(</td>
-          <td class="paramtype">result_t &amp;&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a9dba4690fd979200330e3b51178067b2"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::impl_derivative" ref="a9dba4690fd979200330e3b51178067b2" args="(gradient_t &amp;derivative, double argument, size_type order=1) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a9dba4690fd979200330e3b51178067b2">impl_derivative</a> </td>
-          <td>(</td>
-          <td class="paramtype">gradient_t &amp;&#160;</td>
-          <td class="paramname"><em>derivative</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>argument</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>order</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae1c8e9ba79a2f572d543a20e5b7a21ae"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::impl_derivative" ref="ae1c8e9ba79a2f572d543a20e5b7a21ae" args="(gradient_t &amp;g, StableTimePoint, size_type order) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a9dba4690fd979200330e3b51178067b2">impl_derivative</a> </td>
-          <td>(</td>
-          <td class="paramtype">gradient_t &amp;&#160;</td>
-          <td class="paramname"><em>g</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">StableTimePoint&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>order</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a63c9a290356b2ef7c64c3302846c83f5"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::resize" ref="a63c9a290356b2ef7c64c3302846c83f5" args="(interval_t timeRange) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt; * <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a63c9a290356b2ef7c64c3302846c83f5">resize</a> </td>
-          <td>(</td>
-          <td class="paramtype">interval_t&#160;</td>
-          <td class="paramname"><em>timeRange</em></td><td>)</td>
-          <td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4092138ab147f016a303cadd02747e52"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::ROBOPTIM_IMPLEMENT_CLONE" ref="a4092138ab147f016a303cadd02747e52" args="(MinimumJerkTrajectory&lt; T &gt;)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a4092138ab147f016a303cadd02747e52">ROBOPTIM_IMPLEMENT_CLONE</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6b7ce58ce7ca3b4110bed2d336d04b35"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a6b7ce58ce7ca3b4110bed2d336d04b35" args="(GenericTwiceDifferentiableFunction&lt; T &gt;)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a6b7ce58ce7ca3b4110bed2d336d04b35">ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
-          <td>(</td>
-          <td class="paramtype">GenericTwiceDifferentiableFunction&lt; T &gt;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a951216cf8ed6bdb365925cf1fefc88f7"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::setParameters" ref="a951216cf8ed6bdb365925cf1fefc88f7" args="(const vector_t &amp;)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a951216cf8ed6bdb365925cf1fefc88f7">setParameters</a> </td>
-          <td>(</td>
-          <td class="paramtype">const vector_t &amp;&#160;</td>
-          <td class="paramname"><em>params</em></td><td>)</td>
-          <td>  throw ()</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Store parameters and update coefficients. </p>
-
-</div>
-</div>
-<a class="anchor" id="a91a13ac7f3aba518fe9508704638d996"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::singularPointAtRank" ref="a91a13ac7f3aba518fe9508704638d996" args="(size_type rank) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::value_type <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#a91a13ac7f3aba518fe9508704638d996">singularPointAtRank</a> </td>
-          <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>rank</em></td><td>)</td>
-          <td> const<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa8bac5500bb611daa08c5230be290b89"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::variationConfigWrtParam" ref="aa8bac5500bb611daa08c5230be290b89" args="(double t) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::jacobian_t <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#aa8bac5500bb611daa08c5230be290b89">variationConfigWrtParam</a> </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
-          <td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a8de6bc2a720be8e12f08ab0312f11f6b"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::variationConfigWrtParam" ref="a8de6bc2a720be8e12f08ab0312f11f6b" args="(StableTimePoint tp) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::jacobian_t <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#aa8bac5500bb611daa08c5230be290b89">variationConfigWrtParam</a> </td>
-          <td>(</td>
-          <td class="paramtype">StableTimePoint&#160;</td>
-          <td class="paramname"><em>tp</em></td><td>)</td>
-          <td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa65f04a003cd4be2f2e33f77b03f2a0e"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::variationDerivWrtParam" ref="aa65f04a003cd4be2f2e33f77b03f2a0e" args="(double t, size_type order) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::jacobian_t <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#aa65f04a003cd4be2f2e33f77b03f2a0e">variationDerivWrtParam</a> </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>order</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a12227d6fc0a5eb89b4af938d6dd69e30"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkTrajectory::variationDerivWrtParam" ref="a12227d6fc0a5eb89b4af938d6dd69e30" args="(StableTimePoint tp, size_type order) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>&lt; T &gt;::jacobian_t <a class="el" href="a00025.html">roboptim::retargeting::MinimumJerkTrajectory</a>&lt; T &gt;::<a class="el" href="a00025.html#aa65f04a003cd4be2f2e33f77b03f2a0e">variationDerivWrtParam</a> </td>
-          <td>(</td>
-          <td class="paramtype">StableTimePoint&#160;</td>
-          <td class="paramname"><em>tp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>order</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
 
 </div>
 </div>
@@ -514,7 +245,7 @@ template&lt;typename T &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -525,8 +256,8 @@ template&lt;typename T &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00025.html">MinimumJerkTrajectory</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00025.html">MarkerProblemOptions</a>      </li>
 </body>
 </html>

@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['ddq',['ddq',['../a00116.html#a3e71506037da07770f1549e52da32150',1,'roboptim::retargeting::Torque']]],
-  ['doexcludeboneedgesfromlaplaciancoordinate',['doExcludeBoneEdgesFromLaplacianCoordinate',['../a00021.html#abb46d1402595a250af2f11d39293084b',1,'roboptim::retargeting::LaplacianDeformationEnergy']]],
-  ['doupdatelaplaciancoordinateconstanteveryframe',['doUpdateLaplacianCoordinateConstantEveryFrame',['../a00021.html#a2a524043ad2cee3eece652228760d56b',1,'roboptim::retargeting::LaplacianDeformationEnergy']]],
-  ['dq',['dq',['../a00116.html#a4b7e1d0564eeb771d07d1e27fc313a16',1,'roboptim::retargeting::Torque']]]
+  ['disabledjoints',['disabledJoints',['../a00015.html#afe8c6e93ea9a34cf687df0ffd3007f41',1,'roboptim::retargeting::JointProblemOptions::disabledJoints()'],['../a00030.html#a2dfe7e86f7cd903d8c2bdb5ebde0eef8',1,'roboptim::retargeting::MarkerToJointProblemOptions::disabledJoints()']]],
+  ['disabledjointsconfiguration',['disabledJointsConfiguration',['../a00011.html#af67773587f6321ca9aee179f928a8bcc',1,'roboptim::retargeting::JointFunctionData::disabledJointsConfiguration()'],['../a00026.html#a7d271293be47bdca084fc9a32d9e44d6',1,'roboptim::retargeting::MarkerToJointFunctionData::disabledJointsConfiguration()']]],
+  ['disabledjointstrajectory',['disabledJointsTrajectory',['../a00011.html#a4962c6ce72d945c55997d77aa64e9433',1,'roboptim::retargeting::JointFunctionData']]]
 ];

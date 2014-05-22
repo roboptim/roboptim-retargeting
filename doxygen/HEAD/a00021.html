@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt; Class Template Reference</title>
+<title>roboptim::retargeting::MarkerFunctionData Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -57,921 +57,163 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::MarkerFunctionData Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::LaplacianDeformationEnergy" -->
-<p>Laplacian Deformation Energy.  
+<!-- doxytag: class="roboptim::retargeting::MarkerFunctionData" -->
+<p>POD structure containing all problems data.  
  <a href="a00021.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/laplacian-deformation-energy.hh&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="a00413.png" border="0" usemap="#roboptim_1_1retargeting_1_1_laplacian_deformation_energy_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<p><code>#include &lt;roboptim/retargeting/problem/marker-function-factory.hh&gt;</code></p>
 
-<p><a href="a00414.html">List of all members.</a></p>
+<p><a href="a00191.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a79ed44a06199738b184901238def1a94">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ae348b2aaedcb8d31fb2c46de97952ed2">LaplacianDeformationEnergy</a> (size_type nDofs)  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a12bfd1f1d9be5888c131692c7afbb1d4">~LaplacianDeformationEnergy</a> ()  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ae9a3c038ceceb375d75644980450309f">LaplacianDeformationEnergy</a> (<a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a> <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">mesh</a>, cnoid::MarkerMotionPtr originalMarkerMotion, cnoid::CharacterPtr character, cnoid::MarkerIMeshPtr markerIMesh, boost::shared_ptr&lt; std::vector&lt; <a class="el" href="a00005.html">CharacterInfo</a> &gt; &gt; <a class="el" href="a00021.html#abfbd0f38b5e41f4fb716790a282db5a9">characterInfos</a>)  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#abc0d0eb88ab3ea7dce921413d8cdc222">~LaplacianDeformationEnergy</a> ()  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ab2c77f591719b836115fd292c7a44aa4">impl_compute</a> (result_t &amp;result, const argument_t &amp;<a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">x</a>) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a99ad1bbbe0529d5323bee327890dd852">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;argument, size_type functionId=0) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">initVariables</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">extractBones</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">initFrame</a> (int frame) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">setLaplacianMatrixOfFrame</a> (cnoid::MarkerIMesh::Frame neighborsList) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">clear</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af5bfa0fd42b4adac85d77001fd9b8f0c">setInteractionMesh</a> (cnoid::MarkerIMeshPtr <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">mesh</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">copySolution</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const cnoid::Vector3 &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a4b615b9c1ba65afc9080c0119a45a15c">orgVertexOfActiveIndex</a> (int activeIndex) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const cnoid::Vector3 &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af67d6b3ff7d8f147266a11a7453ae212">orgVertexOfGlobalIndex</a> (int globalIndex) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a161dec59c69b3961c0277ba700b1371f">nMarkers</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a56782a092f1a13d3d7b6513db714e302">nFrames</a> () const </td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af6b0876d50bc56a435b5bfd437474a62">animatedMesh_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Original mesh.  <a href="#af6b0876d50bc56a435b5bfd437474a62"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a35dadcc105304e9eb5f121b5316ec340">animatedMeshLocal_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Current state of the mesh (during optimization process).  <a href="#a35dadcc105304e9eb5f121b5316ec340"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a281ca341ef31c5cf373700e8cb21fe8f">buffer_</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">cnoid::MarkerMotionPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ab8b2e60d07753b8d63f6756df68a3126">markerMotion_</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak"/>
-&lt; cnoid::MarkerMotionPtr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">morphedMarkerMotions</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">cnoid::MarkerIMeshPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">mesh</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak"/>
-&lt; cnoid::MarkerMotion::Frame &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a887a6e883d265a547c00c630b42df23f">Vi0_frames</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak"/>
-&lt; cnoid::MarkerMotion::Frame &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a62c176c543504baf8903150359e3dd01">Vi_frames</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::map&lt; int, std::set&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a859e9f706bdfa8d1b5bd7cfc33888a31">boneEdgeMap</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af7ad3340a765676885994f1ebe46eab9">m</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7">m3</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a8e27b924dd65117f433637a6fb53f7e9">numAllBones</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; cnoid::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af3c1a7c8b8d04c9510d3f56b9a6ac05c">M</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; cnoid::VectorXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#aafabaea462a9770d5c78a155c5807967">b</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; cnoid::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a6b46a5c739eb92428c4010bb4e9cc4b7">MtM</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ab123f08fb83bd6c0aed1b798e3a33e1c">laplacianWeightPowerHalf</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a2a524043ad2cee3eece652228760d56b">doUpdateLaplacianCoordinateConstantEveryFrame</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a206534bd792882c53585f3dcc57fb75e">firstIter</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a57a9ccbaaa969b0e873398876c4c31ca">isSingleFrameMode</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a1b9b1012e2a9607597b9206774446b61">currentFrame</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">cnoid::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">x</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; std::vector<br class="typebreak"/>
-&lt; <a class="el" href="a00005.html">CharacterInfo</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#abfbd0f38b5e41f4fb716790a282db5a9">characterInfos</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#abb46d1402595a250af2f11d39293084b">doExcludeBoneEdgesFromLaplacianCoordinate</a></td></tr>
-<tr><td colspan="2"><h2><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ab2c77f591719b836115fd292c7a44aa4">impl_compute</a> (result_t &amp;result, const argument_t &amp;<a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">x</a>) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#af0a19628a055c18e9b1cf05fd3331ed0">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;<a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">x</a>, size_type i) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">libmocap::MarkerSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a498613adf3ceb15eec977db1750d836c">markerSet</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">marker set loaded by libmocap  <a href="#a498613adf3ceb15eec977db1750d836c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">libmocap::MarkerTrajectory&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a8a97080b4e7835094620824e550a9fdd">markersTrajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">markers trajectory as loaded by libmocap  <a href="#a8a97080b4e7835094620824e550a9fdd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">cnoid::BodyPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#aef4c49a4e571eaf5bbf0d4e3308dcdac">robotModel</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot model loaded through Choreonoid.  <a href="#aef4c49a4e571eaf5bbf0d4e3308dcdac"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr<br class="typebreak"/>
+&lt; roboptim::Trajectory&lt; 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#ae1a54a5e1b4a9513c24e96d8950acdaf">trajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">RobOptim trajectory.  <a href="#ae1a54a5e1b4a9513c24e96d8950acdaf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr<br class="typebreak"/>
+&lt; DifferentiableFunction &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00021.html#a494adeebe0f9ff02efcb7717a7e79b76">cost</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer to cost function.  <a href="#a494adeebe0f9ff02efcb7717a7e79b76"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename T&gt;<br/>
-class roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;</h3>
-
-<p>Laplacian Deformation Energy. </p>
-<p>Compute that Laplacian Deformation Energy.</p>
-<p>Input: x = [q]</p>
-<p>Output: result = [cost]</p>
-<dl class=""><dt><b>Template Parameters:</b></dt><dd>
-  <table class="">
-    <tr><td class="paramname">T</td><td>Function traits type</td></tr>
-  </table>
-  </dd>
-</dl>
-<p class="formulaDsp">
-<img class="formulaDsp" alt="\[ E_L(V_{i}') = \sum_{j} \| \delta_{j} - L(p_{j}'^{i}) \|^{2} \]" src="form_3.png"/>
-</p>
- </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ae348b2aaedcb8d31fb2c46de97952ed2"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::LaplacianDeformationEnergy" ref="ae348b2aaedcb8d31fb2c46de97952ed2" args="(size_type nDofs)" -->
+<div class="textblock"><p>POD structure containing all problems data. </p>
+<p>This gathers together several information from which functions parameters are set. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a56782a092f1a13d3d7b6513db714e302"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::nFrames" ref="a56782a092f1a13d3d7b6513db714e302" args="() const " -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html">LaplacianDeformationEnergy</a> </td>
-          <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>nDofs</em></td><td>)</td>
-          <td>  throw ()<code> [inline, explicit]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a12bfd1f1d9be5888c131692c7afbb1d4"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::~LaplacianDeformationEnergy" ref="a12bfd1f1d9be5888c131692c7afbb1d4" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::~<a class="el" href="a00021.html">LaplacianDeformationEnergy</a> </td>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00021.html#a56782a092f1a13d3d7b6513db714e302">roboptim::retargeting::MarkerFunctionData::nFrames</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [inline, virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae9a3c038ceceb375d75644980450309f"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::LaplacianDeformationEnergy" ref="ae9a3c038ceceb375d75644980450309f" args="(AnimatedInteractionMeshShPtr_t mesh, cnoid::MarkerMotionPtr originalMarkerMotion, cnoid::CharacterPtr character, cnoid::MarkerIMeshPtr markerIMesh, boost::shared_ptr&lt; std::vector&lt; CharacterInfo &gt; &gt; characterInfos)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html">LaplacianDeformationEnergy</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a>&#160;</td>
-          <td class="paramname"><em>mesh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::MarkerMotionPtr&#160;</td>
-          <td class="paramname"><em>originalMarkerMotion</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::CharacterPtr&#160;</td>
-          <td class="paramname"><em>character</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::MarkerIMeshPtr&#160;</td>
-          <td class="paramname"><em>markerIMesh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; std::vector&lt; <a class="el" href="a00005.html">CharacterInfo</a> &gt; &gt;&#160;</td>
-          <td class="paramname"><em>characterInfos</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>  throw ()<code> [explicit]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abc0d0eb88ab3ea7dce921413d8cdc222"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::~LaplacianDeformationEnergy" ref="abc0d0eb88ab3ea7dce921413d8cdc222" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::~<a class="el" href="a00021.html">LaplacianDeformationEnergy</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aaa7a956e530ad062aeffe481adbe1cb0"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::clear" ref="aaa7a956e530ad062aeffe481adbe1cb0" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">clear</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00021.html#a859e9f706bdfa8d1b5bd7cfc33888a31">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::boneEdgeMap</a>, <a class="el" href="a00021.html#a2a524043ad2cee3eece652228760d56b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::doUpdateLaplacianCoordinateConstantEveryFrame</a>, <a class="el" href="a00021.html#af3c1a7c8b8d04c9510d3f56b9a6ac05c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::M</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, <a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::morphedMarkerMotions</a>, <a class="el" href="a00021.html#a6b46a5c739eb92428c4010bb4e9cc4b7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::MtM</a>, <a class="el" href="a00021.html#a8e27b924dd65117f433637a6fb53f7e9">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::numAllBones</a>, <a class="el" href="a00021.html#a887a6e883d265a547c00c630b42df23f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::Vi0_frames</a>, and <a class="el" href="a00021.html#a62c176c543504baf8903150359e3dd01">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::Vi_frames</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af8c4c8b05635bd850577863295d3548f"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::copySolution" ref="af8c4c8b05635bd850577863295d3548f" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">copySolution</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00021.html#a57a9ccbaaa969b0e873398876c4c31ca">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::isSingleFrameMode</a>, <a class="el" href="a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::m3</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, <a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::morphedMarkerMotions</a>, and <a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::x</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aee247deb42c3a73f8bdbe333e1e4984d"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::extractBones" ref="aee247deb42c3a73f8bdbe333e1e4984d" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">extractBones</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00003.html#a8645c81b4d8f04055871e4291028f121">roboptim::retargeting::Bone::activeVertexIndex1</a>, <a class="el" href="a00003.html#a8ba9f62d6028b0a37a0d4491d152dc91">roboptim::retargeting::Bone::activeVertexIndex2</a>, <a class="el" href="a00021.html#a859e9f706bdfa8d1b5bd7cfc33888a31">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::boneEdgeMap</a>, <a class="el" href="a00005.html#a262c34e4f06e6cf0692260cbf3bf5d9d">roboptim::retargeting::CharacterInfo::bones</a>, <a class="el" href="a00021.html#abfbd0f38b5e41f4fb716790a282db5a9">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::characterInfos</a>, <a class="el" href="a00021.html#abb46d1402595a250af2f11d39293084b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::doExcludeBoneEdgesFromLaplacianCoordinate</a>, <a class="el" href="a00005.html#aa70fecd497cbfa0711082a2c26159503">roboptim::retargeting::CharacterInfo::goal</a>, <a class="el" href="a00003.html#a6bd16c9eb31383777582bfbd70ff5d62">roboptim::retargeting::Bone::goalLength</a>, <a class="el" href="a00003.html#a625a27a09b23654a2af4941850ddd5d1">roboptim::retargeting::Bone::localMarkerIndex1</a>, <a class="el" href="a00003.html#ac66a11de87b00388e997e5a7c5e10b5c">roboptim::retargeting::Bone::localMarkerIndex2</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, <a class="el" href="a00021.html#a8e27b924dd65117f433637a6fb53f7e9">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::numAllBones</a>, and <a class="el" href="a00005.html#aab2820253ab9339e7b88b79dff63d4b0">roboptim::retargeting::CharacterInfo::org</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab2c77f591719b836115fd292c7a44aa4"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::impl_compute" ref="ab2c77f591719b836115fd292c7a44aa4" args="(result_t &amp;result, const argument_t &amp;x) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#ab2c77f591719b836115fd292c7a44aa4">impl_compute</a> </td>
-          <td>(</td>
-          <td class="paramtype">result_t &amp;&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>x</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab2c77f591719b836115fd292c7a44aa4"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::impl_compute" ref="ab2c77f591719b836115fd292c7a44aa4" args="(result_t &amp;result, const argument_t &amp;x) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#ab2c77f591719b836115fd292c7a44aa4">impl_compute</a> </td>
-          <td>(</td>
-          <td class="paramtype">result_t &amp;&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>x</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>ROBOPTIM_DO_NOT_CHECK_ALLOCATION </p>
-
-</div>
-</div>
-<a class="anchor" id="a99ad1bbbe0529d5323bee327890dd852"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::impl_gradient" ref="a99ad1bbbe0529d5323bee327890dd852" args="(gradient_t &amp;gradient, const argument_t &amp;argument, size_type functionId=0) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af0a19628a055c18e9b1cf05fd3331ed0">impl_gradient</a> </td>
-          <td>(</td>
-          <td class="paramtype">gradient_t &amp;&#160;</td>
-          <td class="paramname"><em>gradient</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>argument</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>functionId</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="af0a19628a055c18e9b1cf05fd3331ed0"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::impl_gradient" ref="af0a19628a055c18e9b1cf05fd3331ed0" args="(gradient_t &amp;gradient, const argument_t &amp;x, size_type i) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af0a19628a055c18e9b1cf05fd3331ed0">impl_gradient</a> </td>
-          <td>(</td>
-          <td class="paramtype">gradient_t &amp;&#160;</td>
-          <td class="paramname"><em>gradient</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>i</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>ROBOPTIM_DO_NOT_CHECK_ALLOCATION </p>
-
-</div>
-</div>
-<a class="anchor" id="a8febb043a16409ea8f7b617de4d4222f"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::initFrame" ref="a8febb043a16409ea8f7b617de4d4222f" args="(int frame) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">initFrame</a> </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>frame</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00021.html#a57a9ccbaaa969b0e873398876c4c31ca">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::isSingleFrameMode</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, <a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::morphedMarkerMotions</a>, <a class="el" href="a00021.html#a887a6e883d265a547c00c630b42df23f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::Vi0_frames</a>, and <a class="el" href="a00021.html#a62c176c543504baf8903150359e3dd01">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::Vi_frames</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1231f9e46e98dd49dac81f2e29698a98"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::initVariables" ref="a1231f9e46e98dd49dac81f2e29698a98" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">initVariables</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00021.html#aafabaea462a9770d5c78a155c5807967">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::b</a>, <a class="el" href="a00021.html#a57a9ccbaaa969b0e873398876c4c31ca">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::isSingleFrameMode</a>, <a class="el" href="a00021.html#af3c1a7c8b8d04c9510d3f56b9a6ac05c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::M</a>, <a class="el" href="a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::m3</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, <a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::morphedMarkerMotions</a>, <a class="el" href="a00021.html#a6b46a5c739eb92428c4010bb4e9cc4b7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::MtM</a>, and <a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::x</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4b615b9c1ba65afc9080c0119a45a15c"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::orgVertexOfActiveIndex" ref="a4b615b9c1ba65afc9080c0119a45a15c" args="(int activeIndex) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">const cnoid::Vector3&amp; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a4b615b9c1ba65afc9080c0119a45a15c">orgVertexOfActiveIndex</a> </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>activeIndex</em></td><td>)</td>
           <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="a00021.html#a887a6e883d265a547c00c630b42df23f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::Vi0_frames</a>.</p>
-
-<p>Referenced by <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
+<p>References <a class="el" href="a00021.html#a161dec59c69b3961c0277ba700b1371f">nMarkers()</a>, and <a class="el" href="a00021.html#ae1a54a5e1b4a9513c24e96d8950acdaf">trajectory</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af67d6b3ff7d8f147266a11a7453ae212"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::orgVertexOfGlobalIndex" ref="af67d6b3ff7d8f147266a11a7453ae212" args="(int globalIndex) const " -->
+<a class="anchor" id="a161dec59c69b3961c0277ba700b1371f"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::nMarkers" ref="a161dec59c69b3961c0277ba700b1371f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const cnoid::Vector3&amp; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af67d6b3ff7d8f147266a11a7453ae212">orgVertexOfGlobalIndex</a> </td>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00021.html#a161dec59c69b3961c0277ba700b1371f">roboptim::retargeting::MarkerFunctionData::nMarkers</a> </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>globalIndex</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, and <a class="el" href="a00021.html#a887a6e883d265a547c00c630b42df23f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::Vi0_frames</a>.</p>
+<p>References <a class="el" href="a00021.html#ae1a54a5e1b4a9513c24e96d8950acdaf">trajectory</a>.</p>
 
-<p>Referenced by <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a79ed44a06199738b184901238def1a94"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a79ed44a06199738b184901238def1a94" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a79ed44a06199738b184901238def1a94">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
-          <td>(</td>
-          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="af5bfa0fd42b4adac85d77001fd9b8f0c"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::setInteractionMesh" ref="af5bfa0fd42b4adac85d77001fd9b8f0c" args="(cnoid::MarkerIMeshPtr mesh)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af5bfa0fd42b4adac85d77001fd9b8f0c">setInteractionMesh</a> </td>
-          <td>(</td>
-          <td class="paramtype">cnoid::MarkerIMeshPtr&#160;</td>
-          <td class="paramname"><em>mesh</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00021.html#af7ad3340a765676885994f1ebe46eab9">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::m</a>, <a class="el" href="a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::m3</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, and <a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::morphedMarkerMotions</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae5893ce510852b2a2a809e2b46d38d0b"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::setLaplacianMatrixOfFrame" ref="ae5893ce510852b2a2a809e2b46d38d0b" args="(cnoid::MarkerIMesh::Frame neighborsList) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">setLaplacianMatrixOfFrame</a> </td>
-          <td>(</td>
-          <td class="paramtype">cnoid::MarkerIMesh::Frame&#160;</td>
-          <td class="paramname"><em>neighborsList</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00021.html#aafabaea462a9770d5c78a155c5807967">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::b</a>, <a class="el" href="a00021.html#a859e9f706bdfa8d1b5bd7cfc33888a31">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::boneEdgeMap</a>, <a class="el" href="a00021.html#a1b9b1012e2a9607597b9206774446b61">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::currentFrame</a>, <a class="el" href="a00021.html#ab123f08fb83bd6c0aed1b798e3a33e1c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::laplacianWeightPowerHalf</a>, <a class="el" href="a00021.html#af7ad3340a765676885994f1ebe46eab9">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::m</a>, <a class="el" href="a00021.html#af3c1a7c8b8d04c9510d3f56b9a6ac05c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::M</a>, <a class="el" href="a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::m3</a>, <a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::mesh</a>, <a class="el" href="a00021.html#a6b46a5c739eb92428c4010bb4e9cc4b7">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::MtM</a>, <a class="el" href="a00021.html#a4b615b9c1ba65afc9080c0119a45a15c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::orgVertexOfActiveIndex()</a>, and <a class="el" href="a00021.html#af67d6b3ff7d8f147266a11a7453ae212">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::orgVertexOfGlobalIndex()</a>.</p>
+<p>Referenced by <a class="el" href="a00021.html#a56782a092f1a13d3d7b6513db714e302">nFrames()</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="af6b0876d50bc56a435b5bfd437474a62"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::animatedMesh_" ref="af6b0876d50bc56a435b5bfd437474a62" args="" -->
+<a class="anchor" id="a494adeebe0f9ff02efcb7717a7e79b76"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::cost" ref="a494adeebe0f9ff02efcb7717a7e79b76" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a> <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af6b0876d50bc56a435b5bfd437474a62">animatedMesh_</a></td>
+          <td class="memname">boost::shared_ptr&lt;DifferentiableFunction&gt; <a class="el" href="a00021.html#a494adeebe0f9ff02efcb7717a7e79b76">roboptim::retargeting::MarkerFunctionData::cost</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Original mesh. </p>
+<p>Shared pointer to cost function. </p>
+<p>The oldest part of RobOptim do not rely on shared pointers and therefore we need to store the cost function shared pointer manually to dellocating it. </p>
 
 </div>
 </div>
-<a class="anchor" id="a35dadcc105304e9eb5f121b5316ec340"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::animatedMeshLocal_" ref="a35dadcc105304e9eb5f121b5316ec340" args="" -->
+<a class="anchor" id="a498613adf3ceb15eec977db1750d836c"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::markerSet" ref="a498613adf3ceb15eec977db1750d836c" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a> <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a35dadcc105304e9eb5f121b5316ec340">animatedMeshLocal_</a></td>
+          <td class="memname">libmocap::MarkerSet <a class="el" href="a00021.html#a498613adf3ceb15eec977db1750d836c">roboptim::retargeting::MarkerFunctionData::markerSet</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Current state of the mesh (during optimization process). </p>
+<p>marker set loaded by libmocap </p>
+
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aafabaea462a9770d5c78a155c5807967"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::b" ref="aafabaea462a9770d5c78a155c5807967" args="" -->
+<a class="anchor" id="a8a97080b4e7835094620824e550a9fdd"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::markersTrajectory" ref="a8a97080b4e7835094620824e550a9fdd" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;cnoid::VectorXd&gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#aafabaea462a9770d5c78a155c5807967">b</a><code> [mutable]</code></td>
+          <td class="memname">libmocap::MarkerTrajectory <a class="el" href="a00021.html#a8a97080b4e7835094620824e550a9fdd">roboptim::retargeting::MarkerFunctionData::markersTrajectory</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
+<p>markers trajectory as loaded by libmocap </p>
+
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a859e9f706bdfa8d1b5bd7cfc33888a31"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::boneEdgeMap" ref="a859e9f706bdfa8d1b5bd7cfc33888a31" args="" -->
+<a class="anchor" id="aef4c49a4e571eaf5bbf0d4e3308dcdac"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::robotModel" ref="aef4c49a4e571eaf5bbf0d4e3308dcdac" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;int, std::set&lt;int&gt; &gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a859e9f706bdfa8d1b5bd7cfc33888a31">boneEdgeMap</a><code> [mutable]</code></td>
+          <td class="memname">cnoid::BodyPtr <a class="el" href="a00021.html#aef4c49a4e571eaf5bbf0d4e3308dcdac">roboptim::retargeting::MarkerFunctionData::robotModel</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
+<p>Robot model loaded through Choreonoid. </p>
+<p>Robot model contains the robot description of joints and bodies associated with limits such as joints positions, velocities limits, etc. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a281ca341ef31c5cf373700e8cb21fe8f"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::buffer_" ref="a281ca341ef31c5cf373700e8cb21fe8f" args="" -->
+<a class="anchor" id="ae1a54a5e1b4a9513c24e96d8950acdaf"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionData::trajectory" ref="ae1a54a5e1b4a9513c24e96d8950acdaf" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::VectorXd <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a281ca341ef31c5cf373700e8cb21fe8f">buffer_</a><code> [mutable]</code></td>
+          <td class="memname">boost::shared_ptr&lt;roboptim::Trajectory&lt;3&gt; &gt; <a class="el" href="a00021.html#ae1a54a5e1b4a9513c24e96d8950acdaf">roboptim::retargeting::MarkerFunctionData::trajectory</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="abfbd0f38b5e41f4fb716790a282db5a9"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::characterInfos" ref="abfbd0f38b5e41f4fb716790a282db5a9" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt;std::vector&lt;<a class="el" href="a00005.html">CharacterInfo</a>&gt; &gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#abfbd0f38b5e41f4fb716790a282db5a9">characterInfos</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>RobOptim trajectory. </p>
 
-<p>Referenced by <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1b9b1012e2a9607597b9206774446b61"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::currentFrame" ref="a1b9b1012e2a9607597b9206774446b61" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a1b9b1012e2a9607597b9206774446b61">currentFrame</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="abb46d1402595a250af2f11d39293084b"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::doExcludeBoneEdgesFromLaplacianCoordinate" ref="abb46d1402595a250af2f11d39293084b" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#abb46d1402595a250af2f11d39293084b">doExcludeBoneEdgesFromLaplacianCoordinate</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2a524043ad2cee3eece652228760d56b"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::doUpdateLaplacianCoordinateConstantEveryFrame" ref="a2a524043ad2cee3eece652228760d56b" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a2a524043ad2cee3eece652228760d56b">doUpdateLaplacianCoordinateConstantEveryFrame</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a206534bd792882c53585f3dcc57fb75e"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::firstIter" ref="a206534bd792882c53585f3dcc57fb75e" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a206534bd792882c53585f3dcc57fb75e">firstIter</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a57a9ccbaaa969b0e873398876c4c31ca"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::isSingleFrameMode" ref="a57a9ccbaaa969b0e873398876c4c31ca" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a57a9ccbaaa969b0e873398876c4c31ca">isSingleFrameMode</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::copySolution()</a>, <a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initFrame()</a>, and <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab123f08fb83bd6c0aed1b798e3a33e1c"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::laplacianWeightPowerHalf" ref="ab123f08fb83bd6c0aed1b798e3a33e1c" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">double <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#ab123f08fb83bd6c0aed1b798e3a33e1c">laplacianWeightPowerHalf</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af7ad3340a765676885994f1ebe46eab9"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::m" ref="af7ad3340a765676885994f1ebe46eab9" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af7ad3340a765676885994f1ebe46eab9">m</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#af5bfa0fd42b4adac85d77001fd9b8f0c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setInteractionMesh()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af3c1a7c8b8d04c9510d3f56b9a6ac05c"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::M" ref="af3c1a7c8b8d04c9510d3f56b9a6ac05c" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;cnoid::MatrixXd&gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#af3c1a7c8b8d04c9510d3f56b9a6ac05c">M</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6601d3cf62bad0d55b8c7326aa5254d7"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::m3" ref="a6601d3cf62bad0d55b8c7326aa5254d7" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7">m3</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::copySolution()</a>, <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>, <a class="el" href="a00021.html#af5bfa0fd42b4adac85d77001fd9b8f0c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setInteractionMesh()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab8b2e60d07753b8d63f6756df68a3126"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::markerMotion_" ref="ab8b2e60d07753b8d63f6756df68a3126" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">cnoid::MarkerMotionPtr <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#ab8b2e60d07753b8d63f6756df68a3126">markerMotion_</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a108441e38021477a547e0a017718df54"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::mesh" ref="a108441e38021477a547e0a017718df54" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">cnoid::MarkerIMeshPtr <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a108441e38021477a547e0a017718df54">mesh</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, <a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::copySolution()</a>, <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>, <a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initFrame()</a>, <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>, <a class="el" href="a00021.html#af67d6b3ff7d8f147266a11a7453ae212">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::orgVertexOfGlobalIndex()</a>, <a class="el" href="a00021.html#af5bfa0fd42b4adac85d77001fd9b8f0c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setInteractionMesh()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4c01631e874f71285dac83a58783db07"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::morphedMarkerMotions" ref="a4c01631e874f71285dac83a58783db07" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;cnoid::MarkerMotionPtr&gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a4c01631e874f71285dac83a58783db07">morphedMarkerMotions</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, <a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::copySolution()</a>, <a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initFrame()</a>, <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>, and <a class="el" href="a00021.html#af5bfa0fd42b4adac85d77001fd9b8f0c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setInteractionMesh()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6b46a5c739eb92428c4010bb4e9cc4b7"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::MtM" ref="a6b46a5c739eb92428c4010bb4e9cc4b7" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;cnoid::MatrixXd&gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a6b46a5c739eb92428c4010bb4e9cc4b7">MtM</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>, and <a class="el" href="a00021.html#ae5893ce510852b2a2a809e2b46d38d0b">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::setLaplacianMatrixOfFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8e27b924dd65117f433637a6fb53f7e9"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::numAllBones" ref="a8e27b924dd65117f433637a6fb53f7e9" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a8e27b924dd65117f433637a6fb53f7e9">numAllBones</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, and <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a887a6e883d265a547c00c630b42df23f"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::Vi0_frames" ref="a887a6e883d265a547c00c630b42df23f" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;cnoid::MarkerMotion::Frame&gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a887a6e883d265a547c00c630b42df23f">Vi0_frames</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, <a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initFrame()</a>, <a class="el" href="a00021.html#a4b615b9c1ba65afc9080c0119a45a15c">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::orgVertexOfActiveIndex()</a>, and <a class="el" href="a00021.html#af67d6b3ff7d8f147266a11a7453ae212">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::orgVertexOfGlobalIndex()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a62c176c543504baf8903150359e3dd01"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::Vi_frames" ref="a62c176c543504baf8903150359e3dd01" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;cnoid::MarkerMotion::Frame&gt; <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a62c176c543504baf8903150359e3dd01">Vi_frames</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#aaa7a956e530ad062aeffe481adbe1cb0">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::clear()</a>, and <a class="el" href="a00021.html#a8febb043a16409ea8f7b617de4d4222f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initFrame()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4f36eb3f472bb66cc1403e3793440291"></a><!-- doxytag: member="roboptim::retargeting::LaplacianDeformationEnergy::x" ref="a4f36eb3f472bb66cc1403e3793440291" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">cnoid::VectorXd <a class="el" href="a00021.html">roboptim::retargeting::LaplacianDeformationEnergy</a>&lt; T &gt;::<a class="el" href="a00021.html#a4f36eb3f472bb66cc1403e3793440291">x</a><code> [mutable]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00021.html#af8c4c8b05635bd850577863295d3548f">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::copySolution()</a>, and <a class="el" href="a00021.html#a1231f9e46e98dd49dac81f2e29698a98">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::initVariables()</a>.</p>
+<p>Referenced by <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>, <a class="el" href="a00021.html#a56782a092f1a13d3d7b6513db714e302">nFrames()</a>, <a class="el" href="a00021.html#a161dec59c69b3961c0277ba700b1371f">nMarkers()</a>, and <a class="el" href="a00078.html#a4e68220601f5f37fd8b2ce0d0dadeefb">roboptim::retargeting::detail::null()</a>.</p>
 
 </div>
 </div>
@@ -982,7 +224,7 @@ template&lt;typename T &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -993,8 +235,8 @@ template&lt;typename T &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00021.html">LaplacianDeformationEnergy</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00021.html">MarkerFunctionData</a>      </li>
 </body>
 </html>

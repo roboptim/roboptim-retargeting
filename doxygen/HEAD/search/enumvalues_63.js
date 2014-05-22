@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['cheek_5fp_5flink',['CHEEK_P_LINK',['../a00013.html#a557367f3756a434d53a5bb43dc9b0dc1ab53961dfbae16338cadd69bdc94cff19',1,'metapod::hrp4g2']]],
-  ['chest_5fp_5flink',['CHEST_P_LINK',['../a00013.html#a557367f3756a434d53a5bb43dc9b0dc1a74dab684d9d133409dce2e5d1cfb4109',1,'metapod::hrp4g2']]],
-  ['chest_5fr_5flink',['CHEST_R_LINK',['../a00013.html#a557367f3756a434d53a5bb43dc9b0dc1a76bde28bb8e41a8ca395e3e5c668527c',1,'metapod::hrp4g2']]],
-  ['chest_5fy_5flink',['CHEST_Y_LINK',['../a00013.html#a557367f3756a434d53a5bb43dc9b0dc1a5410b40cbe76b7469577bcd262de3b9d',1,'metapod::hrp4g2']]]
+  ['constraint_5ftype_5fonce',['CONSTRAINT_TYPE_ONCE',['../a00004.html#abd6461e2e45b026268588f9db4ff827ba29a68263e9b55348f5e2a228bdabae9e',1,'roboptim::retargeting::Constraint']]],
+  ['constraint_5ftype_5fper_5fframe',['CONSTRAINT_TYPE_PER_FRAME',['../a00004.html#abd6461e2e45b026268588f9db4ff827ba01ac9d9e42d05ea352e0a1df50f43bd3',1,'roboptim::retargeting::Constraint']]]
 ];

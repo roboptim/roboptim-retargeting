@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>metapod::hrp4g2::Node1 Class Reference</title>
+<title>roboptim::retargeting::MarkerToJointFunctionFactory Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,80 +56,86 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">metapod::hrp4g2::Node1 Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::MarkerToJointFunctionFactory Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="metapod::hrp4g2::Node1" -->
-<p><code>#include &lt;model/hrp4g2.hh&gt;</code></p>
+<!-- doxytag: class="roboptim::retargeting::MarkerToJointFunctionFactory" --><!-- doxytag: inherits="roboptim::retargeting::FunctionFactory" -->
+<p>Creates functions from their name for joint-joint optimization.  
+ <a href="a00027.html#details">More...</a></p>
+
+<p><code>#include &lt;roboptim/retargeting/problem/marker-to-joint-function-factory.hh&gt;</code></p>
 <div class="dynheader">
-Collaboration diagram for metapod::hrp4g2::Node1:</div>
+Inheritance diagram for roboptim::retargeting::MarkerToJointFunctionFactory:</div>
 <div class="dyncontent">
-<div class="center"><img src="a00259.png" border="0" usemap="#metapod_1_1hrp4g2_1_1_node1_coll__map" alt="Collaboration graph"/></div>
-<map name="metapod_1_1hrp4g2_1_1_node1_coll__map" id="metapod_1_1hrp4g2_1_1_node1_coll__map">
-<area shape="rect" id="node2" title="STL class." alt="" coords="51,89,131,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="7,6,175,37"/></map>
+<div class="center"><img src="a00202.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_to_joint_function_factory_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_to_joint_function_factory_inherit__map" id="roboptim_1_1retargeting_1_1_marker_to_joint_function_factory_inherit__map">
+<area shape="rect" id="node2" href="a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="49,6,295,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::MarkerToJointFunctionFactory:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00203.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_to_joint_function_factory_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_to_joint_function_factory_coll__map" id="roboptim_1_1retargeting_1_1_marker_to_joint_function_factory_coll__map">
+<area shape="rect" id="node2" href="a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="49,6,295,37"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00260.html">List of all members.</a></p>
+<p><a href="a00204.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef RevoluteAxisAnyJoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a4b5b52bbf152f3c926b543cced8921eb">Joint</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a11974a1076119034b9fb9d246a2932e8">Node1</a> ()</td></tr>
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::rm_mul_op<br class="typebreak"/>
-&lt; Spatial::RotationMatrix, <br class="typebreak"/>
-Spatial::RotationMatrixIdentity &gt;<br class="typebreak"/>
-::rm &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a89bfd323df152f2c9205d0ea1c933b7d">sXp</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; FloatType, <br class="typebreak"/>
-6, Joint::NBDOF &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a23905626fc7c2ab07d25b8cbf0d3cdcd">joint_F</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00027.html#a4b5b52bbf152f3c926b543cced8921eb">Joint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#af3b03037809021f5303e94e65986ace9">joint</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Body&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a7cfb16c6b8e728b64e9be6b40c464bde">body</a></td></tr>
-<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#aac4fccb4b41845b8e3fee9167cf56bff">id</a> = 1</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#ab19b3814a8451d9c580919b028d4dede">joint_name</a> = std::string(&quot;CHEST_R&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a80aa9591a9d4bb8298ce736b80650e0c">body_name</a> = std::string(&quot;CHEST_R_LINK&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const <br class="typebreak"/>
-Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::RotationMatrixIdentity &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a78ec14c4ce8e7fed54f11c7901be29eb">Xt</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a4bae46113743f1bca3d0b370413ee328">q_idx</a> = 1</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a1fce33250c2fbdc4c884827a5ff3175c">parent_id</a> = 0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a22b7c0a00d27d9dc3d0532865123c46b">child0_id</a> = 2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a37812f44a92a2f73604f20bb6c346096">child1_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a464ff66b66e9d1a95a35110f4472ca63">child2_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a5ca41b8a501c548851d7e679e1d66b02">child3_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#aca042616becb1fadabc43782c9a9fe46">child4_id</a> = -2</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00027.html#ac6320fc93d2d75669d49e53f3503f92f">buildFunction</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate a function from its name.  <a href="#ac6320fc93d2d75669d49e53f3503f92f"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="a00004.html">Constraint</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">buildConstraint</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate a constraint from its name.  <a href="#a831d26d8091f58ed733322a82a1fcef6"></a><br/></td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a8277687af9a96dfb8f55b08123e854cf">MarkerToJointFunctionFactory</a> (const <a class="el" href="a00026.html">MarkerToJointFunctionData</a> &amp;data)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor and Destructor.  <a href="#a8277687af9a96dfb8f55b08123e854cf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#abfb29af04d38707df31f9c417b8d0a53">~MarkerToJointFunctionFactory</a> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00027.html#a044887a609c7647fee1f6acc6e8c5534">listFunctions</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">List supported functions.  <a href="#a044887a609c7647fee1f6acc6e8c5534"></a><br/></td></tr>
 </table>
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a4b5b52bbf152f3c926b543cced8921eb"></a><!-- doxytag: member="metapod::hrp4g2::Node1::Joint" ref="a4b5b52bbf152f3c926b543cced8921eb" args="" -->
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Creates functions from their name for joint-joint optimization. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a8277687af9a96dfb8f55b08123e854cf"></a><!-- doxytag: member="roboptim::retargeting::MarkerToJointFunctionFactory::MarkerToJointFunctionFactory" ref="a8277687af9a96dfb8f55b08123e854cf" args="(const MarkerToJointFunctionData &amp;data)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef RevoluteAxisAnyJoint <a class="el" href="a00027.html#a4b5b52bbf152f3c926b543cced8921eb">metapod::hrp4g2::Node1::Joint</a></td>
+          <td class="memname"><a class="el" href="a00027.html#a8277687af9a96dfb8f55b08123e854cf">roboptim::retargeting::MarkerToJointFunctionFactory::MarkerToJointFunctionFactory</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="a00026.html">MarkerToJointFunctionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Constructor and Destructor. </p>
+<p>Constructor</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>problem data (trajectories, etc.) </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a11974a1076119034b9fb9d246a2932e8"></a><!-- doxytag: member="metapod::hrp4g2::Node1::Node1" ref="a11974a1076119034b9fb9d246a2932e8" args="()" -->
+<a class="anchor" id="abfb29af04d38707df31f9c417b8d0a53"></a><!-- doxytag: member="roboptim::retargeting::MarkerToJointFunctionFactory::~MarkerToJointFunctionFactory" ref="abfb29af04d38707df31f9c417b8d0a53" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00027.html#a11974a1076119034b9fb9d246a2932e8">metapod::hrp4g2::Node1::Node1</a> </td>
+          <td class="memname"><a class="el" href="a00027.html#abfb29af04d38707df31f9c417b8d0a53">roboptim::retargeting::MarkerToJointFunctionFactory::~MarkerToJointFunctionFactory</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -140,203 +146,104 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a7cfb16c6b8e728b64e9be6b40c464bde"></a><!-- doxytag: member="metapod::hrp4g2::Node1::body" ref="a7cfb16c6b8e728b64e9be6b40c464bde" args="" -->
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a831d26d8091f58ed733322a82a1fcef6"></a><!-- doxytag: member="roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint" ref="a831d26d8091f58ed733322a82a1fcef6" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Body <a class="el" href="a00027.html#a7cfb16c6b8e728b64e9be6b40c464bde">metapod::hrp4g2::Node1::body</a></td>
+          <td class="memname"><a class="el" href="a00004.html">Constraint</a>&lt; T &gt; <a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Instantiate a constraint from its name. </p>
+<p>This method creates a constraint object from the constraint name.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>newly created constraint object </dd></dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function type (e.g. DifferentiableFunction) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="a00026.html#a7d271293be47bdca084fc9a32d9e44d6">roboptim::retargeting::MarkerToJointFunctionData::disabledJointsConfiguration</a>, <a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">roboptim::retargeting::Constraint&lt; T &gt;::function</a>, <a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">roboptim::retargeting::Constraint&lt; T &gt;::intervals</a>, <a class="el" href="a00026.html#ae4d0f8e02d99d275e7561dc36132d8b0">roboptim::retargeting::MarkerToJointFunctionData::nDofsFull()</a>, <a class="el" href="a00026.html#a4fac51435588425e3a4f19dc6dac1adc">roboptim::retargeting::MarkerToJointFunctionData::robotModel</a>, <a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">roboptim::retargeting::Constraint&lt; T &gt;::scales</a>, <a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">roboptim::retargeting::Constraint&lt; T &gt;::stateFunctionOrder</a>, and <a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">roboptim::retargeting::Constraint&lt; T &gt;::type</a>.</p>
+
+<p>Referenced by <a class="el" href="a00029.html#a698add03671cb1e332c926087a1e07e8">roboptim::retargeting::MarkerToJointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a80aa9591a9d4bb8298ce736b80650e0c"></a><!-- doxytag: member="metapod::hrp4g2::Node1::body_name" ref="a80aa9591a9d4bb8298ce736b80650e0c" args="" -->
+<a class="anchor" id="ac6320fc93d2d75669d49e53f3503f92f"></a><!-- doxytag: member="roboptim::retargeting::MarkerToJointFunctionFactory::buildFunction" ref="ac6320fc93d2d75669d49e53f3503f92f" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const std::string <a class="el" href="a00027.html#a80aa9591a9d4bb8298ce736b80650e0c">metapod::hrp4g2::Node1::body_name</a> = std::string(&quot;CHEST_R_LINK&quot;)<code> [static]</code></td>
+          <td class="memname">boost::shared_ptr&lt; T &gt; <a class="el" href="a00027.html#ac6320fc93d2d75669d49e53f3503f92f">roboptim::retargeting::MarkerToJointFunctionFactory::buildFunction</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Instantiate a function from its name. </p>
+<p>This method creates a function (cost or constraint) from its name.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>shared pointer to the newly created function </dd></dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function type (e.g. DifferentiableFunction) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="a00020.html#a1d9b8252c4813335ee0ca70ab091d0c1">roboptim::retargeting::detail::MarkerToJointFunctionFactoryMapping&lt; T &gt;::Mapping::factory</a>, and <a class="el" href="a00020.html#acd8301924e9ee314f7aa6e65f1963121">roboptim::retargeting::detail::MarkerToJointFunctionFactoryMapping&lt; T &gt;::Mapping::name</a>.</p>
+
+<p>Referenced by <a class="el" href="a00029.html#a698add03671cb1e332c926087a1e07e8">roboptim::retargeting::MarkerToJointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a22b7c0a00d27d9dc3d0532865123c46b"></a><!-- doxytag: member="metapod::hrp4g2::Node1::child0_id" ref="a22b7c0a00d27d9dc3d0532865123c46b" args="" -->
+<a class="anchor" id="a044887a609c7647fee1f6acc6e8c5534"></a><!-- doxytag: member="roboptim::retargeting::MarkerToJointFunctionFactory::listFunctions" ref="a044887a609c7647fee1f6acc6e8c5534" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#a22b7c0a00d27d9dc3d0532865123c46b">metapod::hrp4g2::Node1::child0_id</a> = 2<code> [static]</code></td>
+          <td class="memname">std::vector&lt; std::string &gt; <a class="el" href="a00027.html#a044887a609c7647fee1f6acc6e8c5534">roboptim::retargeting::MarkerToJointFunctionFactory::listFunctions</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a37812f44a92a2f73604f20bb6c346096"></a><!-- doxytag: member="metapod::hrp4g2::Node1::child1_id" ref="a37812f44a92a2f73604f20bb6c346096" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#a37812f44a92a2f73604f20bb6c346096">metapod::hrp4g2::Node1::child1_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>List supported functions. </p>
+<p>Each element of this string can be passed to buildFunction method to create the corresponding function. </p>
 
-</div>
-</div>
-<a class="anchor" id="a464ff66b66e9d1a95a35110f4472ca63"></a><!-- doxytag: member="metapod::hrp4g2::Node1::child2_id" ref="a464ff66b66e9d1a95a35110f4472ca63" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#a464ff66b66e9d1a95a35110f4472ca63">metapod::hrp4g2::Node1::child2_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>References <a class="el" href="a00020.html#acd8301924e9ee314f7aa6e65f1963121">roboptim::retargeting::detail::MarkerToJointFunctionFactoryMapping&lt; T &gt;::Mapping::name</a>.</p>
 
-</div>
-</div>
-<a class="anchor" id="a5ca41b8a501c548851d7e679e1d66b02"></a><!-- doxytag: member="metapod::hrp4g2::Node1::child3_id" ref="a5ca41b8a501c548851d7e679e1d66b02" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#a5ca41b8a501c548851d7e679e1d66b02">metapod::hrp4g2::Node1::child3_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aca042616becb1fadabc43782c9a9fe46"></a><!-- doxytag: member="metapod::hrp4g2::Node1::child4_id" ref="aca042616becb1fadabc43782c9a9fe46" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#aca042616becb1fadabc43782c9a9fe46">metapod::hrp4g2::Node1::child4_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aac4fccb4b41845b8e3fee9167cf56bff"></a><!-- doxytag: member="metapod::hrp4g2::Node1::id" ref="aac4fccb4b41845b8e3fee9167cf56bff" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#aac4fccb4b41845b8e3fee9167cf56bff">metapod::hrp4g2::Node1::id</a> = 1<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="af3b03037809021f5303e94e65986ace9"></a><!-- doxytag: member="metapod::hrp4g2::Node1::joint" ref="af3b03037809021f5303e94e65986ace9" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00027.html#a4b5b52bbf152f3c926b543cced8921eb">Joint</a> <a class="el" href="a00027.html#af3b03037809021f5303e94e65986ace9">metapod::hrp4g2::Node1::joint</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a23905626fc7c2ab07d25b8cbf0d3cdcd"></a><!-- doxytag: member="metapod::hrp4g2::Node1::joint_F" ref="a23905626fc7c2ab07d25b8cbf0d3cdcd" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::Matrix&lt;FloatType, 6, Joint::NBDOF&gt; <a class="el" href="a00027.html#a23905626fc7c2ab07d25b8cbf0d3cdcd">metapod::hrp4g2::Node1::joint_F</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab19b3814a8451d9c580919b028d4dede"></a><!-- doxytag: member="metapod::hrp4g2::Node1::joint_name" ref="ab19b3814a8451d9c580919b028d4dede" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="a00027.html#ab19b3814a8451d9c580919b028d4dede">metapod::hrp4g2::Node1::joint_name</a> = std::string(&quot;CHEST_R&quot;)<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a1fce33250c2fbdc4c884827a5ff3175c"></a><!-- doxytag: member="metapod::hrp4g2::Node1::parent_id" ref="a1fce33250c2fbdc4c884827a5ff3175c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#a1fce33250c2fbdc4c884827a5ff3175c">metapod::hrp4g2::Node1::parent_id</a> = 0<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4bae46113743f1bca3d0b370413ee328"></a><!-- doxytag: member="metapod::hrp4g2::Node1::q_idx" ref="a4bae46113743f1bca3d0b370413ee328" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00027.html#a4bae46113743f1bca3d0b370413ee328">metapod::hrp4g2::Node1::q_idx</a> = 1<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a89bfd323df152f2c9205d0ea1c933b7d"></a><!-- doxytag: member="metapod::hrp4g2::Node1::sXp" ref="a89bfd323df152f2c9205d0ea1c933b7d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Spatial::TransformT&lt;Spatial::rm_mul_op&lt;Spatial::RotationMatrix, Spatial::RotationMatrixIdentity&gt;::rm&gt; <a class="el" href="a00027.html#a89bfd323df152f2c9205d0ea1c933b7d">metapod::hrp4g2::Node1::sXp</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a78ec14c4ce8e7fed54f11c7901be29eb"></a><!-- doxytag: member="metapod::hrp4g2::Node1::Xt" ref="a78ec14c4ce8e7fed54f11c7901be29eb" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const Spatial::TransformT&lt; Spatial::RotationMatrixIdentity &gt; <a class="el" href="a00027.html#a78ec14c4ce8e7fed54f11c7901be29eb">metapod::hrp4g2::Node1::Xt</a><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment"> Spatial::TransformT&lt;Spatial::RotationMatrixIdentity&gt;(
-    Spatial::RotationMatrixIdentity(),
-    Vector3d(0, 0, 0))
-</pre></div>
 </div>
 </div>
 </div><!-- contents -->
@@ -346,7 +253,7 @@ Spatial::TransformT<br class="typebreak"/>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -357,8 +264,8 @@ Spatial::TransformT<br class="typebreak"/>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00171.html">metapod</a>      </li>
-      <li class="navelem"><a class="el" href="a00013.html">hrp4g2</a>      </li>
-      <li class="navelem"><a class="el" href="a00027.html">Node1</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00027.html">MarkerToJointFunctionFactory</a>      </li>
 </body>
 </html>

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['differentiablefunctionshptr_5ft',['DifferentiableFunctionShPtr_t',['../a00018.html#a87ddea7972a76366735ed7882179dd9e',1,'roboptim::retargeting::problem::Joint::DifferentiableFunctionShPtr_t()'],['../a00022.html#abf779f6b16b477034608b24ec4ab8902',1,'roboptim::retargeting::problem::Marker::DifferentiableFunctionShPtr_t()'],['../a00023.html#ae398cfbbc8b445037ce4f01c0b202daf',1,'roboptim::retargeting::problem::MinimumJerk::DifferentiableFunctionShPtr_t()']]],
-  ['discreteinterval_5ft',['discreteInterval_t',['../a00007.html#a083273964074f2781aaa9234ab479eed',1,'roboptim::retargeting::CostReferenceTrajectory::discreteInterval_t()'],['../a00024.html#ae1fda91413e87b17c116c3e99eff1eb3',1,'roboptim::retargeting::MinimumJerkOptimizationLogger::discreteInterval_t()']]]
+  ['denseproblem_5ft',['denseProblem_t',['../a00077.html#ab3b7863cbf566955291c6d25ba6278ae',1,'roboptim::retargeting']]],
+  ['differentiablefunctionshptr_5ft',['DifferentiableFunctionShPtr_t',['../a00001.html#a47f6bbc2f0c747e4daf0a2d889fc444a',1,'roboptim::retargeting::BodyLaplacianDeformationEnergyChoreonoid']]],
+  ['differentiablefunctionsshptr_5ft',['DifferentiableFunctionsShPtr_t',['../a00001.html#aeb9decb2102e96294c70484ee1c50d71',1,'roboptim::retargeting::BodyLaplacianDeformationEnergyChoreonoid']]],
+  ['discreteinterval_5ft',['discreteInterval_t',['../a00005.html#a083273964074f2781aaa9234ab479eed',1,'roboptim::retargeting::CostReferenceTrajectory']]]
 ];

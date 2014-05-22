@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>metapod::hrp4g2::Node14 Class Reference</title>
+<title>roboptim::retargeting::ProblemBuilder&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,83 +56,57 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">metapod::hrp4g2::Node14 Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::ProblemBuilder&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="metapod::hrp4g2::Node14" -->
-<p><code>#include &lt;model/hrp4g2.hh&gt;</code></p>
+<!-- doxytag: class="roboptim::retargeting::ProblemBuilder" -->
+<p>Abstract Base Class for problem builders.  
+ <a href="a00032.html#details">More...</a></p>
+
+<p><code>#include &lt;roboptim/retargeting/problem/problem-builder.hh&gt;</code></p>
 <div class="dynheader">
-Collaboration diagram for metapod::hrp4g2::Node14:</div>
+Inheritance diagram for roboptim::retargeting::ProblemBuilder&lt; T &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="a00269.png" border="0" usemap="#metapod_1_1hrp4g2_1_1_node14_coll__map" alt="Collaboration graph"/></div>
-<map name="metapod_1_1hrp4g2_1_1_node14_coll__map" id="metapod_1_1hrp4g2_1_1_node14_coll__map">
-<area shape="rect" id="node2" title="STL class." alt="" coords="55,89,135,119"/><area shape="rect" id="node4" title="STL class." alt="" coords="11,6,179,37"/></map>
+<div class="center"><img src="a00210.png" border="0" usemap="#roboptim_1_1retargeting_1_1_problem_builder_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_problem_builder_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_problem_builder_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node3" href="a00014.html" title="Build a joint retargeting problem." alt="" coords="364,5,671,35"/><area shape="rect" id="node5" href="a00024.html" title="Build a marker retargeting problem." alt="" coords="357,58,677,89"/><area shape="rect" id="node7" href="a00029.html" title="Build a joint retargeting problem." alt="" coords="335,111,700,142"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00270.html">List of all members.</a></p>
+<p><a href="a00211.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef RevoluteAxisAnyJoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a9edfc7a838346e559a10742704c785f3">Joint</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#aff61dcd4719cb0a1654bea44a9a3a289">Node14</a> ()</td></tr>
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::rm_mul_op<br class="typebreak"/>
-&lt; Spatial::RotationMatrix, <br class="typebreak"/>
-Spatial::RotationMatrixIdentity &gt;<br class="typebreak"/>
-::rm &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a16566a2b065cbda3c809d266b3e4e3e4">sXp</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; FloatType, <br class="typebreak"/>
-6, Joint::NBDOF &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a95e8d5526bc1c9b285fa32da21b0eac0">joint_F</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00032.html#a9edfc7a838346e559a10742704c785f3">Joint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#ad40089c16e5ac7fb7d6e77b5ba526ad5">joint</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">Body&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a554bc2d80eb0f3d325e690f9d44a1a55">body</a></td></tr>
-<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a54a83d0e7fd67488172289efcb1c52e4">id</a> = 14</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a27595e90ff9541d0aff178f480e73b17">joint_name</a> = std::string(&quot;EYEBROW_P&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a35b7f627b7ceec79489d04739431533d">body_name</a> = std::string(&quot;EYEBROW_P_LINK&quot;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const <br class="typebreak"/>
-Spatial::TransformT<br class="typebreak"/>
-&lt; Spatial::RotationMatrixIdentity &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a588c6dfa542b03465eb50ebc11250be4">Xt</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a815c96662ef6967735e941f0c9923a08">q_idx</a> = 14</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a025fd0efb0e5b89ceab2c0ef1d3d682e">parent_id</a> = 13</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a7fedf87a2e2f2ccbcb96ef0776a20ed4">child0_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a2a69b699cd30039483a3c94a3f776b6e">child1_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a2a1ee58e41cc5e26f76098c93a608b9c">child2_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a484e575349dbb9d68f0a4eca88bc8d6d">child3_id</a> = -2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#af350dfc1e97f1150e0c277b9494a3849">child4_id</a> = -2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a73dc64af687641673239a8efb8250c93">ProblemBuilder</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00032.html#a63a7b08832bff7b347b1a9614563e62d">~ProblemBuilder</a> ()</td></tr>
 </table>
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a9edfc7a838346e559a10742704c785f3"></a><!-- doxytag: member="metapod::hrp4g2::Node14::Joint" ref="a9edfc7a838346e559a10742704c785f3" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef RevoluteAxisAnyJoint <a class="el" href="a00032.html#a9edfc7a838346e559a10742704c785f3">metapod::hrp4g2::Node14::Joint</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::ProblemBuilder&lt; T &gt;</h3>
 
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aff61dcd4719cb0a1654bea44a9a3a289"></a><!-- doxytag: member="metapod::hrp4g2::Node14::Node14" ref="aff61dcd4719cb0a1654bea44a9a3a289" args="()" -->
+<p>Abstract Base Class for problem builders. </p>
+<p>A problem builder is a class builder a RobOptim problem.</p>
+<p>It takes as input strings describing which cost function to use, which constraints should be enabled, what trajectory representation should be chosen, etc.</p>
+<p>Once the problem is built, it can be retrieved using the operator ().</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>problem type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a73dc64af687641673239a8efb8250c93"></a><!-- doxytag: member="roboptim::retargeting::ProblemBuilder::ProblemBuilder" ref="a73dc64af687641673239a8efb8250c93" args="()" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00032.html#aff61dcd4719cb0a1654bea44a9a3a289">metapod::hrp4g2::Node14::Node14</a> </td>
+          <td class="memname"><a class="el" href="a00032.html">roboptim::retargeting::ProblemBuilder</a>&lt; T &gt;::<a class="el" href="a00032.html">ProblemBuilder</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -140,203 +114,22 @@ Spatial::TransformT<br class="typebreak"/>
 
 </div>
 </div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a554bc2d80eb0f3d325e690f9d44a1a55"></a><!-- doxytag: member="metapod::hrp4g2::Node14::body" ref="a554bc2d80eb0f3d325e690f9d44a1a55" args="" -->
+<a class="anchor" id="a63a7b08832bff7b347b1a9614563e62d"></a><!-- doxytag: member="roboptim::retargeting::ProblemBuilder::~ProblemBuilder" ref="a63a7b08832bff7b347b1a9614563e62d" args="()" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Body <a class="el" href="a00032.html#a554bc2d80eb0f3d325e690f9d44a1a55">metapod::hrp4g2::Node14::body</a></td>
+          <td class="memname">virtual <a class="el" href="a00032.html">roboptim::retargeting::ProblemBuilder</a>&lt; T &gt;::~<a class="el" href="a00032.html">ProblemBuilder</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a35b7f627b7ceec79489d04739431533d"></a><!-- doxytag: member="metapod::hrp4g2::Node14::body_name" ref="a35b7f627b7ceec79489d04739431533d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="a00032.html#a35b7f627b7ceec79489d04739431533d">metapod::hrp4g2::Node14::body_name</a> = std::string(&quot;EYEBROW_P_LINK&quot;)<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a7fedf87a2e2f2ccbcb96ef0776a20ed4"></a><!-- doxytag: member="metapod::hrp4g2::Node14::child0_id" ref="a7fedf87a2e2f2ccbcb96ef0776a20ed4" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a7fedf87a2e2f2ccbcb96ef0776a20ed4">metapod::hrp4g2::Node14::child0_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a2a69b699cd30039483a3c94a3f776b6e"></a><!-- doxytag: member="metapod::hrp4g2::Node14::child1_id" ref="a2a69b699cd30039483a3c94a3f776b6e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a2a69b699cd30039483a3c94a3f776b6e">metapod::hrp4g2::Node14::child1_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a2a1ee58e41cc5e26f76098c93a608b9c"></a><!-- doxytag: member="metapod::hrp4g2::Node14::child2_id" ref="a2a1ee58e41cc5e26f76098c93a608b9c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a2a1ee58e41cc5e26f76098c93a608b9c">metapod::hrp4g2::Node14::child2_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a484e575349dbb9d68f0a4eca88bc8d6d"></a><!-- doxytag: member="metapod::hrp4g2::Node14::child3_id" ref="a484e575349dbb9d68f0a4eca88bc8d6d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a484e575349dbb9d68f0a4eca88bc8d6d">metapod::hrp4g2::Node14::child3_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="af350dfc1e97f1150e0c277b9494a3849"></a><!-- doxytag: member="metapod::hrp4g2::Node14::child4_id" ref="af350dfc1e97f1150e0c277b9494a3849" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#af350dfc1e97f1150e0c277b9494a3849">metapod::hrp4g2::Node14::child4_id</a> = -2<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a54a83d0e7fd67488172289efcb1c52e4"></a><!-- doxytag: member="metapod::hrp4g2::Node14::id" ref="a54a83d0e7fd67488172289efcb1c52e4" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a54a83d0e7fd67488172289efcb1c52e4">metapod::hrp4g2::Node14::id</a> = 14<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ad40089c16e5ac7fb7d6e77b5ba526ad5"></a><!-- doxytag: member="metapod::hrp4g2::Node14::joint" ref="ad40089c16e5ac7fb7d6e77b5ba526ad5" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00032.html#a9edfc7a838346e559a10742704c785f3">Joint</a> <a class="el" href="a00032.html#ad40089c16e5ac7fb7d6e77b5ba526ad5">metapod::hrp4g2::Node14::joint</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a95e8d5526bc1c9b285fa32da21b0eac0"></a><!-- doxytag: member="metapod::hrp4g2::Node14::joint_F" ref="a95e8d5526bc1c9b285fa32da21b0eac0" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::Matrix&lt;FloatType, 6, Joint::NBDOF&gt; <a class="el" href="a00032.html#a95e8d5526bc1c9b285fa32da21b0eac0">metapod::hrp4g2::Node14::joint_F</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a27595e90ff9541d0aff178f480e73b17"></a><!-- doxytag: member="metapod::hrp4g2::Node14::joint_name" ref="a27595e90ff9541d0aff178f480e73b17" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string <a class="el" href="a00032.html#a27595e90ff9541d0aff178f480e73b17">metapod::hrp4g2::Node14::joint_name</a> = std::string(&quot;EYEBROW_P&quot;)<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a025fd0efb0e5b89ceab2c0ef1d3d682e"></a><!-- doxytag: member="metapod::hrp4g2::Node14::parent_id" ref="a025fd0efb0e5b89ceab2c0ef1d3d682e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a025fd0efb0e5b89ceab2c0ef1d3d682e">metapod::hrp4g2::Node14::parent_id</a> = 13<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a815c96662ef6967735e941f0c9923a08"></a><!-- doxytag: member="metapod::hrp4g2::Node14::q_idx" ref="a815c96662ef6967735e941f0c9923a08" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int <a class="el" href="a00032.html#a815c96662ef6967735e941f0c9923a08">metapod::hrp4g2::Node14::q_idx</a> = 14<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a16566a2b065cbda3c809d266b3e4e3e4"></a><!-- doxytag: member="metapod::hrp4g2::Node14::sXp" ref="a16566a2b065cbda3c809d266b3e4e3e4" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Spatial::TransformT&lt;Spatial::rm_mul_op&lt;Spatial::RotationMatrix, Spatial::RotationMatrixIdentity&gt;::rm&gt; <a class="el" href="a00032.html#a16566a2b065cbda3c809d266b3e4e3e4">metapod::hrp4g2::Node14::sXp</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a588c6dfa542b03465eb50ebc11250be4"></a><!-- doxytag: member="metapod::hrp4g2::Node14::Xt" ref="a588c6dfa542b03465eb50ebc11250be4" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const Spatial::TransformT&lt; Spatial::RotationMatrixIdentity &gt; <a class="el" href="a00032.html#a588c6dfa542b03465eb50ebc11250be4">metapod::hrp4g2::Node14::Xt</a><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment"> Spatial::TransformT&lt;Spatial::RotationMatrixIdentity&gt;(
-    Spatial::RotationMatrixIdentity(),
-    Vector3d(-0.036, 0, 0.09))
-</pre></div>
 </div>
 </div>
 </div><!-- contents -->
@@ -346,7 +139,7 @@ Spatial::TransformT<br class="typebreak"/>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -357,8 +150,8 @@ Spatial::TransformT<br class="typebreak"/>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00171.html">metapod</a>      </li>
-      <li class="navelem"><a class="el" href="a00013.html">hrp4g2</a>      </li>
-      <li class="navelem"><a class="el" href="a00032.html">Node14</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00032.html">ProblemBuilder</a>      </li>
 </body>
 </html>

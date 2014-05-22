@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::ForwardGeometry&lt; T &gt; Class Template Reference</title>
+<title>roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,68 +56,74 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::ForwardGeometry&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::ForwardGeometry" -->
-<p>Compute a particular body position for a given configuration.  
+<!-- doxytag: class="roboptim::retargeting::ForwardGeometryChoreonoid" --><!-- doxytag: inherits="roboptim::retargeting::ForwardGeometry" -->
+<p>Compute forward geometry for a particular robot model.  
  <a href="a00009.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/function/forward-geometry.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/function/forward-geometry/choreonoid.hh&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for roboptim::retargeting::ForwardGeometry&lt; T &gt;:</div>
+Inheritance diagram for roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="a00410.png" border="0" usemap="#roboptim_1_1retargeting_1_1_forward_geometry_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="roboptim_1_1retargeting_1_1_forward_geometry_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_forward_geometry_3_01_t_01_4_inherit__map">
-<area shape="rect" id="node3" href="a00010.html" title="Compute forward geometry for a particular robot model." alt="" coords="5,86,373,117"/></map>
+<div class="center"><img src="a00148.png" border="0" usemap="#roboptim_1_1retargeting_1_1_forward_geometry_choreonoid_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_forward_geometry_choreonoid_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_forward_geometry_choreonoid_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="a00008.html" title="Compute a particular body position for a given configuration." alt="" coords="41,6,337,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00149.png" border="0" usemap="#roboptim_1_1retargeting_1_1_forward_geometry_choreonoid_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_forward_geometry_choreonoid_3_01_t_01_4_coll__map" id="roboptim_1_1retargeting_1_1_forward_geometry_choreonoid_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="a00008.html" title="Compute a particular body position for a given configuration." alt="" coords="41,6,337,37"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00411.html">List of all members.</a></p>
+<p><a href="a00150.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#a811deb04e16c2a7144948a01f99eaf2c">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#a214e954796c3c8ae1fcd462edf761486">ForwardGeometry</a> (size_type nDofs, std::string title)  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#a812e39701974930929d11797f954a33b">~ForwardGeometry</a> ()  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#a74820ab43931e066b4da1a017ad6e34b">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (<a class="el" href="a00008.html">ForwardGeometry</a>&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#aa15b074e21d3cf12fed46895a8451cfe">ForwardGeometryChoreonoid</a> (cnoid::BodyPtr robot, int bodyId)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#a4edbb7db77cce221b08fd85ac295e065">ForwardGeometryChoreonoid</a> (cnoid::BodyPtr robot, const std::string &amp;bodyName)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#ae2758454ca94d3acb3eab4776c5d8054">~ForwardGeometryChoreonoid</a> ()  throw ()</td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#a20a48333d1bf93c4c15ae5a5d7536ecc">impl_compute</a> (result_t &amp;result, const argument_t &amp;x) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#addc610ff312a57228ba19e79f0b7b3b0">impl_gradient2</a> (gradient_t &amp;gradient, const argument_t &amp;x, size_type functionId) const   throw ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gradient computation.  <a href="#addc610ff312a57228ba19e79f0b7b3b0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#abcc8b6a0b41d5e863d03348746931d6e">impl_jacobian2</a> (jacobian_t &amp;J, const argument_t &amp;x) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00009.html#ad0cf46f4905937b8d596a68ab9e8cbb7">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;x, size_type functionId) const   throw ()</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#a4718e8f757b6e614d5a4d0a480442019">translation</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#a295617173af7372fe1a4e935fbe4f5cd">translation</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#a3bf6d17d7d3506411fa659f71fd2ca15">rotation</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#a5d85b4d08fe5b6daccd62951786189a6">rotation</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; const Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#acb5d71d788730ffcc72de441e07ff848">q</a> (const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorBlock&lt; Derived &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#ad0083cd015cbbe3412e223d5bcd8a1c8">q</a> (Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const   throw ()</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00009.html#aa8492fe9e40872a9994695f0ae5c5ff0">updateDR</a> (const typename Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br/>
-class roboptim::retargeting::ForwardGeometry&lt; T &gt;</h3>
+class roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;</h3>
 
-<p>Compute a particular body position for a given configuration. </p>
-<p>Input: [q0, q1, ..., qN] Output: [bodyM_x, bodyM_y, bodyM_z] </p>
+<p>Compute forward geometry for a particular robot model. </p>
+<p>Robot model from choreonoid should be passed to the constructor and use for computation. The analytical jacobian must also be retrieved and returned in the impl_gradient/impl_jacobian methods. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a214e954796c3c8ae1fcd462edf761486"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::ForwardGeometry" ref="a214e954796c3c8ae1fcd462edf761486" args="(size_type nDofs, std::string title)" -->
+<a class="anchor" id="aa15b074e21d3cf12fed46895a8451cfe"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::ForwardGeometryChoreonoid" ref="aa15b074e21d3cf12fed46895a8451cfe" args="(cnoid::BodyPtr robot, int bodyId)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html">ForwardGeometry</a> </td>
+          <td class="memname"><a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html">ForwardGeometryChoreonoid</a> </td>
           <td>(</td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>nDofs</em>, </td>
+          <td class="paramtype">cnoid::BodyPtr&#160;</td>
+          <td class="paramname"><em>robot</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>title</em>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bodyId</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -130,14 +136,43 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a812e39701974930929d11797f954a33b"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::~ForwardGeometry" ref="a812e39701974930929d11797f954a33b" args="()" -->
+<a class="anchor" id="a4edbb7db77cce221b08fd85ac295e065"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::ForwardGeometryChoreonoid" ref="a4edbb7db77cce221b08fd85ac295e065" args="(cnoid::BodyPtr robot, const std::string &amp;bodyName)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::~<a class="el" href="a00009.html">ForwardGeometry</a> </td>
+          <td class="memname"><a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html">ForwardGeometryChoreonoid</a> </td>
+          <td>(</td>
+          <td class="paramtype">cnoid::BodyPtr&#160;</td>
+          <td class="paramname"><em>robot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>bodyName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>  throw ()<code> [inline, explicit]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae2758454ca94d3acb3eab4776c5d8054"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::~ForwardGeometryChoreonoid" ref="ae2758454ca94d3acb3eab4776c5d8054" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::~<a class="el" href="a00009.html">ForwardGeometryChoreonoid</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td>  throw ()<code> [inline, virtual]</code></td>
@@ -149,30 +184,65 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="acb5d71d788730ffcc72de441e07ff848"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::q" ref="acb5d71d788730ffcc72de441e07ff848" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<a class="anchor" id="a20a48333d1bf93c4c15ae5a5d7536ecc"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::impl_compute" ref="a20a48333d1bf93c4c15ae5a5d7536ecc" args="(result_t &amp;result, const argument_t &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
-<div class="memtemplate">
-template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#acb5d71d788730ffcc72de441e07ff848">q</a> </td>
+          <td class="memname">void <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html#a20a48333d1bf93c4c15ae5a5d7536ecc">impl_compute</a> </td>
           <td>(</td>
-          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramtype">result_t &amp;&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00052.html#a6dde0cc265752f95d52f8b55743b5cd8">transformToVector()</a>, and <a class="el" href="a00077.html#ab29b9fedea967ac4e51af93d35047009">roboptim::retargeting::updateRobotConfiguration()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad0cf46f4905937b8d596a68ab9e8cbb7"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::impl_gradient" ref="ad0cf46f4905937b8d596a68ab9e8cbb7" args="(gradient_t &amp;gradient, const argument_t &amp;x, size_type functionId) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html#ad0cf46f4905937b8d596a68ab9e8cbb7">impl_gradient</a> </td>
+          <td>(</td>
+          <td class="paramtype">gradient_t &amp;&#160;</td>
+          <td class="paramname"><em>gradient</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>functionId</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const  throw ()<code> [inline]</code></td>
+          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
         </tr>
       </table>
 </div>
@@ -180,47 +250,99 @@ template&lt;typename Derived &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ad0083cd015cbbe3412e223d5bcd8a1c8"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::q" ref="ad0083cd015cbbe3412e223d5bcd8a1c8" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x, bool withBaseLink=true) const " -->
+<a class="anchor" id="addc610ff312a57228ba19e79f0b7b3b0"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::impl_gradient2" ref="addc610ff312a57228ba19e79f0b7b3b0" args="(gradient_t &amp;gradient, const argument_t &amp;x, size_type functionId) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
-<div class="memtemplate">
-template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#acb5d71d788730ffcc72de441e07ff848">q</a> </td>
+          <td class="memname">void <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html#addc610ff312a57228ba19e79f0b7b3b0">impl_gradient2</a> </td>
           <td>(</td>
-          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramtype">gradient_t &amp;&#160;</td>
+          <td class="paramname"><em>gradient</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
           <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>withBaseLink</em> = <code>true</code>&#160;</td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>functionId</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const  throw ()<code> [inline]</code></td>
+          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Gradient computation. </p>
+<p>The jacobian is as follow:</p>
+<p>------------------------------------------------------------------ | function id || tx | ty | tz | rx | ry | rz | dof0 | ... | dofN | ------------------------------------------------------------------ | 0 (tx) || 1 | 0 | 0 | | | | 1 (ty) || 0 | 1 | 0 | [1] | Choreonoid | | 2 (tz) || 0 | 0 | 1 | | | | 3 (rx) || 0 | 0 | 0 | | | | 4 (ry) || 0 | 0 | 0 | [2] | Choreonoid | | 5 (rz) || 0 | 0 | 0 | | | ------------------------------------------------------------------</p>
+<p>I.e. influence of configuration change on the body position.</p>
+<p>In our case, we only compute one line of this array.</p>
+<p>Formula [1] and [2] are available in "On the Dynamics Modeling of Free-Floating-Base Articulated Mechanisms and Applications to Humanoid Whole-Body Dynamics and Control", K. Bouyarmane, A. Kheddar.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gradient</td><td>Gradient </td></tr>
+    <tr><td class="paramname">x</td><td>configuration (free floating then DOF values) </td></tr>
+    <tr><td class="paramname">functionId</td><td>jacobian line to be computed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="a00052.html#a9ed7f7cfc049d90dab635f90939e94a5">hat()</a>, <a class="el" href="a00009.html#aa8492fe9e40872a9994695f0ae5c5ff0">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;::updateDR()</a>, and <a class="el" href="a00077.html#ab29b9fedea967ac4e51af93d35047009">roboptim::retargeting::updateRobotConfiguration()</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a811deb04e16c2a7144948a01f99eaf2c"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a811deb04e16c2a7144948a01f99eaf2c" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
+<a class="anchor" id="abcc8b6a0b41d5e863d03348746931d6e"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::impl_jacobian2" ref="abcc8b6a0b41d5e863d03348746931d6e" args="(jacobian_t &amp;J, const argument_t &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#a811deb04e16c2a7144948a01f99eaf2c">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td class="memname">virtual void <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html#abcc8b6a0b41d5e863d03348746931d6e">impl_jacobian2</a> </td>
           <td>(</td>
-          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
+          <td class="paramtype">jacobian_t &amp;&#160;</td>
+          <td class="paramname"><em>J</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline, protected, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00052.html#a9ed7f7cfc049d90dab635f90939e94a5">hat()</a>, <a class="el" href="a00009.html#aa8492fe9e40872a9994695f0ae5c5ff0">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;::updateDR()</a>, and <a class="el" href="a00077.html#ab29b9fedea967ac4e51af93d35047009">roboptim::retargeting::updateRobotConfiguration()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a74820ab43931e066b4da1a017ad6e34b"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a74820ab43931e066b4da1a017ad6e34b" args="(ForwardGeometry&lt; T &gt;)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html#a74820ab43931e066b4da1a017ad6e34b">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00008.html">ForwardGeometry</a>&lt; T &gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -230,7 +352,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3bf6d17d7d3506411fa659f71fd2ca15"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::rotation" ref="a3bf6d17d7d3506411fa659f71fd2ca15" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
+<a class="anchor" id="aa8492fe9e40872a9994695f0ae5c5ff0"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometryChoreonoid::updateDR" ref="aa8492fe9e40872a9994695f0ae5c5ff0" args="(const typename Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -239,82 +361,17 @@ template&lt;typename T &gt; </div>
 template&lt;typename Derived &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#a3bf6d17d7d3506411fa659f71fd2ca15">rotation</a> </td>
+          <td class="memname">void <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometryChoreonoid</a>&lt; T &gt;::<a class="el" href="a00009.html#aa8492fe9e40872a9994695f0ae5c5ff0">updateDR</a> </td>
           <td>(</td>
-          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramtype">const typename Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
-          <td> const  throw ()<code> [inline]</code></td>
+          <td> const  throw ()<code> [inline, protected]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00010.html#a20a48333d1bf93c4c15ae5a5d7536ecc">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;::impl_compute()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5d85b4d08fe5b6daccd62951786189a6"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::rotation" ref="a5d85b4d08fe5b6daccd62951786189a6" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<div class="memtemplate">
-template&lt;typename Derived &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#a3bf6d17d7d3506411fa659f71fd2ca15">rotation</a> </td>
-          <td>(</td>
-          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td> const  throw ()<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4718e8f757b6e614d5a4d0a480442019"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::translation" ref="a4718e8f757b6e614d5a4d0a480442019" args="(const Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<div class="memtemplate">
-template&lt;typename Derived &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::VectorBlock&lt;const Derived&gt; <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#a4718e8f757b6e614d5a4d0a480442019">translation</a> </td>
-          <td>(</td>
-          <td class="paramtype">const Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td> const  throw ()<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00010.html#a20a48333d1bf93c4c15ae5a5d7536ecc">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;::impl_compute()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a295617173af7372fe1a4e935fbe4f5cd"></a><!-- doxytag: member="roboptim::retargeting::ForwardGeometry::translation" ref="a295617173af7372fe1a4e935fbe4f5cd" args="(Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<div class="memtemplate">
-template&lt;typename Derived &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Eigen::VectorBlock&lt;Derived&gt; <a class="el" href="a00009.html">roboptim::retargeting::ForwardGeometry</a>&lt; T &gt;::<a class="el" href="a00009.html#a4718e8f757b6e614d5a4d0a480442019">translation</a> </td>
-          <td>(</td>
-          <td class="paramtype">Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td> const  throw ()<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Referenced by <a class="el" href="a00009.html#addc610ff312a57228ba19e79f0b7b3b0">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;::impl_gradient2()</a>, and <a class="el" href="a00009.html#abcc8b6a0b41d5e863d03348746931d6e">roboptim::retargeting::ForwardGeometryChoreonoid&lt; T &gt;::impl_jacobian2()</a>.</p>
 
 </div>
 </div>
@@ -325,7 +382,7 @@ template&lt;typename Derived &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -336,8 +393,8 @@ template&lt;typename Derived &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00009.html">ForwardGeometry</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00009.html">ForwardGeometryChoreonoid</a>      </li>
 </body>
 </html>

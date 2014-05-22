@@ -1,19 +1,11 @@
 var a00025 =
 [
-    [ "MinimumJerkTrajectory", "a00025.html#a82eea02064be112d474b147e2b498e1e", null ],
-    [ "~MinimumJerkTrajectory", "a00025.html#a89fb978fd0f319c17adca9f526f7b47e", null ],
-    [ "derivAfterSingularPoint", "a00025.html#a48ab2d744cd0a207ab0a1b5a6606ebc5", null ],
-    [ "derivBeforeSingularPoint", "a00025.html#a4a41d733f9142236316e440c0ba296e5", null ],
-    [ "impl_compute", "a00025.html#a7037749d9390b5c10b2a1f1de59fca6f", null ],
-    [ "impl_derivative", "a00025.html#a9dba4690fd979200330e3b51178067b2", null ],
-    [ "impl_derivative", "a00025.html#ae1c8e9ba79a2f572d543a20e5b7a21ae", null ],
-    [ "resize", "a00025.html#a63c9a290356b2ef7c64c3302846c83f5", null ],
-    [ "ROBOPTIM_IMPLEMENT_CLONE", "a00025.html#a4092138ab147f016a303cadd02747e52", null ],
-    [ "ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_", "a00025.html#a6b7ce58ce7ca3b4110bed2d336d04b35", null ],
-    [ "setParameters", "a00025.html#a951216cf8ed6bdb365925cf1fefc88f7", null ],
-    [ "singularPointAtRank", "a00025.html#a91a13ac7f3aba518fe9508704638d996", null ],
-    [ "variationConfigWrtParam", "a00025.html#aa8bac5500bb611daa08c5230be290b89", null ],
-    [ "variationConfigWrtParam", "a00025.html#a8de6bc2a720be8e12f08ab0312f11f6b", null ],
-    [ "variationDerivWrtParam", "a00025.html#aa65f04a003cd4be2f2e33f77b03f2a0e", null ],
-    [ "variationDerivWrtParam", "a00025.html#a12227d6fc0a5eb89b4af938d6dd69e30", null ]
+    [ "constraints", "a00025.html#abf2cf9aec422d680dce28bb1f5b4a24a", null ],
+    [ "cost", "a00025.html#afbc516baaf5bac3a47022b64a3c24e80", null ],
+    [ "markerSet", "a00025.html#a99b6c9ec1b15909d313247bfaf69bcab", null ],
+    [ "markersTrajectory", "a00025.html#ad9f0ed3c5b84c4ada889710f153ff8d3", null ],
+    [ "outputFile", "a00025.html#a5846d813d1e06b57b9ca0407b6545593", null ],
+    [ "plugin", "a00025.html#a791561980005f65c2549c8a5325de0bc", null ],
+    [ "robotModel", "a00025.html#ad7280ae016bf2f4d39e60d9ca53fe8ad", null ],
+    [ "trajectoryType", "a00025.html#a08bb129c06fc2dcfcb76d9cfef865a2c", null ]
 ];

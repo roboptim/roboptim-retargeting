@@ -1,12 +1,12 @@
 var a00009 =
 [
-    [ "ForwardGeometry", "a00009.html#a214e954796c3c8ae1fcd462edf761486", null ],
-    [ "~ForwardGeometry", "a00009.html#a812e39701974930929d11797f954a33b", null ],
-    [ "q", "a00009.html#acb5d71d788730ffcc72de441e07ff848", null ],
-    [ "q", "a00009.html#ad0083cd015cbbe3412e223d5bcd8a1c8", null ],
-    [ "ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_", "a00009.html#a811deb04e16c2a7144948a01f99eaf2c", null ],
-    [ "rotation", "a00009.html#a3bf6d17d7d3506411fa659f71fd2ca15", null ],
-    [ "rotation", "a00009.html#a5d85b4d08fe5b6daccd62951786189a6", null ],
-    [ "translation", "a00009.html#a4718e8f757b6e614d5a4d0a480442019", null ],
-    [ "translation", "a00009.html#a295617173af7372fe1a4e935fbe4f5cd", null ]
+    [ "ForwardGeometryChoreonoid", "a00009.html#aa15b074e21d3cf12fed46895a8451cfe", null ],
+    [ "ForwardGeometryChoreonoid", "a00009.html#a4edbb7db77cce221b08fd85ac295e065", null ],
+    [ "~ForwardGeometryChoreonoid", "a00009.html#ae2758454ca94d3acb3eab4776c5d8054", null ],
+    [ "impl_compute", "a00009.html#a20a48333d1bf93c4c15ae5a5d7536ecc", null ],
+    [ "impl_gradient", "a00009.html#ad0cf46f4905937b8d596a68ab9e8cbb7", null ],
+    [ "impl_gradient2", "a00009.html#addc610ff312a57228ba19e79f0b7b3b0", null ],
+    [ "impl_jacobian2", "a00009.html#abcc8b6a0b41d5e863d03348746931d6e", null ],
+    [ "ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_", "a00009.html#a74820ab43931e066b4da1a017ad6e34b", null ],
+    [ "updateDR", "a00009.html#aa8492fe9e40872a9994695f0ae5c5ff0", null ]
 ];

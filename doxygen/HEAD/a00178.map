@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node7" href="$a00125.html" title="roboptim/retargeting/acceleration&#45;energy.hh" alt="" coords="387,86,669,117"/>
-<area shape="rect" id="node13" href="$a00128.html" title="roboptim/retargeting/animated&#45;interaction&#45;mesh.hh" alt="" coords="531,166,848,197"/>
+<area shape="rect" id="node3" href="$a00012.html" title="Creates functions from their name for joint&#45;joint optimization." alt="" coords="332,5,607,35"/>
+<area shape="rect" id="node5" href="$a00022.html" title="Creates functions from their name for marker&#45;joint optimization." alt="" coords="325,58,613,89"/>
+<area shape="rect" id="node7" href="$a00027.html" title="Creates functions from their name for joint&#45;joint optimization." alt="" coords="303,111,636,142"/>
 </map>

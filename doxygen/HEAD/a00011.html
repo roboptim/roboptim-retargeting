@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::GraphEdgeWriter&lt; Name &gt; Class Template Reference</title>
+<title>roboptim::retargeting::JointFunctionData Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,89 +56,298 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::GraphEdgeWriter&lt; Name &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::JointFunctionData Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::GraphEdgeWriter" -->
-<p>Write an edge using the Graphviz format.  
+<!-- doxytag: class="roboptim::retargeting::JointFunctionData" -->
+<p>POD structure containing all problems data.  
  <a href="a00011.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/animated-interaction-mesh.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/joint-function-factory.hh&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::JointFunctionData:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00179.png" border="0" usemap="#roboptim_1_1retargeting_1_1_joint_function_data_coll__map" alt="Collaboration graph"/></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00397.html">List of all members.</a></p>
+<p><a href="a00180.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#aa367f2a9f2a1311021c60fb60c603a6a">GraphEdgeWriter</a> (Name name, unsigned frameId)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;class Edge &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00011.html#a59f5a9d69ec72dfd668fc649b9fc96be">operator()</a> (std::ostream &amp;out, const <a class="el" href="a00008.html">Edge</a> &amp;v) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#ae4dc31b8106a531717b33b775d6712d0">nDofsFull</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a0e5c91a51055bd4fa0bb40da45e269c9">nDofsFiltered</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a6e01183b5226702477d0de7e2c2491de">nParametersFull</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a431b4f7c74d3eac4ae431bfe875ec98c">nParametersFiltered</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Function::vector_t::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a1750bbb85363d7a2e05e15433d66ac02">nFrames</a> () const </td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">cnoid::BodyMotionPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a3ce6c73bd9ffe7ede0da259f4750301d">jointsTrajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Joints Trajectory as loaded by Choreonoid.  <a href="#a3ce6c73bd9ffe7ede0da259f4750301d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">cnoid::BodyPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a692486d61e774f98a97080ad8a95a7a3">robotModel</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Robot model loaded through Choreonoid.  <a href="#a692486d61e774f98a97080ad8a95a7a3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr<br class="typebreak"/>
+&lt; roboptim::Trajectory&lt; 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a8f53a5fc66a63e92f922f7e3f809b1e2">trajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">RobOptim trajectory.  <a href="#a8f53a5fc66a63e92f922f7e3f809b1e2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr<br class="typebreak"/>
+&lt; roboptim::Trajectory&lt; 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#aa30a90c9d4ec44825a98d200f6f4f3df">filteredTrajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduced RobOptim trajectory.  <a href="#aa30a90c9d4ec44825a98d200f6f4f3df"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">cnoid::BodyIMeshPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a7cdee75e2945fb0ae4ce4df85a6ab528">interactionMesh</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Interaction Mesh (loaded by Choreonoid)  <a href="#a7cdee75e2945fb0ae4ce4df85a6ab528"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; boost::optional<br class="typebreak"/>
+&lt; Function::value_type &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#af67773587f6321ca9aee179f928a8bcc">disabledJointsConfiguration</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration of the disabled joints (one frame)  <a href="#af67773587f6321ca9aee179f928a8bcc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; boost::optional<br class="typebreak"/>
+&lt; Function::value_type &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a4962c6ce72d945c55997d77aa64e9433">disabledJointsTrajectory</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration of the disabled joints (all frames)  <a href="#a4962c6ce72d945c55997d77aa64e9433"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr<br class="typebreak"/>
+&lt; DifferentiableFunction &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00011.html#a816c554ad3e8c6339ff8ad0bd6d3dfc5">cost</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer to cost function.  <a href="#a816c554ad3e8c6339ff8ad0bd6d3dfc5"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Name&gt;<br/>
-class roboptim::retargeting::GraphEdgeWriter&lt; Name &gt;</h3>
-
-<p>Write an edge using the Graphviz format. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aa367f2a9f2a1311021c60fb60c603a6a"></a><!-- doxytag: member="roboptim::retargeting::GraphEdgeWriter::GraphEdgeWriter" ref="aa367f2a9f2a1311021c60fb60c603a6a" args="(Name name, unsigned frameId)" -->
+<div class="textblock"><p>POD structure containing all problems data. </p>
+<p>This gathers together several information from which functions parameters are set. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a0e5c91a51055bd4fa0bb40da45e269c9"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::nDofsFiltered" ref="a0e5c91a51055bd4fa0bb40da45e269c9" args="() const " -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class Name &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00011.html">roboptim::retargeting::GraphEdgeWriter</a>&lt; Name &gt;::<a class="el" href="a00011.html">GraphEdgeWriter</a> </td>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00011.html#a0e5c91a51055bd4fa0bb40da45e269c9">roboptim::retargeting::JointFunctionData::nDofsFiltered</a> </td>
           <td>(</td>
-          <td class="paramtype">Name&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned&#160;</td>
-          <td class="paramname"><em>frameId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [inline]</code></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>References <a class="el" href="a00011.html#aa30a90c9d4ec44825a98d200f6f4f3df">filteredTrajectory</a>.</p>
+
+<p>Referenced by <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00078.html#a9f8bbe5e3c8259a4cea28debadd791c2">roboptim::retargeting::detail::freeze()</a>, and <a class="el" href="a00078.html#a1285b37240ca6cce6b4973d9397e8224">roboptim::retargeting::detail::jointsLimits()</a>.</p>
+
 </div>
 </div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a59f5a9d69ec72dfd668fc649b9fc96be"></a><!-- doxytag: member="roboptim::retargeting::GraphEdgeWriter::operator()" ref="a59f5a9d69ec72dfd668fc649b9fc96be" args="(std::ostream &amp;out, const Edge &amp;v) const " -->
+<a class="anchor" id="ae4dc31b8106a531717b33b775d6712d0"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::nDofsFull" ref="ae4dc31b8106a531717b33b775d6712d0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class Name &gt; </div>
-<div class="memtemplate">
-template&lt;class Edge &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="a00011.html">roboptim::retargeting::GraphEdgeWriter</a>&lt; Name &gt;::operator() </td>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00011.html#ae4dc31b8106a531717b33b775d6712d0">roboptim::retargeting::JointFunctionData::nDofsFull</a> </td>
           <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="a00008.html">Edge</a> &amp;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const<code> [inline]</code></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>References <a class="el" href="a00011.html#a8f53a5fc66a63e92f922f7e3f809b1e2">trajectory</a>.</p>
+
+<p>Referenced by <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, and <a class="el" href="a00011.html#a1750bbb85363d7a2e05e15433d66ac02">nFrames()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1750bbb85363d7a2e05e15433d66ac02"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::nFrames" ref="a1750bbb85363d7a2e05e15433d66ac02" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00011.html#a1750bbb85363d7a2e05e15433d66ac02">roboptim::retargeting::JointFunctionData::nFrames</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00011.html#ae4dc31b8106a531717b33b775d6712d0">nDofsFull()</a>, and <a class="el" href="a00011.html#a8f53a5fc66a63e92f922f7e3f809b1e2">trajectory</a>.</p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a431b4f7c74d3eac4ae431bfe875ec98c"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::nParametersFiltered" ref="a431b4f7c74d3eac4ae431bfe875ec98c" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00011.html#a431b4f7c74d3eac4ae431bfe875ec98c">roboptim::retargeting::JointFunctionData::nParametersFiltered</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00011.html#aa30a90c9d4ec44825a98d200f6f4f3df">filteredTrajectory</a>.</p>
+
+<p>Referenced by <a class="el" href="a00078.html#a9f8bbe5e3c8259a4cea28debadd791c2">roboptim::retargeting::detail::freeze()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6e01183b5226702477d0de7e2c2491de"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::nParametersFull" ref="a6e01183b5226702477d0de7e2c2491de" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Function::vector_t::Index <a class="el" href="a00011.html#a6e01183b5226702477d0de7e2c2491de">roboptim::retargeting::JointFunctionData::nParametersFull</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00011.html#a8f53a5fc66a63e92f922f7e3f809b1e2">trajectory</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a816c554ad3e8c6339ff8ad0bd6d3dfc5"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::cost" ref="a816c554ad3e8c6339ff8ad0bd6d3dfc5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::shared_ptr&lt;DifferentiableFunction&gt; <a class="el" href="a00011.html#a816c554ad3e8c6339ff8ad0bd6d3dfc5">roboptim::retargeting::JointFunctionData::cost</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Shared pointer to cost function. </p>
+<p>The oldest part of RobOptim do not rely on shared pointers and therefore we need to store the cost function shared pointer manually to dellocating it. </p>
+
+<p>Referenced by <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af67773587f6321ca9aee179f928a8bcc"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::disabledJointsConfiguration" ref="af67773587f6321ca9aee179f928a8bcc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;boost::optional&lt;Function::value_type&gt; &gt; <a class="el" href="a00011.html#af67773587f6321ca9aee179f928a8bcc">roboptim::retargeting::JointFunctionData::disabledJointsConfiguration</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Configuration of the disabled joints (one frame) </p>
+
+<p>Referenced by <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, and <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4962c6ce72d945c55997d77aa64e9433"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::disabledJointsTrajectory" ref="a4962c6ce72d945c55997d77aa64e9433" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;boost::optional&lt;Function::value_type&gt; &gt; <a class="el" href="a00011.html#a4962c6ce72d945c55997d77aa64e9433">roboptim::retargeting::JointFunctionData::disabledJointsTrajectory</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Configuration of the disabled joints (all frames) </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, <a class="el" href="a00078.html#a3f3a08f4347fcca9cd38cf9f777f8808">roboptim::retargeting::detail::laplacianDeformationEnergy()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa30a90c9d4ec44825a98d200f6f4f3df"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::filteredTrajectory" ref="aa30a90c9d4ec44825a98d200f6f4f3df" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::shared_ptr&lt;roboptim::Trajectory&lt;3&gt; &gt; <a class="el" href="a00011.html#aa30a90c9d4ec44825a98d200f6f4f3df">roboptim::retargeting::JointFunctionData::filteredTrajectory</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Reduced RobOptim trajectory. </p>
+<p>This trajectory contained the reduce motion. I.e. this does not include the disabled joints. </p>
+
+<p>Referenced by <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, <a class="el" href="a00078.html#a9f8bbe5e3c8259a4cea28debadd791c2">roboptim::retargeting::detail::freeze()</a>, <a class="el" href="a00011.html#a0e5c91a51055bd4fa0bb40da45e269c9">nDofsFiltered()</a>, <a class="el" href="a00011.html#a431b4f7c74d3eac4ae431bfe875ec98c">nParametersFiltered()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7cdee75e2945fb0ae4ce4df85a6ab528"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::interactionMesh" ref="a7cdee75e2945fb0ae4ce4df85a6ab528" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cnoid::BodyIMeshPtr <a class="el" href="a00011.html#a7cdee75e2945fb0ae4ce4df85a6ab528">roboptim::retargeting::JointFunctionData::interactionMesh</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Interaction Mesh (loaded by Choreonoid) </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, and <a class="el" href="a00078.html#a3f3a08f4347fcca9cd38cf9f777f8808">roboptim::retargeting::detail::laplacianDeformationEnergy()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3ce6c73bd9ffe7ede0da259f4750301d"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::jointsTrajectory" ref="a3ce6c73bd9ffe7ede0da259f4750301d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cnoid::BodyMotionPtr <a class="el" href="a00011.html#a3ce6c73bd9ffe7ede0da259f4750301d">roboptim::retargeting::JointFunctionData::jointsTrajectory</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Joints Trajectory as loaded by Choreonoid. </p>
+<p>This file both contains the joints parameters at each frame as well as the base position at each frame.</p>
+<p>This trajectory contains the full motion. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a692486d61e774f98a97080ad8a95a7a3"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::robotModel" ref="a692486d61e774f98a97080ad8a95a7a3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cnoid::BodyPtr <a class="el" href="a00011.html#a692486d61e774f98a97080ad8a95a7a3">roboptim::retargeting::JointFunctionData::robotModel</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Robot model loaded through Choreonoid. </p>
+<p>Robot model contains the robot description of joints and bodies associated with limits such as joints positions, velocities limits, etc. </p>
+
+<p>Referenced by <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, <a class="el" href="a00078.html#a237abd2bd1601d6b658b47c85dd3c86b">roboptim::retargeting::detail::leftFoot()</a>, <a class="el" href="a00078.html#a4c23f08eed95aeb10b1748452436c433">roboptim::retargeting::detail::rightFoot()</a>, <a class="el" href="a00078.html#a84397999df7036a4fba5ce2f7055ba83">roboptim::retargeting::detail::torque()</a>, and <a class="el" href="a00078.html#aca977f488d0e58a52dd70bab66bbbfd0">roboptim::retargeting::detail::zmp()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8f53a5fc66a63e92f922f7e3f809b1e2"></a><!-- doxytag: member="roboptim::retargeting::JointFunctionData::trajectory" ref="a8f53a5fc66a63e92f922f7e3f809b1e2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::shared_ptr&lt;roboptim::Trajectory&lt;3&gt; &gt; <a class="el" href="a00011.html#a8f53a5fc66a63e92f922f7e3f809b1e2">roboptim::retargeting::JointFunctionData::trajectory</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>RobOptim trajectory. </p>
+<p>This trajectory is the full trajectory, it also contains the disabled joints information. </p>
+
+<p>Referenced by <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, <a class="el" href="a00078.html#a3f3a08f4347fcca9cd38cf9f777f8808">roboptim::retargeting::detail::laplacianDeformationEnergy()</a>, <a class="el" href="a00011.html#ae4dc31b8106a531717b33b775d6712d0">nDofsFull()</a>, <a class="el" href="a00011.html#a1750bbb85363d7a2e05e15433d66ac02">nFrames()</a>, <a class="el" href="a00011.html#a6e01183b5226702477d0de7e2c2491de">nParametersFull()</a>, and <a class="el" href="a00078.html#a14199bb3818e86c15589c7105af4d4b5">roboptim::retargeting::detail::null()</a>.</p>
 
 </div>
 </div>
@@ -149,7 +358,7 @@ template&lt;class Edge &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -160,8 +369,8 @@ template&lt;class Edge &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00011.html">GraphEdgeWriter</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00011.html">JointFunctionData</a>      </li>
 </body>
 </html>

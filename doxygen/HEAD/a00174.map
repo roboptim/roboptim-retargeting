@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node7" href="$a00125.html" title="roboptim/retargeting/animated&#45;interaction&#45;mesh.hh" alt="" coords="420,86,737,117"/>
+<area shape="rect" id="node3" href="$a00038.html" title="ZMP position computed through Choreonoid." alt="" coords="288,5,573,35"/>
+<area shape="rect" id="node5" href="$a00039.html" title="ZMP position computed using the Inverted Pendulum model." alt="" coords="269,58,592,89"/>
+<area shape="rect" id="node7" href="$a00040.html" title="ZMP position computed through Metapod." alt="" coords="296,111,565,142"/>
 </map>

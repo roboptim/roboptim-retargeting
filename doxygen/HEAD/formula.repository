@@ -1,4 +1,29 @@
-\form#0:\[ E_A(V_{i-1}',V_i',V_{i+1}') = \frac{1}{2} \| V_{i-1}^2 + 2 V_i + V_{i+1}^2 \|^2 \]
-\form#1:\[ C_B(V_i') = B_i V_i - l \]
-\form#2:\[ L(p_j) = p_j - \sum_{l \in N_j} w_l^j p_l \]
-\form#3:\[ E_L(V_{i}') = \sum_{j} \| \delta_{j} - L(p_{j}'^{i}) \|^{2} \]
+\form#0:$\alpha$
+\form#1:$\beta$
+\form#2:$\gamma$
+\form#3:$ \left( \begin{array}{ccc} \cos(\alpha) \cos(\beta) & \cos(\alpha) \sin(\beta) \sin(\gamma) - \sin(\alpha) \cos(\gamma) & \cos(\alpha) \sin(\beta) \cos(\gamma) + \sin(\alpha) \sin(\gamma) \\ \sin(\alpha) \cos(\beta) & \sin(\alpha) \sin(\beta) \sin(\gamma) + \cos(\alpha) \cos(\gamma) & \sin(\alpha) \sin(\beta) \cos(\gamma) - \cos(\alpha) \sin(\gamma) \\ -\sin(\beta) & \cos(\beta) \sin(\gamma) & \cos(\beta) \cos(\gamma) \end{array} \right) $
+\form#4:$(\gamma, \beta, \alpha)$
+\form#5:$\theta$
+\form#6:$\vec{v} = (\alpha, \beta, \gamma)$
+\form#7:$ \alpha = \tan^{-1}(r_{10} / r_{00}) $
+\form#8:$ \beta = \tan^{-1}(-r_{20} / \sqrt{r_{21}^2 + r_{22}^2}) $
+\form#9:$ \gamma = \tan^{-1}(r_{21} / r_{22}) $
+\form#10:$ \left( \begin{array}{ccc} 0 & -\mathbf{v}_2 & \mathbf{v}_1 \\ \mathbf{v}_2 & 0 & -\mathbf{v}_0 \\ -\mathbf{v}_1 & \mathbf{v}_0 & 0 \end{array} \right) $
+\form#11:$(\mathbf{v}_0, \mathbf{v}_1, \mathbf{v}_2)$
+\form#12:$ \mathbf{\xi} = (\mathbf{v}, \mathbf{\omega}) $
+\form#13:$\mathbf{v}$
+\form#14:$\mathbf{R}$
+\form#15:$\mathbf{p}$
+\form#16:$ \left( \begin{array}{cc} \mathbf{R} & \hat{\mathbf{p}} \mathbf{R} \\ \mathbf{0} & \mathbf{R} \end{array} \right) $
+\form#17:$v = (x, y, z, \gamma, \beta, \alpha)$
+\form#18:$U\theta$
+\form#19:$\frac{\partial R_{0}}{\partial \theta}(\theta)$
+\form#20:$R_0$
+\form#21:$ f(x) = \sum f_i(x_i) $
+\form#22:$ f_i(x_i) = lde(laplacianCoordinate(jointToMarker(x))) $
+\form#23:$ \sum (x_i - r_i)^2 $
+\form#24:$ x = [q, \dot{q}, \ddot{q}] $
+\form#25:$ result = [\tau_0, \tau_1, ..., \tau_N] $
+\form#26:$ result = [zmp_x, zmp_y] $
+\form#27:$ \dot{L} $
+\form#28:$ [ \dot{\delta_y}, \dot{\delta_x}] $

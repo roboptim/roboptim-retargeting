@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::Bone Struct Reference</title>
+<title>roboptim::retargeting::ChoreonoidBodyTrajectory Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,102 +56,104 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::Bone Struct Reference</div>  </div>
+<div class="title">roboptim::retargeting::ChoreonoidBodyTrajectory Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::Bone" -->
-<p>Index1 should be smaller than index2 to sequentially insert the coefficients of the bone length constraints into the sparse matrix.  
+<!-- doxytag: class="roboptim::retargeting::ChoreonoidBodyTrajectory" -->
+<p>Discrete trajectory built from a cnoid::BodyMotion object.  
  <a href="a00003.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/bone.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/function/choreonoid-body-trajectory.hh&gt;</code></p>
 
-<p><a href="a00402.html">List of all members.</a></p>
+<p><a href="a00145.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#a625a27a09b23654a2af4941850ddd5d1">localMarkerIndex1</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#ac66a11de87b00388e997e5a7c5e10b5c">localMarkerIndex2</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#a8645c81b4d8f04055871e4291028f121">activeVertexIndex1</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#a8ba9f62d6028b0a37a0d4491d152dc91">activeVertexIndex2</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">boost::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#a6bd16c9eb31383777582bfbd70ff5d62">goalLength</a></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#ae6fd90044e9fc30b4176f5ca96e11da9">ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS</a> (VectorInterpolation)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#a444f5f0d541f20962d5ca08bcd717a6a">ROBOPTIM_IMPLEMENT_CLONE</a> (<a class="el" href="a00003.html">ChoreonoidBodyTrajectory</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#ab9f34f93394bcbbcfa9cb144698dbcad">ChoreonoidBodyTrajectory</a> (cnoid::BodyMotionPtr bodyMotion, bool addFreeFloating)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00003.html#a1e8a0c0dd3b73014792b8ce702a7cfdf">~ChoreonoidBodyTrajectory</a> ()  throw ()</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Index1 should be smaller than index2 to sequentially insert the coefficients of the bone length constraints into the sparse matrix. </p>
-</div><hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a8645c81b4d8f04055871e4291028f121"></a><!-- doxytag: member="roboptim::retargeting::Bone::activeVertexIndex1" ref="a8645c81b4d8f04055871e4291028f121" args="" -->
+<div class="textblock"><p>Discrete trajectory built from a cnoid::BodyMotion object. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ab9f34f93394bcbbcfa9cb144698dbcad"></a><!-- doxytag: member="roboptim::retargeting::ChoreonoidBodyTrajectory::ChoreonoidBodyTrajectory" ref="ab9f34f93394bcbbcfa9cb144698dbcad" args="(cnoid::BodyMotionPtr bodyMotion, bool addFreeFloating)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00003.html#a8645c81b4d8f04055871e4291028f121">roboptim::retargeting::Bone::activeVertexIndex1</a></td>
+          <td class="memname"><a class="el" href="a00003.html#ab9f34f93394bcbbcfa9cb144698dbcad">roboptim::retargeting::ChoreonoidBodyTrajectory::ChoreonoidBodyTrajectory</a> </td>
+          <td>(</td>
+          <td class="paramtype">cnoid::BodyMotionPtr&#160;</td>
+          <td class="paramname"><em>bodyMotion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>addFreeFloating</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>  throw ()<code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">roboptim::retargeting::BoneLength::BoneLength()</a>, and <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
 </div>
 </div>
-<a class="anchor" id="a8ba9f62d6028b0a37a0d4491d152dc91"></a><!-- doxytag: member="roboptim::retargeting::Bone::activeVertexIndex2" ref="a8ba9f62d6028b0a37a0d4491d152dc91" args="" -->
+<a class="anchor" id="a1e8a0c0dd3b73014792b8ce702a7cfdf"></a><!-- doxytag: member="roboptim::retargeting::ChoreonoidBodyTrajectory::~ChoreonoidBodyTrajectory" ref="a1e8a0c0dd3b73014792b8ce702a7cfdf" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00003.html#a8ba9f62d6028b0a37a0d4491d152dc91">roboptim::retargeting::Bone::activeVertexIndex2</a></td>
+          <td class="memname">virtual <a class="el" href="a00003.html#a1e8a0c0dd3b73014792b8ce702a7cfdf">roboptim::retargeting::ChoreonoidBodyTrajectory::~ChoreonoidBodyTrajectory</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>  throw ()<code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">roboptim::retargeting::BoneLength::BoneLength()</a>, and <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
 </div>
 </div>
-<a class="anchor" id="a6bd16c9eb31383777582bfbd70ff5d62"></a><!-- doxytag: member="roboptim::retargeting::Bone::goalLength" ref="a6bd16c9eb31383777582bfbd70ff5d62" args="" -->
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a444f5f0d541f20962d5ca08bcd717a6a"></a><!-- doxytag: member="roboptim::retargeting::ChoreonoidBodyTrajectory::ROBOPTIM_IMPLEMENT_CLONE" ref="a444f5f0d541f20962d5ca08bcd717a6a" args="(ChoreonoidBodyTrajectory)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::optional&lt;double&gt; <a class="el" href="a00003.html#a6bd16c9eb31383777582bfbd70ff5d62">roboptim::retargeting::Bone::goalLength</a></td>
+          <td class="memname"><a class="el" href="a00003.html#a444f5f0d541f20962d5ca08bcd717a6a">roboptim::retargeting::ChoreonoidBodyTrajectory::ROBOPTIM_IMPLEMENT_CLONE</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00003.html">ChoreonoidBodyTrajectory</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">roboptim::retargeting::BoneLength::BoneLength()</a>, and <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
 </div>
 </div>
-<a class="anchor" id="a625a27a09b23654a2af4941850ddd5d1"></a><!-- doxytag: member="roboptim::retargeting::Bone::localMarkerIndex1" ref="a625a27a09b23654a2af4941850ddd5d1" args="" -->
+<a class="anchor" id="ae6fd90044e9fc30b4176f5ca96e11da9"></a><!-- doxytag: member="roboptim::retargeting::ChoreonoidBodyTrajectory::ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS" ref="ae6fd90044e9fc30b4176f5ca96e11da9" args="(VectorInterpolation)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00003.html#a625a27a09b23654a2af4941850ddd5d1">roboptim::retargeting::Bone::localMarkerIndex1</a></td>
+          <td class="memname"><a class="el" href="a00003.html#ae6fd90044e9fc30b4176f5ca96e11da9">roboptim::retargeting::ChoreonoidBodyTrajectory::ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS</a> </td>
+          <td>(</td>
+          <td class="paramtype">VectorInterpolation&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">roboptim::retargeting::BoneLength::BoneLength()</a>, and <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac66a11de87b00388e997e5a7c5e10b5c"></a><!-- doxytag: member="roboptim::retargeting::Bone::localMarkerIndex2" ref="ac66a11de87b00388e997e5a7c5e10b5c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="a00003.html#ac66a11de87b00388e997e5a7c5e10b5c">roboptim::retargeting::Bone::localMarkerIndex2</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">roboptim::retargeting::BoneLength::BoneLength()</a>, and <a class="el" href="a00021.html#aee247deb42c3a73f8bdbe333e1e4984d">roboptim::retargeting::LaplacianDeformationEnergy&lt; T &gt;::extractBones()</a>.</p>
 
 </div>
 </div>
@@ -162,7 +164,7 @@ Public Attributes</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -173,8 +175,8 @@ Public Attributes</h2></td></tr>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00003.html">Bone</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00003.html">ChoreonoidBodyTrajectory</a>      </li>
 </body>
 </html>

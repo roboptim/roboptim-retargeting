@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::InteractionMeshGraphVertexWriter&lt; Name &gt; Class Template Reference</title>
+<title>roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,43 +56,72 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::InteractionMeshGraphVertexWriter&lt; Name &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::InteractionMeshGraphVertexWriter" -->
-<p>Write a vertex using the Graphviz format.  
+<!-- doxytag: class="roboptim::retargeting::JointToMarkerPositionChoreonoid" -->
+<p>Convert joint position into marker position.  
  <a href="a00016.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/animated-interaction-mesh.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/function/joint-to-marker/choreonoid.hh&gt;</code></p>
 
-<p><a href="a00400.html">List of all members.</a></p>
+<p><a href="a00153.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#aa0669d8a8d0e121138a84ec06cdb2cf5">InteractionMeshGraphVertexWriter</a> (Name name)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;class Vertex &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00016.html#afabad3815af6fe1f77cc41a74732def7">operator()</a> (std::ostream &amp;out, const <a class="el" href="a00120.html">Vertex</a> &amp;v) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#a428e8576d395ff87d28fa81c02218d3f">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#a4e89cc53c44543fa1e0bafedcfb956d1">JointToMarkerPositionChoreonoid</a> (cnoid::BodyIMeshPtr mesh)  throw (std::runtime_error)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#a6009694833dee5264fcffc62e78ea838">~JointToMarkerPositionChoreonoid</a> ()  throw ()</td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#aa9529aa4ed960da66ef1a7411f83c057">impl_compute</a> (result_t &amp;result, const argument_t &amp;x) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#a4344329a17bc0570f39312f34fe2c472">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;x, size_type functionId) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00016.html#acea682566ae2127a32eff851825ed0b4">impl_jacobian</a> (jacobian_t &amp;jacobian, const argument_t &amp;x) const   throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename Derived &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00016.html#a0e2ea2be803b274d7f0c695abb834450">updateDR</a> (const typename Eigen::MatrixBase&lt; Derived &gt; &amp;x) const   throw ()</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Name&gt;<br/>
-class roboptim::retargeting::InteractionMeshGraphVertexWriter&lt; Name &gt;</h3>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt;</h3>
 
-<p>Write a vertex using the Graphviz format. </p>
+<p>Convert joint position into marker position. </p>
+<p>Input: [q] where q is the value of a particular joint [q] is the full robot configuration including the free-floating joint.</p>
+<p>Output: [m] where m is a marker position in the 3d space (x, y, z) [m] is the array of all markers associated with the character</p>
+<p>The joint/marker offset is constant. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aa0669d8a8d0e121138a84ec06cdb2cf5"></a><!-- doxytag: member="roboptim::retargeting::InteractionMeshGraphVertexWriter::InteractionMeshGraphVertexWriter" ref="aa0669d8a8d0e121138a84ec06cdb2cf5" args="(Name name)" -->
+<a class="anchor" id="a4e89cc53c44543fa1e0bafedcfb956d1"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::JointToMarkerPositionChoreonoid" ref="a4e89cc53c44543fa1e0bafedcfb956d1" args="(cnoid::BodyIMeshPtr mesh)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Name &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00016.html">roboptim::retargeting::InteractionMeshGraphVertexWriter</a>&lt; Name &gt;::<a class="el" href="a00016.html">InteractionMeshGraphVertexWriter</a> </td>
+          <td class="memname"><a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::<a class="el" href="a00016.html">JointToMarkerPositionChoreonoid</a> </td>
           <td>(</td>
-          <td class="paramtype">Name&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td><code> [inline]</code></td>
+          <td class="paramtype">cnoid::BodyIMeshPtr&#160;</td>
+          <td class="paramname"><em>mesh</em></td><td>)</td>
+          <td>  throw (std::runtime_error)<code> [inline, explicit]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6009694833dee5264fcffc62e78ea838"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::~JointToMarkerPositionChoreonoid" ref="a6009694833dee5264fcffc62e78ea838" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::~<a class="el" href="a00016.html">JointToMarkerPositionChoreonoid</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>  throw ()<code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -101,34 +130,144 @@ template&lt;class Name &gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="afabad3815af6fe1f77cc41a74732def7"></a><!-- doxytag: member="roboptim::retargeting::InteractionMeshGraphVertexWriter::operator()" ref="afabad3815af6fe1f77cc41a74732def7" args="(std::ostream &amp;out, const Vertex &amp;v) const " -->
+<a class="anchor" id="aa9529aa4ed960da66ef1a7411f83c057"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::impl_compute" ref="aa9529aa4ed960da66ef1a7411f83c057" args="(result_t &amp;result, const argument_t &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Name &gt; </div>
-<div class="memtemplate">
-template&lt;class Vertex &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="a00016.html">roboptim::retargeting::InteractionMeshGraphVertexWriter</a>&lt; Name &gt;::operator() </td>
+          <td class="memname">void <a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::<a class="el" href="a00016.html#aa9529aa4ed960da66ef1a7411f83c057">impl_compute</a> </td>
           <td>(</td>
-          <td class="paramtype">std::ostream &amp;&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
+          <td class="paramtype">result_t &amp;&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="a00120.html">Vertex</a> &amp;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const<code> [inline]</code></td>
+          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>References <a class="el" href="a00077.html#ab29b9fedea967ac4e51af93d35047009">roboptim::retargeting::updateRobotConfiguration()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4344329a17bc0570f39312f34fe2c472"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::impl_gradient" ref="a4344329a17bc0570f39312f34fe2c472" args="(gradient_t &amp;gradient, const argument_t &amp;x, size_type functionId) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::<a class="el" href="a00016.html#a4344329a17bc0570f39312f34fe2c472">impl_gradient</a> </td>
+          <td>(</td>
+          <td class="paramtype">gradient_t &amp;&#160;</td>
+          <td class="paramname"><em>gradient</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_type&#160;</td>
+          <td class="paramname"><em>functionId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00052.html#a9ed7f7cfc049d90dab635f90939e94a5">hat()</a>, <a class="el" href="a00016.html#a0e2ea2be803b274d7f0c695abb834450">roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt;::updateDR()</a>, and <a class="el" href="a00077.html#ab29b9fedea967ac4e51af93d35047009">roboptim::retargeting::updateRobotConfiguration()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acea682566ae2127a32eff851825ed0b4"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::impl_jacobian" ref="acea682566ae2127a32eff851825ed0b4" args="(jacobian_t &amp;jacobian, const argument_t &amp;x) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::<a class="el" href="a00016.html#acea682566ae2127a32eff851825ed0b4">impl_jacobian</a> </td>
+          <td>(</td>
+          <td class="paramtype">jacobian_t &amp;&#160;</td>
+          <td class="paramname"><em>jacobian</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const argument_t &amp;&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const  throw ()<code> [inline, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="a00052.html#a9ed7f7cfc049d90dab635f90939e94a5">hat()</a>, <a class="el" href="a00016.html#a0e2ea2be803b274d7f0c695abb834450">roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt;::updateDR()</a>, and <a class="el" href="a00077.html#ab29b9fedea967ac4e51af93d35047009">roboptim::retargeting::updateRobotConfiguration()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a428e8576d395ff87d28fa81c02218d3f"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a428e8576d395ff87d28fa81c02218d3f" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::<a class="el" href="a00016.html#a428e8576d395ff87d28fa81c02218d3f">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td>(</td>
+          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0e2ea2be803b274d7f0c695abb834450"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPositionChoreonoid::updateDR" ref="a0e2ea2be803b274d7f0c695abb834450" args="(const typename Eigen::MatrixBase&lt; Derived &gt; &amp;x) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Derived &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="a00016.html">roboptim::retargeting::JointToMarkerPositionChoreonoid</a>&lt; T &gt;::<a class="el" href="a00016.html#a0e2ea2be803b274d7f0c695abb834450">updateDR</a> </td>
+          <td>(</td>
+          <td class="paramtype">const typename Eigen::MatrixBase&lt; Derived &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td> const  throw ()<code> [inline, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="a00016.html#a4344329a17bc0570f39312f34fe2c472">roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt;::impl_gradient()</a>, and <a class="el" href="a00016.html#acea682566ae2127a32eff851825ed0b4">roboptim::retargeting::JointToMarkerPositionChoreonoid&lt; T &gt;::impl_jacobian()</a>.</p>
 
 </div>
 </div>
@@ -139,7 +278,7 @@ template&lt;class Vertex &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -150,8 +289,8 @@ template&lt;class Vertex &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00016.html">InteractionMeshGraphVertexWriter</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00016.html">JointToMarkerPositionChoreonoid</a>      </li>
 </body>
 </html>

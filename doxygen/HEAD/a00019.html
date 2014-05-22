@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::JointToMarkerPosition&lt; T &gt; Class Template Reference</title>
+<title>roboptim::retargeting::detail::JointFunctionFactoryMapping&lt; T &gt;::Mapping Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,64 +56,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::JointToMarkerPosition&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::detail::JointFunctionFactoryMapping&lt; T &gt;::Mapping Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::JointToMarkerPosition" -->
-<p>Compute the offset between one joint and one or more attached markers.  
+<!-- doxytag: class="roboptim::retargeting::detail::JointFunctionFactoryMapping::Mapping" -->
+<p>Pair (name, pointer to allocator function)  
  <a href="a00019.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/function/joint-to-marker-position.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/joint-function-factory.hxx&gt;</code></p>
 
-<p><a href="a00412.html">List of all members.</a></p>
+<p><a href="a00216.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00019.html#a21a8ef7edaaf965ef5688ebc0e89e841">JointToMarkerPosition</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00019.html#a2e90acc1f011222e9e0d7179b5b8eb32">~JointToMarkerPosition</a> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00019.html#a5c5125f519a5fd8f6a62998c87720e35">name</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00019.html#a626e4e4d963d3d890ab2c0c5aef9dc0a">factory</a> )(const <a class="el" href="a00011.html">JointFunctionData</a> &amp;)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br/>
-class roboptim::retargeting::JointToMarkerPosition&lt; T &gt;</h3>
+struct roboptim::retargeting::detail::JointFunctionFactoryMapping&lt; T &gt;::Mapping</h3>
 
-<p>Compute the offset between one joint and one or more attached markers. </p>
-<p>This function is linear as the joint/marker offset is constant. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a21a8ef7edaaf965ef5688ebc0e89e841"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPosition::JointToMarkerPosition" ref="a21a8ef7edaaf965ef5688ebc0e89e841" args="()" -->
+<p>Pair (name, pointer to allocator function) </p>
+</div><hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a626e4e4d963d3d890ab2c0c5aef9dc0a"></a><!-- doxytag: member="roboptim::retargeting::detail::JointFunctionFactoryMapping::Mapping::factory" ref="a626e4e4d963d3d890ab2c0c5aef9dc0a" args=")(const JointFunctionData &amp;)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00019.html">roboptim::retargeting::JointToMarkerPosition</a>&lt; T &gt;::<a class="el" href="a00019.html">JointToMarkerPosition</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline, explicit]</code></td>
+          <td class="memname">boost::shared_ptr&lt;T&gt;(* <a class="el" href="a00013.html">roboptim::retargeting::detail::JointFunctionFactoryMapping</a>&lt; T &gt;::<a class="el" href="a00019.html#a626e4e4d963d3d890ab2c0c5aef9dc0a">Mapping::factory</a>)(const <a class="el" href="a00011.html">JointFunctionData</a> &amp;)</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Referenced by <a class="el" href="a00012.html#a19c3d78caf997b11a8c67c718fc2f34d">roboptim::retargeting::JointFunctionFactory::buildFunction()</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a2e90acc1f011222e9e0d7179b5b8eb32"></a><!-- doxytag: member="roboptim::retargeting::JointToMarkerPosition::~JointToMarkerPosition" ref="a2e90acc1f011222e9e0d7179b5b8eb32" args="()" -->
+<a class="anchor" id="a5c5125f519a5fd8f6a62998c87720e35"></a><!-- doxytag: member="roboptim::retargeting::detail::JointFunctionFactoryMapping::Mapping::name" ref="a5c5125f519a5fd8f6a62998c87720e35" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00019.html">roboptim::retargeting::JointToMarkerPosition</a>&lt; T &gt;::~<a class="el" href="a00019.html">JointToMarkerPosition</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
+          <td class="memname">const char* <a class="el" href="a00013.html">roboptim::retargeting::detail::JointFunctionFactoryMapping</a>&lt; T &gt;::<a class="el" href="a00019.html#a5c5125f519a5fd8f6a62998c87720e35">Mapping::name</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Referenced by <a class="el" href="a00012.html#a19c3d78caf997b11a8c67c718fc2f34d">roboptim::retargeting::JointFunctionFactory::buildFunction()</a>.</p>
 
 </div>
 </div>
@@ -124,7 +121,7 @@ template&lt;typename T &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -135,8 +132,10 @@ template&lt;typename T &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00019.html">JointToMarkerPosition</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00078.html">detail</a>      </li>
+      <li class="navelem"><a class="el" href="a00013.html">JointFunctionFactoryMapping</a>      </li>
+      <li class="navelem"><a class="el" href="a00019.html">Mapping</a>      </li>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::Collision Class Reference</title>
+<title>roboptim::retargeting::DistanceToMarker&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,38 +56,60 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::Collision Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::DistanceToMarker&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::Collision" -->
-<p><a class="el" href="a00006.html" title="Collision constraint (not implemented).">Collision</a> constraint (not implemented).  
+<!-- doxytag: class="roboptim::retargeting::DistanceToMarker" -->
+<p>Distance between markers expected positions and reference markers positions.  
  <a href="a00006.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/collision.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/function/distance-to-marker.hh&gt;</code></p>
 
-<p><a href="a00405.html">List of all members.</a></p>
+<p><a href="a00147.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef boost::shared_ptr<br class="typebreak"/>
+&lt; <a class="el" href="a00016.html">JointToMarkerPositionChoreonoid</a><br class="typebreak"/>
+&lt; T &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a385806879afe6ec6a36ac430e361a50e">JointToMarkerShPtr_t</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a44a11728d0271b24297d0aee3faf4e12">Collision</a> ()  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a123426c822449c9ae82c078616849a24">~Collision</a> ()  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a2c76ec91e450bb207f4f0172bec1eb13">impl_compute</a> (result_t &amp;result, const argument_t &amp;x) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#aa483ae700df77b1fb5599520d13ee8e4">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;argument, size_type functionId=0) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#aad4f891a20a8b04cdba0405f3bcf594a">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#afb793c1eebe490b9171752fc1f891648">DistanceToMarker</a> (<a class="el" href="a00006.html#a385806879afe6ec6a36ac430e361a50e">JointToMarkerShPtr_t</a> jointToMarker, const vector_t &amp;markersReferencePosition)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#afb793c1eebe490b9171752fc1f891648"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a51b275f67daa25ba35c272aa8d6e2289">~DistanceToMarker</a> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#ae2767d93e4cc9d105c294202f02d4b39">impl_compute</a> (result_t &amp;result, const argument_t &amp;x) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a370e1b95c3620e3e8e24d715a607a93a">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;x, size_type i) const </td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="a00006.html" title="Collision constraint (not implemented).">Collision</a> constraint (not implemented). </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a44a11728d0271b24297d0aee3faf4e12"></a><!-- doxytag: member="roboptim::retargeting::Collision::Collision" ref="a44a11728d0271b24297d0aee3faf4e12" args="()" -->
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::DistanceToMarker&lt; T &gt;</h3>
+
+<p>Distance between markers expected positions and reference markers positions. </p>
+<p>This is used as cost function for the marker to joints problem.</p>
+<p>This function takes a robot configuration as input. Using JointToMarker function, it computes where the markers would be in this particular configuration. Then it computes the distance between the current position and the expected, constant, ones. The reference positions are determined when this function is built.</p>
+<p>Input: robot configuration (size: 6 + number of DOFs) Output: cost (size: 1)</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Function traits type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Member Typedef Documentation</h2>
+<a class="anchor" id="a385806879afe6ec6a36ac430e361a50e"></a><!-- doxytag: member="roboptim::retargeting::DistanceToMarker::JointToMarkerShPtr_t" ref="a385806879afe6ec6a36ac430e361a50e" args="" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00006.html#a44a11728d0271b24297d0aee3faf4e12">roboptim::retargeting::Collision::Collision</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [explicit]</code></td>
+          <td class="memname">typedef boost::shared_ptr&lt;<a class="el" href="a00016.html">JointToMarkerPositionChoreonoid</a>&lt;T&gt; &gt; <a class="el" href="a00006.html">roboptim::retargeting::DistanceToMarker</a>&lt; T &gt;::<a class="el" href="a00006.html#a385806879afe6ec6a36ac430e361a50e">JointToMarkerShPtr_t</a></td>
         </tr>
       </table>
 </div>
@@ -95,15 +117,56 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a123426c822449c9ae82c078616849a24"></a><!-- doxytag: member="roboptim::retargeting::Collision::~Collision" ref="a123426c822449c9ae82c078616849a24" args="()" -->
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="afb793c1eebe490b9171752fc1f891648"></a><!-- doxytag: member="roboptim::retargeting::DistanceToMarker::DistanceToMarker" ref="afb793c1eebe490b9171752fc1f891648" args="(JointToMarkerShPtr_t jointToMarker, const vector_t &amp;markersReferencePosition)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00006.html#a123426c822449c9ae82c078616849a24">roboptim::retargeting::Collision::~Collision</a> </td>
+          <td class="memname"><a class="el" href="a00006.html">roboptim::retargeting::DistanceToMarker</a>&lt; T &gt;::<a class="el" href="a00006.html">DistanceToMarker</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00006.html#a385806879afe6ec6a36ac430e361a50e">JointToMarkerShPtr_t</a>&#160;</td>
+          <td class="paramname"><em>jointToMarker</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector_t &amp;&#160;</td>
+          <td class="paramname"><em>markersReferencePosition</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline, explicit]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructor. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">jointToMarker</td><td>Shared pointer to a JointToMarker function (necessary to compute the relative position of markers w.r.t robot bodies)</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">markersReferencePosition</td><td>Expected markers positions (size: 3 * number of markers) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a51b275f67daa25ba35c272aa8d6e2289"></a><!-- doxytag: member="roboptim::retargeting::DistanceToMarker::~DistanceToMarker" ref="a51b275f67daa25ba35c272aa8d6e2289" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="a00006.html">roboptim::retargeting::DistanceToMarker</a>&lt; T &gt;::~<a class="el" href="a00006.html">DistanceToMarker</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [virtual]</code></td>
+          <td><code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -112,12 +175,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a2c76ec91e450bb207f4f0172bec1eb13"></a><!-- doxytag: member="roboptim::retargeting::Collision::impl_compute" ref="a2c76ec91e450bb207f4f0172bec1eb13" args="(result_t &amp;result, const argument_t &amp;x) const " -->
+<a class="anchor" id="ae2767d93e4cc9d105c294202f02d4b39"></a><!-- doxytag: member="roboptim::retargeting::DistanceToMarker::impl_compute" ref="ae2767d93e4cc9d105c294202f02d4b39" args="(result_t &amp;result, const argument_t &amp;x) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="a00006.html#a2c76ec91e450bb207f4f0172bec1eb13">roboptim::retargeting::Collision::impl_compute</a> </td>
+          <td class="memname">void <a class="el" href="a00006.html">roboptim::retargeting::DistanceToMarker</a>&lt; T &gt;::<a class="el" href="a00006.html#ae2767d93e4cc9d105c294202f02d4b39">impl_compute</a> </td>
           <td>(</td>
           <td class="paramtype">result_t &amp;&#160;</td>
           <td class="paramname"><em>result</em>, </td>
@@ -131,7 +196,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const  throw ()</td>
+          <td></td><td> const<code> [inline, protected]</code></td>
         </tr>
       </table>
 </div>
@@ -139,12 +204,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa483ae700df77b1fb5599520d13ee8e4"></a><!-- doxytag: member="roboptim::retargeting::Collision::impl_gradient" ref="aa483ae700df77b1fb5599520d13ee8e4" args="(gradient_t &amp;gradient, const argument_t &amp;argument, size_type functionId=0) const " -->
+<a class="anchor" id="a370e1b95c3620e3e8e24d715a607a93a"></a><!-- doxytag: member="roboptim::retargeting::DistanceToMarker::impl_gradient" ref="a370e1b95c3620e3e8e24d715a607a93a" args="(gradient_t &amp;gradient, const argument_t &amp;x, size_type i) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="a00006.html#aa483ae700df77b1fb5599520d13ee8e4">roboptim::retargeting::Collision::impl_gradient</a> </td>
+          <td class="memname">void <a class="el" href="a00006.html">roboptim::retargeting::DistanceToMarker</a>&lt; T &gt;::<a class="el" href="a00006.html#a370e1b95c3620e3e8e24d715a607a93a">impl_gradient</a> </td>
           <td>(</td>
           <td class="paramtype">gradient_t &amp;&#160;</td>
           <td class="paramname"><em>gradient</em>, </td>
@@ -153,18 +220,37 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>argument</em>, </td>
+          <td class="paramname"><em>x</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>functionId</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const  throw ()</td>
+          <td></td><td> const<code> [inline, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aad4f891a20a8b04cdba0405f3bcf594a"></a><!-- doxytag: member="roboptim::retargeting::DistanceToMarker::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="aad4f891a20a8b04cdba0405f3bcf594a" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00006.html">roboptim::retargeting::DistanceToMarker</a>&lt; T &gt;::<a class="el" href="a00006.html#aad4f891a20a8b04cdba0405f3bcf594a">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
+          <td>(</td>
+          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
@@ -179,7 +265,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -190,8 +276,8 @@ Public Member Functions</h2></td></tr>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00006.html">Collision</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00006.html">DistanceToMarker</a>      </li>
 </body>
 </html>

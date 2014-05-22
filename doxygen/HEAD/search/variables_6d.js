@@ -1,11 +1,6 @@
 var searchData=
 [
-  ['m',['m',['../a00021.html#af7ad3340a765676885994f1ebe46eab9',1,'roboptim::retargeting::LaplacianDeformationEnergy::m()'],['../a00021.html#af3c1a7c8b8d04c9510d3f56b9a6ac05c',1,'roboptim::retargeting::LaplacianDeformationEnergy::M()']]],
-  ['m3',['m3',['../a00021.html#a6601d3cf62bad0d55b8c7326aa5254d7',1,'roboptim::retargeting::LaplacianDeformationEnergy']]],
-  ['markermotion_5f',['markerMotion_',['../a00021.html#ab8b2e60d07753b8d63f6756df68a3126',1,'roboptim::retargeting::LaplacianDeformationEnergy']]],
-  ['mesh',['mesh',['../a00021.html#a108441e38021477a547e0a017718df54',1,'roboptim::retargeting::LaplacianDeformationEnergy']]],
-  ['mocapmotion_5f',['mocapMotion_',['../a00116.html#ab6c8992dc871c9a0d866d2e58a2da9b7',1,'roboptim::retargeting::Torque']]],
-  ['model_5f',['model_',['../a00116.html#ae23de8d81e74b3031d0e1c4d0968f90b',1,'roboptim::retargeting::Torque']]],
-  ['morphedmarkermotions',['morphedMarkerMotions',['../a00021.html#a4c01631e874f71285dac83a58783db07',1,'roboptim::retargeting::LaplacianDeformationEnergy']]],
-  ['mtm',['MtM',['../a00021.html#a6b46a5c739eb92428c4010bb4e9cc4b7',1,'roboptim::retargeting::LaplacianDeformationEnergy']]]
+  ['map',['map',['../a00013.html#aada38e19b7adae73fb45d880b5263f4c',1,'roboptim::retargeting::detail::JointFunctionFactoryMapping::map()'],['../a00023.html#a58b490832f0b8e4e335010b1f90bdfcf',1,'roboptim::retargeting::detail::MarkerFunctionFactoryMapping::map()'],['../a00028.html#a0cfdbe04a1e05d3fcd1a02c0ded3a111',1,'roboptim::retargeting::detail::MarkerToJointFunctionFactoryMapping::map()']]],
+  ['markerset',['markerSet',['../a00021.html#a498613adf3ceb15eec977db1750d836c',1,'roboptim::retargeting::MarkerFunctionData::markerSet()'],['../a00025.html#a99b6c9ec1b15909d313247bfaf69bcab',1,'roboptim::retargeting::MarkerProblemOptions::markerSet()'],['../a00026.html#a07f74707ed67e52766dac2df206e3e14',1,'roboptim::retargeting::MarkerToJointFunctionData::markerSet()'],['../a00030.html#a284b3cc17f29da5966e1ffe641053c5a',1,'roboptim::retargeting::MarkerToJointProblemOptions::markerSet()']]],
+  ['markerstrajectory',['markersTrajectory',['../a00021.html#a8a97080b4e7835094620824e550a9fdd',1,'roboptim::retargeting::MarkerFunctionData::markersTrajectory()'],['../a00025.html#ad9f0ed3c5b84c4ada889710f153ff8d3',1,'roboptim::retargeting::MarkerProblemOptions::markersTrajectory()'],['../a00026.html#a790febf7205ea937ba83c5e0f5d2ca5a',1,'roboptim::retargeting::MarkerToJointFunctionData::markersTrajectory()'],['../a00030.html#aae87956afe2dcd8d497bc40c6e44ee2a',1,'roboptim::retargeting::MarkerToJointProblemOptions::markersTrajectory()']]]
 ];

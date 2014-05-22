@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$a00049.html" title="metapod::hrp4g2::Node3" alt="" coords="5,5,176,35"/>
+<area shape="rect" id="node1" href="$a00032.html" title="Abstract Base Class for problem builders." alt="" coords="7,58,284,89"/>
+<area shape="rect" id="node3" href="$a00014.html" title="Build a joint retargeting problem." alt="" coords="364,5,671,35"/>
+<area shape="rect" id="node5" href="$a00024.html" title="Build a marker retargeting problem." alt="" coords="357,58,677,89"/>
+<area shape="rect" id="node7" href="$a00029.html" title="Build a joint retargeting problem." alt="" coords="335,111,700,142"/>
 </map>

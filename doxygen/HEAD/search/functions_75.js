@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['unexpectednodetypeerrormessage',['unexpectedNodeTypeErrorMessage',['../a00173.html#aec7eedf3268ee44b795890f8dd2a6cab',1,'roboptim::retargeting']]]
+  ['updatedr',['updateDR',['../a00009.html#aa8492fe9e40872a9994695f0ae5c5ff0',1,'roboptim::retargeting::ForwardGeometryChoreonoid::updateDR()'],['../a00016.html#a0e2ea2be803b274d7f0c695abb834450',1,'roboptim::retargeting::JointToMarkerPositionChoreonoid::updateDR()']]],
+  ['updaterobotconfiguration',['updateRobotConfiguration',['../a00077.html#ab29b9fedea967ac4e51af93d35047009',1,'roboptim::retargeting']]],
+  ['uthetaposetotransform',['uthetaPoseToTransform',['../a00052.html#a8a23481b022df913861b87880187e5b9',1,'uthetaPoseToTransform(Eigen::Transform&lt; typename Derived::RealScalar, _Dim, _Mode, _Options &gt; &amp;transform, const Eigen::MatrixBase&lt; Derived &gt; &amp;result):&#160;eigen-rigid-body.hxx'],['../a00053.html#a8a23481b022df913861b87880187e5b9',1,'uthetaPoseToTransform(Eigen::Transform&lt; typename Derived::RealScalar, _Dim, _Mode, _Options &gt; &amp;transform, const Eigen::MatrixBase&lt; Derived &gt; &amp;result):&#160;eigen-rigid-body.hxx']]],
+  ['uthetatotransform',['uthetaToTransform',['../a00052.html#ad5830c35f32edf60f1d0e3eb6ea7a065',1,'uthetaToTransform(Eigen::MatrixBase&lt; Derived &gt; const &amp;transform, const Eigen::MatrixBase&lt; OtherDerived &gt; &amp;utheta):&#160;eigen-rigid-body.hxx'],['../a00053.html#a74863c828995188eab2e3cd8c27eada2',1,'uthetaToTransform(Eigen::MatrixBase&lt; Derived &gt; const &amp;linear, const Eigen::MatrixBase&lt; OtherDerived &gt; &amp;utheta):&#160;eigen-rigid-body.hxx']]]
 ];

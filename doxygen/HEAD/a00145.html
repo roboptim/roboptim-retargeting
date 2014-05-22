@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>joint.hh File Reference</title>
+<title>Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -12,8 +12,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -34,8 +34,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -49,70 +51,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-  initNavTree('a00145.html','');
+  initNavTree('a00003.html','');
 </script>
 <div id="doc-content">
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
-<div class="title">joint.hh File Reference</div>  </div>
+<div class="title">roboptim::retargeting::ChoreonoidBodyTrajectory Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string&gt;</code><br/>
-<code>#include &lt;boost/shared_ptr.hpp&gt;</code><br/>
-<code>#include &lt;roboptim/core/differentiable-function.hh&gt;</code><br/>
-<code>#include &lt;roboptim/core/generic-solver.hh&gt;</code><br/>
-<code>#include &lt;roboptim/core/linear-function.hh&gt;</code><br/>
-<code>#include &lt;roboptim/core/problem.hh&gt;</code><br/>
-<code>#include &lt;roboptim/core/solver.hh&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00125.html">roboptim/retargeting/acceleration-energy.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00128.html">roboptim/retargeting/animated-interaction-mesh.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00150.html">roboptim/retargeting/laplacian-deformation-energy.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00130.html">roboptim/retargeting/bone-length.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00160.html">roboptim/retargeting/position.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00136.html">roboptim/retargeting/collision.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00165.html">roboptim/retargeting/torque.hh</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="a00170.html">roboptim/retargeting/zmp.hh</a>&gt;</code><br/>
-<code>#include &lt;cnoid/Body&gt;</code><br/>
-<code>#include &lt;cnoid/src/MocapPlugin/MarkerMotion.h&gt;</code><br/>
-<code>#include &lt;cnoid/src/MocapPlugin/MarkerMotionItem.h&gt;</code><br/>
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for joint.hh:</div>
-<div class="dyncontent">
-<div class="center"><img src="a00209.png" border="0" usemap="#joint_8hh" alt=""/></div>
-<map name="joint_8hh" id="joint_8hh">
-<area shape="rect" id="node17" href="a00125.html" title="roboptim/retargeting/acceleration&#45;energy.hh" alt="" coords="897,166,1179,197"/><area shape="rect" id="node22" href="a00128.html" title="roboptim/retargeting/animated&#45;interaction&#45;mesh.hh" alt="" coords="707,246,1025,277"/><area shape="rect" id="node45" href="a00150.html" title="roboptim/retargeting/laplacian&#45;deformation&#45;energy.hh" alt="" coords="326,86,662,117"/><area shape="rect" id="node63" href="a00130.html" title="roboptim/retargeting/bone&#45;length.hh" alt="" coords="1305,166,1537,197"/><area shape="rect" id="node71" href="a00160.html" title="roboptim/retargeting/position.hh" alt="" coords="1561,166,1769,197"/><area shape="rect" id="node78" href="a00136.html" title="roboptim/retargeting/collision.hh" alt="" coords="1793,166,2003,197"/><area shape="rect" id="node82" href="a00165.html" title="roboptim/retargeting/torque.hh" alt="" coords="2373,166,2573,197"/><area shape="rect" id="node108" href="a00170.html" title="roboptim/retargeting/zmp.hh" alt="" coords="2927,166,3114,197"/><area shape="rect" id="node49" href="a00131.html" title="roboptim/retargeting/bone.hh" alt="" coords="1374,246,1566,277"/><area shape="rect" id="node55" href="a00147.html" title="roboptim/retargeting/laplacian&#45;coordinate.hh" alt="" coords="353,166,635,197"/></map>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="a00210.png" border="0" usemap="#joint_8hhdep" alt=""/></div>
-<map name="joint_8hhdep" id="joint_8hhdep">
-<area shape="rect" id="node3" href="a00144.html" title="joint.cc" alt="" coords="5,86,67,117"/></map>
-</div>
-</div><table class="memberdecls">
-<tr><td colspan="2"><h2><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00018.html">roboptim::retargeting::problem::Joint</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the optimization problem on robot joint space.  <a href="a00018.html#details">More...</a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00172.html">roboptim</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><p>NDEBUG. </p>
-<br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00173.html">roboptim::retargeting</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00175.html">roboptim::retargeting::problem</a></td></tr>
-</table>
-</div><!-- contents -->
-</div>
+This is the complete list of members for <a class="el" href="a00003.html">roboptim::retargeting::ChoreonoidBodyTrajectory</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="a00003.html#ab9f34f93394bcbbcfa9cb144698dbcad">ChoreonoidBodyTrajectory</a>(cnoid::BodyMotionPtr bodyMotion, bool addFreeFloating)</td><td><a class="el" href="a00003.html">roboptim::retargeting::ChoreonoidBodyTrajectory</a></td><td><code> [inline, explicit]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00003.html#a444f5f0d541f20962d5ca08bcd717a6a">ROBOPTIM_IMPLEMENT_CLONE</a>(ChoreonoidBodyTrajectory)</td><td><a class="el" href="a00003.html">roboptim::retargeting::ChoreonoidBodyTrajectory</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00003.html#ae6fd90044e9fc30b4176f5ca96e11da9">ROBOPTIM_TWICE_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS</a>(VectorInterpolation)</td><td><a class="el" href="a00003.html">roboptim::retargeting::ChoreonoidBodyTrajectory</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="a00003.html#a1e8a0c0dd3b73014792b8ce702a7cfdf">~ChoreonoidBodyTrajectory</a>()</td><td><a class="el" href="a00003.html">roboptim::retargeting::ChoreonoidBodyTrajectory</a></td><td><code> [inline, virtual]</code></td></tr>
+</table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -121,8 +79,8 @@ Namespaces</h2></td></tr>
 </iframe>
 </div>
 
+</div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00145.html">joint.hh</a>      </li>
 </body>
 </html>

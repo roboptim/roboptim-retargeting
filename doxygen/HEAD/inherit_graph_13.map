@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$a00038.html" title="metapod::hrp4g2::Node2" alt="" coords="5,5,176,35"/>
+<area shape="rect" id="node1" href="$a00008.html" title="Compute a particular body position for a given configuration." alt="" coords="7,5,303,35"/>
+<area shape="rect" id="node3" href="$a00009.html" title="Compute forward geometry for a particular robot model." alt="" coords="352,5,720,35"/>
 </map>

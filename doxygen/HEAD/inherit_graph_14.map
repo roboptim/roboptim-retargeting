@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$a00039.html" title="metapod::hrp4g2::Node20" alt="" coords="5,5,184,35"/>
+<area shape="rect" id="node1" href="$a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="7,58,252,89"/>
+<area shape="rect" id="node3" href="$a00012.html" title="Creates functions from their name for joint&#45;joint optimization." alt="" coords="332,5,607,35"/>
+<area shape="rect" id="node5" href="$a00022.html" title="Creates functions from their name for marker&#45;joint optimization." alt="" coords="325,58,613,89"/>
+<area shape="rect" id="node7" href="$a00027.html" title="Creates functions from their name for joint&#45;joint optimization." alt="" coords="303,111,636,142"/>
 </map>

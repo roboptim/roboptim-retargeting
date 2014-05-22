@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::MinimumJerkOptimizationLogger&lt; T, U &gt; Class Template Reference</title>
+<title>roboptim::retargeting::MarkerProblemBuilder&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,172 +56,97 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::MinimumJerkOptimizationLogger&lt; T, U &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::MinimumJerkOptimizationLogger" -->
-<p><a href="a00435.html">List of all members.</a></p>
+<!-- doxytag: class="roboptim::retargeting::MarkerProblemBuilder" --><!-- doxytag: inherits="roboptim::retargeting::ProblemBuilder" -->
+<p>Build a marker retargeting problem.  
+ <a href="a00024.html#details">More...</a></p>
+
+<p><code>#include &lt;roboptim/retargeting/problem/marker-problem-builder.hh&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00197.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_problem_builder_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_problem_builder_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_marker_problem_builder_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="a00032.html" title="Abstract Base Class for problem builders." alt="" coords="27,6,304,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00198.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_problem_builder_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_problem_builder_3_01_t_01_4_coll__map" id="roboptim_1_1retargeting_1_1_marker_problem_builder_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="a00032.html" title="Abstract Base Class for problem builders." alt="" coords="27,6,304,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+
+<p><a href="a00199.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#a341ecc050e1b16d981b12c83ffc92061">solver_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef solver_t::problem_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#a2a4cdc676de4ae483ac20ecc50a6fcb5">problem_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-solver_t::problem_t::value_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#ae109c8e129783d5c80e868f9dc24a5f6">value_type</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-solver_t::problem_t::vector_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#a7bf41fcba4a850015914e635a462345d">vector_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-solver_t::problem_t::function_t::discreteInterval_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#ae1fda91413e87b17c116c3e99eff1eb3">discreteInterval_t</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#a0da614109e17a8a2dd171b54eba684e0">MinimumJerkOptimizationLogger</a> (<a class="el" href="a00024.html#a341ecc050e1b16d981b12c83ffc92061">solver_t</a> &amp;solver, const boost::filesystem::path &amp;path, <a class="el" href="a00024.html#ae1fda91413e87b17c116c3e99eff1eb3">discreteInterval_t</a> discreteInterval, boost::shared_ptr&lt; <a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt; &gt; trajectory, boost::shared_ptr&lt; <a class="el" href="a00121.html">ZMP</a>&lt; U &gt; &gt; zmp)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#ae7ffc1ff7b27a30a58c09cbf893df0fb">~MinimumJerkOptimizationLogger</a> ()  throw ()</td></tr>
-<tr><td colspan="2"><h2><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#acf1293620350743b7f1075ca56516d2f">perIterationCallbackUnsafe</a> (const typename solver_t::vector_t &amp;x, const typename solver_t::problem_t &amp;pb)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">operator()</a> (boost::shared_ptr&lt; T &gt; &amp;problem, <a class="el" href="a00021.html">MarkerFunctionData</a> &amp;data)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate the problem and return it.  <a href="#a3b781c73736bfc8ea9f2887e34a73c1e"></a><br/></td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#ab1f640c8efd078e50cd08554f6a3339e">MarkerProblemBuilder</a> (const <a class="el" href="a00025.html">MarkerProblemOptions</a> &amp;options)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor and destructor.  <a href="#ab1f640c8efd078e50cd08554f6a3339e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00024.html#a03a593eb62d041a2dfd61ee79a32a8bd">~MarkerProblemBuilder</a> ()</td></tr>
 </table>
-<h3>template&lt;typename T, typename U&gt;<br/>
- class roboptim::retargeting::MinimumJerkOptimizationLogger&lt; T, U &gt;</h3>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;</h3>
 
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="ae1fda91413e87b17c116c3e99eff1eb3"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::discreteInterval_t" ref="ae1fda91413e87b17c116c3e99eff1eb3" args="" -->
+<p>Build a marker retargeting problem. </p>
+<p>This class is in charge of building the optimization problem: the cost function, the constraints (function, intervals, scale) and will set the starting point of the optimization process.</p>
+<p>It will also load the data that which will be used by the constraints function.</p>
+<p>This class is parametrized by T, the problem type. By changing the problem type, sparse problems can also be solved.</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>problem type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ab1f640c8efd078e50cd08554f6a3339e"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemBuilder::MarkerProblemBuilder" ref="ab1f640c8efd078e50cd08554f6a3339e" args="(const MarkerProblemOptions &amp;options)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef solver_t::problem_t::function_t::discreteInterval_t <a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html#ae1fda91413e87b17c116c3e99eff1eb3">discreteInterval_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a2a4cdc676de4ae483ac20ecc50a6fcb5"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::problem_t" ref="a2a4cdc676de4ae483ac20ecc50a6fcb5" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef solver_t::problem_t <a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html#a2a4cdc676de4ae483ac20ecc50a6fcb5">problem_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a341ecc050e1b16d981b12c83ffc92061"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::solver_t" ref="a341ecc050e1b16d981b12c83ffc92061" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef T <a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html#a341ecc050e1b16d981b12c83ffc92061">solver_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae109c8e129783d5c80e868f9dc24a5f6"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::value_type" ref="ae109c8e129783d5c80e868f9dc24a5f6" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef solver_t::problem_t::value_type <a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html#ae109c8e129783d5c80e868f9dc24a5f6">value_type</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a7bf41fcba4a850015914e635a462345d"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::vector_t" ref="a7bf41fcba4a850015914e635a462345d" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef solver_t::problem_t::vector_t <a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html#a7bf41fcba4a850015914e635a462345d">vector_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a0da614109e17a8a2dd171b54eba684e0"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::MinimumJerkOptimizationLogger" ref="a0da614109e17a8a2dd171b54eba684e0" args="(solver_t &amp;solver, const boost::filesystem::path &amp;path, discreteInterval_t discreteInterval, boost::shared_ptr&lt; Trajectory&lt; 3 &gt; &gt; trajectory, boost::shared_ptr&lt; ZMP&lt; U &gt; &gt; zmp)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html">MinimumJerkOptimizationLogger</a> </td>
+          <td class="memname"><a class="el" href="a00024.html">roboptim::retargeting::MarkerProblemBuilder</a>&lt; T &gt;::<a class="el" href="a00024.html">MarkerProblemBuilder</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00024.html#a341ecc050e1b16d981b12c83ffc92061">solver_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>solver</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="a00025.html">MarkerProblemOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const boost::filesystem::path &amp;&#160;</td>
-          <td class="paramname"><em>path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00024.html#ae1fda91413e87b17c116c3e99eff1eb3">discreteInterval_t</a>&#160;</td>
-          <td class="paramname"><em>discreteInterval</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt; &gt;&#160;</td>
-          <td class="paramname"><em>trajectory</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="a00121.html">ZMP</a>&lt; U &gt; &gt;&#160;</td>
-          <td class="paramname"><em>zmp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>Constructor and destructor. </p>
+<p>Constructor</p>
+<dl class="warning"><dt><b>Warning:</b></dt><dd>options are kept as a const reference so this object lifespan much be longer than the one of this object.</dd></dl>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">options</td><td>problem description </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a class="anchor" id="ae7ffc1ff7b27a30a58c09cbf893df0fb"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::~MinimumJerkOptimizationLogger" ref="ae7ffc1ff7b27a30a58c09cbf893df0fb" args="()" -->
+<a class="anchor" id="a03a593eb62d041a2dfd61ee79a32a8bd"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemBuilder::~MarkerProblemBuilder" ref="a03a593eb62d041a2dfd61ee79a32a8bd" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::~<a class="el" href="a00024.html">MinimumJerkOptimizationLogger</a> </td>
+          <td class="memname"><a class="el" href="a00024.html">roboptim::retargeting::MarkerProblemBuilder</a>&lt; T &gt;::~<a class="el" href="a00024.html">MarkerProblemBuilder</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [inline]</code></td>
+          <td></td>
         </tr>
       </table>
 </div>
@@ -230,32 +155,37 @@ template&lt;typename T, typename U&gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="acf1293620350743b7f1075ca56516d2f"></a><!-- doxytag: member="roboptim::retargeting::MinimumJerkOptimizationLogger::perIterationCallbackUnsafe" ref="acf1293620350743b7f1075ca56516d2f" args="(const typename solver_t::vector_t &amp;x, const typename solver_t::problem_t &amp;pb)" -->
+<a class="anchor" id="a3b781c73736bfc8ea9f2887e34a73c1e"></a><!-- doxytag: member="roboptim::retargeting::MarkerProblemBuilder::operator()" ref="a3b781c73736bfc8ea9f2887e34a73c1e" args="(boost::shared_ptr&lt; T &gt; &amp;problem, MarkerFunctionData &amp;data)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, typename U&gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="a00024.html">roboptim::retargeting::MinimumJerkOptimizationLogger</a>&lt; T, U &gt;::<a class="el" href="a00024.html#acf1293620350743b7f1075ca56516d2f">perIterationCallbackUnsafe</a> </td>
+          <td class="memname">void <a class="el" href="a00024.html">roboptim::retargeting::MarkerProblemBuilder</a>&lt; T &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">const typename solver_t::vector_t &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
+          <td class="paramtype">boost::shared_ptr&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>problem</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const typename solver_t::problem_t &amp;&#160;</td>
-          <td class="paramname"><em>pb</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00021.html">MarkerFunctionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td><code> [inline, protected, virtual]</code></td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Instantiate the problem and return it. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>shared pointer containing the newly created problem. </dd></dl>
+
+<p>References <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint()</a>, <a class="el" href="a00077.html#a869c0e66a1f79bea5039767a7db08c7d">roboptim::retargeting::buildDataFromOptions()</a>, <a class="el" href="a00022.html#a60988061cb8d010ebdcc294dc60cb33d">roboptim::retargeting::MarkerFunctionFactory::buildFunction()</a>, <a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">roboptim::retargeting::Constraint&lt; T &gt;::function</a>, <a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">roboptim::retargeting::Constraint&lt; T &gt;::intervals</a>, <a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">roboptim::retargeting::Constraint&lt; T &gt;::scales</a>, <a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">roboptim::retargeting::Constraint&lt; T &gt;::stateFunctionOrder</a>, and <a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">roboptim::retargeting::Constraint&lt; T &gt;::type</a>.</p>
 
 </div>
 </div>
@@ -266,7 +196,7 @@ template&lt;typename T, typename U&gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -277,8 +207,8 @@ template&lt;typename T, typename U&gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00024.html">MinimumJerkOptimizationLogger</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00024.html">MarkerProblemBuilder</a>      </li>
 </body>
 </html>

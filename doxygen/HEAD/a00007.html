@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::CostReferenceTrajectory&lt; T &gt; Class Template Reference</title>
+<title>roboptim::retargeting::detail::DistanceToReference&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,220 +56,79 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::CostReferenceTrajectory&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">roboptim::retargeting::detail::DistanceToReference&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::CostReferenceTrajectory" -->
-<p><code>#include &lt;roboptim/retargeting/function/cost-reference-trajectory.hh&gt;</code></p>
+<!-- doxytag: class="roboptim::retargeting::detail::DistanceToReference" -->
+<p>Quadratic function computing the distance between a vector and a reference.  
+ <a href="a00007.html#details">More...</a></p>
 
-<p><a href="a00406.html">List of all members.</a></p>
+<p><code>#include &lt;roboptim/retargeting/function/distance-to-marker.hh&gt;</code></p>
+
+<p><a href="a00212.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-parent_t::discreteInterval_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a083273964074f2781aaa9234ab479eed">discreteInterval_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Import discrete interval type.  <a href="#a083273964074f2781aaa9234ab479eed"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef parent_t::interval_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a517757a27d33a6783cc5fc7813f08d84">interval_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Import discrete interval type.  <a href="#a517757a27d33a6783cc5fc7813f08d84"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a2e3cc730c92a46ebe3f03ff37bf6d7f6">trajectory_t</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a3690f5f62c13bd99a7f56597200af1d5">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericDifferentiableFunction&lt; T &gt;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a2cc261a99083e65e985436b994597a84">CostReferenceTrajectory</a> (boost::shared_ptr&lt; <a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt; &gt; referenceTrajectory, size_type dofId, value_type dt)  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a34f5da50a3a953272f2b7650cb6722fb">~CostReferenceTrajectory</a> ()  throw ()</td></tr>
-<tr><td colspan="2"><h2><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#ab1c2866f4645092db63e1d7081275cc5">impl_compute</a> (result_t &amp;result, const argument_t &amp;p) const   throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#a7a168c542af26f024f9a58749873595f">impl_gradient</a> (gradient_t &amp;gradient, const argument_t &amp;p, size_type) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#affb3d5939d57dfe4b8d30f01f0496555">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> (GenericNumericQuadraticFunction&lt; T &gt;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00007.html#aed4254d845d0e43a3d3b15c1d81f16e5">DistanceToReference</a> (const vector_t &amp;reference)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aed4254d845d0e43a3d3b15c1d81f16e5"></a><br/></td></tr>
 </table>
-<h3>template&lt;typename T&gt;<br/>
- class roboptim::retargeting::CostReferenceTrajectory&lt; T &gt;</h3>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::detail::DistanceToReference&lt; T &gt;</h3>
 
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a083273964074f2781aaa9234ab479eed"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::discreteInterval_t" ref="a083273964074f2781aaa9234ab479eed" args="" -->
+<p>Quadratic function computing the distance between a vector and a reference. </p>
+<p>This formula is widely used as a cost function. In this particular case, it will be used by <a class="el" href="a00006.html" title="Distance between markers expected positions and reference markers positions.">DistanceToMarker</a> class (by chaining JointToMarker and this class).</p>
+<p>Input: x (size: reference vector size) Output: <img class="formulaInl" alt="$ \sum (x_i - r_i)^2 $" src="form_23.png"/> (size: 1)</p>
+<p>This should be probably promoted as a generic class in RobOptim Core at some point.</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function trait </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="aed4254d845d0e43a3d3b15c1d81f16e5"></a><!-- doxytag: member="roboptim::retargeting::detail::DistanceToReference::DistanceToReference" ref="aed4254d845d0e43a3d3b15c1d81f16e5" args="(const vector_t &amp;reference)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef parent_t::discreteInterval_t <a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html#a083273964074f2781aaa9234ab479eed">discreteInterval_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Import discrete interval type. </p>
-
-</div>
-</div>
-<a class="anchor" id="a517757a27d33a6783cc5fc7813f08d84"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::interval_t" ref="a517757a27d33a6783cc5fc7813f08d84" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef parent_t::interval_t <a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html#a517757a27d33a6783cc5fc7813f08d84">interval_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Import discrete interval type. </p>
-
-</div>
-</div>
-<a class="anchor" id="a2e3cc730c92a46ebe3f03ff37bf6d7f6"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::trajectory_t" ref="a2e3cc730c92a46ebe3f03ff37bf6d7f6" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="a00119.html">Trajectory</a>&lt;3&gt; <a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html#a2e3cc730c92a46ebe3f03ff37bf6d7f6">trajectory_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2cc261a99083e65e985436b994597a84"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::CostReferenceTrajectory" ref="a2cc261a99083e65e985436b994597a84" args="(boost::shared_ptr&lt; Trajectory&lt; 3 &gt; &gt; referenceTrajectory, size_type dofId, value_type dt)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html">CostReferenceTrajectory</a> </td>
+          <td class="memname"><a class="el" href="a00007.html">roboptim::retargeting::detail::DistanceToReference</a>&lt; T &gt;::<a class="el" href="a00007.html">DistanceToReference</a> </td>
           <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="a00119.html">Trajectory</a>&lt; 3 &gt; &gt;&#160;</td>
-          <td class="paramname"><em>referenceTrajectory</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname"><em>dofId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">value_type&#160;</td>
-          <td class="paramname"><em>dt</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>  throw ()<code> [inline, explicit]</code></td>
+          <td class="paramtype">const vector_t &amp;&#160;</td>
+          <td class="paramname"><em>reference</em></td><td>)</td>
+          <td><code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="a34f5da50a3a953272f2b7650cb6722fb"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::~CostReferenceTrajectory" ref="a34f5da50a3a953272f2b7650cb6722fb" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::~<a class="el" href="a00007.html">CostReferenceTrajectory</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [inline, virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Constructor. </p>
+<p>Build the quadratic function from the reference vector.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">reference</td><td>vector </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ab1c2866f4645092db63e1d7081275cc5"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::impl_compute" ref="ab1c2866f4645092db63e1d7081275cc5" args="(result_t &amp;result, const argument_t &amp;p) const " -->
+<a class="anchor" id="affb3d5939d57dfe4b8d30f01f0496555"></a><!-- doxytag: member="roboptim::retargeting::detail::DistanceToReference::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="affb3d5939d57dfe4b8d30f01f0496555" args="(GenericNumericQuadraticFunction&lt; T &gt;)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html#ab1c2866f4645092db63e1d7081275cc5">impl_compute</a> </td>
+          <td class="memname"><a class="el" href="a00007.html">roboptim::retargeting::detail::DistanceToReference</a>&lt; T &gt;::<a class="el" href="a00007.html#affb3d5939d57dfe4b8d30f01f0496555">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
           <td>(</td>
-          <td class="paramtype">result_t &amp;&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>p</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [inline, protected, virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>ROBOPTIM_DO_NOT_CHECK_ALLOCATION </p>
-
-</div>
-</div>
-<a class="anchor" id="a7a168c542af26f024f9a58749873595f"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::impl_gradient" ref="a7a168c542af26f024f9a58749873595f" args="(gradient_t &amp;gradient, const argument_t &amp;p, size_type) const " -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void <a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html#a7a168c542af26f024f9a58749873595f">impl_gradient</a> </td>
-          <td>(</td>
-          <td class="paramtype">gradient_t &amp;&#160;</td>
-          <td class="paramname"><em>gradient</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const argument_t &amp;&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_type&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const  throw ()<code> [inline, protected, virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>ROBOPTIM_DO_NOT_CHECK_ALLOCATION </p>
-
-</div>
-</div>
-<a class="anchor" id="a3690f5f62c13bd99a7f56597200af1d5"></a><!-- doxytag: member="roboptim::retargeting::CostReferenceTrajectory::ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_" ref="a3690f5f62c13bd99a7f56597200af1d5" args="(GenericDifferentiableFunction&lt; T &gt;)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00007.html">roboptim::retargeting::CostReferenceTrajectory</a>&lt; T &gt;::<a class="el" href="a00007.html#a3690f5f62c13bd99a7f56597200af1d5">ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_</a> </td>
-          <td>(</td>
-          <td class="paramtype">GenericDifferentiableFunction&lt; T &gt;&#160;</td>
+          <td class="paramtype">GenericNumericQuadraticFunction&lt; T &gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -286,7 +145,7 @@ template&lt;typename T &gt; </div>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -297,8 +156,9 @@ template&lt;typename T &gt; </div>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00007.html">CostReferenceTrajectory</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00078.html">detail</a>      </li>
+      <li class="navelem"><a class="el" href="a00007.html">DistanceToReference</a>      </li>
 </body>
 </html>

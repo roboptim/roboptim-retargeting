@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::BoneLength Class Reference</title>
+<title>roboptim::retargeting::Constraint&lt; T &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,79 +56,187 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::BoneLength Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::Constraint&lt; T &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::BoneLength" -->
-<p><a class="el" href="a00003.html" title="Index1 should be smaller than index2 to sequentially insert the coefficients of the bone length const...">Bone</a> length constraint.  
+<!-- doxytag: class="roboptim::retargeting::Constraint" -->
+<p><a class="el" href="a00004.html" title="Constraint definition.">Constraint</a> definition.  
  <a href="a00004.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/bone-length.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/function-factory.hh&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::Constraint&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00176.png" border="0" usemap="#roboptim_1_1retargeting_1_1_constraint_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00401.html">List of all members.</a></p>
+<p><a href="a00177.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">BoneLength</a> (cnoid::MarkerIMeshPtr markerIMesh, boost::shared_ptr&lt; std::vector&lt; <a class="el" href="a00005.html">CharacterInfo</a> &gt; &gt; characterInfos, int numAllBones)  throw ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a37133df58742037f1fe72045273fdc69">~BoneLength</a> ()  throw ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#abd6461e2e45b026268588f9db4ff827b">ConstraintType</a> { <br/>
+&#160;&#160;<a class="el" href="a00004.html#abd6461e2e45b026268588f9db4ff827ba29a68263e9b55348f5e2a228bdabae9e">CONSTRAINT_TYPE_ONCE</a> =  0, 
+<br/>
+&#160;&#160;<a class="el" href="a00004.html#abd6461e2e45b026268588f9db4ff827ba01ac9d9e42d05ea352e0a1df50f43bd3">CONSTRAINT_TYPE_PER_FRAME</a>
+<br/>
+ }</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Define how the constraint will be added to the problem.  <a href="a00004.html#abd6461e2e45b026268588f9db4ff827b">More...</a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">function</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer to function.  <a href="#a054eb029bd7e9111930da5cc5a3b9a90"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">T::intervals_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">intervals</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Interval on which the constraint is valid.  <a href="#abec053c9350c126870d389b338b59fb7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; typename <br class="typebreak"/>
+T::value_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">scales</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaling to be used for this constraint.  <a href="#abbe8e2aa7383f597ba48bacbe08a92bb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00004.html#abd6461e2e45b026268588f9db4ff827b">ConstraintType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">type</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">One-time constraint or per-frame constraint?  <a href="#ae3a7e33b9eebbd46a2c5a78e37583e3f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">stateFunctionOrder</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Which derivative order is required by this constraint?  <a href="#a3c24e091f3fa899118c8bc79742a63b1"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="a00003.html" title="Index1 should be smaller than index2 to sequentially insert the coefficients of the bone length const...">Bone</a> length constraint. </p>
-<p>Compute segment length error w.r.t the goal robot model.</p>
-<p class="formulaDsp">
-<img class="formulaDsp" alt="\[ C_B(V_i') = B_i V_i - l \]" src="form_1.png"/>
-</p>
- </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a6002c0399a120d5424b81ea91012bc38"></a><!-- doxytag: member="roboptim::retargeting::BoneLength::BoneLength" ref="a6002c0399a120d5424b81ea91012bc38" args="(cnoid::MarkerIMeshPtr markerIMesh, boost::shared_ptr&lt; std::vector&lt; CharacterInfo &gt; &gt; characterInfos, int numAllBones)" -->
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+struct roboptim::retargeting::Constraint&lt; T &gt;</h3>
+
+<p><a class="el" href="a00004.html" title="Constraint definition.">Constraint</a> definition. </p>
+<p>A constraint is defined as a triplet containing:</p>
+<ul>
+<li>a (shared pointer to a) function</li>
+<li>an interval over which the constraint is satisfied</li>
+<li>a scale factor used to evaluate the function in order to obtain a better numerical stability </li>
+</ul>
+</div><hr/><h2>Member Enumeration Documentation</h2>
+<a class="anchor" id="abd6461e2e45b026268588f9db4ff827b"></a><!-- doxytag: member="roboptim::retargeting::Constraint::ConstraintType" ref="abd6461e2e45b026268588f9db4ff827b" args="" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00004.html#a6002c0399a120d5424b81ea91012bc38">roboptim::retargeting::BoneLength::BoneLength</a> </td>
-          <td>(</td>
-          <td class="paramtype">cnoid::MarkerIMeshPtr&#160;</td>
-          <td class="paramname"><em>markerIMesh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; std::vector&lt; <a class="el" href="a00005.html">CharacterInfo</a> &gt; &gt;&#160;</td>
-          <td class="paramname"><em>characterInfos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numAllBones</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>  throw ()<code> [explicit]</code></td>
+          <td class="memname">enum <a class="el" href="a00004.html#abd6461e2e45b026268588f9db4ff827b">roboptim::retargeting::Constraint::ConstraintType</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="a00003.html#a8645c81b4d8f04055871e4291028f121">roboptim::retargeting::Bone::activeVertexIndex1</a>, <a class="el" href="a00003.html#a8ba9f62d6028b0a37a0d4491d152dc91">roboptim::retargeting::Bone::activeVertexIndex2</a>, <a class="el" href="a00005.html#a262c34e4f06e6cf0692260cbf3bf5d9d">roboptim::retargeting::CharacterInfo::bones</a>, <a class="el" href="a00005.html#aa70fecd497cbfa0711082a2c26159503">roboptim::retargeting::CharacterInfo::goal</a>, <a class="el" href="a00003.html#a6bd16c9eb31383777582bfbd70ff5d62">roboptim::retargeting::Bone::goalLength</a>, <a class="el" href="a00003.html#a625a27a09b23654a2af4941850ddd5d1">roboptim::retargeting::Bone::localMarkerIndex1</a>, <a class="el" href="a00003.html#ac66a11de87b00388e997e5a7c5e10b5c">roboptim::retargeting::Bone::localMarkerIndex2</a>, and <a class="el" href="a00005.html#aab2820253ab9339e7b88b79dff63d4b0">roboptim::retargeting::CharacterInfo::org</a>.</p>
+<p>Define how the constraint will be added to the problem. </p>
+<p>Two possibilities here: either the constraint is applied on the whole trajectory or on each trajectory state. In this case, the state function may depend on dq or ddq. This is indicated by the "state function order" attribute. </p>
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="abd6461e2e45b026268588f9db4ff827ba29a68263e9b55348f5e2a228bdabae9e"></a><!-- doxytag: member="CONSTRAINT_TYPE_ONCE" ref="abd6461e2e45b026268588f9db4ff827ba29a68263e9b55348f5e2a228bdabae9e" args="" -->CONSTRAINT_TYPE_ONCE</em>&nbsp;</td><td>
+<p>This constraint will be applied once. </p>
+<p>This constraint function input size must be equal to the whole filtered trajectory parameters vector size. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd6461e2e45b026268588f9db4ff827ba01ac9d9e42d05ea352e0a1df50f43bd3"></a><!-- doxytag: member="CONSTRAINT_TYPE_PER_FRAME" ref="abd6461e2e45b026268588f9db4ff827ba01ac9d9e42d05ea352e0a1df50f43bd3" args="" -->CONSTRAINT_TYPE_PER_FRAME</em>&nbsp;</td><td>
+<p>This constraint must be repeated for each frame excluding the first and last one. </p>
+<p>This constraint function input size must be equal to the whole filtered trajectory parameters vector size. </p>
+</td></tr>
+</table>
+</dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="a37133df58742037f1fe72045273fdc69"></a><!-- doxytag: member="roboptim::retargeting::BoneLength::~BoneLength" ref="a37133df58742037f1fe72045273fdc69" args="()" -->
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a054eb029bd7e9111930da5cc5a3b9a90"></a><!-- doxytag: member="roboptim::retargeting::Constraint::function" ref="a054eb029bd7e9111930da5cc5a3b9a90" args="" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00004.html#a37133df58742037f1fe72045273fdc69">roboptim::retargeting::BoneLength::~BoneLength</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>  throw ()<code> [virtual]</code></td>
+          <td class="memname">boost::shared_ptr&lt;T&gt; <a class="el" href="a00004.html">roboptim::retargeting::Constraint</a>&lt; T &gt;::<a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">function</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Shared pointer to function. </p>
+
+<p>Referenced by <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint()</a>, <a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00029.html#a698add03671cb1e332c926087a1e07e8">roboptim::retargeting::MarkerToJointProblemBuilder&lt; T &gt;::operator()()</a>, <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abec053c9350c126870d389b338b59fb7"></a><!-- doxytag: member="roboptim::retargeting::Constraint::intervals" ref="abec053c9350c126870d389b338b59fb7" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T::intervals_t <a class="el" href="a00004.html">roboptim::retargeting::Constraint</a>&lt; T &gt;::<a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">intervals</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Interval on which the constraint is valid. </p>
+
+<p>Referenced by <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint()</a>, <a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00029.html#a698add03671cb1e332c926087a1e07e8">roboptim::retargeting::MarkerToJointProblemBuilder&lt; T &gt;::operator()()</a>, <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abbe8e2aa7383f597ba48bacbe08a92bb"></a><!-- doxytag: member="roboptim::retargeting::Constraint::scales" ref="abbe8e2aa7383f597ba48bacbe08a92bb" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;typename T::value_type&gt; <a class="el" href="a00004.html">roboptim::retargeting::Constraint</a>&lt; T &gt;::<a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">scales</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Scaling to be used for this constraint. </p>
+
+<p>Referenced by <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint()</a>, <a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00029.html#a698add03671cb1e332c926087a1e07e8">roboptim::retargeting::MarkerToJointProblemBuilder&lt; T &gt;::operator()()</a>, <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3c24e091f3fa899118c8bc79742a63b1"></a><!-- doxytag: member="roboptim::retargeting::Constraint::stateFunctionOrder" ref="a3c24e091f3fa899118c8bc79742a63b1" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t <a class="el" href="a00004.html">roboptim::retargeting::Constraint</a>&lt; T &gt;::<a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">stateFunctionOrder</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Which derivative order is required by this constraint? </p>
+<p>0 means the state function depends on q (i.e. the current configuration as produced by trajectory evaluation at a particular time). 1 means q and dq 2 means q, dq, ddq etc.</p>
+<p>See roboptim-trajectory StateFunction for more information.</p>
+<dl class="note"><dt><b>Note:</b></dt><dd>This attribute is ignored if the constraint type is set to CONSTRAINT_TYPE_ONCE. </dd></dl>
+
+<p>Referenced by <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint()</a>, <a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae3a7e33b9eebbd46a2c5a78e37583e3f"></a><!-- doxytag: member="roboptim::retargeting::Constraint::type" ref="ae3a7e33b9eebbd46a2c5a78e37583e3f" args="" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00004.html#abd6461e2e45b026268588f9db4ff827b">ConstraintType</a> <a class="el" href="a00004.html">roboptim::retargeting::Constraint</a>&lt; T &gt;::<a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">type</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>One-time constraint or per-frame constraint? </p>
+<p>If the constraint is a "one time" constraint then it will be added in the problem as it is. If this is a per-frame constraint, it will be added for each frame of the problem (excluding the first and last one). </p>
+
+<p>Referenced by <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint()</a>, <a class="el" href="a00027.html#a831d26d8091f58ed733322a82a1fcef6">roboptim::retargeting::MarkerToJointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>, and <a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">roboptim::retargeting::JointProblemBuilder&lt; T &gt;::operator()()</a>.</p>
 
 </div>
 </div>
@@ -139,7 +247,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -150,8 +258,8 @@ Public Member Functions</h2></td></tr>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00004.html">BoneLength</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00004.html">Constraint</a>      </li>
 </body>
 </html>

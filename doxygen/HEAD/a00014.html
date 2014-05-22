@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::InteractionMeshEdge Struct Reference</title>
+<title>roboptim::retargeting::JointProblemBuilder&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,33 +56,136 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::InteractionMeshEdge Struct Reference</div>  </div>
+<div class="title">roboptim::retargeting::JointProblemBuilder&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::InteractionMeshEdge" -->
-<p><code>#include &lt;roboptim/retargeting/animated-interaction-mesh.hh&gt;</code></p>
+<!-- doxytag: class="roboptim::retargeting::JointProblemBuilder" --><!-- doxytag: inherits="roboptim::retargeting::ProblemBuilder" -->
+<p>Build a joint retargeting problem.  
+ <a href="a00014.html#details">More...</a></p>
 
-<p><a href="a00395.html">List of all members.</a></p>
+<p><code>#include &lt;roboptim/retargeting/problem/joint-problem-builder.hh&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for roboptim::retargeting::JointProblemBuilder&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00188.png" border="0" usemap="#roboptim_1_1retargeting_1_1_joint_problem_builder_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_joint_problem_builder_3_01_t_01_4_inherit__map" id="roboptim_1_1retargeting_1_1_joint_problem_builder_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="a00032.html" title="Abstract Base Class for problem builders." alt="" coords="20,6,297,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::JointProblemBuilder&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00189.png" border="0" usemap="#roboptim_1_1retargeting_1_1_joint_problem_builder_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_joint_problem_builder_3_01_t_01_4_coll__map" id="roboptim_1_1retargeting_1_1_joint_problem_builder_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="a00032.html" title="Abstract Base Class for problem builders." alt="" coords="20,6,297,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+
+<p><a href="a00190.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00014.html#aa4bc5cb4a53855eca297b653ddd2a004">weight</a></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00014.html#a419fcd136d622e8dcebd8d076ab5fcac">operator()</a> (boost::shared_ptr&lt; T &gt; &amp;problem, <a class="el" href="a00011.html">JointFunctionData</a> &amp;data)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate the problem and return it.  <a href="#a419fcd136d622e8dcebd8d076ab5fcac"></a><br/></td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00014.html#a30fc58fcde5c37d547f9b43878421f5a">JointProblemBuilder</a> (const <a class="el" href="a00015.html">JointProblemOptions</a> &amp;options)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor and destructor.  <a href="#a30fc58fcde5c37d547f9b43878421f5a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00014.html#af7d9e290b6f1dcd76dfd7d7754fc125b">~JointProblemBuilder</a> ()</td></tr>
 </table>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="aa4bc5cb4a53855eca297b653ddd2a004"></a><!-- doxytag: member="roboptim::retargeting::InteractionMeshEdge::weight" ref="aa4bc5cb4a53855eca297b653ddd2a004" args="" -->
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class roboptim::retargeting::JointProblemBuilder&lt; T &gt;</h3>
+
+<p>Build a joint retargeting problem. </p>
+<p>This class is in charge of building the optimization problem: the cost function, the constraints (function, intervals, scale) and will set the starting point of the optimization process.</p>
+<p>It will also load the data that which will be used by the constraints function.</p>
+<p>This class is parametrized by T, the problem type. By changing the problem type, sparse problems can also be solved.</p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>problem type </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a30fc58fcde5c37d547f9b43878421f5a"></a><!-- doxytag: member="roboptim::retargeting::JointProblemBuilder::JointProblemBuilder" ref="a30fc58fcde5c37d547f9b43878421f5a" args="(const JointProblemOptions &amp;options)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double <a class="el" href="a00014.html#aa4bc5cb4a53855eca297b653ddd2a004">roboptim::retargeting::InteractionMeshEdge::weight</a></td>
+          <td class="memname"><a class="el" href="a00014.html">roboptim::retargeting::JointProblemBuilder</a>&lt; T &gt;::<a class="el" href="a00014.html">JointProblemBuilder</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="a00015.html">JointProblemOptions</a> &amp;&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00002.html#aabf77ab735e73e9a6d5261801faec3f6">roboptim::retargeting::AnimatedInteractionMesh::computeVertexWeights()</a>, and <a class="el" href="a00020.html#a03df067c0386adb447f82a96a8a62b81">roboptim::retargeting::LaplacianCoordinate::impl_compute()</a>.</p>
+<p>Constructor and destructor. </p>
+<p>Constructor</p>
+<dl class="warning"><dt><b>Warning:</b></dt><dd>options are kept as a const reference so this object lifespan much be longer than the one of this object.</dd></dl>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">options</td><td>problem description </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="af7d9e290b6f1dcd76dfd7d7754fc125b"></a><!-- doxytag: member="roboptim::retargeting::JointProblemBuilder::~JointProblemBuilder" ref="af7d9e290b6f1dcd76dfd7d7754fc125b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00014.html">roboptim::retargeting::JointProblemBuilder</a>&lt; T &gt;::~<a class="el" href="a00014.html">JointProblemBuilder</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a419fcd136d622e8dcebd8d076ab5fcac"></a><!-- doxytag: member="roboptim::retargeting::JointProblemBuilder::operator()" ref="a419fcd136d622e8dcebd8d076ab5fcac" args="(boost::shared_ptr&lt; T &gt; &amp;problem, JointFunctionData &amp;data)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="a00014.html">roboptim::retargeting::JointProblemBuilder</a>&lt; T &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>problem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00011.html">JointFunctionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Instantiate the problem and return it. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>shared pointer containing the newly created problem. </dd></dl>
+
+<p>References <a class="el" href="a00012.html#afafcf857b59ac9e0c47e4ef7bf35b55c">roboptim::retargeting::JointFunctionFactory::buildConstraint()</a>, <a class="el" href="a00012.html#a19c3d78caf997b11a8c67c718fc2f34d">roboptim::retargeting::JointFunctionFactory::buildFunction()</a>, <a class="el" href="a00077.html#aa7d44ffa63cd035279ffb4a7e98ca195">roboptim::retargeting::buildJointDataFromOptions()</a>, <a class="el" href="a00011.html#a816c554ad3e8c6339ff8ad0bd6d3dfc5">roboptim::retargeting::JointFunctionData::cost</a>, <a class="el" href="a00011.html#a4962c6ce72d945c55997d77aa64e9433">roboptim::retargeting::JointFunctionData::disabledJointsTrajectory</a>, <a class="el" href="a00011.html#aa30a90c9d4ec44825a98d200f6f4f3df">roboptim::retargeting::JointFunctionData::filteredTrajectory</a>, <a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">roboptim::retargeting::Constraint&lt; T &gt;::function</a>, <a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">roboptim::retargeting::Constraint&lt; T &gt;::intervals</a>, <a class="el" href="a00011.html#a1750bbb85363d7a2e05e15433d66ac02">roboptim::retargeting::JointFunctionData::nFrames()</a>, <a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">roboptim::retargeting::Constraint&lt; T &gt;::scales</a>, <a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">roboptim::retargeting::Constraint&lt; T &gt;::stateFunctionOrder</a>, and <a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">roboptim::retargeting::Constraint&lt; T &gt;::type</a>.</p>
 
 </div>
 </div>
@@ -93,7 +196,7 @@ Public Attributes</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -104,8 +207,8 @@ Public Attributes</h2></td></tr>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00014.html">InteractionMeshEdge</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00014.html">JointProblemBuilder</a>      </li>
 </body>
 </html>

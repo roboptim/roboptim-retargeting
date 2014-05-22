@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>roboptim::retargeting::problem::Marker Class Reference</title>
+<title>roboptim::retargeting::MarkerFunctionFactory Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -56,207 +56,89 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">roboptim::retargeting::problem::Marker Class Reference</div>  </div>
+<div class="title">roboptim::retargeting::MarkerFunctionFactory Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="roboptim::retargeting::problem::Marker" -->
-<p>Define the optimization problem on marker (Euclidian) space.  
+<!-- doxytag: class="roboptim::retargeting::MarkerFunctionFactory" --><!-- doxytag: inherits="roboptim::retargeting::FunctionFactory" -->
+<p>Creates functions from their name for marker-joint optimization.  
  <a href="a00022.html#details">More...</a></p>
 
-<p><code>#include &lt;roboptim/retargeting/problem/marker.hh&gt;</code></p>
+<p><code>#include &lt;roboptim/retargeting/problem/marker-function-factory.hh&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for roboptim::retargeting::MarkerFunctionFactory:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00192.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_function_factory_inherit__map" alt="Inheritance graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_function_factory_inherit__map" id="roboptim_1_1retargeting_1_1_marker_function_factory_inherit__map">
+<area shape="rect" id="node2" href="a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="27,6,272,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for roboptim::retargeting::MarkerFunctionFactory:</div>
+<div class="dyncontent">
+<div class="center"><img src="a00193.png" border="0" usemap="#roboptim_1_1retargeting_1_1_marker_function_factory_coll__map" alt="Collaboration graph"/></div>
+<map name="roboptim_1_1retargeting_1_1_marker_function_factory_coll__map" id="roboptim_1_1retargeting_1_1_marker_function_factory_coll__map">
+<area shape="rect" id="node2" href="a00010.html" title="Function factories inherit from this class (empty for now)." alt="" coords="27,6,272,37"/></map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="a00437.html">List of all members.</a></p>
+<p><a href="a00194.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef boost::shared_ptr<br class="typebreak"/>
-&lt; roboptim::GenericDifferentiableFunction<br class="typebreak"/>
-&lt; EigenMatrixSparse &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#abf779f6b16b477034608b24ec4ab8902">DifferentiableFunctionShPtr_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef roboptim::Solver<br class="typebreak"/>
-&lt; GenericDifferentiableFunction<br class="typebreak"/>
-&lt; EigenMatrixSparse &gt;<br class="typebreak"/>
-, boost::mpl::vector<br class="typebreak"/>
-&lt; GenericNumericLinearFunction<br class="typebreak"/>
-&lt; EigenMatrixSparse &gt;<br class="typebreak"/>
-, GenericDifferentiableFunction<br class="typebreak"/>
-&lt; EigenMatrixSparse &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a0c7279fd523d2d85c583c1e853170fd4">solver_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef solver_t::problem_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a9d1940574777b35214bd58d1ebb3161c">problem_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef boost::shared_ptr<br class="typebreak"/>
-&lt; <a class="el" href="a00022.html#a9d1940574777b35214bd58d1ebb3161c">problem_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a436f85bc14518b70e011e4e178595f2b">problemShPtr_t</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a798fa9ecf6184d8ae2d066d33b75c003">Marker</a> (cnoid::MarkerMotionPtr markerMotion, cnoid::CharacterPtr character, cnoid::BodyPtr body, cnoid::MarkerIMeshPtr markerIMesh, bool enableBoneLength, bool enablePosition, bool enableCollision, bool enableTorque, bool enableZmp, const std::string &amp;solverName, cnoid::MarkerMotionItemPtr markerMotionItem)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a016d1182b22666bf534aad752df48e4b">~Marker</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a436ee02ac7a6a704a7a0a196206f1c43">solve</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the underlying optimization problem.  <a href="#a436ee02ac7a6a704a7a0a196206f1c43"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#ad9fc447bce9bb294c1815355b4add542">animatedMesh</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <br class="typebreak"/>
-<a class="el" href="a00173.html#a93fa694705bfd994671f23d0d23b31d0">LaplacianDeformationEnergyShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#ab260be717a03b49604f712c267ca1231">costLaplacian</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00173.html#a93fa694705bfd994671f23d0d23b31d0">LaplacianDeformationEnergyShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a3cf833c48e87b03a6df0d5da1b16b95d">costLaplacian</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="a00173.html#a048f38c9dfe79196bb7b3a122720046a">AccelerationEnergyShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a917632b223d019789b7d07105fddc023">costAcceleration</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00173.html#a048f38c9dfe79196bb7b3a122720046a">AccelerationEnergyShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#ad48f0976672ef904a5161b2c6bdb8fe4">costAcceleration</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <br class="typebreak"/>
-<a class="el" href="a00022.html#abf779f6b16b477034608b24ec4ab8902">DifferentiableFunctionShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#ad90199ed4d59f0d1f58ea8e6cb34b2ce">cost</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00022.html#abf779f6b16b477034608b24ec4ab8902">DifferentiableFunctionShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a8972ae37cf985fb8a20f4ff667b0bd8c">cost</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00022.html#a436f85bc14518b70e011e4e178595f2b">problemShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a3cb961f89b26ffd82f341fbabe5d5bb6">problem</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="a00022.html#a436f85bc14518b70e011e4e178595f2b">problemShPtr_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a858a22a87570b6fa965d3b8760c123c4">problem</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const GenericSolver::result_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a543a955f4b3eb821bb71d6d1ffc85dae">result</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the optimization result.  <a href="#a543a955f4b3eb821bb71d6d1ffc85dae"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00173.html#a5d5c0817b1cfe7c766aaf9afd2d369d0">TorqueShPtr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a91728ab955be7da6eb0678374c0d3d9c">torqueConstraint</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#ab05b73232895f8c91598bcf94df26d4d">setCharacterPair</a> (int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">boost::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00022.html#a60988061cb8d010ebdcc294dc60cb33d">buildFunction</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate a function from its name.  <a href="#a60988061cb8d010ebdcc294dc60cb33d"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="a00004.html">Constraint</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">buildConstraint</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Instantiate a constraint from its name.  <a href="#af51b9b3c3d03bee08fc508de82e00030"></a><br/></td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a6fc493b10c248337f24265d6ae63678e">MarkerFunctionFactory</a> (const <a class="el" href="a00021.html">MarkerFunctionData</a> &amp;data)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor and Destructor.  <a href="#a6fc493b10c248337f24265d6ae63678e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a9a1be08de0ce9479b4fa84b7aa07941c">~MarkerFunctionFactory</a> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00022.html#a66093038bab93714555f490b9286e302">listFunctions</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">List supported functions.  <a href="#a66093038bab93714555f490b9286e302"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Define the optimization problem on marker (Euclidian) space. </p>
-<p>Build the optimization problem and provide a method <a class="el" href="a00022.html#a436ee02ac7a6a704a7a0a196206f1c43" title="Solve the underlying optimization problem.">solve</a> () which looks for an optimal solution. </p>
-</div><hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="abf779f6b16b477034608b24ec4ab8902"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::DifferentiableFunctionShPtr_t" ref="abf779f6b16b477034608b24ec4ab8902" args="" -->
+<div class="textblock"><p>Creates functions from their name for marker-joint optimization. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a6fc493b10c248337f24265d6ae63678e"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionFactory::MarkerFunctionFactory" ref="a6fc493b10c248337f24265d6ae63678e" args="(const MarkerFunctionData &amp;data)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef boost::shared_ptr&lt; roboptim::GenericDifferentiableFunction&lt; EigenMatrixSparse&gt; &gt; <a class="el" href="a00022.html#abf779f6b16b477034608b24ec4ab8902">roboptim::retargeting::problem::Marker::DifferentiableFunctionShPtr_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a9d1940574777b35214bd58d1ebb3161c"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::problem_t" ref="a9d1940574777b35214bd58d1ebb3161c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef solver_t::problem_t <a class="el" href="a00022.html#a9d1940574777b35214bd58d1ebb3161c">roboptim::retargeting::problem::Marker::problem_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a436f85bc14518b70e011e4e178595f2b"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::problemShPtr_t" ref="a436f85bc14518b70e011e4e178595f2b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef boost::shared_ptr&lt;<a class="el" href="a00022.html#a9d1940574777b35214bd58d1ebb3161c">problem_t</a>&gt; <a class="el" href="a00022.html#a436f85bc14518b70e011e4e178595f2b">roboptim::retargeting::problem::Marker::problemShPtr_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a0c7279fd523d2d85c583c1e853170fd4"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::solver_t" ref="a0c7279fd523d2d85c583c1e853170fd4" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef roboptim::Solver&lt; GenericDifferentiableFunction&lt;EigenMatrixSparse&gt;, boost::mpl::vector&lt; GenericNumericLinearFunction&lt;EigenMatrixSparse&gt;, GenericDifferentiableFunction&lt;EigenMatrixSparse&gt; &gt; &gt; <a class="el" href="a00022.html#a0c7279fd523d2d85c583c1e853170fd4">roboptim::retargeting::problem::Marker::solver_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a798fa9ecf6184d8ae2d066d33b75c003"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::Marker" ref="a798fa9ecf6184d8ae2d066d33b75c003" args="(cnoid::MarkerMotionPtr markerMotion, cnoid::CharacterPtr character, cnoid::BodyPtr body, cnoid::MarkerIMeshPtr markerIMesh, bool enableBoneLength, bool enablePosition, bool enableCollision, bool enableTorque, bool enableZmp, const std::string &amp;solverName, cnoid::MarkerMotionItemPtr markerMotionItem)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00022.html#a798fa9ecf6184d8ae2d066d33b75c003">roboptim::retargeting::problem::Marker::Marker</a> </td>
+          <td class="memname"><a class="el" href="a00022.html#a6fc493b10c248337f24265d6ae63678e">roboptim::retargeting::MarkerFunctionFactory::MarkerFunctionFactory</a> </td>
           <td>(</td>
-          <td class="paramtype">cnoid::MarkerMotionPtr&#160;</td>
-          <td class="paramname"><em>markerMotion</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::CharacterPtr&#160;</td>
-          <td class="paramname"><em>character</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::BodyPtr&#160;</td>
-          <td class="paramname"><em>body</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::MarkerIMeshPtr&#160;</td>
-          <td class="paramname"><em>markerIMesh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enableBoneLength</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enablePosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enableCollision</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enableTorque</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enableZmp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>solverName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::MarkerMotionItemPtr&#160;</td>
-          <td class="paramname"><em>markerMotionItem</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [explicit]</code></td>
+          <td class="paramtype">const <a class="el" href="a00021.html">MarkerFunctionData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="a00002.html#ade1630e8aa6d52fade853e5a301261b3">roboptim::retargeting::AnimatedInteractionMesh::makeFromOptimizationVariables()</a>, <a class="el" href="a00022.html#ab05b73232895f8c91598bcf94df26d4d">setCharacterPair()</a>, and <a class="el" href="a00022.html#a91728ab955be7da6eb0678374c0d3d9c">torqueConstraint()</a>.</p>
+<p>Constructor and Destructor. </p>
+<p>Constructor</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>problem data (trajectories, etc.) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="a016d1182b22666bf534aad752df48e4b"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::~Marker" ref="a016d1182b22666bf534aad752df48e4b" args="()" -->
+<a class="anchor" id="a9a1be08de0ce9479b4fa84b7aa07941c"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionFactory::~MarkerFunctionFactory" ref="a9a1be08de0ce9479b4fa84b7aa07941c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00022.html#a016d1182b22666bf534aad752df48e4b">roboptim::retargeting::problem::Marker::~Marker</a> </td>
+          <td class="memname"><a class="el" href="a00022.html#a9a1be08de0ce9479b4fa84b7aa07941c">roboptim::retargeting::MarkerFunctionFactory::~MarkerFunctionFactory</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td><code> [virtual]</code></td>
+          <td></td>
         </tr>
       </table>
 </div>
@@ -265,247 +147,100 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ad9fc447bce9bb294c1815355b4add542"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::animatedMesh" ref="ad9fc447bce9bb294c1815355b4add542" args="()" -->
+<a class="anchor" id="af51b9b3c3d03bee08fc508de82e00030"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionFactory::buildConstraint" ref="af51b9b3c3d03bee08fc508de82e00030" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00173.html#a224ef49214ed7f1286570f98f3f78d56">AnimatedInteractionMeshShPtr_t</a> <a class="el" href="a00022.html#ad9fc447bce9bb294c1815355b4add542">roboptim::retargeting::problem::Marker::animatedMesh</a> </td>
+          <td class="memname"><a class="el" href="a00004.html">Constraint</a>&lt; T &gt; <a class="el" href="a00022.html#af51b9b3c3d03bee08fc508de82e00030">roboptim::retargeting::MarkerFunctionFactory::buildConstraint</a> </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00161.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad90199ed4d59f0d1f58ea8e6cb34b2ce"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::cost" ref="ad90199ed4d59f0d1f58ea8e6cb34b2ce" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="a00022.html#abf779f6b16b477034608b24ec4ab8902">DifferentiableFunctionShPtr_t</a>&amp; <a class="el" href="a00022.html#ad90199ed4d59f0d1f58ea8e6cb34b2ce">roboptim::retargeting::problem::Marker::cost</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a8972ae37cf985fb8a20f4ff667b0bd8c"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::cost" ref="a8972ae37cf985fb8a20f4ff667b0bd8c" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00022.html#abf779f6b16b477034608b24ec4ab8902">DifferentiableFunctionShPtr_t</a>&amp; <a class="el" href="a00022.html#ad90199ed4d59f0d1f58ea8e6cb34b2ce">roboptim::retargeting::problem::Marker::cost</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a917632b223d019789b7d07105fddc023"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::costAcceleration" ref="a917632b223d019789b7d07105fddc023" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="a00173.html#a048f38c9dfe79196bb7b3a122720046a">AccelerationEnergyShPtr_t</a>&amp; <a class="el" href="a00022.html#a917632b223d019789b7d07105fddc023">roboptim::retargeting::problem::Marker::costAcceleration</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ad48f0976672ef904a5161b2c6bdb8fe4"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::costAcceleration" ref="ad48f0976672ef904a5161b2c6bdb8fe4" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00173.html#a048f38c9dfe79196bb7b3a122720046a">AccelerationEnergyShPtr_t</a>&amp; <a class="el" href="a00022.html#a917632b223d019789b7d07105fddc023">roboptim::retargeting::problem::Marker::costAcceleration</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab260be717a03b49604f712c267ca1231"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::costLaplacian" ref="ab260be717a03b49604f712c267ca1231" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="a00173.html#a93fa694705bfd994671f23d0d23b31d0">LaplacianDeformationEnergyShPtr_t</a>&amp; <a class="el" href="a00022.html#ab260be717a03b49604f712c267ca1231">roboptim::retargeting::problem::Marker::costLaplacian</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a3cf833c48e87b03a6df0d5da1b16b95d"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::costLaplacian" ref="a3cf833c48e87b03a6df0d5da1b16b95d" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00173.html#a93fa694705bfd994671f23d0d23b31d0">LaplacianDeformationEnergyShPtr_t</a>&amp; <a class="el" href="a00022.html#ab260be717a03b49604f712c267ca1231">roboptim::retargeting::problem::Marker::costLaplacian</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a3cb961f89b26ffd82f341fbabe5d5bb6"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::problem" ref="a3cb961f89b26ffd82f341fbabe5d5bb6" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00022.html#a436f85bc14518b70e011e4e178595f2b">problemShPtr_t</a>&amp; <a class="el" href="a00022.html#a3cb961f89b26ffd82f341fbabe5d5bb6">roboptim::retargeting::problem::Marker::problem</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="a00161.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a858a22a87570b6fa965d3b8760c123c4"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::problem" ref="a858a22a87570b6fa965d3b8760c123c4" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="a00022.html#a436f85bc14518b70e011e4e178595f2b">problemShPtr_t</a>&amp; <a class="el" href="a00022.html#a3cb961f89b26ffd82f341fbabe5d5bb6">roboptim::retargeting::problem::Marker::problem</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a543a955f4b3eb821bb71d6d1ffc85dae"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::result" ref="a543a955f4b3eb821bb71d6d1ffc85dae" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const GenericSolver::result_t&amp; <a class="el" href="a00022.html#a543a955f4b3eb821bb71d6d1ffc85dae">roboptim::retargeting::problem::Marker::result</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Return the optimization result. </p>
-<p>You *have* to call <a class="el" href="a00022.html#a436ee02ac7a6a704a7a0a196206f1c43" title="Solve the underlying optimization problem.">solve()</a> first otherwise the result will contain no information. </p>
-
-<p>Referenced by <a class="el" href="a00161.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab05b73232895f8c91598bcf94df26d4d"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::setCharacterPair" ref="ab05b73232895f8c91598bcf94df26d4d" args="(int motionIndex, cnoid::CharacterPtr org, cnoid::CharacterPtr goal)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00022.html#ab05b73232895f8c91598bcf94df26d4d">roboptim::retargeting::problem::Marker::setCharacterPair</a> </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>motionIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::CharacterPtr&#160;</td>
-          <td class="paramname"><em>org</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cnoid::CharacterPtr&#160;</td>
-          <td class="paramname"><em>goal</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>References <a class="el" href="a00005.html#aa70fecd497cbfa0711082a2c26159503">roboptim::retargeting::CharacterInfo::goal</a>, and <a class="el" href="a00005.html#aab2820253ab9339e7b88b79dff63d4b0">roboptim::retargeting::CharacterInfo::org</a>.</p>
-
-<p>Referenced by <a class="el" href="a00022.html#a798fa9ecf6184d8ae2d066d33b75c003">Marker()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a436ee02ac7a6a704a7a0a196206f1c43"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::solve" ref="a436ee02ac7a6a704a7a0a196206f1c43" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="a00022.html#a436ee02ac7a6a704a7a0a196206f1c43">roboptim::retargeting::problem::Marker::solve</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Solve the underlying optimization problem. </p>
+<p>Instantiate a constraint from its name. </p>
+<p>This method creates a constraint object from the constraint name.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>newly created constraint object </dd></dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function type (e.g. DifferentiableFunction) </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Referenced by <a class="el" href="a00161.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>References <a class="el" href="a00004.html#a054eb029bd7e9111930da5cc5a3b9a90">roboptim::retargeting::Constraint&lt; T &gt;::function</a>, <a class="el" href="a00004.html#abec053c9350c126870d389b338b59fb7">roboptim::retargeting::Constraint&lt; T &gt;::intervals</a>, <a class="el" href="a00004.html#abbe8e2aa7383f597ba48bacbe08a92bb">roboptim::retargeting::Constraint&lt; T &gt;::scales</a>, <a class="el" href="a00004.html#a3c24e091f3fa899118c8bc79742a63b1">roboptim::retargeting::Constraint&lt; T &gt;::stateFunctionOrder</a>, and <a class="el" href="a00004.html#ae3a7e33b9eebbd46a2c5a78e37583e3f">roboptim::retargeting::Constraint&lt; T &gt;::type</a>.</p>
+
+<p>Referenced by <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a91728ab955be7da6eb0678374c0d3d9c"></a><!-- doxytag: member="roboptim::retargeting::problem::Marker::torqueConstraint" ref="a91728ab955be7da6eb0678374c0d3d9c" args="()" -->
+<a class="anchor" id="a60988061cb8d010ebdcc294dc60cb33d"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionFactory::buildFunction" ref="a60988061cb8d010ebdcc294dc60cb33d" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00173.html#a5d5c0817b1cfe7c766aaf9afd2d369d0">TorqueShPtr_t</a> <a class="el" href="a00022.html#a91728ab955be7da6eb0678374c0d3d9c">roboptim::retargeting::problem::Marker::torqueConstraint</a> </td>
+          <td class="memname">boost::shared_ptr&lt; T &gt; <a class="el" href="a00022.html#a60988061cb8d010ebdcc294dc60cb33d">roboptim::retargeting::MarkerFunctionFactory::buildFunction</a> </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [inline]</code></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="a00022.html#a798fa9ecf6184d8ae2d066d33b75c003">Marker()</a>.</p>
+<p>Instantiate a function from its name. </p>
+<p>This method creates a function (cost or constraint) from its name.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>function name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>shared pointer to the newly created function </dd></dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>function type (e.g. DifferentiableFunction) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="a00018.html#adb274459120318d75329116b13b4c026">roboptim::retargeting::detail::MarkerFunctionFactoryMapping&lt; T &gt;::Mapping::factory</a>, and <a class="el" href="a00018.html#add944a5b3ef41f4960d1b39d97a02379">roboptim::retargeting::detail::MarkerFunctionFactoryMapping&lt; T &gt;::Mapping::name</a>.</p>
+
+<p>Referenced by <a class="el" href="a00024.html#a3b781c73736bfc8ea9f2887e34a73c1e">roboptim::retargeting::MarkerProblemBuilder&lt; T &gt;::operator()()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a66093038bab93714555f490b9286e302"></a><!-- doxytag: member="roboptim::retargeting::MarkerFunctionFactory::listFunctions" ref="a66093038bab93714555f490b9286e302" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; <a class="el" href="a00022.html#a66093038bab93714555f490b9286e302">roboptim::retargeting::MarkerFunctionFactory::listFunctions</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>List supported functions. </p>
+<p>Each element of this string can be passed to buildFunction method to create the corresponding function. </p>
 
 </div>
 </div>
@@ -516,7 +251,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -527,9 +262,8 @@ Public Member Functions</h2></td></tr>
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><a class="el" href="a00172.html">roboptim</a>      </li>
-      <li class="navelem"><a class="el" href="a00173.html">retargeting</a>      </li>
-      <li class="navelem"><a class="el" href="a00175.html">problem</a>      </li>
-      <li class="navelem"><a class="el" href="a00022.html">Marker</a>      </li>
+      <li class="navelem"><a class="el" href="a00076.html">roboptim</a>      </li>
+      <li class="navelem"><a class="el" href="a00077.html">retargeting</a>      </li>
+      <li class="navelem"><a class="el" href="a00022.html">MarkerFunctionFactory</a>      </li>
 </body>
 </html>
