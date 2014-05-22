@@ -65,7 +65,6 @@ namespace roboptim
 	    JointToMarkerPositionChoreonoid<typename T::traits_t> >
 	  (data.interactionMesh);
 
-	//FIXME: frameId will always be 0, how to update?
 	Function::vector_t referencePositions =
 	  data.inputTrajectory->parameters ().segment
 	  (data.frameId * jointToMarker->outputSize (),

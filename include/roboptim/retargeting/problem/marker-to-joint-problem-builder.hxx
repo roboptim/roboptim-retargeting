@@ -70,7 +70,7 @@ namespace roboptim
 
       // Create the interaction mesh
       data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();
-      //FIXME: is this ok?
+
       if (!data.interactionMesh->addBody
 	  (data.robotModel, cnoid::BodyMotionPtr ()))
         throw std::runtime_error ("failed to add body to body interaction mesh");
