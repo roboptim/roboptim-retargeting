@@ -80,15 +80,16 @@ namespace roboptim
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
 
-      std::size_t length = static_cast<std::size_t> (options.length);
+      std::size_t length =
+	static_cast<std::size_t> (options.length);
       if (options.startFrame < 0
 	  || options.startFrame >= data.markersTrajectory.numFrames ())
 	  throw std::runtime_error ("invalid starting frame");
-      if (options.length == -1)
+      if (options.length < 0)
 	length = data.markersTrajectory.numFrames () - options.startFrame;
       if (length < 1
 	  || options.startFrame + static_cast<int> (length)
-	     >= data.markersTrajectory.numFrames ())
+	     > data.markersTrajectory.numFrames ())
 	  throw std::runtime_error ("invalid length");
 
       data.robotModel = loader.load (options.robotModel);
