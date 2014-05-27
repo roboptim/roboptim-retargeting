@@ -33,6 +33,8 @@
 static void writeTRC (const std::string& filename,
 		      boost::shared_ptr<roboptim::Trajectory<3> > trajectory)
 {
+  typedef roboptim::Trajectory<3>::value_type value_type;
+
   std::ofstream file (filename.c_str ());
 
   std::string headerFormatStr =
@@ -47,9 +49,9 @@ static void writeTRC (const std::string& filename,
     static_cast<index_t> (trajectory->outputSize () / 3);
   index_t numFrames =
     static_cast<index_t>
-    (static_cast<index_t>(trajectory->length ()) / trajectory->outputSize ());
+    (trajectory->length () / static_cast<value_type> (trajectory->outputSize ()));
   index_t dataRate = static_cast<index_t>
-    (static_cast<index_t>(trajectory->length ()) / numFrames);
+    (trajectory->length () / static_cast<value_type> (numFrames));
 
   boost::format headerFormat (headerFormatStr);
   headerFormat
@@ -123,6 +125,13 @@ static bool parseOptions
     ("constraint,C",
      po::value<std::vector<std::string> > (&options.constraints),
      "Which constraints should be used?")
+
+    ("start-frame",
+     po::value<int> (&options.startFrame)->default_value (0),
+     "Starting frame (previous frames will be dropped)")
+    ("length",
+     po::value<int> (&options.length)->default_value (-1),
+     "How many frames will be considered? (-1 means all)")
     ;
 
   po::variables_map vm;

@@ -31,6 +31,14 @@ namespace roboptim
     /// chosen from resolution, etc.
     struct MarkerProblemOptions
     {
+      /// \brief Frames before this one will not be considered
+      int startFrame;
+
+      /// \brief How many frames will be considered?
+      ///
+      /// -1 means all frames.
+      int length;
+
       /// \brief Marker set filename.
       ///
       /// Any format supported by libmocap is acceptable.

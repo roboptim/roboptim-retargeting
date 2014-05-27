@@ -81,7 +81,8 @@ namespace roboptim
 	{
 	  if (options.trajectoryType == "discrete")
 	    data.inputTrajectory =
-	      convertToTrajectory<VectorInterpolation> (data.markersTrajectory);
+	      convertToTrajectory<VectorInterpolation>
+	      (data.markersTrajectory, 0, data.markersTrajectory.numFrames ());
 	  else
 	    throw std::runtime_error ("invalid trajectory type");
 	}

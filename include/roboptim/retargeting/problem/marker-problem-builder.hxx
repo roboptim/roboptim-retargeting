@@ -45,21 +45,23 @@ namespace roboptim
     /// object.
     template <typename T>
     boost::shared_ptr<T>
-    convertToTrajectory (const libmocap::MarkerTrajectory& raw)
+    convertToTrajectory
+    (const libmocap::MarkerTrajectory& raw,
+     std::size_t startFrame, std::size_t length)
     {
-      typename T::vector_t parameters
-	(raw.numFrames () * raw.numMarkers () * 3);
+      std::size_t frameLength = raw.numMarkers () * 3;
 
-      std::vector<std::vector<double> >::const_iterator it;
-      std::ptrdiff_t nFrame = 0;
+      typename T::vector_t parameters (length * frameLength);
 
-      for (it = raw.positions ().begin (); it != raw.positions ().end ();
-	   nFrame = (++it) - raw.positions ().begin())
+      for (std::size_t frameId = startFrame;
+	   frameId < startFrame + length; ++frameId)
 	{
 	  Eigen::Map<const typename T::vector_t>
-	    positions (&(*it)[0], raw.numMarkers () * 3);
+	    positions (&raw.positions ()[frameId][0],
+		       static_cast<typename T::vector_t::Index> (frameLength));
 	  parameters.segment
-	    (nFrame * raw.numMarkers (), raw.numMarkers () * 3) = positions;
+	    ((frameId - startFrame) * raw.numMarkers (),
+	     frameLength) = positions;
 	}
 
       return
@@ -77,11 +79,24 @@ namespace roboptim
 	libmocap::MarkerSetFactory ().load (options.markerSet);
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
+
+      std::size_t length = static_cast<std::size_t> (options.length);
+      if (options.startFrame < 0
+	  || options.startFrame >= data.markersTrajectory.numFrames ())
+	  throw std::runtime_error ("invalid starting frame");
+      if (options.length == -1)
+	length = data.markersTrajectory.numFrames () - options.startFrame;
+      if (length < 1
+	  || options.startFrame + static_cast<int> (length)
+	     >= data.markersTrajectory.numFrames ())
+	  throw std::runtime_error ("invalid length");
+
       data.robotModel = loader.load (options.robotModel);
 
       if (options.trajectoryType == "discrete")
 	data.trajectory =
-	  convertToTrajectory<VectorInterpolation> (data.markersTrajectory);
+	  convertToTrajectory<VectorInterpolation>
+	  (data.markersTrajectory, static_cast<std::size_t> (options.startFrame), length);
       else
 	throw std::runtime_error ("invalid trajectory type");
     }
