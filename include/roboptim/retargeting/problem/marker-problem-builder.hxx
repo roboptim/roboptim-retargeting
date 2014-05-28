@@ -47,18 +47,19 @@ namespace roboptim
     boost::shared_ptr<T>
     convertToTrajectory
     (const libmocap::MarkerTrajectory& raw,
-     std::size_t startFrame, std::size_t length)
+     typename T::vector_t::Index startFrame,
+     typename T::vector_t::Index length)
     {
-      std::size_t frameLength = raw.numMarkers () * 3;
+      typename T::vector_t::Index frameLength = raw.numMarkers () * 3;
 
       typename T::vector_t parameters (length * frameLength);
 
-      for (std::size_t frameId = startFrame;
+      for (typename T::vector_t::Index frameId = startFrame;
 	   frameId < startFrame + length; ++frameId)
 	{
+	  std::size_t frameId_ = static_cast<std::size_t> (frameId);
 	  Eigen::Map<const typename T::vector_t>
-	    positions (&raw.positions ()[frameId][0],
-		       static_cast<typename T::vector_t::Index> (frameLength));
+	    positions (&raw.positions ()[frameId_][0], frameLength);
 	  parameters.segment
 	    ((frameId - startFrame) * raw.numMarkers (),
 	     frameLength) = positions;
@@ -80,13 +81,16 @@ namespace roboptim
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
 
-      std::size_t length =
-	static_cast<std::size_t> (options.length);
+      Function::vector_t::Index length =
+	static_cast<Function::vector_t::Index> (options.length);
       if (options.startFrame < 0
 	  || options.startFrame >= data.markersTrajectory.numFrames ())
 	  throw std::runtime_error ("invalid starting frame");
       if (options.length < 0)
-	length = data.markersTrajectory.numFrames () - options.startFrame;
+	length =
+	  static_cast<Function::vector_t::Index>
+	  (data.markersTrajectory.numFrames ())
+	  - static_cast<Function::vector_t::Index> (options.startFrame);
       if (length < 1
 	  || options.startFrame + static_cast<int> (length)
 	     > data.markersTrajectory.numFrames ())
@@ -97,7 +101,7 @@ namespace roboptim
       if (options.trajectoryType == "discrete")
 	data.trajectory =
 	  convertToTrajectory<VectorInterpolation>
-	  (data.markersTrajectory, static_cast<std::size_t> (options.startFrame), length);
+	  (data.markersTrajectory, options.startFrame, length);
       else
 	throw std::runtime_error ("invalid trajectory type");
     }
