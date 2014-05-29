@@ -67,7 +67,7 @@ namespace roboptim
 
       return
 	boost::make_shared<T>
-	(parameters, raw.numMarkers (), 1. / raw.dataRate ());
+	(parameters, frameLength, 1. / raw.dataRate ());
     }
 
     void
@@ -126,8 +126,7 @@ namespace roboptim
       buildDataFromOptions (data, options_);
 
       std::size_t nConstraints =
-	static_cast<std::size_t> (data.nFrames ()) - 2;
-
+	static_cast<std::size_t> (data.nFrames ());
       MarkerFunctionFactory factory (data);
 
       data.cost =

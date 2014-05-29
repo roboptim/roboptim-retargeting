@@ -17,12 +17,14 @@
 
 #ifndef ROBOPTIM_RETARGETING_MARKER_FUNCTION_FACTORY_HXX
 # define  ROBOPTIM_RETARGETING_MARKER_FUNCTION_FACTORY_HXX
+# include <algorithm>
 # include <stdexcept>
 
 # include <roboptim/core/numeric-linear-function.hh>
 
 //# include <roboptim/retargeting/function/bone-length.hh>
 # include <roboptim/retargeting/function/marker-laplacian-deformation-energy/choreonoid.hh>
+# include <roboptim/retargeting/function/bone-length.hh>
 
 namespace roboptim
 {
@@ -58,9 +60,16 @@ namespace roboptim
 
       template <typename T>
       boost::shared_ptr<T>
-      boneLength (const MarkerFunctionData&)
+      boneLength (const MarkerFunctionData& data)
       {
-	return boost::shared_ptr<T> ();
+	typedef BoneLengthError<typename T::traits_t> fun_t;
+	typedef boost::shared_ptr<fun_t> funPtr_t;
+
+	funPtr_t larm =
+	  boost::make_shared<fun_t>
+	  ("LELBL", "LELBM", "R_ELBOW_P", data.markersTrajectory, data.robotModel);
+
+	return larm;
       }
 
       /// \brief Map function name to the function used to allocate
@@ -133,6 +142,10 @@ namespace roboptim
 
       if (name == "bone-length")
 	{
+	  constraint.type = Constraint<T>::CONSTRAINT_TYPE_PER_FRAME;
+	  std::fill (constraint.intervals.begin (),
+		     constraint.intervals.end (),
+		     Function::makeInterval (0., 0.));
 	}
       else
 	throw std::runtime_error ("unknown constraint");
