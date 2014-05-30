@@ -30,63 +30,8 @@
 
 #include <roboptim/retargeting/problem/marker-problem-builder.hh>
 
-static void writeTRC (const std::string& filename,
-		      boost::shared_ptr<roboptim::Trajectory<3> > trajectory)
-{
-  typedef roboptim::Trajectory<3>::value_type value_type;
-
-  std::ofstream file (filename.c_str ());
-
-  std::string headerFormatStr =
-    "PathFileType	%d	%s	%s\n"
-    "DataRate	CameraRate	NumFrames	NumMarkers	Units	OrigDataRate	OrigDataStartFrame	OrigNumFrames\n"
-    "%f	%f	      %d	%d	%s	%f	%d	      %d\n"
-    "Frame#	Time	box1			box2			box3			box4\n"
-    "X1	Y1	Z1	X2	Y2	Z2	X3	Y3	Z3	X4	Y4	Z4\n";
-
-  typedef roboptim::Function::vector_t::Index index_t;
-  index_t numMarkers =
-    static_cast<index_t> (trajectory->outputSize () / 3);
-  index_t numFrames =
-    static_cast<index_t>
-    (trajectory->length () / static_cast<value_type> (trajectory->outputSize ()));
-  index_t dataRate = static_cast<index_t>
-    (trajectory->length () / static_cast<value_type> (numFrames));
-
-  boost::format headerFormat (headerFormatStr);
-  headerFormat
-    % 4
-    % "(X/Y/Z)"
-    % filename
-    % dataRate // Data rate
-    % dataRate // Camera rate
-    % numFrames // Num Frames
-    % numMarkers // Num Markers
-    % "m" // Units
-    % dataRate // OrigDataRate
-    % 1 // OrigDataStartFrame
-    % numFrames // OrigNumFrames
-    ;
-
-  file << headerFormat.str ();
-
-  for (index_t frameId = 0; frameId < numFrames; ++frameId)
-    {
-      file << (frameId + 1) << " ";
-      for (index_t markerId = 0; markerId < numMarkers; ++markerId)
-	file
-	  << trajectory->parameters ()
-	  [frameId * numMarkers * 3 + markerId * 3 + 0]
-	  << " "
-	  << trajectory->parameters ()
-	  [frameId * numMarkers * 3 + markerId * 3 + 1]
-	  << " "
-	  << trajectory->parameters ()
-	  [frameId * numMarkers * 3 + markerId * 3 + 2]
-	  << " ";
-      file << "\n";
-    }
-}
+#include "path.hh"
+#include "trc.hh"
 
 static bool parseOptions
 (roboptim::retargeting::MarkerProblemOptions& options,
@@ -186,7 +131,7 @@ int safeMain (int argc, const char* argv[])
   boost::shared_ptr<problem_t> problem;
   roboptim::retargeting::MarkerFunctionData data;
   builder (problem, data);
-  writeTRC ("/tmp/foo.trc", data.trajectory);
+  roboptim::retargeting::writeTRC ("/tmp/foo.trc", *data.trajectory);
 
   if (!problem)
     throw std::runtime_error ("failed to build problem");
@@ -240,7 +185,7 @@ int safeMain (int argc, const char* argv[])
       throw std::runtime_error ("Optimization failed");
     }
 
-  writeTRC (options.outputFile, finalTrajectory);
+  roboptim::retargeting::writeTRC (options.outputFile, *finalTrajectory);
 
   return 0;
 }

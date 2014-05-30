@@ -73,6 +73,9 @@ ADD_REQUIRED_DEPENDENCY("yaml-cpp")
 
 HEADER_INSTALL("${HEADERS}")
 
+# Allow the inclusion of private headers.
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 # Order matters here: the library (in src) _must_ be compiled before
 # the cli tools and the tests.
 ADD_SUBDIRECTORY(share)
