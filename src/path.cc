@@ -19,7 +19,7 @@
 
 #include "path.hh"
 #include "directories.hh"
-
+#include <iostream>
 namespace roboptim
 {
   namespace retargeting
@@ -45,7 +45,7 @@ namespace roboptim
       newPath += path;
 
       // And check it, if valid, update path.
-      std::ifstream file (path.c_str ());
+      std::ifstream file (newPath.c_str ());
       if (file.good ())
 	path = newPath;
     }

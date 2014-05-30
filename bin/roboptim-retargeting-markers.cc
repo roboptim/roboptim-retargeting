@@ -103,6 +103,9 @@ static bool parseOptions
 
   po::notify (vm);
 
+  roboptim::retargeting::resolvePath (options.markerSet);
+  roboptim::retargeting::resolvePath (options.markersTrajectory);
+  roboptim::retargeting::resolvePath (options.robotModel);
   return true;
 }
 
