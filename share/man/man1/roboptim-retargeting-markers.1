@@ -1,0 +1,91 @@
+.TH ROBOPTIM-RETARGETING 1
+
+.SH NAME
+
+roboptim-retargeting-markers \- optimize marker positions to fit a new actor
+
+.SH SYNOPSIS
+
+.B roboptim\-retarget\-markers [OPTIONS]
+     \-s <MARKER TRAJECTORY>
+     \-m <MARKER TRAJECTORY>
+     \-o <OUTPUT FILE>
+
+.SH DESCRIPTION
+
+Takes a marker trajectory as input and adapt the bone length to fit a
+new actor.
+
+See "Spatial Relationship Preserving Character Motion Adaptation" by
+E.S.L. Ho, T. Komura, C.-L. Tai.
+
+.SH OPTIONS
+
+.TP 5
+\-s, \-\-marker\-set FILE
+Marker Set used during Motion Capture (mars file or any other format
+supported by libmocap).
+
+.TP 5
+\-m, \-\-marker\-trajectory FILE
+Marker Trajectories (trc file or any other format supported by
+libmocap).
+
+.TP 5
+\-o, \-\-output FILE
+Output file (file format determined by the extension, should be trc)
+
+.TP 5
+\-t, \-\-trajectory TYPE
+Trajectory type (discrete or spline). By default discrete.
+
+.TP 5
+\-r, \-\-robot-model FILE
+Robot description (YAML file as supported by Choreonoid).
+
+.TP 5
+\-p, \-\-plugin PLUGING
+Solver which should be used: ipopt (open source), cfsqp (proprietary), etc.
+
+.TP 5
+\-c, \-\-cost NAME
+Which cost function should used? (Laplacian Deformation Energy by default)
+
+.TP 5
+\-C, \-\-constraint NAME
+Which constraints should be included? (bone-length is only supported)
+
+.TP 5
+\-s, \-\-start\-frame N
+Only optimize and export the motion from this frame (default is 0).
+
+.TP 5
+\-\-length N
+After the starting point, cut the trajectory after this number of
+frames (default is -1 meaning take into account the whole trajectory).
+
+.TP 5
+\-h, \-\-help
+Print help message and exit.
+
+.SH EXAMPLES
+
+The software comes with a set of data allowing to run tests easily.
+For a short example, please run:
+
+  roboptim-retarget-markers
+     -s human.mars
+     -m human.trc
+     -o /tmp/robot.trc
+
+
+.SH SEE ALSO
+
+.TP
+.B Home Page
+https://github.com/thomas-moulard/roboptim-retargeting
+
+.SH AUTHOR
+
+Thomas Moulard, based on original Shin'Ichiro Nakaoka's implementation
+in Choreonoid.

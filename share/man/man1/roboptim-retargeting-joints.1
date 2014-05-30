@@ -1,0 +1,78 @@
+.TH ROBOPTIM-RETARGETING 1
+
+.SH NAME
+
+roboptim\-retargeting\-joints \- optimize joints trajectory
+
+.SH SYNOPSIS
+
+.B roboptim\-retarget\-joints [OPTIONS]
+     -j <JOINT TRAJECTORY>
+     -o <OUTPUT FILE>
+     -r <ROBOT MODEL PATH>
+
+.SH DESCRIPTION
+
+Optimize a joint trajectory to take into account balance and other
+robotics related criteria.
+
+.SH OPTIONS
+
+.TP 5
+\-j, \-\-joint\-trajectory FILE
+Joints Trajectory (YAML file as supported by Choreonoid).
+
+.TP 5
+\-o, \-\-output FILE
+Joints Optimized Trajectory (YAML file as supported by Choreonoid).
+
+.TP 5
+\-t, \-\-trajectory TYPE
+Trajectory type (discrete or spline). By default discrete.
+
+.TP 5
+\-r, \-\-robot-model FILE
+Robot description (YAML file as supported by Choreonoid).
+
+.TP 5
+\-p, \-\-plugin PLUGING
+Solver which should be used: ipopt (open source), cfsqp (proprietary), etc.
+
+.TP 5
+\-c, \-\-cost NAME
+Which cost function should used? (Laplacian Deformation Energy by default)
+
+.TP 5
+\-C, \-\-constraint NAME
+Which constraints should be included?
+
+.TP 5
+\-d, \-\-disable\-joint JOINT
+Exclude a joint from the optimization process (needed if for instance
+no marker are attached to it). This option can be passed many times.
+
+.TP 5
+\-h, \-\-help
+Print help message and exit.
+
+.SH EXAMPLES
+
+The software comes with a set of data allowing to run tests easily.
+For a short example, please run:
+
+  roboptim-retarget-joints
+     -j robot.motion.yaml
+     -o optimized.motion.yaml
+     -r /path/to/robot.yaml
+
+
+.SH SEE ALSO
+
+.TP
+.B Home Page
+https://github.com/thomas-moulard/roboptim-retargeting
+
+.SH AUTHOR
+
+Thomas Moulard, based on original Shin'Ichiro Nakaoka's implementation
+in Choreonoid.

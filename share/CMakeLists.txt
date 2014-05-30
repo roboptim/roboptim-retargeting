@@ -1,12 +1,6 @@
 INSTALL(FILES
-  roboptim/retargeting/log4cxx.xml
-  DESTINATION share/roboptim/retargeting)
-
-INSTALL(FILES
-  roboptim/retargeting/data/character-cgvu-hrp4c.yaml
-  roboptim/retargeting/data/dance_longer-markers.yaml
-  roboptim/retargeting/data/dance_one-frame.yaml
-  roboptim/retargeting/data/dance_ten-frames.yaml
+  roboptim/retargeting/data/human.mars
+  roboptim/retargeting/data/human.trc
   DESTINATION share/roboptim/retargeting/data)
 
 FIND_PROGRAM(GZIP gzip)

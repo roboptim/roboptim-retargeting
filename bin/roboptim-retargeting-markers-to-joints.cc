@@ -216,6 +216,15 @@ static bool parseOptions
   if (vm.count ("help"))
     {
       std::cout << desc << "\n";
+
+      std::cout << "Available functions:\n";
+
+      std::vector<std::string> functions =
+	roboptim::retargeting::MarkerToJointFunctionFactory::listFunctions ();
+      std::vector<std::string>::const_iterator it;
+      for (it = functions.begin (); it != functions.end (); ++it)
+	std::cout << "\t - " << *it << "\n";
+
       return false;
     }
 
