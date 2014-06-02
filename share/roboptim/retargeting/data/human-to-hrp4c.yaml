@@ -1,0 +1,75 @@
+# ROBOPTIM-RETARGETING MORPHING FILE (YAML)
+#
+# Description:
+# ------------
+# This is a morphing file as supported by roboptim-retargeting.
+#
+# This files links a marker set to a robot body by specifying the
+# relative position of each marker on each body of the robot.
+#
+# If this file do not mention a particular marker and/or robot body,
+# it has to be excluded from the optimization process.
+#
+# This file:
+# ----------
+#
+# This files allows the marker set "human.mars" to be morphed to the
+# HRP4C robot structure. HRP4C model is freely available on internet.
+
+---
+format:                 # Describe what data this YAML file is encoding.
+  type: morphing        # This string must be set to morphing in this case.
+  version: "1.0"        # File format version (only 1.0 is currently valid).
+
+mapping:                # Build the robot bodies <-> markers mapping.
+                        # For each body a list of markers as well as an offset
+                        # is specified.
+#  R_HIP_Y_LINK
+#  R_HIP_R_LINK
+  R_HIP_P_LINK:
+  R_KNEE_P_LINK: [[RKNEEO, [0.,0.,0.],]
+  R_ANKLE_P_LINK:
+#  R_ANKLE_R_LINK
+#  R_TOE_P_LINK
+#  L_HIP_Y_LINK
+#  L_HIP_R_LINK
+  L_HIP_P_LINK:
+  L_KNEE_P_LINK: [[LKNEEO, [0.,0.,0.],]
+#  L_ANKLE_P_LINK
+  L_ANKLE_R_LINK:
+#  L_TOE_P_LINK
+  CHEST_P_LINK:
+#  CHEST_R_LINK
+#  CHEST_Y_LINK
+#  NECK_Y_LINK
+#  NECK_R_LINK
+  NECK_P_LINK: [[HEADF, [0.,0.,0.]], [HEADR, [0.,0.,0.]], [HEADL, [0.,0.,0.]]]
+#  EYEBROW_P_LINK
+#  EYELID_P_LINK
+#  EYE_P_LINK
+#  EYE_Y_LINK
+#  MOUTH_P_LINK
+#  LOWERLIP_P_LINK
+#  UPPERLIP_P_LINK
+#  CHEEK_P_LINK
+  R_SHOULDER_P_LINK: [[RSHO, [0.,0.,0.]],]
+#  R_SHOULDER_R_LINK
+#  R_SHOULDER_Y_LINK
+  R_ELBOW_P_LINK: [[RELBL, [0.,0.,0.]], [RELBM, [0.,0.,0.]]]
+#  R_WRIST_Y_LINK
+  R_WRIST_R_LINK: [[RWRISTR, [0.,0.,0.],[RWRISTU, [0.,0.,0.]]
+#  R_HAND_J0_LINK
+#  R_HAND_J1_LINK
+  L_SHOULDER_P_LINK: [[LSHO, [0.,0.,0.]],]
+#  L_SHOULDER_R_LINK
+#  L_SHOULDER_Y_LINK
+  L_ELBOW_P_LINK: [[LELBL, [0.,0.,0.]], [LELBM, [0.,0.,0.]]]
+#  L_WRIST_Y_LINK
+  L_WRIST_R_LINK: [[LWRISTR, [0.,0.,0.]], [LWRISTU, [0.,0.,0.]]]
+#  L_HAND_J0_LINK
+#  L_HAND_J1_LINK
+
+# Additional markers (to be placed):
+# RMP LMP RPEL RHIP RANK RHEEL
+# RPINKY RTHUMB LPEL LHIP LANK LHEEL LPINKY LTHUMB T1 T7 L5 STERNUP
+# STERNLOW SCAP
