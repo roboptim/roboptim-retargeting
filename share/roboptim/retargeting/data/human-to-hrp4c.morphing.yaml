@@ -26,19 +26,19 @@ mapping:                # Build the robot bodies <-> markers mapping.
                         # is specified.
 #  R_HIP_Y_LINK
 #  R_HIP_R_LINK
-  R_HIP_P_LINK:
-  R_KNEE_P_LINK: [[RKNEEO, [0.,0.,0.],]
-  R_ANKLE_P_LINK:
+#  R_HIP_P_LINK:
+  R_KNEE_P_LINK: [[RKNEEO, [0.,0.,0.]],]
+#  R_ANKLE_P_LINK:
 #  R_ANKLE_R_LINK
 #  R_TOE_P_LINK
 #  L_HIP_Y_LINK
 #  L_HIP_R_LINK
-  L_HIP_P_LINK:
-  L_KNEE_P_LINK: [[LKNEEO, [0.,0.,0.],]
+#  L_HIP_P_LINK:
+  L_KNEE_P_LINK: [[LKNEEO, [0.,0.,0.]],]
 #  L_ANKLE_P_LINK
-  L_ANKLE_R_LINK:
+#  L_ANKLE_R_LINK:
 #  L_TOE_P_LINK
-  CHEST_P_LINK:
+#  CHEST_P_LINK:
 #  CHEST_R_LINK
 #  CHEST_Y_LINK
 #  NECK_Y_LINK
@@ -57,7 +57,7 @@ mapping:                # Build the robot bodies <-> markers mapping.
 #  R_SHOULDER_Y_LINK
   R_ELBOW_P_LINK: [[RELBL, [0.,0.,0.]], [RELBM, [0.,0.,0.]]]
 #  R_WRIST_Y_LINK
-  R_WRIST_R_LINK: [[RWRISTR, [0.,0.,0.],[RWRISTU, [0.,0.,0.]]
+  R_WRIST_R_LINK: [[RWRISTR, [0.,0.,0.]],[RWRISTU, [0.,0.,0.]]]
 #  R_HAND_J0_LINK
 #  R_HAND_J1_LINK
   L_SHOULDER_P_LINK: [[LSHO, [0.,0.,0.]],]

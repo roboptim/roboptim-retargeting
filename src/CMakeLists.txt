@@ -6,9 +6,12 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
 # Main library.
 ADD_LIBRARY(roboptim-retargeting SHARED
   ${HEADERS}
+  morphing.cc
   path.cc
   trc.cc
 )
+
+PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)
 
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-core)
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting roboptim-trajectory)
