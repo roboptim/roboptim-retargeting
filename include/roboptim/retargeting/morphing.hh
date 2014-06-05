@@ -19,6 +19,7 @@
 # define ROBOPTIM_RETARGETING_MORPHING_HH
 # include <map>
 # include <string>
+# include <vector>
 
 # include <roboptim/core/function.hh> // for Eigen with the right flags.
 
@@ -51,24 +52,46 @@ namespace roboptim
     /// offset (specific to this particular pair body/marker).
     struct MorphingData
     {
+      typedef std::vector<
+	MorphingDataMapping,
+	Eigen::aligned_allocator<MorphingDataMapping> >
+      mappingData_t;
+
       typedef std::map<
 	std::string,
-	std::vector<
-	  MorphingDataMapping,
-	  Eigen::aligned_allocator<MorphingDataMapping> >,
-
+	mappingData_t,
 	std::less<std::string>,
-
 	Eigen::aligned_allocator<
 	  std::pair<
 	    const std::string,
-	    Eigen::Vector3d>
+	    mappingData_t>
 	  >
 	>
       mapping_t;
 
       /// \brief Mapping from body names to markers (and offsets).
       mapping_t mapping;
+
+      /// \brief Markers list
+      std::vector<std::string> markers;
+
+      /// \brief Get body on which a marker is attached.
+      ///
+      /// Throw a std::runtime_error is the marker cannot be found.
+      ///
+      /// \param[in] marker Marker name
+      /// \return Link name
+      const std::string& attachedBody (const std::string& marker) const;
+
+      /// \brief Get offset from link and marker name.
+      ///
+      /// Throw a std::runtime_error if the link/marker is not found.
+      ///
+      /// \param[in] linkName link name
+      /// \param[in] markerName marker name
+      /// \return Position of the marker w.r.t link.
+      Eigen::Vector3d
+      offset (const std::string& linkName, const std::string& markerName) const;
     };
 
     /// \brief Load morphing data from YAML file.

@@ -1,6 +1,7 @@
 INSTALL(FILES
   roboptim/retargeting/data/human.mars
   roboptim/retargeting/data/human.trc
+  roboptim/retargeting/data/human-to-hrp4c.morphing.yaml
   DESTINATION share/roboptim/retargeting/data)
 
 FIND_PROGRAM(GZIP gzip)

@@ -164,6 +164,9 @@ static bool parseOptions
     ("robot-model,r",
      po::value<std::string> (&options.robotModel)->required (),
      "Robot Model (Choreonoid YAML file)")
+    ("morphing,M",
+     po::value<std::string> (&options.morphing)->required (),
+     "Morphing data (YAML file)")
     ("plugin,p",
      po::value<std::string> (&options.plugin)->default_value ("cfsqp"),
      "RobOptim plug-in to be used")

@@ -2,12 +2,15 @@
 # define ROBOPTIM_RETARGETING_JOINT_TO_MARKER_POSITION_CHOREONOID_HH
 # include <stdexcept>
 
+# include <libmocap/marker-trajectory.hh>
+
 # include <roboptim/core/differentiable-function.hh>
+
+# include <roboptim/retargeting/morphing.hh>
 
 // For update configuration function.
 # include <roboptim/retargeting/function/forward-geometry/choreonoid.hh>
 
-# include <cnoid/BodyIMesh>
 # include <cnoid/Link>
 
 namespace roboptim
@@ -32,71 +35,62 @@ namespace roboptim
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (GenericDifferentiableFunction<T>);
 
       explicit JointToMarkerPositionChoreonoid
-      (cnoid::BodyIMeshPtr mesh)
-	throw (std::runtime_error)
+      (cnoid::BodyPtr robot,
+       const MorphingData& morphing)
 	: GenericDifferentiableFunction<T>
-	  (6 + mesh->bodyInfo (0).body->numJoints (), 3 * mesh->numMarkers (),
+	  (6 + robot->numJoints (),
+	   3 * static_cast<size_type> (morphing.markers.size ()),
 	   "JointToMarkerPosition"),
-	  mesh_ (mesh),
+	  robot_ (robot),
+	  morphing_ (morphing),
 	  markerPositions_
-	  (static_cast<std::size_t> (mesh->numMarkers ())),
+	  (static_cast<std::size_t> (3 * morphing.markers.size ())),
 	  jointPath_ (),
 	  J_ (),
 	  dR_ ()
       {
-	if (mesh_->numBodies () != 1)
-	  {
-	    boost::format fmt
-	      ("unexpected number of body when instantiating"
-	       " JointToMarkerPositionChoreonoid"
-	       " (expected is 1 but %d body are present)");
-	    fmt % mesh_->numBodies ();
-	    throw std::runtime_error (fmt.str ());
-	  }
-
-	J_.resize (3, mesh->bodyInfo (0).body->numJoints ());
+	J_.resize (3, robot->numJoints ());
 	dR_[0].setZero ();
 	dR_[1].setZero ();
 	dR_[2].setZero ();
       }
 
-      virtual ~JointToMarkerPositionChoreonoid () throw ()
+      virtual ~JointToMarkerPositionChoreonoid ()
       {}
 
     protected:
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
-	assert (mesh_->numBodies () == 1);
-
-	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
-	cnoid::BodyPtr& body = bodyInfo.body;
-
 	// Set the robot configuration.
-	updateRobotConfiguration (body, x);
+	updateRobotConfiguration (robot_, x);
 
 	// Update body positions
-	body->calcForwardKinematics ();
+	robot_->calcForwardKinematics ();
 
 	// combine forward geometry with marker offset
-        const std::vector<cnoid::BodyIMesh::MarkerPtr>&
-	  markers = bodyInfo.markers;
+	typedef std::vector<std::string>::const_iterator const_iterator;
 
-	typename result_t::Index vertexIndex = 0;
-        for(std::size_t j = 0; j < markers.size (); ++j)
+	typename result_t::Index markerIndex = 0;
+	for (const_iterator it = morphing_.markers.begin ();
+	     it != morphing_.markers.end ();
+	     ++it, ++markerIndex)
 	  {
-            const cnoid::BodyIMesh::MarkerPtr& marker = markers[j];
-            if(marker->localPos)
+	    try
 	      {
-		result.segment (vertexIndex * 3, 3) = marker->link->p ();
-		result.segment (vertexIndex * 3, 3) +=
-		  marker->link->attitude () * (*marker->localPos);
+		const std::string& linkName = morphing_.attachedBody (*it);
+		cnoid::Link* link = robot_->link (linkName);
+
+		result.segment (markerIndex * 3, 3) = link->p ();
+		result.segment (markerIndex * 3, 3) +=
+		  morphing_.offset (linkName, *it);
 	      }
-	    else
-	      result.segment (vertexIndex * 3, 3) = marker->link->p ();
-	    ++vertexIndex;
+	    catch (const std::exception& e)
+	      {
+		result.segment (markerIndex * 3, 3).setZero ();
+	      }
 	  }
       }
 
@@ -104,11 +98,9 @@ namespace roboptim
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type functionId)
-	const throw ()
+	const
       {
-	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
-	cnoid::BodyPtr& body = bodyInfo.body;
-	cnoid::Link* rootLink = body->rootLink ();
+	cnoid::Link* rootLink = robot_->rootLink ();
 
 	// Determine which marker matches this
 	//
@@ -123,29 +115,35 @@ namespace roboptim
 	gradient[dim] = 1.;
 
 	// look for marker information
-        const std::vector<cnoid::BodyIMesh::MarkerPtr>&
-	  markers = bodyInfo.markers;
-
-	const cnoid::BodyIMesh::MarkerPtr& marker = markers[markerId];
+	const std::string& markerName = morphing_.markers[markerId];
+	cnoid::Link* link;
+	std::string linkName;
+	try
+	  {
+	    linkName = morphing_.attachedBody (markerName);
+	    link = robot_->link (linkName);
+	  }
+	catch (const std::exception& e)
+	  {
+	    gradient.setZero ();
+	    return;
+	  }
 
 	// Update paths.
-	jointPath_.setPath (rootLink, marker->link);
+	jointPath_.setPath (rootLink, link);
 
 	// Set the robot configuration.
-	updateRobotConfiguration (body, x);
+	updateRobotConfiguration (robot_, x);
 
 	// Update body positions
-	body->calcForwardKinematics ();
+	robot_->calcForwardKinematics ();
 
 	// Compute the jacobian.
-	Eigen::Vector3d localPos;
-	if(marker->localPos)
-	  localPos = *marker->localPos;
-	else
-	  localPos.setZero ();
+	Eigen::Vector3d localPos =
+	  morphing_.offset (linkName, markerName);
 
 	cnoid::setJacobian<0x7, 0, 0, true>
-	  (jointPath_, marker->link, localPos, J_);
+	  (jointPath_, link, localPos, J_);
 
 	const typename cnoid::Position::LinearPart& R0 =
 	  jointPath_.baseLink ()->T ().linear ();
@@ -193,44 +191,51 @@ namespace roboptim
       void
       impl_jacobian (jacobian_t& jacobian,
 		     const argument_t& x)
-	const throw ()
+	const
       {
-	cnoid::BodyIMesh::BodyInfo& bodyInfo = mesh_->bodyInfo (0);
-	cnoid::BodyPtr& body = bodyInfo.body;
-	cnoid::Link* rootLink = body->rootLink ();
-	const std::vector<cnoid::BodyIMesh::MarkerPtr>&
-	  markers = bodyInfo.markers;
-
+	cnoid::Link* rootLink = robot_->rootLink ();
 	jacobian.setZero ();
 
 	// Set the robot configuration.
-	updateRobotConfiguration (body, x);
+	updateRobotConfiguration (robot_, x);
 
 	// Update body positions
-	body->calcForwardKinematics ();
+	robot_->calcForwardKinematics ();
 
 	for (std::size_t markerId = 0;
-	     markerId < markers.size (); ++markerId)
+	     markerId < morphing_.markers.size (); ++markerId)
 	{
 	  typename jacobian_t::Index markerId_ =
 	    static_cast<typename jacobian_t::Index> (markerId);
 
 	  jacobian.template block<3, 3> (markerId_ * 3, 0).setIdentity ();
 
-	  const cnoid::BodyIMesh::MarkerPtr& marker = markers[markerId];
-
 	  // Update paths.
-	  jointPath_.setPath (rootLink, marker->link);
+	  std::string markerName;
+	  std::string linkName;
+	  cnoid::Link* link;
+
+	  try
+	    {
+	      markerName = morphing_.markers[markerId];
+	      linkName = morphing_.attachedBody (markerName);
+	      link = robot_->link (linkName);
+	    }
+	  catch (const std::exception&)
+	    {
+	      jacobian.template block<3, 3> (markerId_ * 3, 3).setZero ();
+	      continue;
+	    }
+
+
+	  jointPath_.setPath (rootLink, link);
 
 	  // Compute the jacobian.
-	  Eigen::Vector3d localPos;
-	  if(marker->localPos)
-	    localPos = *marker->localPos;
-	  else
-	    localPos.setZero ();
+	  Eigen::Vector3d localPos =
+	    morphing_.offset (linkName, markerName);
 
 	  cnoid::setJacobian<0x7, 0, 0, true>
-	    (jointPath_, marker->link, localPos, J_);
+	    (jointPath_, link, localPos, J_);
 
 	  const typename cnoid::Position::LinearPart& R0 =
 	    jointPath_.baseLink ()->T ().linear ();
@@ -278,7 +283,7 @@ namespace roboptim
 
       // See doc/sympy/euler-angles.py
       template <typename Derived>
-      void updateDR (const typename Eigen::MatrixBase<Derived>& x) const throw ()
+      void updateDR (const typename Eigen::MatrixBase<Derived>& x) const
       {
 	value_type cr, sr, cp, sp, cy, sy;
 	sincos (x[0], &sr, &cr);
@@ -314,8 +319,14 @@ namespace roboptim
       }
 
     private:
-      cnoid::BodyIMeshPtr mesh_;
-      mutable std::vector<cnoid::Vector3> markerPositions_;
+      cnoid::BodyPtr robot_;
+      const MorphingData& morphing_;
+
+      mutable std::vector<
+	cnoid::Vector3,
+	Eigen::aligned_allocator<cnoid::Vector3>
+	>
+	markerPositions_;
 
       mutable cnoid::JointPath jointPath_;
       mutable cnoid::MatrixXd J_;

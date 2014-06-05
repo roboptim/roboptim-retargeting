@@ -45,6 +45,7 @@ namespace roboptim
       std::string outputFile;
 
       std::string robotModel;
+      std::string morphing;
 
       std::string cost;
       std::vector<std::string> constraints;

@@ -21,14 +21,13 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <cnoid/BodyIMesh>
 #include <cnoid/BodyLoader>
-#include <cnoid/BodyMotion>
 
 #include <roboptim/core/indent.hh>
 #include <roboptim/core/filter/bind.hh>
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
+#include <roboptim/retargeting/morphing.hh>
 #include <roboptim/retargeting/function/distance-to-marker.hh>
 
 using namespace roboptim;
@@ -38,6 +37,7 @@ typedef JointToMarkerPositionChoreonoid<EigenMatrixDense>
 jointToMarker_t;
 
 std::string modelFilePath (HRP4C_YAML_FILE);
+std::string morphingFilePath (DATA_DIR "/human-to-hrp4c.morphing.yaml");
 
 #define CHECK_GRADIENT(F, I, X)						\
   BOOST_CHECK_NO_THROW							\
@@ -61,26 +61,21 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
   o << "Loading model " << modelFilePath << iendl;
   cnoid::BodyPtr robotModel = loader.load (modelFilePath);
 
-  // Create the interaction mesh
-  cnoid::BodyIMeshPtr interactionMesh =
-    boost::make_shared<cnoid::BodyIMesh> ();
-
-  if (!interactionMesh->addBody
-      (robotModel, boost::make_shared<cnoid::BodyMotion> ()))
-    throw std::runtime_error ("failed to add body to body interaction mesh");
-  // if (!interactionMesh->initialize ())
-  //   throw std::runtime_error ("failed to initialize body interaction mesh");
-  interactionMesh->initialize ();
+  // Load morphing data.
+  o << "Loading morphing data " << morphingFilePath << iendl;
+  roboptim::retargeting::MorphingData morphing =
+    roboptim::retargeting::loadMorphingData (morphingFilePath);
 
 
   boost::shared_ptr<jointToMarker_t>
     jointToMarker =
     boost::make_shared<jointToMarker_t>
-    (interactionMesh);
+    (robotModel, morphing);
 
   // Create configuration vector and markers positions vector.
   Function::vector_t x (6 + robotModel->numJoints ());
-  Function::vector_t referencePositions (interactionMesh->numMarkers () * 3);
+  Function::vector_t referencePositions
+    (static_cast<Function::vector_t::Index> (morphing.markers.size ()) * 3);
 
   // Make sure that cost is zero if marker position and reference
   // position match.
@@ -200,21 +195,23 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
       o << "╚════════════════════════╧══════════╝"
 	<< decindent << iendl << iendl;
 
-      Function::vector_t configuration =
+      Function::vector_t markerPosition =
 	(*jointToMarker) (x);
       roboptim::retargeting::updateRobotConfiguration
-	(robotModel, configuration);
+	(robotModel, x);
 
 
       o << "Joint to marker" << incindent << iendl
 	<<
-	"╔════════════════════════╤══════════╤══════════"
+	"╔════════════════════════╤════════════════════════╤"
+	"══════════╤══════════"
 	"╤══════════╤══════════╤══════════╤══════════╤══"
 	"════════╤══════════╤══════════╗"
 	<< iendl
-	<< (boost::format ("║ %-22s │ %-8s │ %-8s │ %-8s"
+	<< (boost::format ("║ %-22s │ %-22s │ %-8s │ %-8s │ %-8s"
 			   " │ %-8s │ %-8s │ %-8s │ %-8s │ %-8s │ %-8s ║")
-	    % "Marker attached to..."
+	    % "Marker Name"
+	    % "Attached to body..."
 	    % "Marker X"
 	    % "Marker Y"
 	    % "Marker Z"
@@ -226,25 +223,30 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
 	    % "Offset Z").str ()
 	<< iendl
 	<<
-	"╠════════════════════════╪══════════╪══════════"
+	"╠════════════════════════╪════════════════════════╪"
+	"══════════╪══════════"
 	"╪══════════╪══════════╪══════════╪══════════╪══"
 	"════════╪══════════╪══════════╣"
 	<< iendl;
 
       Function::vector_t::Index offset = 0;
       for (std::size_t markerId = 0;
-	   offset < configuration.size () - 2; ++markerId, offset += 3)
+	   offset < markerPosition.size () - 2; ++markerId, offset += 3)
 	{
-	  cnoid::Link* link = interactionMesh->bodyInfo (0).markers[markerId]->link;
+	  std::string markerName = morphing.markers[markerId];
+	  std::string bodyName = morphing.attachedBody (markerName);
+	  cnoid::Link* link = robotModel->link (bodyName);
+
 	  boost::optional<cnoid::Vector3> markerOffset =
-	    interactionMesh->bodyInfo (0).markers[markerId]->localPos;
+	    morphing.offset (bodyName, markerName);
 	  o << (boost::format
-		("║ %-22s │ %-8.2d │ %-8.2d │ %-8.2d │ %-8.2d"
+		("║ %-22s │ %-22s │ %-8.2d │ %-8.2d │ %-8.2d │ %-8.2d"
 		 " │ %-8.2d │ %-8.2d │ %-8.2d │ %-8.2d │ %-8.2d ║")
+		% morphing.markers[markerId]
 		% (link ? link->name () : "none")
-		% configuration[offset]
-		% configuration[offset + 1]
-		% configuration[offset + 2]
+		% markerPosition[offset]
+		% markerPosition[offset + 1]
+		% markerPosition[offset + 2]
 		% (link ? link->position ().translation ()[0] : 0.)
 		% (link ? link->position ().translation ()[1] : 0.)
 		% (link ? link->position ().translation ()[2] : 0.)
@@ -254,7 +256,9 @@ BOOST_AUTO_TEST_CASE (distance_to_marker)
 		).str ()
 	    << iendl;
 	}
-      o << "╚════════════════════════╧══════════╧══════════╧══════════"
+      o <<
+	"╚════════════════════════╧════════════════════════╧"
+	"══════════╧══════════╧══════════"
 	"╧══════════╧══════════╧══════════╧══════════╧══════════╧══════════╝"
 	<< decindent << iendl << iendl;
 

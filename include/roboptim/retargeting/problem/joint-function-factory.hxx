@@ -121,7 +121,7 @@ namespace roboptim
 	boost::shared_ptr<jointToMarker_t>
           jointToMarker =
           boost::make_shared<jointToMarker_t>
-	  (data.interactionMesh);
+	  (data.robotModel, data.morphing);
 
 	// create the cost function using the full trajectory
 	boost::shared_ptr<T> cost =

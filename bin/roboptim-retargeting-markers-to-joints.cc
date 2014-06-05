@@ -41,6 +41,8 @@
 
 #include <roboptim/retargeting/problem/marker-to-joint-problem-builder.hh>
 
+#include "path.hh"
+
 //FIXME: unduplicate this
 static void
 writeBodyMotion (const std::string& filename,
@@ -180,6 +182,10 @@ static bool parseOptions
     ("robot-model,r",
      po::value<std::string> (&options.robotModel)->required (),
      "Robot Model (Choreonoid YAML file)")
+
+    ("morphing,M",
+     po::value<std::string> (&options.morphing)->required (),
+     "Morphing data (YAML file)")
 
     ("constraint,C",
      po::value<std::vector<std::string> > (&options.constraints),

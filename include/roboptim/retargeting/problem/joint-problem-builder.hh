@@ -58,6 +58,11 @@ namespace roboptim
       /// The Choreonoid file format is expected here.
       std::string robotModel;
 
+      /// \brief Morphing data
+      ///
+      /// YAML file path (map robot bodies to markers)
+      std::string morphing;
+
       /// \brief Solver plug-in name.
       std::string plugin;
 

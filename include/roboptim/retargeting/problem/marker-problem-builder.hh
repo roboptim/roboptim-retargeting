@@ -68,6 +68,12 @@ namespace roboptim
       /// The robot model is used to determine the segment length.
       std::string robotModel;
 
+      /// \brief Morphing data path.
+      ///
+      /// YAML file mapping bodies and markers.
+      /// See share/roboptim/retargeting/data/human-to-hrp4c.yaml
+      std::string morphing;
+
       /// \brief Solver plug-in name.
       std::string plugin;
 

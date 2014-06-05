@@ -24,50 +24,50 @@ format:                 # Describe what data this YAML file is encoding.
 mapping:                # Build the robot bodies <-> markers mapping.
                         # For each body a list of markers as well as an offset
                         # is specified.
-#  R_HIP_Y_LINK
-#  R_HIP_R_LINK
-#  R_HIP_P_LINK:
-  R_KNEE_P_LINK: [[RKNEEO, [0.,0.,0.]],]
-#  R_ANKLE_P_LINK:
-#  R_ANKLE_R_LINK
-#  R_TOE_P_LINK
-#  L_HIP_Y_LINK
-#  L_HIP_R_LINK
-#  L_HIP_P_LINK:
-  L_KNEE_P_LINK: [[LKNEEO, [0.,0.,0.]],]
-#  L_ANKLE_P_LINK
-#  L_ANKLE_R_LINK:
-#  L_TOE_P_LINK
-#  CHEST_P_LINK:
-#  CHEST_R_LINK
-#  CHEST_Y_LINK
-#  NECK_Y_LINK
-#  NECK_R_LINK
-  NECK_P_LINK: [[HEADF, [0.,0.,0.]], [HEADR, [0.,0.,0.]], [HEADL, [0.,0.,0.]]]
-#  EYEBROW_P_LINK
-#  EYELID_P_LINK
-#  EYE_P_LINK
-#  EYE_Y_LINK
-#  MOUTH_P_LINK
-#  LOWERLIP_P_LINK
-#  UPPERLIP_P_LINK
-#  CHEEK_P_LINK
-  R_SHOULDER_P_LINK: [[RSHO, [0.,0.,0.]],]
-#  R_SHOULDER_R_LINK
-#  R_SHOULDER_Y_LINK
-  R_ELBOW_P_LINK: [[RELBL, [0.,0.,0.]], [RELBM, [0.,0.,0.]]]
-#  R_WRIST_Y_LINK
-  R_WRIST_R_LINK: [[RWRISTR, [0.,0.,0.]],[RWRISTU, [0.,0.,0.]]]
-#  R_HAND_J0_LINK
-#  R_HAND_J1_LINK
-  L_SHOULDER_P_LINK: [[LSHO, [0.,0.,0.]],]
-#  L_SHOULDER_R_LINK
-#  L_SHOULDER_Y_LINK
-  L_ELBOW_P_LINK: [[LELBL, [0.,0.,0.]], [LELBM, [0.,0.,0.]]]
-#  L_WRIST_Y_LINK
-  L_WRIST_R_LINK: [[LWRISTR, [0.,0.,0.]], [LWRISTU, [0.,0.,0.]]]
-#  L_HAND_J0_LINK
-#  L_HAND_J1_LINK
+#  R_HIP_Y:
+#  R_HIP_R:
+#  R_HIP_P:
+#  R_KNEE_P: [[RKNEEO, [0.,0.,0.]],]
+#  R_ANKLE_P:
+#  R_ANKLE_R:
+#  R_TOE_P:
+#  L_HIP_Y:
+#  L_HIP_R:
+#  L_HIP_P:
+#  L_KNEE_P: [[LKNEEO, [0.,0.,0.]],]
+#  L_ANKLE_P:
+#  L_ANKLE_R:
+#  L_TOE_P:
+#  CHEST_P:
+#  CHEST_R:
+#  CHEST_Y:
+#  NECK_Y:
+#  NECK_R:
+  NECK_P: [[HEADF, [0.,0.,0.]], [HEADR, [0.,0.,0.]], [HEADL, [0.,0.,0.]]]
+#  EYEBROW_P:
+#  EYELID_P:
+#  EYE_P:
+#  EYE_Y:
+#  MOUTH_P:
+#  LOWERLIP_P:
+#  UPPERLIP_P:
+#  CHEEK_P:
+#  R_SHOULDER_P: [[RSHO, [0.,0.,0.]],]
+#  R_SHOULDER_R:
+#  R_SHOULDER_Y:
+  R_ELBOW_P: [[RELBL, [0.,0.,0.]], [RELBM, [0.,0.,0.]]]
+#  R_WRIST_Y
+  R_WRIST_R: [[RWRISTR, [0.,0.,0.]],[RWRISTU, [0.,0.,0.]]]
+#  R_HAND_J0:
+#  R_HAND_J1:
+#  L_SHOULDER_P: [[LSHO, [0.,0.,0.]],]
+#  L_SHOULDER_R:
+#  L_SHOULDER_Y:
+  L_ELBOW_P: [[LELBL, [0.,0.,0.]], [LELBM, [0.,0.,0.]]]
+#  L_WRIST_Y:
+  L_WRIST_R: [[LWRISTR, [0.,0.,0.]], [LWRISTU, [0.,0.,0.]]]
+#  L_HAND_J0:
+#  L_HAND_J1:
 
 # Additional markers (to be placed):
 # RMP LMP RPEL RHIP RANK RHEEL

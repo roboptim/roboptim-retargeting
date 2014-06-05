@@ -21,6 +21,7 @@
 # include <stdexcept>
 
 # include <roboptim/core/numeric-linear-function.hh>
+# include <roboptim/core/filter/plus.hh>
 
 //# include <roboptim/retargeting/function/bone-length.hh>
 # include <roboptim/retargeting/function/marker-laplacian-deformation-energy/choreonoid.hh>
@@ -65,11 +66,43 @@ namespace roboptim
 	typedef BoneLengthError<typename T::traits_t> fun_t;
 	typedef boost::shared_ptr<fun_t> funPtr_t;
 
-	funPtr_t larm =
-	  boost::make_shared<fun_t>
-	  ("LELBL", "LELBM", "R_ELBOW_P", data.markersTrajectory, data.robotModel);
+	typedef MorphingData::mapping_t::const_iterator
+	  body_const_iterator;
+	typedef MorphingData::mappingData_t::const_iterator
+	  marker_const_iterator;
 
-	return larm;
+	boost::shared_ptr<T> result;
+
+	for (body_const_iterator it = data.morphing.mapping.begin ();
+	     it != data.morphing.mapping.end (); ++it)
+	  {
+	    for (marker_const_iterator itMarker = it->second.begin ();
+		 itMarker != it->second.end (); ++itMarker)
+	      {
+		for (marker_const_iterator itMarker2 = it->second.begin ();
+		     itMarker2 != it->second.end (); ++itMarker2)
+		  {
+		    // Avoid duplicating markers by adding both
+		    // (p1,p2) and (p2,p1). Make sure that p2 < p1
+		    // Also never add (p,p).
+		    if (itMarker2 - it->second.begin ()
+			>= itMarker - it->second.begin ())
+		      continue;
+
+		    boost::shared_ptr<T> fun =
+		      boost::make_shared<fun_t>
+		      (itMarker->marker, itMarker2->marker, it->first,
+		       data.markersTrajectory, data.robotModel);
+
+		    if (!result)
+		      result = fun;
+		    else
+		      result = result + fun;
+		  }
+	      }
+	  }
+
+	return result;
       }
 
       /// \brief Map function name to the function used to allocate

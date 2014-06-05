@@ -29,6 +29,7 @@
 # include <roboptim/trajectory/state-function.hh>
 # include <roboptim/trajectory/vector-interpolation.hh>
 
+# include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/problem/marker-function-factory.hh>
 
 
@@ -97,6 +98,7 @@ namespace roboptim
 	  throw std::runtime_error ("invalid length");
 
       data.robotModel = loader.load (options.robotModel);
+      data.morphing = loadMorphingData (options.morphing);
 
       if (options.trajectoryType == "discrete")
 	data.trajectory =

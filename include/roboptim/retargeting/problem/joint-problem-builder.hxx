@@ -32,6 +32,7 @@
 # include <roboptim/trajectory/state-function.hh>
 # include <roboptim/trajectory/vector-interpolation.hh>
 
+# include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
 
 # include <roboptim/retargeting/problem/joint-function-factory.hh>
@@ -174,6 +175,7 @@ namespace roboptim
       data.jointsTrajectory->loadStandardYAMLformat (options.jointsTrajectory);
 
       data.robotModel = loader.load (options.robotModel);
+      data.morphing = loadMorphingData (options.morphing);
 
       // Create the interaction mesh
       data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();

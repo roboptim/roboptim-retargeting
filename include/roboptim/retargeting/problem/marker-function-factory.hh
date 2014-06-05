@@ -24,6 +24,7 @@
 
 # include <roboptim/trajectory/trajectory.hh>
 
+# include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/problem/function-factory.hh>
 
 namespace roboptim
@@ -48,6 +49,11 @@ namespace roboptim
       /// bodies associated with limits such as joints positions,
       /// velocities limits, etc.
       cnoid::BodyPtr robotModel;
+
+      /// \brief Morphing data.
+      ///
+      /// Map markers to bodies (possibly with a per-marker offset).
+      MorphingData morphing;
 
       /// \brief RobOptim trajectory
       boost::shared_ptr<roboptim::Trajectory<3> > trajectory;

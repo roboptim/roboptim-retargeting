@@ -63,7 +63,7 @@ namespace roboptim
 	  jointToMarker =
 	  boost::make_shared<
 	    JointToMarkerPositionChoreonoid<typename T::traits_t> >
-	  (data.interactionMesh);
+	  (data.robotModel, data.morphing);
 
 	Function::vector_t referencePositions =
 	  data.inputTrajectory->parameters ().segment

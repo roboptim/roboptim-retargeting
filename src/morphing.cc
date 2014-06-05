@@ -26,6 +26,52 @@ namespace roboptim
 {
   namespace retargeting
   {
+
+    const std::string&
+    MorphingData::attachedBody (const std::string& marker) const
+    {
+      typedef MorphingData::mapping_t::const_iterator
+	body_const_iterator;
+      typedef MorphingData::mappingData_t::const_iterator
+	marker_const_iterator;
+
+      for (body_const_iterator it = mapping.begin ();
+	   it != mapping.end (); ++it)
+	{
+	  for (marker_const_iterator itMarker = it->second.begin ();
+	       itMarker != it->second.end (); ++itMarker)
+	    {
+	      if (itMarker->marker == marker)
+		return it->first;
+	    }
+	}
+
+      throw std::runtime_error ("cannot find marker");
+    }
+
+    Eigen::Vector3d
+    MorphingData::offset
+    (const std::string& linkName, const std::string& markerName) const
+    {
+      typedef MorphingData::mapping_t::const_iterator
+	body_const_iterator;
+      typedef MorphingData::mappingData_t::const_iterator
+	marker_const_iterator;
+
+      body_const_iterator it = mapping.find (linkName);
+      if (it == mapping.end ())
+	throw std::runtime_error ("cannot find link");
+
+      for (marker_const_iterator itMarker = it->second.begin ();
+	   itMarker != it->second.end (); ++itMarker)
+	{
+	  if (itMarker->marker == markerName)
+	    return itMarker->offset;
+	}
+
+      throw std::runtime_error ("cannot find marker");
+    }
+
     MorphingData loadMorphingData (const std::string& filename)
     {
       MorphingData result;
@@ -97,6 +143,8 @@ namespace roboptim
 		(*itMarker)[1][1].to<double> (),
 		(*itMarker)[1][2].to<double> ();
 	      result.mapping[bodyName].push_back (mapping);
+
+	      result.markers.push_back (mapping.marker);
 	    }
 	}
 
