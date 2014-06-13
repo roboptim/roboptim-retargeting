@@ -15,19 +15,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
 
-
-#define BOOST_TEST_MODULE choreonoid_body_trajectory
+#define BOOST_TEST_MODULE libmocap_marker_trajectory
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
+
+#include <libmocap/marker-trajectory-factory.hh>
+#include <libmocap/marker-trajectory.hh>
+
 
 #include <roboptim/core/visualization/gnuplot.hh>
 #include <roboptim/core/visualization/gnuplot-commands.hh>
 #include <roboptim/core/visualization/gnuplot-function.hh>
 
-#include "roboptim/retargeting/function/choreonoid-body-trajectory.hh"
-
-#include <cnoid/BodyMotion>
+#include <roboptim/retargeting/function/libmocap-marker-trajectory.hh>
 
 using namespace roboptim;
 using namespace roboptim::visualization;
@@ -38,19 +39,22 @@ using boost::test_tools::output_test_stream;
 BOOST_AUTO_TEST_CASE (simple)
 {
   // Loading the motion.
-  cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
+  std::string file = DATA_DIR;
+  file += "/human.trc";
 
-  bodyMotion->loadStandardYAMLformat
-    (DATA_DIR "/sample.body-motion.yaml");
+  libmocap::MarkerTrajectoryFactory factory;
+  libmocap::MarkerTrajectory markers =
+    factory.load (file);
 
-  ChoreonoidBodyTrajectory trajectory (bodyMotion, true);
+  // Building the trajectory.
+  LibmocapMarkerTrajectory trajectory (markers);
 
-  ChoreonoidBodyTrajectory::discreteInterval_t interval =
-    ChoreonoidBodyTrajectory::makeDiscreteInterval
-    (ChoreonoidBodyTrajectory::getLowerBound (trajectory.timeRange ()),
-     ChoreonoidBodyTrajectory::getUpperBound (trajectory.timeRange ()),
-     (ChoreonoidBodyTrajectory::getUpperBound (trajectory.timeRange ())
-      - ChoreonoidBodyTrajectory::getLowerBound (trajectory.timeRange ()))
+  LibmocapMarkerTrajectory::discreteInterval_t interval =
+    LibmocapMarkerTrajectory::makeDiscreteInterval
+    (LibmocapMarkerTrajectory::getLowerBound (trajectory.timeRange ()),
+     LibmocapMarkerTrajectory::getUpperBound (trajectory.timeRange ()),
+     (LibmocapMarkerTrajectory::getUpperBound (trajectory.timeRange ())
+      - LibmocapMarkerTrajectory::getLowerBound (trajectory.timeRange ()))
      / 100.
      );
 

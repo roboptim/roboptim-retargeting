@@ -9,6 +9,7 @@ roboptim-retargeting-markers \- optimize marker positions to fit a new actor
 .B roboptim\-retarget\-markers [OPTIONS]
      \-s <MARKER TRAJECTORY>
      \-m <MARKER TRAJECTORY>
+     \-M <MORPHING FILE>
      \-o <OUTPUT FILE>
 
 .SH DESCRIPTION
@@ -17,7 +18,7 @@ Takes a marker trajectory as input and adapt the bone length to fit a
 new actor.
 
 See "Spatial Relationship Preserving Character Motion Adaptation" by
-E.S.L. Ho, T. Komura, C.-L. Tai.
+E.S.L. Ho, T. Komura, C.\-L. Tai.
 
 .SH OPTIONS
 
@@ -73,17 +74,21 @@ Print help message and exit.
 The software comes with a set of data allowing to run tests easily.
 For a short example, please run:
 
-  roboptim-retarget-markers
-     -s human.mars
-     -m human.trc
-     -o /tmp/robot.trc
+  roboptim\-retarget\-markers
+     \-s data/human.mars			# Marker Set
+     \-m data/human.trc				# Marker Trajectory
+     \-M data/human\-to\-hrp4c.morphing.yaml    # Morphing File
+     \-r /path/to/HRP4C\-release/HRP4Cg2.yaml   # Path to robot YAML
+     \-C bone\-length				# Add the constraint
+     \-o /tmp/robot.trc				# Output file
+     \-\-length 10				# Only 10 frames
 
 
 .SH SEE ALSO
 
 .TP
 .B Home Page
-https://github.com/thomas-moulard/roboptim-retargeting
+https://github.com/thomas\-moulard/roboptim\-retargeting
 
 .SH AUTHOR
 

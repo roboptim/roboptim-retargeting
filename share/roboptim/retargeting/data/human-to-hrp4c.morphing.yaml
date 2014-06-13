@@ -15,6 +15,11 @@
 #
 # This files allows the marker set "human.mars" to be morphed to the
 # HRP4C robot structure. HRP4C model is freely available on internet.
+#
+#
+# IMPORTANT: please note that the roboptim-retargeting test suite rely
+# on this file, you will HAVE to update the test suite (see
+# tests/marker-mapping.cc for instance) if you change this file!
 
 ---
 format:                 # Describe what data this YAML file is encoding.
@@ -24,52 +29,47 @@ format:                 # Describe what data this YAML file is encoding.
 mapping:                # Build the robot bodies <-> markers mapping.
                         # For each body a list of markers as well as an offset
                         # is specified.
-#  R_HIP_Y:
-#  R_HIP_R:
-#  R_HIP_P:
-#  R_KNEE_P: [[RKNEEO, [0.,0.,0.]],]
-#  R_ANKLE_P:
-#  R_ANKLE_R:
-#  R_TOE_P:
-#  L_HIP_Y:
-#  L_HIP_R:
-#  L_HIP_P:
-#  L_KNEE_P: [[LKNEEO, [0.,0.,0.]],]
-#  L_ANKLE_P:
-#  L_ANKLE_R:
-#  L_TOE_P:
-#  CHEST_P:
-#  CHEST_R:
-#  CHEST_Y:
-#  NECK_Y:
-#  NECK_R:
+  R_HIP_Y: []
+  R_HIP_R: []
+  R_HIP_P: [[RHIP, [0.,0.,0.]]]
+  R_KNEE_P: [[RKNEEO, [0.,0.,0.]], [RMP, [0.,0.,0.]],]
+  R_ANKLE_P: []
+  R_ANKLE_R: [[RANK, [0.,0.,0.]], [RHEEL, [0.,0.,0.]], [RPINKY, [0.,0.,0.]], [RTHUMB, [0.,0.,0.]],]
+  R_TOE_P: []
+  L_HIP_Y: []
+  L_HIP_R: []
+  L_HIP_P: [[LHIP, [0.,0.,0.]]]
+  L_KNEE_P: [[LKNEEO, [0.,0.,0.]], [LMP, [0.,0.,0.]],]
+  L_ANKLE_P: []
+  L_ANKLE_R: [[LANK, [0.,0.,0.]], [LHEEL, [0.,0.,0.]], [LPINKY, [0.,0.,0.]], [LTHUMB, [0.,0.,0.]],]
+  L_TOE_P: []
+  CHEST_P: []
+  CHEST_R: []
+  CHEST_Y: [[L5, [0.,0.,0.]], [T1, [0.,0.,0.]], [T7, [0.,0.,0.]], [SCAP, [0.,0.,0.]], [STERNLOW, [0.,0.,0.]], [STERNUP, [0.,0.,0.]]]
+  NECK_Y: []
+  NECK_R: []
   NECK_P: [[HEADF, [0.,0.,0.]], [HEADR, [0.,0.,0.]], [HEADL, [0.,0.,0.]]]
-#  EYEBROW_P:
-#  EYELID_P:
-#  EYE_P:
-#  EYE_Y:
-#  MOUTH_P:
-#  LOWERLIP_P:
-#  UPPERLIP_P:
-#  CHEEK_P:
-#  R_SHOULDER_P: [[RSHO, [0.,0.,0.]],]
-#  R_SHOULDER_R:
-#  R_SHOULDER_Y:
-  R_ELBOW_P: [[RELBL, [0.,0.,0.]], [RELBM, [0.,0.,0.]]]
-#  R_WRIST_Y
+  EYEBROW_P: []
+  EYELID_P: []
+  EYE_P: []
+  EYE_Y: []
+  MOUTH_P: []
+  LOWERLIP_P: []
+  UPPERLIP_P: []
+  CHEEK_P: []
+  R_SHOULDER_P: [[RSHO, [0.,0.,0.]],]
+  R_SHOULDER_R: []
+  R_SHOULDER_Y: []
+  R_ELBOW_P: [[RELBL, [0.,0.,0.]], [RELBM, [0.,0.,0.]], [RPEL, [0.,0.,0.]]]
+  R_WRIST_Y: []
   R_WRIST_R: [[RWRISTR, [0.,0.,0.]],[RWRISTU, [0.,0.,0.]]]
-#  R_HAND_J0:
-#  R_HAND_J1:
-#  L_SHOULDER_P: [[LSHO, [0.,0.,0.]],]
-#  L_SHOULDER_R:
-#  L_SHOULDER_Y:
-  L_ELBOW_P: [[LELBL, [0.,0.,0.]], [LELBM, [0.,0.,0.]]]
-#  L_WRIST_Y:
+  R_HAND_J0: []
+  R_HAND_J1: []
+  L_SHOULDER_P: [[LSHO, [0.,0.,0.]],]
+  L_SHOULDER_R: []
+  L_SHOULDER_Y: []
+  L_ELBOW_P: [[LELBL, [0.,0.,0.]], [LELBM, [0.,0.,0.]], [LPEL, [0.,0.,0.]]]
+  L_WRIST_Y: []
   L_WRIST_R: [[LWRISTR, [0.,0.,0.]], [LWRISTU, [0.,0.,0.]]]
-#  L_HAND_J0:
-#  L_HAND_J1:
-
-# Additional markers (to be placed):
-# RMP LMP RPEL RHIP RANK RHEEL
-# RPINKY RTHUMB LPEL LHIP LANK LHEEL LPINKY LTHUMB T1 T7 L5 STERNUP
-# STERNLOW SCAP
+  L_HAND_J0: []
+  L_HAND_J1: []

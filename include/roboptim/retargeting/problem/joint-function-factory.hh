@@ -24,8 +24,12 @@
 
 # include <roboptim/trajectory/trajectory.hh>
 
+# include <roboptim/retargeting/marker-mapping.hh>
+# include <roboptim/retargeting/interaction-mesh.hh>
 # include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/problem/function-factory.hh>
+
+# include <roboptim/retargeting/utility.hh>
 
 namespace roboptim
 {
@@ -57,21 +61,24 @@ namespace roboptim
       /// Map robot bodies to markers (optionally with an offset)
       MorphingData morphing;
 
+      /// \brief Marker mapping.
+      MarkerMappingShPtr markerMapping;
+
       /// \brief RobOptim trajectory
       ///
       /// This trajectory is the full trajectory, it also contains the
       /// disabled joints information.
-      boost::shared_ptr<roboptim::Trajectory<3> > trajectory;
+      TrajectoryShPtr trajectory;
 
 
       /// \brief Reduced RobOptim trajectory
       ///
       /// This trajectory contained the reduce motion.
       /// I.e. this does not include the disabled joints.
-      boost::shared_ptr<roboptim::Trajectory<3> > filteredTrajectory;
+      TrajectoryShPtr filteredTrajectory;
 
       /// \brief Interaction Mesh (loaded by Choreonoid)
-      cnoid::BodyIMeshPtr interactionMesh;
+      InteractionMeshShPtr interactionMesh;
 
       /// \brief Configuration of the disabled joints (one frame)
       ///

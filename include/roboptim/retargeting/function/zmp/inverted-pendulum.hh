@@ -16,18 +16,18 @@ namespace roboptim
     public:
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (ZMP<T>);
 
-      explicit ZMPInvertedPendulum (size_type nDofs) throw ()
+      explicit ZMPInvertedPendulum (size_type nDofs)
 	: ZMP<T> (nDofs, "choreonoid")
       {}
 
-      virtual ~ZMPInvertedPendulum () throw ()
+      virtual ~ZMPInvertedPendulum ()
       {}
 
     protected:
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
 	//FIXME: implement this
       }
@@ -36,7 +36,7 @@ namespace roboptim
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type i)
-	const throw ()
+	const
       {
 	//FIXME: implement this
       }

@@ -24,6 +24,8 @@
 
 # include <roboptim/trajectory/trajectory.hh>
 
+# include <roboptim/retargeting/interaction-mesh.hh>
+# include <roboptim/retargeting/marker-mapping.hh>
 # include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/problem/function-factory.hh>
 
@@ -49,6 +51,12 @@ namespace roboptim
       /// bodies associated with limits such as joints positions,
       /// velocities limits, etc.
       cnoid::BodyPtr robotModel;
+
+      /// \brief Mapping from marker name to id
+      MarkerMappingShPtr mapping;
+
+      /// \brief Interaction Mesh
+      InteractionMeshShPtr mesh;
 
       /// \brief Morphing data.
       ///

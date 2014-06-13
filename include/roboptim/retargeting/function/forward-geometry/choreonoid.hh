@@ -9,8 +9,10 @@
 # include <cnoid/JointPath>
 # include <cnoid/Jacobian>
 
-# include <roboptim/retargeting/function/forward-geometry.hh>
+# include <roboptim/retargeting/choreonoid.hh>
 # include <roboptim/retargeting/eigen-rigid-body.hh>
+# include <roboptim/retargeting/function/forward-geometry.hh>
+# include <roboptim/retargeting/utility.hh>
 
 # include <roboptim/core/finite-difference-gradient.hh>
 
@@ -19,40 +21,6 @@ namespace roboptim
 {
   namespace retargeting
   {
-    /// \brief Update Choreonoid robot from configuration vector.
-    ///
-    /// It is a two step process:
-    /// 1. extract the first 6 DOFs of the configuration vector
-    ///    which represents the root link position.
-    ///    The first three values are the translation part,
-    ///    The next three values are the rotational part expressed
-    ///    using the U-Theta representation.
-    ///
-    /// 2. The remaining values are the DOFs configurations, pass
-    ///    them directly to Choreonoid.
-    ///
-    /// This function does not realize any allocation and can be
-    /// safely used in function computations.
-    ///
-    /// \param robot Choreonoid robot
-    /// \param x configuration vector which size must correspond to
-    ///          the robot number of DOFs plus six.
-    template <typename Derived>
-    void
-    updateRobotConfiguration (const cnoid::BodyPtr& robot,
-			      const Eigen::MatrixBase<Derived>& x)
-    {
-      // Set root link position.
-      robot->rootLink ()->position ().translation () =
-	x.template segment<3> (0);
-      eulerToTransform
-	(robot->rootLink ()->position ().linear (), x.template segment<3> (3));
-
-      // Set joints values.
-      for(int dofId = 0; dofId < robot->numJoints (); ++dofId)
-	robot->joint (dofId)->q () = x[dofId + 6];
-    }
-
     /// \brief Compute forward geometry for a particular robot model.
     ///
     /// Robot model from choreonoid should be passed to the
@@ -66,7 +34,7 @@ namespace roboptim
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (ForwardGeometry<T>);
 
       explicit ForwardGeometryChoreonoid
-      (cnoid::BodyPtr robot, int bodyId) throw ()
+      (cnoid::BodyPtr robot, int bodyId)
 	: ForwardGeometry<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
 	  bodyId_ (bodyId),
@@ -93,7 +61,7 @@ namespace roboptim
       }
 
       explicit ForwardGeometryChoreonoid
-      (cnoid::BodyPtr robot, const std::string& bodyName) throw ()
+      (cnoid::BodyPtr robot, const std::string& bodyName)
 	: ForwardGeometry<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
 	  bodyId_ (0),
@@ -130,14 +98,14 @@ namespace roboptim
       }
 
 
-      virtual ~ForwardGeometryChoreonoid () throw ()
+      virtual ~ForwardGeometryChoreonoid ()
       {}
 
     protected:
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
 	updateRobotConfiguration (robot_, x);
 	robot_->calcForwardKinematics ();
@@ -178,7 +146,7 @@ namespace roboptim
       impl_gradient2 (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type functionId)
-	const throw ()
+	const
       {
 	// Set the robot configuration.
 	updateRobotConfiguration (robot_, x);
@@ -247,15 +215,15 @@ namespace roboptim
 	for (std::size_t jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
-	    assert (jointId < gradient.size ());
-	    assert (jointId >= 6);
+	    ROBOPTIM_RETARGETING_ASSERT (jointId < gradient.size ());
+	    ROBOPTIM_RETARGETING_ASSERT (jointId >= 6);
 
 	    gradient[jointId] = J_ (functionId, jacobianId);
 	  }
       }
 
       virtual void impl_jacobian2 (jacobian_t& J, const argument_t& x)
-	const throw ()
+	const
       {
 	// Set the robot configuration.
 	updateRobotConfiguration (robot_, x);
@@ -314,8 +282,8 @@ namespace roboptim
 	for (int jacobianId = 0; jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
-	    assert (jointId < J.cols ());
-	    assert (jointId >= 6);
+	    ROBOPTIM_RETARGETING_ASSERT (jointId < J.cols ());
+	    ROBOPTIM_RETARGETING_ASSERT (jointId >= 6);
 
 	    J.col (jointId) = J_.col (jacobianId);
 	  }
@@ -327,14 +295,14 @@ namespace roboptim
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type functionId)
-	const throw ()
+	const
       {
 	fd_->gradient (gradient, x, functionId);
       }
 
       // See doc/sympy/euler-angles.py
       template <typename Derived>
-      void updateDR (const typename Eigen::MatrixBase<Derived>& x) const throw ()
+      void updateDR (const typename Eigen::MatrixBase<Derived>& x) const
       {
 	value_type cr, sr, cp, sp, cy, sy;
 	sincos (x[0], &sr, &cr);

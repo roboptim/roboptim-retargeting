@@ -1,7 +1,8 @@
 MACRO(ADD_ROBOPTIM_RETARGETING_TOOL NAME)
   ADD_EXECUTABLE(${NAME} ${NAME}.cc)
   TARGET_LINK_LIBRARIES(${NAME} roboptim-retargeting)
-
+  TARGET_LINK_LIBRARIES(${NAME} roboptim-retargeting)
+  TARGET_LINK_LIBRARIES(${NAME} roboptim-retargeting)
   TARGET_LINK_LIBRARIES(${NAME} boost_program_options)
 
   PKG_CONFIG_USE_DEPENDENCY(${NAME} libmocap)
@@ -11,10 +12,6 @@ MACRO(ADD_ROBOPTIM_RETARGETING_TOOL NAME)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid-body-plugin)
 
   PKG_CONFIG_USE_DEPENDENCY(${NAME} yaml-cpp)
-
-  # Unfortunately, the motion capture part does not provide any
-  # pkg-config file.
-  TARGET_LINK_LIBRARIES(${NAME} CnoidMocap CnoidMocapPlugin)
 
   INSTALL(TARGETS ${NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 ENDMACRO()

@@ -28,7 +28,7 @@ namespace roboptim
       (boost::shared_ptr<Trajectory<3> > referenceTrajectory,
        size_type dofId,
        value_type dt)
-	throw ()
+
 	: GenericDifferentiableFunction<T>
 	  (referenceTrajectory->parameters ().size (), 1, "CostReferenceTrajectory"),
 	  vectorInterpolation_
@@ -42,13 +42,13 @@ namespace roboptim
 	  dt_ (dt)
       {}
 
-      virtual ~CostReferenceTrajectory () throw ()
+      virtual ~CostReferenceTrajectory ()
       {}
 
     protected:
       virtual void impl_compute (result_t& result,
 				 const argument_t& p)
-	const throw ()
+	const
       {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);
@@ -70,7 +70,7 @@ namespace roboptim
       virtual void impl_gradient (gradient_t& gradient,
 				  const argument_t& p,
 				  size_type)
-	const throw ()
+	const
       {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);

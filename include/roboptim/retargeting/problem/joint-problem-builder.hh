@@ -34,6 +34,14 @@ namespace roboptim
     /// chosen from resolution, etc.
     struct JointProblemOptions
     {
+      /// \brief Frames before this one will not be considered
+      int startFrame;
+
+      /// \brief How many frames will be considered?
+      ///
+      /// -1 means all frames.
+      int length;
+
       /// \brief Joints trajectory.
       ///
       /// Joints trajectories which will be used as the initial input

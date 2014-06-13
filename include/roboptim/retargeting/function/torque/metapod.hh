@@ -29,19 +29,19 @@ namespace roboptim
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (Torque<T>);
       typedef R robot_t;
 
-      explicit TorqueMetapod () throw ()
+      explicit TorqueMetapod ()
 	: Torque<T> (robot_t::NBDOF, "metapod"),
 	  robot_ ()
       {}
 
-      virtual ~TorqueMetapod () throw ()
+      virtual ~TorqueMetapod ()
       {}
 
       // see https://github.com/laas/metapod/issues/63
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
 	metapod::rnea<robot_t, true>::run
 	  (robot_, this->q (x), this->dq (x), this->ddq (x));
@@ -53,7 +53,7 @@ namespace roboptim
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type i)
-	const throw ()
+	const
       {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);

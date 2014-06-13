@@ -19,6 +19,8 @@
 # define ROBOPTIM_RETARGETING_PATH_HH
 # include <string>
 
+# include <roboptim/retargeting/config.hh>
+
 namespace roboptim
 {
   namespace retargeting
@@ -33,7 +35,7 @@ namespace roboptim
     /// for provided data.
     ///
     /// \param[in,out] path Path be be resolved.
-    void resolvePath (std::string& path);
+    ROBOPTIM_RETARGETING_DLLEXPORT void resolvePath (std::string& path);
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 

@@ -22,7 +22,6 @@
 # include <boost/make_shared.hpp>
 # include <boost/optional.hpp>
 
-# include <cnoid/BodyIMesh>
 # include <cnoid/BodyLoader>
 # include <cnoid/BodyMotion>
 
@@ -36,6 +35,7 @@
 # include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
 
 # include <roboptim/retargeting/problem/joint-function-factory.hh>
+# include <roboptim/retargeting/utility.hh>
 
 
 namespace roboptim
@@ -76,7 +76,7 @@ namespace roboptim
     std::vector<boost::optional<Function::value_type> >
     disabledJointsConfiguration
     (const std::vector<std::string>& disabledJoints,
-     boost::shared_ptr<Trajectory<3> > originalTrajectory,
+     TrajectoryShPtr originalTrajectory,
      cnoid::BodyPtr robotModel)
     {
       std::set<std::string> disabledJointsSet
@@ -120,12 +120,12 @@ namespace roboptim
     /// \param[in] originalTrajectory original, full, trajectory
     /// \param[in] disabledJointsConfiguration list of joints to be excluded
     /// \return filtered trajectory
-    boost::shared_ptr<Trajectory<3> >
-    filterTrajectory (boost::shared_ptr<Trajectory<3> > originalTrajectory,
+    TrajectoryShPtr
+    filterTrajectory (TrajectoryShPtr originalTrajectory,
 		      const std::vector<boost::optional<Function::value_type> >&
 		      disabledJointsConfiguration)
     {
-      typedef Trajectory<3>::vector_t::Index index_t;
+      typedef Trajectory::vector_t::Index index_t;
 
       index_t nDofsFull =
 	static_cast<index_t> (disabledJointsConfiguration.size ());
@@ -141,7 +141,7 @@ namespace roboptim
 	/ nDofsFull;
       index_t reducedTrajectoryParametersSize = nDofsReduced * nFrames;
 
-      Trajectory<3>::vector_t
+      Trajectory::vector_t
 	reducedTrajectoryParameters (reducedTrajectoryParametersSize);
       reducedTrajectoryParameters.setZero ();
 
@@ -155,7 +155,7 @@ namespace roboptim
 	  idxOriginal++;
 	}
 
-      boost::shared_ptr<Trajectory<3> > reducedTrajectory =
+      TrajectoryShPtr reducedTrajectory =
 	boost::make_shared<VectorInterpolation>
 	(reducedTrajectoryParameters,
 	 nDofsReduced, static_cast<index_t> (originalTrajectory->length ()) / nDofsFull);
@@ -176,23 +176,31 @@ namespace roboptim
 
       data.robotModel = loader.load (options.robotModel);
       data.morphing = loadMorphingData (options.morphing);
-
-      // Create the interaction mesh
-      data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();
-      if (!data.interactionMesh->addBody (data.robotModel, data.jointsTrajectory))
-	throw std::runtime_error ("failed to add body to body interaction mesh");
-      if (!data.interactionMesh->initialize ())
-        throw std::runtime_error ("failed to initialize body interaction mesh");
-
+      data.markerMapping = buildMarkerMappingFromMorphing (data.morphing);
 
       // Load the trajectory
       if (options.trajectoryType == "discrete")
 	{
-	  data.trajectory = boost::make_shared<ChoreonoidBodyTrajectory>
+	  // load the trajectory
+	  boost::shared_ptr<ChoreonoidBodyTrajectory> trajectory =
+	    boost::make_shared<ChoreonoidBodyTrajectory>
 	    (data.jointsTrajectory, true);
+
+	  // trim it before insertion to satisfy startFrame / length
+	  // options.
+	  data.trajectory = safeGet (trajectory).trim
+	    (static_cast<Function::size_type> (options.startFrame),
+	     static_cast<Function::size_type> (options.length));
 	}
       else
       	throw std::runtime_error ("invalid trajectory type");
+
+      // Create the interaction mesh
+      data.interactionMesh =
+	buildInteractionMeshFromMarkerMotion
+	(data.trajectory, data.markerMapping);
+      if (!data.interactionMesh)
+	throw std::runtime_error ("failed to build the interaction mesh");
 
       // Filter the trajectory (do not re-order as the initial trajectory is needed!)
 
@@ -209,7 +217,6 @@ namespace roboptim
       data.filteredTrajectory =
 	filterTrajectory
 	(data.trajectory, data.disabledJointsConfiguration);
-
     }
 
 
@@ -265,10 +272,10 @@ namespace roboptim
 		    const Function::value_type t =
 		      (static_cast<Function::value_type> (i) + 1.) /
 		      (static_cast<Function::value_type> (nConstraints) + 1.);
-		    assert (t > 0. && t < 1.);
+		    ROBOPTIM_RETARGETING_ASSERT (t > 0. && t < 1.);
 
 		    boost::shared_ptr<DifferentiableFunction> f
-		      (new roboptim::StateFunction<Trajectory<3> >
+		      (new roboptim::StateFunction<Trajectory >
 		       (*data.filteredTrajectory,
 			constraint.function,
 			t * tMax,
@@ -282,7 +289,7 @@ namespace roboptim
 		break;
 	      }
 	    default:
-	      assert (0 && "should never happen");
+	      ROBOPTIM_RETARGETING_ASSERT (0 && "should never happen");
 	    }
 	}
 

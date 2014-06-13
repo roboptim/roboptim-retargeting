@@ -19,6 +19,8 @@
 # define ROBOPTIM_RETARGETING_EIGEN_RIGID_BODY_HXX
 # include <cmath>
 
+# include <roboptim/retargeting/utility.hh>
+
 template <typename Derived, typename OtherDerived>
 void
 eulerToTransform (Eigen::MatrixBase<Derived> const& linear,
@@ -169,7 +171,7 @@ transformToVector (Eigen::MatrixBase<Derived> const& result,
 					  _Dim, _Mode, _Options>& transform)
 {
   EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
-  assert (result.size () == 6);
+  ROBOPTIM_RETARGETING_ASSERT (result.size () == 6);
 
   Eigen::MatrixBase<Derived>& result_ =
     const_cast<Eigen::MatrixBase<Derived>&> (result);
@@ -185,7 +187,7 @@ transformToUtheta (Eigen::MatrixBase<Derived> const& result,
 					      _Dim, _Mode, _Options>& transform)
 {
   EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
-  assert (result.size () == 6);
+  ROBOPTIM_RETARGETING_ASSERT (result.size () == 6);
 
   Eigen::MatrixBase<Derived>& result_ =
     const_cast<Eigen::MatrixBase<Derived>&> (result);
@@ -202,7 +204,7 @@ vectorToTransform (Eigen::Transform<typename Derived::RealScalar,
 		   const Eigen::MatrixBase<Derived>& result)
 {
   EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
-  assert (result.size () == 6);
+  ROBOPTIM_RETARGETING_ASSERT (result.size () == 6);
 
   transform.translation () = result.template segment<3> (0);
   eulerToTransform (transform.linear (), result.template segment<3> (3));
@@ -216,7 +218,7 @@ uthetaPoseToTransform (Eigen::Transform<typename Derived::RealScalar,
 		       const Eigen::MatrixBase<Derived>& result)
 {
   EIGEN_STATIC_ASSERT_VECTOR_ONLY (Derived);
-  assert (result.size () == 6);
+  ROBOPTIM_RETARGETING_ASSERT (result.size () == 6);
 
   transform.translation () = result.template segment<3> (0);
   uthetaToTransform (transform.linear (), result.template segment<3> (3));

@@ -31,6 +31,8 @@
 
 #include <roboptim/retargeting/problem/joint-problem-builder.hh>
 
+#include "path.hh"
+
 static void
 writeBodyMotion (const std::string& filename,
 		 boost::shared_ptr<roboptim::Trajectory<3> > result)
@@ -171,7 +173,7 @@ static bool parseOptions
      po::value<std::string> (&options.plugin)->default_value ("cfsqp"),
      "RobOptim plug-in to be used")
     ("cost,c",
-     po::value<std::string> (&options.cost)->default_value ("null"),
+     po::value<std::string> (&options.cost)->default_value ("lde"),
      "What cost function should be used?")
     ("constraint,C",
      po::value<std::vector<std::string> > (&options.constraints),
@@ -179,6 +181,13 @@ static bool parseOptions
     ("disable-joint,d",
      po::value<std::vector<std::string> > (&options.disabledJoints),
      "Exclude a joint from the optimization process")
+
+    ("start-frame",
+     po::value<int> (&options.startFrame)->default_value (0),
+     "Starting frame (previous frames will be dropped)")
+    ("length",
+     po::value<int> (&options.length)->default_value (-1),
+     "How many frames will be considered? (-1 means all)")
     ;
 
   po::variables_map vm;
@@ -205,6 +214,9 @@ static bool parseOptions
 
   po::notify (vm);
 
+  roboptim::retargeting::resolvePath (options.jointsTrajectory);
+  roboptim::retargeting::resolvePath (options.robotModel);
+  roboptim::retargeting::resolvePath (options.morphing);
   return true;
 }
 

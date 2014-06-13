@@ -33,7 +33,7 @@ namespace roboptim
       };
 
 
-      explicit ZMPChoreonoid (cnoid::BodyPtr robot) throw ()
+      explicit ZMPChoreonoid (cnoid::BodyPtr robot)
 	// Add a fictional free floating joint at the beginning.
 	: ZMP<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
@@ -47,7 +47,7 @@ namespace roboptim
 	  states_[i].x.resize (6 + robot->numJoints ());
       }
 
-      explicit ZMPChoreonoid (const ZMPChoreonoid<T>& zmp) throw ()
+      explicit ZMPChoreonoid (const ZMPChoreonoid<T>& zmp)
 	: ZMP<T> (6 + zmp.robot_->numJoints (), "choreonoid"),
 	  robot_ (zmp.robot_),
 	  g_ (zmp.g_),
@@ -74,15 +74,15 @@ namespace roboptim
 	return *this;
       }
 
-      virtual ~ZMPChoreonoid () throw ()
+      virtual ~ZMPChoreonoid ()
       {}
 
-      const State& states () const throw ()
+      const State& states () const
       {
 	return states_;
       }
 
-      void printState (std::ostream& o, std::size_t i) const throw ()
+      void printState (std::ostream& o, std::size_t i) const
       {
 	if (i >= states_.size ())
 	  {
@@ -96,7 +96,7 @@ namespace roboptim
 	  << "L: " << states_[i].L;
       }
 
-      void printQuantities (std::ostream& o) const throw ()
+      void printQuantities (std::ostream& o) const
       {
 	o << "g: " << g_ << iendl
 	  << "delta: " << delta_ << iendl
@@ -119,7 +119,7 @@ namespace roboptim
       }
 
     protected:
-      void fillStates (const argument_t& x) const throw ()
+      void fillStates (const argument_t& x) const
       {
 	// Store q
 	states_[0].x = this->q (x, true);
@@ -165,7 +165,7 @@ namespace roboptim
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
 	fillStates (x);
 
@@ -192,7 +192,7 @@ namespace roboptim
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type i)
-	const throw ()
+	const
       {
 	fd_->gradient (gradient, x, i);
       }

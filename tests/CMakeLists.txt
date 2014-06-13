@@ -8,7 +8,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 
 MACRO(ROBOPTIM_RETARGETING_TEST NAME)
-  ADD_EXECUTABLE(${NAME} ${NAME}.cc)
+  ADD_EXECUTABLE(${NAME} ${NAME}.cc ${HEADERS})
   ADD_TEST(${NAME} ${RUNTIME_OUTPUT_DIRECTORY}/${NAME})
 
   # Link against main library.
@@ -24,10 +24,6 @@ MACRO(ROBOPTIM_RETARGETING_TEST NAME)
   # Choreonoid
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid)
   PKG_CONFIG_USE_DEPENDENCY(${NAME} choreonoid-body-plugin)
-
-  # Unfortunately, the motion capture part does not provide any
-  # pkg-config file.
-  TARGET_LINK_LIBRARIES(${NAME} CnoidMocap CnoidMocapPlugin)
 ENDMACRO()
 
 
@@ -47,7 +43,8 @@ ADD_DEFINITIONS(
   -DDATA_DIR="${CMAKE_SOURCE_DIR}/share/roboptim/retargeting/data")
 
 
-
+ROBOPTIM_RETARGETING_TEST(interaction-mesh)
+ROBOPTIM_RETARGETING_TEST(marker-mapping)
 ROBOPTIM_RETARGETING_TEST(morphing)
 
 ADD_SUBDIRECTORY(function)

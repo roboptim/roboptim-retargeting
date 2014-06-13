@@ -28,10 +28,19 @@
 #include <roboptim/core/solver.hh>
 #include <roboptim/core/solver-factory.hh>
 
+#include <roboptim/retargeting/exception.hh>
 #include <roboptim/retargeting/problem/marker-problem-builder.hh>
 
 #include "path.hh"
 #include "trc.hh"
+
+namespace roboptim
+{
+  template <typename U, typename V>
+  boost::shared_ptr<Chain<U, V> >
+  chain (boost::shared_ptr<U> left, boost::shared_ptr<V> right);
+} // end of namespace roboptim.
+
 
 static bool parseOptions
 (roboptim::retargeting::MarkerProblemOptions& options,
@@ -68,7 +77,7 @@ static bool parseOptions
      po::value<std::string> (&options.plugin)->default_value ("cfsqp"),
      "RobOptim plug-in to be used")
     ("cost,c",
-     po::value<std::string> (&options.cost)->default_value ("null"),
+     po::value<std::string> (&options.cost)->default_value ("lde"),
      "What cost function should be used?")
     ("constraint,C",
      po::value<std::vector<std::string> > (&options.constraints),
@@ -202,6 +211,11 @@ int main (int argc, const char* argv[])
   try
     {
       return safeMain (argc, argv);
+    }
+  catch (const roboptim::retargeting::Exception& e)
+    {
+      std::cerr << e << std::endl;
+      return 1;
     }
   catch (const std::exception& e)
     {

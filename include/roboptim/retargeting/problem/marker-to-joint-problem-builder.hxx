@@ -22,7 +22,6 @@
 # include <boost/make_shared.hpp>
 # include <boost/optional.hpp>
 
-# include <cnoid/BodyIMesh>
 # include <cnoid/BodyLoader>
 # include <cnoid/BodyMotion>
 
@@ -33,12 +32,9 @@
 # include <roboptim/trajectory/vector-interpolation.hh>
 
 # include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
-
+# include <roboptim/retargeting/function/libmocap-marker-trajectory.hh>
 # include <roboptim/retargeting/problem/marker-to-joint-function-factory.hh>
 
-
-// for trajectory conversion
-# include <roboptim/retargeting/problem/marker-problem-builder.hh>
 // for trajectory filtering
 # include <roboptim/retargeting/problem/joint-problem-builder.hh>
 
@@ -68,21 +64,19 @@ namespace roboptim
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
       data.robotModel = loader.load (options.robotModel);
 
-      // Create the interaction mesh
-      data.interactionMesh = boost::make_shared<cnoid::BodyIMesh> ();
-
-      if (!data.interactionMesh->addBody
-	  (data.robotModel, cnoid::BodyMotionPtr ()))
-        throw std::runtime_error ("failed to add body to body interaction mesh");
-      if (!data.interactionMesh->initialize ())
-        throw std::runtime_error ("failed to initialize body interaction mesh");
-
       if (!data.inputTrajectory)
 	{
 	  if (options.trajectoryType == "discrete")
-	    data.inputTrajectory =
-	      convertToTrajectory<VectorInterpolation>
-	      (data.markersTrajectory, 0, data.markersTrajectory.numFrames ());
+	    {
+	      // load the trajectory
+	      boost::shared_ptr<LibmocapMarkerTrajectory> trajectory =
+		boost::make_shared<LibmocapMarkerTrajectory> (data.markersTrajectory);
+
+	      // trim the trajectory to satisfy the start frame / length arguments.
+	      data.inputTrajectory = safeGet (trajectory).trim
+		(static_cast<Function::size_type> (options.startFrame),
+		 static_cast<Function::size_type> (options.length));
+	    }
 	  else
 	    throw std::runtime_error ("invalid trajectory type");
 	}

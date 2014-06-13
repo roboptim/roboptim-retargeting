@@ -23,12 +23,14 @@
 
 # include <roboptim/core/function.hh> // for Eigen with the right flags.
 
+# include <roboptim/retargeting/config.hh>
+
 namespace roboptim
 {
   namespace retargeting
   {
     /// \brief Define a pair (marker, offset).
-    struct MorphingDataMapping
+    struct ROBOPTIM_RETARGETING_DLLEXPORT MorphingDataMapping
     {
       std::string marker;
       Eigen::Vector3d offset;
@@ -50,7 +52,7 @@ namespace roboptim
     /// The position of the marker Y attached to the body X in the
     /// Euclidian space is the position of body X plus a constant
     /// offset (specific to this particular pair body/marker).
-    struct MorphingData
+    struct ROBOPTIM_RETARGETING_DLLEXPORT MorphingData
     {
       typedef std::vector<
 	MorphingDataMapping,
@@ -81,7 +83,8 @@ namespace roboptim
       ///
       /// \param[in] marker Marker name
       /// \return Link name
-      const std::string& attachedBody (const std::string& marker) const;
+      ROBOPTIM_RETARGETING_DLLEXPORT const std::string&
+	attachedBody (const std::string& marker) const;
 
       /// \brief Get offset from link and marker name.
       ///
@@ -90,7 +93,7 @@ namespace roboptim
       /// \param[in] linkName link name
       /// \param[in] markerName marker name
       /// \return Position of the marker w.r.t link.
-      Eigen::Vector3d
+      ROBOPTIM_RETARGETING_DLLEXPORT Eigen::Vector3d
       offset (const std::string& linkName, const std::string& markerName) const;
     };
 
@@ -110,7 +113,8 @@ namespace roboptim
     ///
     /// \param[in] YAML file path
     /// \return Morphing data.
-    MorphingData loadMorphingData (const std::string& filename);
+    ROBOPTIM_RETARGETING_DLLEXPORT MorphingData
+    loadMorphingData (const std::string& filename);
 
   } // end of namespace retargeting.
 } // end of namespace roboptim.

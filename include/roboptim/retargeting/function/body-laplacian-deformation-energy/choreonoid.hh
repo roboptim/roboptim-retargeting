@@ -1,3 +1,20 @@
+// Copyright (C) 2014 by Thomas Moulard, AIST, CNRS.
+//
+// This file is part of the roboptim.
+//
+// roboptim is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// roboptim is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_BODY_LAPLACIAN_DEFORMATION_ENERGY_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_BODY_LAPLACIAN_DEFORMATION_ENERGY_CHOREONOID_HH
 # include <stdexcept>
@@ -10,224 +27,17 @@
 # include <roboptim/core/numeric-quadratic-function.hh>
 # include <roboptim/core/util.hh>
 
-# include <roboptim/retargeting/function/laplacian-coordinate/choreonoid.hh>
+# include <roboptim/retargeting/function/rss.hh>
 # include <roboptim/retargeting/function/joint-to-marker/choreonoid.hh>
-
-# include <cnoid/BodyIMesh>
+# include <roboptim/retargeting/function/laplacian-coordinate/choreonoid.hh>
+# include <roboptim/retargeting/morphing.hh>
+# include <roboptim/retargeting/utility.hh>
+# include <roboptim/retargeting/io.hh>
 
 namespace roboptim
 {
   namespace retargeting
   {
-    template <typename T>
-    std::ostream&
-    printMatrix (std::ostream& o, const Eigen::MatrixBase<T>& matrix)
-    {
-      Eigen::IOFormat ioformat (Eigen::StreamPrecision,
-				Eigen::DontAlignCols,
-				",", ", ", "(", ")", "(", ")");
-      ioformat.rowSpacer = "";
-      o << "[";
-
-      // Matrix
-      if (matrix.cols () == 1 || matrix.cols () == 1)
-	{
-	  // Vector
-	  ioformat = Eigen::IOFormat (Eigen::StreamPrecision,
-				      Eigen::DontAlignCols,
-                                    ",", ",", "", "", "(", ")");
-	  ioformat.rowSpacer = "";
-	  o << matrix.size ();
-	}
-      else
-	o << matrix.rows () << "," << matrix.cols ();
-
-      o << "]" << matrix.format (ioformat);
-      return o;
-    }
-
-    template <typename T>
-    std::ostream& operator<< (std::ostream& o, const std::set<T>& set)
-    {
-      typedef typename std::set<T>::const_iterator citer_t;
-
-      if (set.empty ())
-	return o << "Empty set";
-
-      citer_t it = set.begin ();
-      o << *it;
-      ++it;
-
-      for (; it != set.end (); ++it)
-	o << ", " << *it;
-      return o;
-    }
-
-    std::ostream& operator<< (std::ostream& o,
-			      const cnoid::Link& link)
-    {
-      o << "Link " << link.name () << incindent << iendl;
-
-      o << "Id: " << link.jointId () << iendl;
-      o << "Type: " << link.jointType () << iendl;
-
-      o << decindent;
-      return o;
-    }
-
-    std::ostream& operator<< (std::ostream& o,
-			      const cnoid::BodyMotion& bodyMotion)
-    {
-      o << "BodyMotion" << incindent << iendl;
-
-      o << "Number of joints: " << bodyMotion.numJoints () << iendl;
-      o << "Number of links: " << bodyMotion.numLinks () << iendl;
-      o << "Frame rate: " << bodyMotion.frameRate () << iendl;
-      o << "Number of frames: " << bodyMotion.numFrames () << iendl;
-
-      o << decindent;
-      return o;
-    }
-
-    std::ostream& operator<< (std::ostream& o,
-			      const cnoid::BodyIMesh::Marker& marker)
-    {
-      o << "Link:" << incindent << iendl;
-      if (marker.link)
-	o << *marker.link;
-      else
-	o << "empty";
-      o << decindent << iendl;
-
-      o << "Local Position:" << incindent << iendl;
-      if (marker.localPos)
-	o << *marker.localPos;
-      else
-	o << "empty";
-      o << decindent << iendl;
-
-      o << "Neighbors to exclude:" << incindent << iendl
-	<< marker.neighborsToExclude << decindent << iendl;
-
-      return o;
-    }
-
-    std::ostream& operator<< (std::ostream& o,
-			      const cnoid::BodyIMesh::BodyInfo& bodyInfo)
-    {
-      o << "Body:" << incindent << iendl;
-      if (bodyInfo.body)
-	o << bodyInfo.body;
-      else
-	o << "empty";
-      o << decindent << iendl;
-
-      o << "Motion:" << incindent << iendl;
-      if (bodyInfo.motion)
-	o << *(bodyInfo.motion);
-      else
-	o << "empty";
-      o << decindent << iendl;
-
-      o << "Number of markers: " << bodyInfo.markers.size () << iendl;
-
-      for (std::size_t markerId = 0;
-	   markerId < bodyInfo.markers.size (); ++markerId)
-	o << "Marker id " << markerId << incindent << iendl
-	  << (*bodyInfo.markers[markerId]) << decindent << iendl;
-
-      o << "Marker Index Offset: " << bodyInfo.markerIndexOffset << iendl;
-      return o;
-    }
-
-
-    std::ostream& operator<< (std::ostream& o, const cnoid::BodyIMesh& mesh)
-    {
-      //FIXME: workaround around bad API
-      cnoid::BodyIMesh& meshNonConst = const_cast<cnoid::BodyIMesh&> (mesh);
-
-      o << "Choreonoid Body Interaction Mesh" << iendl;
-
-      o << "Number of bodies" << incindent << iendl
-	<< mesh.numBodies () << decindent << iendl;
-
-      o << "Number of vertices" << incindent << iendl
-	<< mesh.numVertices () << decindent << iendl;
-
-      o << "Number of markers" << incindent << iendl
-	<< mesh.numMarkers () << decindent << iendl;
-
-      o << "List of Bodies" << incindent << iendl;
-      for (int bodyId = 0; bodyId < mesh.numBodies (); ++bodyId)
-	{
-	  const cnoid::BodyIMesh::BodyInfo& bodyInfo =
-	    meshNonConst.bodyInfo (bodyId);
-	  o << "Body number " << bodyId << incindent << iendl
-	    << bodyInfo << decindent << iendl;
-	}
-      o << decindent;
-
-      return o;
-    }
-
-    /// \brief Body Laplacian Deformation Energy (from laplacian
-    ///        coordinates, for one frame)
-    ///
-    /// This function takes as input the Laplacian Coordinates of all
-    /// markers concatenated for one frame.
-    ///
-    /// It returns the squared norm of the difference between this
-    /// original value and the current input (i.e. the current
-    /// Laplacian Coordinates) and is expressed as a quadratic
-    /// function.
-    ///
-    /// f(x) = || S - X ||^2 = (S - X)^T . (S - X)
-    ///      = S^2 - 2 . S . X + X^2
-    ///
-    /// A = I
-    /// B = -2 * S
-    /// C = S^T * S
-    ///
-    /// f(x) = X^T * I * X + B * X + C
-    ///      = X^2 - 2 * S * X + S^2
-    ///
-    /// Input:
-    /// x = [LC_x0, LC_y0, LC_z0, ..., LC_xN, LC_yN, LC_zN]
-    ///
-    /// Output:
-    /// f(x) = [cost]
-    ///
-    /// \param originalLaplacianCoordinates Laplacian Coordinates of the
-    ///        marker before any modification, this function will reach its
-    ///        minimum value at this point.
-    ///
-    /// \tparam T Function traits type
-    template <typename T>
-    class BodyLaplacianDeformationEnergyChoreonoid2
-      : public GenericNumericQuadraticFunction<T>
-    {
-    public:
-      ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
-      (GenericDifferentiableFunction<T>);
-
-      explicit BodyLaplacianDeformationEnergyChoreonoid2
-      (const vector_t& originalLaplacianCoordinates)
-	throw (std::runtime_error) :
-	GenericNumericQuadraticFunction<T>
-	(matrix_t (originalLaplacianCoordinates.size (),
-		   originalLaplacianCoordinates.size ()),
-	 vector_t (originalLaplacianCoordinates.size ()))
-      {
-	this->A ().setIdentity ();
-
-	this->b () = originalLaplacianCoordinates;
-	this->b () *= -2.;
-
-	this->c () =
-	  originalLaplacianCoordinates.adjoint () * originalLaplacianCoordinates;
-      }
-    };
-
     /// \brief Laplacian Deformation Energy computed using Choreonoid
     ///        Motion Capture plug-in.
     ///
@@ -291,7 +101,7 @@ namespace roboptim
       typedef std::vector<LaplacianCoordinateShPtr_t>
       LaplacianCoordinatesShPtr_t;
 
-      typedef boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid2<T> >
+      typedef boost::shared_ptr<RSS<T> >
       LaplacianDeformationEnergy_t;
       typedef std::vector<LaplacianDeformationEnergy_t>
       LaplacianDeformationEnergies_t;
@@ -317,61 +127,71 @@ namespace roboptim
       /// \param jointToMarker shared pointer to the JointToMarker
       ///        function.
       explicit BodyLaplacianDeformationEnergyChoreonoid
-      (cnoid::BodyIMeshPtr mesh,
-       const vector_t& initialJointsTrajectory,
+      (MarkerMappingShPtr markerMapping,
+       InteractionMeshShPtr mesh,
+       TrajectoryShPtr trajectory,
        JointToMarkerShPtr_t jointToMarker)
-	throw (std::runtime_error)
 	: GenericDifferentiableFunction<T>
-	  (initialJointsTrajectory.size (), 1,
+	  (safeGet(trajectory).parameters ().size (), 1,
 	   "BodyLaplacianDeformationEnergyChoreonoid"),
+
+	  trajectory_ (safeGet (trajectory).clone ()),
+
 	  mesh_ (mesh),
-	  nFrames_ (static_cast<std::size_t> (mesh->getNumFrames ())),
-	  nDofs_ (initialJointsTrajectory.size ()
-		  / static_cast<size_type> (nFrames_)),
+
+	  // Heuristic choice to decide how many discretization points
+	  // should be considered when summing.
+	  //
+	  // Here we choose one per frame (in the discrete case) or
+	  // per control point (parametrized curve).
+	  nDiscretizationPoints_
+	  (numberOfDiscretizationPoints (trajectory)),
+
 	  jointToMarker_ (jointToMarker),
-	  laplacianCoordinate_ (static_cast<std::size_t> (mesh->getNumFrames ())),
-	  lde_ (static_cast<std::size_t> (mesh->getNumFrames ())),
-	  chainLc_ (static_cast<std::size_t> (mesh->getNumFrames ())),
-	  chain_ (static_cast<std::size_t> (mesh->getNumFrames ())),
-	  markerPositions_ (mesh->numMarkers () * 3)
+	  laplacianCoordinate_ (nDiscretizationPoints_),
+
+	  lde_ (nDiscretizationPoints_),
+	  chainLc_ (nDiscretizationPoints_),
+	  chain_ (nDiscretizationPoints_),
+
+	  markerPositions_
+	  (safeGet (markerMapping).numMarkersEigen () * 3)
       {
-	// Fill array and create necessary functions for each frame.
-	for (std::size_t frameId = 0; frameId < nFrames_; ++frameId)
+	// Fill array and create necessary functions for each
+	// discretization point.
+	for (std::size_t p = 0; p < nDiscretizationPoints_; ++p)
 	  {
-	    typename vector_t::Index frameId_ =
-	      static_cast<typename vector_t::Index> (frameId);
+	    StableTimePoint t = p / nDiscretizationPoints_ * tMax;
 
 	    // Compute marker position for the original configuration.
 	    (*jointToMarker)
-	      (markerPositions_,
-	       initialJointsTrajectory.segment (frameId_ * nDofs_, nDofs_));
+	      (markerPositions_, safeGet (trajectory) (t));
 
 	    // Create Laplacian Coordinate object, original markers positions
 	    // are required to compute the weights.
-	    laplacianCoordinate_[frameId] = boost::make_shared<
+	    laplacianCoordinate_[p] = boost::make_shared<
 	      LaplacianCoordinateChoreonoid<T> >
-	      (mesh, frameId, markerPositions_);
+	      (markerMapping, mesh, p, markerPositions_);
 
 	    // Create the quadratic function computing ||A-X||^2
-	    lde_[frameId] = boost::make_shared<
-	      BodyLaplacianDeformationEnergyChoreonoid2<T> >
-	      ((*laplacianCoordinate_[frameId]) (markerPositions_));
+	    lde_[p] = boost::make_shared<RSS<T> >
+	      ((*laplacianCoordinate_[p]) (markerPositions_));
 
 	    // Chain the three functions together.
-	    chainLc_[frameId] = roboptim::chain
+	    chainLc_[p] = roboptim::chain
 	      <GenericDifferentiableFunction<T>,
 	       GenericDifferentiableFunction<T>
 	       >
-	      (laplacianCoordinate_[frameId], jointToMarker_);
-	    chain_[frameId] = roboptim::chain
+	      (laplacianCoordinate_[p], jointToMarker_);
+	    chain_[p] = roboptim::chain
 	      <GenericDifferentiableFunction<T>,
 	       GenericDifferentiableFunction<T>
 	       >
-	      (lde_[frameId], chainLc_[frameId]);
+	      (lde_[p], chainLc_[p]);
 	  }
       }
 
-      virtual ~BodyLaplacianDeformationEnergyChoreonoid () throw ()
+      virtual ~BodyLaplacianDeformationEnergyChoreonoid ()
       {}
 
       /// \}
@@ -380,25 +200,25 @@ namespace roboptim
       /// \{
 
       const LaplacianCoordinatesShPtr_t&
-      laplacianCoordinate () const throw ()
+      laplacianCoordinate () const
       {
 	return laplacianCoordinate_;
       }
 
       const LaplacianDeformationEnergies_t&
-      lde () const throw ()
+      lde () const
       {
 	return lde_;
       }
 
       const DifferentiableFunctionsShPtr_t&
-      chainLc () const throw ()
+      chainLc () const
       {
 	return chainLc_;
       }
 
       const DifferentiableFunctionsShPtr_t&
-      chain () const throw ()
+      chain () const
       {
 	return chain_;
       }
@@ -410,62 +230,75 @@ namespace roboptim
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-	assert (chain_.size () == nFrames_);
+	ROBOPTIM_RETARGETING_ASSERT (chain_.size () == nDiscretizationPoints_);
 
 	typename DifferentiableFunctionsShPtr_t::const_iterator it;
 
+	trajectory_->setParameters (x);
+
 	result.setZero ();
 
-	typename vector_t::Index frameId = 0;
-	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
+	std::size_t p = 0;
+	for (it = chain_.begin (); it != chain_.end (); ++it, ++p)
 	  {
-	    assert ((*it)->inputSize () == nDofs_);
-	    assert ((*it)->outputSize () == result.size ());
-	    result += (*it)->operator ()
-	      (x.segment (frameId * nDofs_, nDofs_));
+	    ROBOPTIM_RETARGETING_ASSERT
+	      ((*it)->inputSize () == safeGet (trajectory_).outputSize ());
+	    ROBOPTIM_RETARGETING_ASSERT
+	      ((*it)->outputSize () == result.size ());
+
+	    StableTimePoint t = p / nDiscretizationPoints_ * tMax;
+	    result += (*it)->operator () ((*trajectory_) (t));
 	  }
 
 	result *= .5;
 
-	assert (static_cast<std::size_t> (frameId) == nFrames_);
+	ROBOPTIM_RETARGETING_ASSERT
+	  (static_cast<std::size_t> (p) == nDiscretizationPoints_);
       }
 
       void
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type)
-	const throw ()
+	const
       {
 #ifndef ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 	Eigen::internal::set_is_malloc_allowed (true);
 #endif //! ROBOPTIM_DO_NOT_CHECK_ALLOCATION
 
-	assert (chain_.size () == nFrames_);
+	ROBOPTIM_RETARGETING_ASSERT
+	  (chain_.size () == nDiscretizationPoints_);
 
 	typename DifferentiableFunctionsShPtr_t::const_iterator it;
 
+	trajectory_->setParameters (x);
+
 	gradient.setZero ();
 
-	typename vector_t::Index frameId = 0;
-	for (it = chain_.begin (); it != chain_.end (); ++it, ++frameId)
+	typename vector_t::Index p = 0;
+	for (it = chain_.begin (); it != chain_.end (); ++it, ++p)
 	  {
-	    gradient.segment (frameId * nDofs_, nDofs_)
-	      += (*it)->gradient
-	      (x.segment (frameId * nDofs_, nDofs_));
+	    StableTimePoint t =
+	      static_cast<std::size_t> (p) / nDiscretizationPoints_ * tMax;
+
+	    gradient.segment
+	      (p * trajectory_->outputSize (), trajectory_->outputSize ())
+	      += (*it)->gradient ((*trajectory_) (t));
 	  }
 
 	gradient *= .5;
 
-	assert (static_cast<std::size_t> (frameId) == nFrames_);
+	ROBOPTIM_RETARGETING_ASSERT
+	  (static_cast<std::size_t> (p) == nDiscretizationPoints_);
       }
 
-      virtual std::ostream& print (std::ostream& o) const throw ()
+      virtual std::ostream& print (std::ostream& o) const
       {
 	o << this->getName () << iendl;
 
@@ -483,25 +316,36 @@ namespace roboptim
 	o << decindent << iendl;
 
 	o << "Neighbors" << incindent << iendl;
-	for (int frameId = 0; frameId < mesh_->getNumFrames (); ++frameId)
+	for (std::size_t p = 0; p < nDiscretizationPoints_; ++p)
 	  {
-	    o << "frame " << frameId << incindent << iendl;
-	    const cnoid::BodyIMesh::Frame& neighborLists =
-	      mesh_->frame (frameId);
-	    for (int markerId = 0; markerId < mesh_->numMarkers (); ++markerId)
+	    o << "discretization point " << p << incindent << iendl;
+	    const InteractionMesh::neighborsMap_t& neighbors =
+	      safeGet(mesh_).neighbors (p);
+	    for (InteractionMesh::neighborsMap_t::const_iterator
+		   itMarker = neighbors.begin ();
+		 itMarker != neighbors.end (); ++itMarker)
 	      {
-		o << "marker " << markerId << incindent << iendl;
-		const cnoid::BodyIMesh::NeighborList&
-		  neighbors = neighborLists[markerId];
-		for (std::size_t l = 0; l < neighbors.size (); ++l)
-		  {
-		    if (l != 0)
-		      o << ", ";
-		    o << neighbors[l];
-		  }
+		o << "marker " << itMarker->first << incindent << iendl;
+		for (InteractionMesh::neighbors_t::const_iterator
+		       itNeighbors = itMarker->second.begin ();
+		     itNeighbors != itMarker->second.end ();
+		     ++itNeighbors)
+		{
+		  if (itNeighbors != itMarker->second.begin ())
+		    o << ", ";
+		  o << *itNeighbors;
+		}
 		o << decindent << iendl;
 	      }
 	    o << decindent << iendl;
+
+	    // Avoid flooding the output, later a better solution should
+	    // be found.
+	    if (p >= 2)
+	      {
+		o << "[output too long, truncated]" << decindent << iendl;
+		return o;
+	      }
 	  }
 	o << decindent << iendl;
 
@@ -509,13 +353,14 @@ namespace roboptim
       }
 
     private:
-      /// \brief Pointer to interaction mesh.
-      cnoid::BodyIMeshPtr mesh_;
+      /// \brief Copy of the initial trajectory.
+      TrajectoryShPtr trajectory_;
 
-      /// \brief Number of frames
-      std::size_t nFrames_;
-      /// \brief Number of DOFs
-      size_type nDofs_;
+      /// \brief Pointer to interaction mesh.
+      InteractionMeshShPtr mesh_;
+
+      /// \brief Number of discretization points (over time).
+      std::size_t nDiscretizationPoints_;
 
       /// \brief Pointer to joint to marker function.
       JointToMarkerShPtr_t jointToMarker_;

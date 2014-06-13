@@ -23,7 +23,7 @@ namespace roboptim
     public:
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_ (Torque<T>);
 
-      explicit TorqueChoreonoid (cnoid::BodyPtr robot) throw ()
+      explicit TorqueChoreonoid (cnoid::BodyPtr robot)
 	// Add a fictional free floating joint at the beginning.
 	: Torque<T> (6 + robot->numJoints (), "choreonoid"),
 	  robot_ (robot),
@@ -31,13 +31,13 @@ namespace roboptim
 	  fd_ (boost::make_shared<fdFunction_t> (*this))
       {}
 
-      virtual ~TorqueChoreonoid () throw ()
+      virtual ~TorqueChoreonoid ()
       {}
 
       void
       impl_compute
       (result_t& result, const argument_t& x)
-	const throw ()
+	const
       {
 	// Set the robot configuration.
 	updateRobotConfiguration (robot_, x);
@@ -59,7 +59,7 @@ namespace roboptim
       impl_gradient (gradient_t& gradient,
 		     const argument_t& x,
 		     size_type i)
-	const throw ()
+	const
       {
 	fd_->gradient (gradient, x, i);
       }

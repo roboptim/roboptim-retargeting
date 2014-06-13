@@ -17,6 +17,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 INCLUDE(cmake/base.cmake)
+
 INCLUDE(cmake/boost.cmake)
 INCLUDE(cmake/ros.cmake)
 
@@ -51,6 +52,26 @@ ${CSD}/include/roboptim/retargeting/eigen-rigid-body.hxx
 )
 
 SETUP_PROJECT()
+
+# Check compiler flags and enable them if possible
+INCLUDE(CheckCCompilerFlag)
+
+CHECK_C_COMPILER_FLAG(-fvisibility=hidden HAS_VISIBILITY)
+IF(HAS_VISIBILITY)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+ENDIF()
+
+# FIXME: Disable this on Travis for now.
+IF(NOT $ENV{TRAVIS} STREQUAL true)
+  CHECK_C_COMPILER_FLAG(-Wl,--no-undefined HAS_NO_UNDEFINED)
+  IF(HAS_NO_UNDEFINED)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--no-undefined")
+  ENDIF()
+  CHECK_C_COMPILER_FLAG(-Wl,--as-needed HAS_AS_NEEDED)
+  IF(HAS_AS_NEEDED)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--as-needed")
+  ENDIF()
+ENDIF()
 
 # Add main library to pkg-config file.
 PKG_CONFIG_APPEND_LIBS(roboptim-retargeting)

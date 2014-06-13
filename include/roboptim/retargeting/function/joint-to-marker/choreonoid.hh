@@ -180,8 +180,8 @@ namespace roboptim
 	     jacobianId < jointPath_.numJoints (); ++jacobianId)
 	  {
 	    jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
-	    assert (jointId < gradient.size ());
-	    assert (jointId >= 6);
+	    ROBOPTIM_RETARGETING_ASSERT (jointId < gradient.size ());
+	    ROBOPTIM_RETARGETING_ASSERT (jointId >= 6);
 
 	    gradient[jointId] = J_ (dim, jacobianId);
 	  }
@@ -272,8 +272,8 @@ namespace roboptim
 	       jacobianId < jointPath_.numJoints (); ++jacobianId)
 	    {
 	      jointId = jointPath_.joint (jacobianId)->index () + 6 - 1;
-	      assert (jointId < jacobian.cols ());
-	      assert (jointId >= 6);
+	      ROBOPTIM_RETARGETING_ASSERT (jointId < jacobian.cols ());
+	      ROBOPTIM_RETARGETING_ASSERT (jointId >= 6);
 
 	      jacobian.template block<3, 1> (markerId_ * 3, jointId) =
 		J_.col (jacobianId);

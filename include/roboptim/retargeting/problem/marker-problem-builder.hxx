@@ -31,46 +31,13 @@
 
 # include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/problem/marker-function-factory.hh>
+# include <roboptim/retargeting/function/libmocap-marker-trajectory.hh>
 
 
 namespace roboptim
 {
   namespace retargeting
   {
-    /// \brief Convert markers trajectories to a RobOptim trajectory.
-    ///
-    /// The trajectory output size matches the number of marker, the
-    /// input size is time.
-    ///
-    /// The data from libmocap is copied frame per frame into the new
-    /// object.
-    template <typename T>
-    boost::shared_ptr<T>
-    convertToTrajectory
-    (const libmocap::MarkerTrajectory& raw,
-     typename T::vector_t::Index startFrame,
-     typename T::vector_t::Index length)
-    {
-      typename T::vector_t::Index frameLength = raw.numMarkers () * 3;
-
-      typename T::vector_t parameters (length * frameLength);
-
-      for (typename T::vector_t::Index frameId = startFrame;
-	   frameId < startFrame + length; ++frameId)
-	{
-	  std::size_t frameId_ = static_cast<std::size_t> (frameId);
-	  Eigen::Map<const typename T::vector_t>
-	    positions (&raw.positions ()[frameId_][0], frameLength);
-	  parameters.segment
-	    ((frameId - startFrame) * raw.numMarkers (),
-	     frameLength) = positions;
-	}
-
-      return
-	boost::make_shared<T>
-	(parameters, frameLength, 1. / raw.dataRate ());
-    }
-
     void
     buildDataFromOptions (MarkerFunctionData& data,
 			  const MarkerProblemOptions& options)
@@ -82,30 +49,26 @@ namespace roboptim
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
 
-      Function::vector_t::Index length =
-	static_cast<Function::vector_t::Index> (options.length);
-      if (options.startFrame < 0
-	  || options.startFrame >= data.markersTrajectory.numFrames ())
-	  throw std::runtime_error ("invalid starting frame");
-      if (options.length < 0)
-	length =
-	  static_cast<Function::vector_t::Index>
-	  (data.markersTrajectory.numFrames ())
-	  - static_cast<Function::vector_t::Index> (options.startFrame);
-      if (length < 1
-	  || options.startFrame + static_cast<int> (length)
-	     > data.markersTrajectory.numFrames ())
-	  throw std::runtime_error ("invalid length");
-
       data.robotModel = loader.load (options.robotModel);
       data.morphing = loadMorphingData (options.morphing);
+      data.mapping = buildMarkerMappingFromMotion (data.markersTrajectory);
 
       if (options.trajectoryType == "discrete")
-	data.trajectory =
-	  convertToTrajectory<VectorInterpolation>
-	  (data.markersTrajectory, options.startFrame, length);
+	{
+	  // load the trajectory
+	  boost::shared_ptr<LibmocapMarkerTrajectory> trajectory =
+	    boost::make_shared<LibmocapMarkerTrajectory> (data.markersTrajectory);
+
+	  // trim the trajectory to satisfy the start frame / length arguments.
+	  data.trajectory = safeGet (trajectory).trim
+	    (static_cast<Function::size_type> (options.startFrame),
+	     static_cast<Function::size_type> (options.length));
+	}
       else
 	throw std::runtime_error ("invalid trajectory type");
+
+      data.mesh = buildInteractionMeshFromMarkerMotion
+	(data.trajectory, data.mapping);
     }
 
 
@@ -160,10 +123,10 @@ namespace roboptim
 		    const Function::value_type t =
 		      (static_cast<Function::value_type> (i) + 1.) /
 		      (static_cast<Function::value_type> (nConstraints) + 1.);
-		    assert (t > 0. && t < 1.);
+		    ROBOPTIM_RETARGETING_ASSERT (t > 0. && t < 1.);
 
 		    boost::shared_ptr<DifferentiableFunction> f
-		      (new roboptim::StateFunction<Trajectory<3> >
+		      (new roboptim::StateFunction<Trajectory>
 		       (*data.trajectory,
 			constraint.function,
 			t * tMax,
@@ -175,7 +138,7 @@ namespace roboptim
 		break;
 	      }
 	    default:
-	      assert (0 && "should never happen");
+	      ROBOPTIM_RETARGETING_ASSERT (0 && "should never happen");
 	    }
 	}
       problem->startingPoint () = data.trajectory->parameters ();

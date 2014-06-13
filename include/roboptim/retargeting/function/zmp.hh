@@ -33,45 +33,45 @@ namespace roboptim
       ROBOPTIM_DIFFERENTIABLE_FUNCTION_FWD_TYPEDEFS_
       (GenericDifferentiableFunction<T>);
 
-      explicit ZMP (size_type nDofs, std::string title) throw ()
+      explicit ZMP (size_type nDofs, std::string title)
 	: GenericDifferentiableFunction<T>
 	  (nDofs * 3, 2, std::string ("ZMP [") + title + "]")
       {}
 
-      virtual ~ZMP () throw ()
+      virtual ~ZMP ()
       {}
 
       template <typename Derived>
       size_type
-      configurationLength (const Eigen::MatrixBase<Derived>& x) const throw ()
+      configurationLength (const Eigen::MatrixBase<Derived>& x) const
       {
 	return x.size () / 3;
       }
 
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
-      translation (const Eigen::MatrixBase<Derived>& x) const throw ()
+      translation (const Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (0, 3);
       }
 
       template <typename Derived>
       Eigen::VectorBlock<Derived>
-      translation (Eigen::MatrixBase<Derived>& x) const throw ()
+      translation (Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (0, 3);
       }
 
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
-      rotation (const Eigen::MatrixBase<Derived>& x) const throw ()
+      rotation (const Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (3, 3);
       }
 
       template <typename Derived>
       Eigen::VectorBlock<Derived>
-      rotation (Eigen::MatrixBase<Derived>& x) const throw ()
+      rotation (Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (3, 3);
       }
@@ -79,7 +79,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
       q (const Eigen::MatrixBase<Derived>& x,
-	 bool withBaseLink = true) const throw ()
+	 bool withBaseLink = true) const
       {
 	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
@@ -91,7 +91,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<Derived>
       q (Eigen::MatrixBase<Derived>& x,
-	 bool withBaseLink = true) const throw ()
+	 bool withBaseLink = true) const
       {
 	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
@@ -103,7 +103,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
       dq (const Eigen::MatrixBase<Derived>& x,
-	  bool withBaseLink = true) const throw ()
+	  bool withBaseLink = true) const
       {
 	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
@@ -115,7 +115,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<Derived>
       dq (Eigen::MatrixBase<Derived>& x,
-	  bool withBaseLink = true) const throw ()
+	  bool withBaseLink = true) const
       {
 	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
@@ -128,7 +128,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
       ddq (const Eigen::MatrixBase<Derived>& x,
-	   bool withBaseLink = true) const throw ()
+	   bool withBaseLink = true) const
       {
 	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)
@@ -140,7 +140,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<Derived>
       ddq (Eigen::MatrixBase<Derived>& x,
-	   bool withBaseLink = true) const throw ()
+	   bool withBaseLink = true) const
       {
 	typename Eigen::VectorBlock<Derived>::Index offset = 0;
 	if (!withBaseLink)

@@ -42,8 +42,6 @@ using namespace roboptim::retargeting;
 using boost::test_tools::output_test_stream;
 
 std::string modelFilePath (HRP4C_YAML_FILE);
-std::string bodyMotionPath
-(DATA_DIR "/29_07-hrp4c-initial-short.yaml");
 
 BOOST_AUTO_TEST_CASE (simple)
 {
@@ -52,90 +50,105 @@ BOOST_AUTO_TEST_CASE (simple)
   cnoid::BodyPtr robot = loader.load (modelFilePath);
   if (!robot)
     throw std::runtime_error ("failed to load model");
-
   // Loading the motion.
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
-  bodyMotion->loadStandardYAMLformat (bodyMotionPath);
+  bodyMotion->loadStandardYAMLformat
+    (DATA_DIR "/sample.body-motion.yaml");
 
-  // Body Interaction Mesh
-  cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
-  if (!mesh->addBody (robot, bodyMotion))
-    throw std::runtime_error ("failed to add body to body interaction mesh");
-  if (!mesh->initialize ())
-        throw std::runtime_error ("failed to initialize body interaction mesh");
+  TrajectoryShPtr trajectory;
+  {
+    ChoreonoidBodyTrajectoryShPtr trajectory_ =
+      boost::make_shared<ChoreonoidBodyTrajectory> (bodyMotion, true);
+    trajectory = safeGet (trajectory_).trim (0, 10);
+  }
 
-  std::size_t nDofs = 6 + bodyMotion->jointPosSeq ()->numParts ();
+  std::string fileMorphing = DATA_DIR;
+  fileMorphing += "/human-to-hrp4c.morphing.yaml";
+  MorphingData morphing;
+  morphing = loadMorphingData (fileMorphing);
 
-  Function::vector_t x (bodyMotion->numFrames () * nDofs);
-  x.setZero ();
+  MarkerMappingShPtr mapping =
+    buildMarkerMappingFromMorphing (morphing);
+  std::cout << safeGet (mapping) << std::endl;
+
+  InteractionMeshShPtr mesh =
+    buildInteractionMeshFromMarkerMotion
+    (trajectory, mapping);
+
 
   boost::shared_ptr<JointToMarkerPositionChoreonoid<
     EigenMatrixDense> >
     jointToMarker =
     boost::make_shared<JointToMarkerPositionChoreonoid<
-      EigenMatrixDense> > (mesh);
+      EigenMatrixDense> > (robot, morphing);
+
+  Function::vector_t x (trajectory->parameters ().size ());
+  x.setZero ();
 
   boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid<
     EigenMatrixDense> >
     cost =
     boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
       EigenMatrixDense> >
-    (mesh, x, jointToMarker);
+    (mapping, mesh, trajectory, jointToMarker);
 
   x.setIdentity ();
 
   std::cout << "Cost Function Display" << '\n';
   std::cout << (*cost) << '\n';
-
-  Function::vector_t markerPositions (mesh->numMarkers () * 3);
-
-  for (int frameId = 0; frameId < mesh->getNumFrames (); ++frameId)
+  for (std::size_t p = 0;
+       p < std::min (cost->laplacianCoordinate ().size (), 10UL); ++p)
     {
-      markerPositions = (*jointToMarker) (x.segment(frameId * nDofs, nDofs));
+      StableTimePoint t =
+	1. / cost->laplacianCoordinate ().size () * p * tMax;
+
+      Function::vector_t jointPositions = safeGet (trajectory) (t);
+      Function::vector_t markerPositions =
+	safeGet (jointToMarker) (jointPositions);
       std::cout
-	<< "Frame " << frameId << '\n'
+	<< "Point " << p << '\n'
 
 	<< "Joint to Marker\n"
 	<< markerPositions << '\n'
 	<< "Joint to Marker Jacobian\n"
-	<< jointToMarker->jacobian (x.segment(frameId * nDofs, nDofs)) << '\n'
+	<< jointToMarker->jacobian (jointPositions) << '\n'
 
 	<< "Laplacian Coordinates\n"
-	<< (*cost->laplacianCoordinate ()[frameId])
+	<< (*cost->laplacianCoordinate ()[p])
 	(markerPositions)
 	<< '\n'
 	<< "Laplacian Coordinates Jacobian\n"
-	<< cost->laplacianCoordinate ()[frameId]->jacobian (markerPositions)
+	<< cost->laplacianCoordinate ()[p]->jacobian (markerPositions)
 	<< '\n'
 
 	<< "Chain LC\n"
-	<< (*cost->chainLc ()[frameId])
-	(x.segment(frameId * nDofs, nDofs))
+	<< (*cost->chainLc ()[p])
+	(jointPositions)
 	<< '\n'
 	<< "Chain LC Jacobian\n"
-	<< cost->chainLc ()[frameId]->jacobian
-	(x.segment(frameId * nDofs, nDofs))
+	<< cost->chainLc ()[p]->jacobian
+	(jointPositions)
 	<< '\n'
 
 	<< "LDE\n"
-	<< (*cost->lde ()[frameId])
-	((*cost->chainLc ()[frameId])
-	 (x.segment(frameId * nDofs, nDofs)))
+	<< (*cost->lde ()[p])
+	((*cost->chainLc ()[p])
+	 (jointPositions))
 	<< '\n'
         << "LDE Jacobian\n"
-	<< (cost->lde ()[frameId])->jacobian
-	((*cost->chainLc ()[frameId])
-	 (x.segment(frameId * nDofs, nDofs)))
+	<< (cost->lde ()[p])->jacobian
+	((*cost->chainLc ()[p])
+	 (jointPositions))
         << '\n'
 
 	<< "Chain\n"
-	<< (*cost->chain ()[frameId])
-	(x.segment(frameId * nDofs, nDofs))
+	<< (*cost->chain ()[p])
+	(jointPositions)
 	<< '\n'
 	<< "Chain Jacobian\n"
-	<< cost->chain ()[frameId]->jacobian
-	(x.segment(frameId * nDofs, nDofs))
+	<< cost->chain ()[p]->jacobian
+	(jointPositions)
 	<< '\n'
 
 
@@ -173,19 +186,32 @@ BOOST_AUTO_TEST_CASE (reduced)
   // Loading the motion.
   cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
 
-  bodyMotion->loadStandardYAMLformat (bodyMotionPath);
+  bodyMotion->loadStandardYAMLformat
+    (DATA_DIR "/sample.body-motion.yaml");
 
-  // Body Interaction Mesh
-  cnoid::BodyIMeshPtr mesh = boost::make_shared<cnoid::BodyIMesh> ();
-  if (!mesh->addBody (robot, bodyMotion))
-    throw std::runtime_error ("failed to add body to body interaction mesh");
-  if (!mesh->initialize ())
-        throw std::runtime_error ("failed to initialize body interaction mesh");
+  TrajectoryShPtr trajectory;
+  {
+    ChoreonoidBodyTrajectoryShPtr trajectory_ =
+      boost::make_shared<ChoreonoidBodyTrajectory> (bodyMotion, true);
+    trajectory = safeGet (trajectory_).trim (0, 10);
+  }
 
-  std::size_t nFrames = bodyMotion->numFrames ();
-  std::size_t oneFrameFullSize =
-    6 + bodyMotion->jointPosSeq ()->frame(0).size ();
-  std::vector<bool> enabledDofs (oneFrameFullSize, true);
+  std::string fileMorphing = DATA_DIR;
+  fileMorphing += "/human-to-hrp4c.morphing.yaml";
+  MorphingData morphing;
+  morphing = loadMorphingData (fileMorphing);
+
+  MarkerMappingShPtr mapping =
+    buildMarkerMappingFromMorphing (morphing);
+
+  InteractionMeshShPtr mesh =
+    buildInteractionMeshFromMarkerMotion
+    (trajectory, mapping);
+
+
+  std::size_t cfgSize =
+    static_cast<std::size_t> (trajectory->outputSize ());
+  std::vector<bool> enabledDofs (cfgSize, true);
 
   // Disable useless dofs.
   enabledDofs[6 + 17] = false; // NECK_Y
@@ -204,48 +230,57 @@ BOOST_AUTO_TEST_CASE (reduced)
   enabledDofs[6 + 42] = false; // L_HAND_J0
   enabledDofs[6 + 43] = false; // L_HAND_J1
 
+
+  std::size_t nFrames =
+    static_cast<std::size_t>
+    (safeGet (trajectory).parameters ().size ()
+     / safeGet (trajectory).outputSize ());
+
   std::size_t nEnabledDofs =
-    std::count (enabledDofs.begin (), enabledDofs.end (), true);
+    static_cast<std::size_t>
+    (std::count (enabledDofs.begin (), enabledDofs.end (), true));
 
   // X vector (full form)
-  Function::vector_t x (nFrames * oneFrameFullSize);
+  Function::vector_t x (safeGet (trajectory).parameters ().size ());
   x.setZero ();
 
   // X vector (reduced form)
-  Function::vector_t xReduced (nFrames * nEnabledDofs);
+  Function::vector_t xReduced
+    (static_cast<Function::size_type> (nFrames * nEnabledDofs));
   xReduced.setZero ();
 
 
   typedef roboptim::Function::value_type value_type;
   std::vector<boost::optional<value_type> > boundDofs
-    (oneFrameFullSize);
-  for (std::size_t jointId = 0; jointId < oneFrameFullSize; ++jointId)
+    (cfgSize);
+  for (std::size_t jointId = 0; jointId < cfgSize; ++jointId)
     if (!enabledDofs[jointId])
-      boundDofs[jointId] = x[jointId];
+      boundDofs[jointId] = x[static_cast<Function::size_type> (jointId)];
 
   std::vector<boost::optional<value_type> > boundDofsAllFrames
-    (nFrames * oneFrameFullSize);
+    (nFrames * cfgSize);
   for (std::size_t frame = 0; frame < nFrames; ++frame)
     for (std::size_t jointId = 0;
-	 jointId < oneFrameFullSize; ++jointId)
+	 jointId < cfgSize; ++jointId)
       if (!enabledDofs[jointId])
-	boundDofsAllFrames[frame * oneFrameFullSize + jointId]
-	  = x[jointId];
+	boundDofsAllFrames[frame * cfgSize + jointId]
+	  = x[static_cast<Function::size_type> (jointId)];
 
   boost::shared_ptr<JointToMarkerPositionChoreonoid<
     EigenMatrixDense> >
     jointToMarker =
     boost::make_shared<JointToMarkerPositionChoreonoid<
-      EigenMatrixDense> > (mesh);
+      EigenMatrixDense> > (robot, morphing);
 
   boost::shared_ptr<BodyLaplacianDeformationEnergyChoreonoid<
     EigenMatrixDense> >
     cost =
     boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
-      EigenMatrixDense> > (mesh, x, jointToMarker);
+      EigenMatrixDense> > (mapping, mesh, trajectory, jointToMarker);
 
   boost::shared_ptr<DifferentiableFunction>
-    costFiltered = bind<DifferentiableFunction> (cost, boundDofsAllFrames);
+    costFiltered =
+    roboptim::bind<DifferentiableFunction> (cost, boundDofsAllFrames);
 
   std::cout << "X (input)\n";
   std::cout << x << '\n';

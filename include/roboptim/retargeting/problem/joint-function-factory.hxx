@@ -127,8 +127,9 @@ namespace roboptim
 	boost::shared_ptr<T> cost =
 	  boost::make_shared<BodyLaplacianDeformationEnergyChoreonoid<
             typename T::traits_t> >
-	  (data.interactionMesh,
-	   data.trajectory->parameters (),
+	  (data.markerMapping,
+	   data.interactionMesh,
+	   data.trajectory,
 	  jointToMarker);
 
         // bind the joints that must not be taken into account

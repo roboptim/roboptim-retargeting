@@ -1,5 +1,6 @@
 ROBOPTIM_RETARGETING_TEST(choreonoid-body-trajectory)
 ROBOPTIM_RETARGETING_TEST(distance-to-marker)
+ROBOPTIM_RETARGETING_TEST(libmocap-marker-trajectory)
 ROBOPTIM_RETARGETING_TEST(minimum-jerk)
 
 ADD_SUBDIRECTORY(body-laplacian-deformation-energy)

@@ -40,6 +40,7 @@
 #include <roboptim/trajectory/trajectory.hh>
 
 #include <roboptim/retargeting/problem/marker-to-joint-problem-builder.hh>
+#include <roboptim/retargeting/exception.hh>
 
 #include "path.hh"
 
@@ -236,6 +237,10 @@ static bool parseOptions
 
   po::notify (vm);
 
+  roboptim::retargeting::resolvePath (options.markerSet);
+  roboptim::retargeting::resolvePath (options.markersTrajectory);
+  roboptim::retargeting::resolvePath (options.robotModel);
+  roboptim::retargeting::resolvePath (options.morphing);
   return true;
 }
 
@@ -395,6 +400,11 @@ int main (int argc, const char* argv[])
   try
     {
       return safeMain (argc, argv);
+    }
+  catch (const roboptim::retargeting::Exception& e)
+    {
+      std::cerr << e << roboptim::iendl;
+      return 1;
     }
   catch (const std::exception& e)
     {

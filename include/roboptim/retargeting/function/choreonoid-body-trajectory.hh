@@ -20,6 +20,7 @@
 # include <boost/array.hpp>
 # include <boost/shared_ptr.hpp>
 # include <roboptim/trajectory/vector-interpolation.hh>
+# include <roboptim/retargeting/utility.hh>
 
 # include <cnoid/BodyMotion>
 
@@ -27,6 +28,8 @@ namespace roboptim
 {
   namespace retargeting
   {
+    ROBOPTIM_RETARGETING_PREDECLARE_CLASS (ChoreonoidBodyTrajectory);
+
     /// \brief Discrete trajectory built from a cnoid::BodyMotion
     ///        object
     class ChoreonoidBodyTrajectory :
@@ -38,7 +41,7 @@ namespace roboptim
       ROBOPTIM_IMPLEMENT_CLONE (ChoreonoidBodyTrajectory);
 
       explicit ChoreonoidBodyTrajectory (cnoid::BodyMotionPtr bodyMotion,
-					 bool addFreeFloating) throw ()
+					 bool addFreeFloating)
 	: VectorInterpolation
 	  (computeParametersFromBodyMotion (bodyMotion, addFreeFloating),
 	   (addFreeFloating ? 6 : 0) + bodyMotion->numJoints (),
@@ -47,7 +50,7 @@ namespace roboptim
       {
       }
 
-      virtual ~ChoreonoidBodyTrajectory () throw ()
+      virtual ~ChoreonoidBodyTrajectory ()
       {}
 
     private:

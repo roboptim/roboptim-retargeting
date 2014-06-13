@@ -23,7 +23,6 @@
 # include <roboptim/core/numeric-linear-function.hh>
 # include <roboptim/core/filter/plus.hh>
 
-//# include <roboptim/retargeting/function/bone-length.hh>
 # include <roboptim/retargeting/function/marker-laplacian-deformation-energy/choreonoid.hh>
 # include <roboptim/retargeting/function/bone-length.hh>
 
@@ -54,9 +53,10 @@ namespace roboptim
 
       template <typename T>
       boost::shared_ptr<T>
-      laplacianDeformationEnergy (const MarkerFunctionData&)
+      laplacianDeformationEnergy (const MarkerFunctionData& data)
       {
-	return boost::shared_ptr<T> ();
+	return boost::make_shared<MarkerLaplacianDeformationEnergyChoreonoidDense>
+	  (data.mapping, data.mesh, data.trajectory);
       }
 
       template <typename T>

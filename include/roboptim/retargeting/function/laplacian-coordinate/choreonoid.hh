@@ -1,8 +1,30 @@
+// Copyright (C) 2014 by Thomas Moulard, AIST, CNRS.
+//
+// This file is part of the roboptim.
+//
+// roboptim is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// roboptim is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef ROBOPTIM_RETARGETING_FUNCTION_LAPLACIAN_COORDINATE_CHOREONOID_HH
 # define ROBOPTIM_RETARGETING_FUNCTION_LAPLACIAN_COORDINATE_CHOREONOID_HH
 # include <stdexcept>
+
 # include <roboptim/core/numeric-linear-function.hh>
-# include <cnoid/BodyIMesh>
+# include <roboptim/retargeting/interaction-mesh.hh>
+# include <roboptim/retargeting/morphing.hh>
+
+# include <roboptim/retargeting/marker-mapping.hh>
+# include <roboptim/retargeting/interaction-mesh.hh>
 
 namespace roboptim
 {
@@ -29,30 +51,34 @@ namespace roboptim
       (GenericNumericLinearFunction<T>);
 
       explicit LaplacianCoordinateChoreonoid
-      (cnoid::BodyIMeshPtr mesh,
-       int frameId,
-       const vector_t& originalMarkerPosition) throw (std::runtime_error)
+      (MarkerMappingShPtr markerMapping,
+       InteractionMeshShPtr mesh,
+       std::size_t frameId,
+       const vector_t& originalMarkerPosition)
 	: GenericNumericLinearFunction<T>
-	  (matrix_t (mesh->numMarkers () * 3, mesh->numMarkers () * 3),
-	   vector_t (mesh->numMarkers () * 3))
+	  (matrix_t (safeGet (markerMapping).numMarkersEigen () * 3,
+		     safeGet (markerMapping).numMarkersEigen () * 3),
+	   vector_t (safeGet (markerMapping).numMarkersEigen () * 3))
       {
+	ROBOPTIM_RETARGETING_PRECONDITION (!!markerMapping);
+	ROBOPTIM_RETARGETING_PRECONDITION (!!mesh);
+
 	matrix_t& A = this->A ();
 	vector_t& b = this->b ();
 
 	// Compute A
 	A.setIdentity ();
-	const cnoid::BodyIMesh::Frame& neighborLists =
-	  mesh->frame (frameId);
-	for (int markerId = 0; markerId < mesh->numMarkers (); ++markerId)
+	const InteractionMesh::neighborsMap_t& neighborsMap =
+	  mesh->neighbors (frameId);
+	for (InteractionMesh::neighborsMap_t::const_iterator itMarker = neighborsMap.begin ();
+	     itMarker != neighborsMap.end (); ++itMarker)
 	  {
-	    const cnoid::BodyIMesh::NeighborList&
-	      neighbors = neighborLists[markerId];
-	    for (std::size_t l = 0; l < neighbors.size (); ++l)
+	    for (InteractionMesh::neighbors_t::const_iterator itNeighbor = itMarker->second.begin ();
+		 itNeighbor != itMarker->second.end (); ++itNeighbor)
 	      {
-		const int neighborId = neighbors[l];
 		double weight =
-		  (originalMarkerPosition.segment (markerId * 3, 3) -
-		   originalMarkerPosition.segment (neighborId * 3, 3)).norm ();
+		  (safeGet (markerMapping).marker (originalMarkerPosition, itMarker->first) -
+		   safeGet (markerMapping).marker (originalMarkerPosition, *itNeighbor)).norm ();
 		if (std::abs (weight) > 1e-8)
 		  weight = 1. / weight;
 		else
@@ -61,6 +87,8 @@ namespace roboptim
 		// if i > j w(i,j) becomes w(j,i) as we will have i is
 		// a neighbor of j and j is a neighbor of i, divide by
 		// two the weight.
+		size_type markerId = safeGet (markerMapping).markerIdEigen (itMarker->first);
+		size_type neighborId = safeGet (markerMapping).markerIdEigen (*itNeighbor);
 		A (std::min (markerId, neighborId),
 		   std::max (markerId, neighborId)) -= weight / 2.;
 	      }

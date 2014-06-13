@@ -24,6 +24,7 @@
 
 # include <roboptim/trajectory/trajectory.hh>
 
+# include <roboptim/retargeting/interaction-mesh.hh>
 # include <roboptim/retargeting/morphing.hh>
 # include <roboptim/retargeting/problem/function-factory.hh>
 
@@ -74,8 +75,8 @@ namespace roboptim
       std::vector<boost::optional<Function::value_type> >
       disabledJointsConfiguration;
 
-      /// \brief Interaction Mesh (loaded by Choreonoid)
-      cnoid::BodyIMeshPtr interactionMesh;
+      /// \brief Interaction Mesh
+      InteractionMeshShPtr interactionMesh;
 
       Function::vector_t::Index frameId;
 

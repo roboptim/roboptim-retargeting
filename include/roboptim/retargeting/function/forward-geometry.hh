@@ -20,38 +20,38 @@ namespace roboptim
 
       explicit ForwardGeometry (size_type nDofs,
 				std::string title)
-	throw ()
+
 	: GenericDifferentiableFunction<T>
 	  (nDofs, 6, (boost::format ("ForwardGeometry [%s]") % title).str ())
       {}
 
-      virtual ~ForwardGeometry () throw ()
+      virtual ~ForwardGeometry ()
       {}
 
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
-      translation (const Eigen::MatrixBase<Derived>& x) const throw ()
+      translation (const Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (0, 3);
       }
 
       template <typename Derived>
       Eigen::VectorBlock<Derived>
-      translation (Eigen::MatrixBase<Derived>& x) const throw ()
+      translation (Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (0, 3);
       }
 
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
-      rotation (const Eigen::MatrixBase<Derived>& x) const throw ()
+      rotation (const Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (3, 3);
       }
 
       template <typename Derived>
       Eigen::VectorBlock<Derived>
-      rotation (Eigen::MatrixBase<Derived>& x) const throw ()
+      rotation (Eigen::MatrixBase<Derived>& x) const
       {
 	return x.segment (3, 3);
       }
@@ -59,7 +59,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<const Derived>
       q (const Eigen::MatrixBase<Derived>& x,
-	 bool withBaseLink = true) const throw ()
+	 bool withBaseLink = true) const
       {
 	std::size_t offset = 0;
 	if (!withBaseLink)
@@ -70,7 +70,7 @@ namespace roboptim
       template <typename Derived>
       Eigen::VectorBlock<Derived>
       q (Eigen::MatrixBase<Derived>& x,
-	 bool withBaseLink = true) const throw ()
+	 bool withBaseLink = true) const
       {
 	std::size_t offset = 0;
 	if (!withBaseLink)
