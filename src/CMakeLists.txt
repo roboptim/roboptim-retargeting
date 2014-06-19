@@ -11,7 +11,8 @@ ADD_LIBRARY(roboptim-retargeting SHARED
   marker-mapping.cc
   morphing.cc
   path.cc
-  trc.cc
+  io/choreonoid-body-motion.cc
+  io/trc.cc
 )
 
 PKG_CONFIG_USE_DEPENDENCY(roboptim-retargeting yaml-cpp)

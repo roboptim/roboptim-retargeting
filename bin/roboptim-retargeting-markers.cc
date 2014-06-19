@@ -29,10 +29,11 @@
 #include <roboptim/core/solver-factory.hh>
 
 #include <roboptim/retargeting/exception.hh>
+#include <roboptim/retargeting/io/trc.hh>
 #include <roboptim/retargeting/problem/marker-problem-builder.hh>
 
 #include "path.hh"
-#include "trc.hh"
+
 
 namespace roboptim
 {
@@ -147,7 +148,6 @@ int safeMain (int argc, const char* argv[])
   boost::shared_ptr<problem_t> problem;
   roboptim::retargeting::MarkerFunctionData data;
   builder (problem, data);
-  roboptim::retargeting::writeTRC ("/tmp/foo.trc", *data.trajectory);
 
   if (!problem)
     throw std::runtime_error ("failed to build problem");
@@ -176,9 +176,13 @@ int safeMain (int argc, const char* argv[])
 
   const solver_t::result_t& result = solver.minimum ();
 
-  boost::shared_ptr<roboptim::Trajectory<3> > finalTrajectory =
-    boost::shared_ptr<roboptim::Trajectory<3> >
-    (data.trajectory->clone ());
+  //FIXME: does not work with splines.
+  boost::shared_ptr<roboptim::VectorInterpolation> finalTrajectory =
+    boost::make_shared<roboptim::VectorInterpolation>
+    (safeGet (data.trajectory).parameters (),
+     safeGet (data.trajectory).outputSize (),
+     safeGet (data.trajectory).parameters ().size ()
+     / safeGet (data.trajectory).outputSize ());
 
   if (result.which () == solver_t::SOLVER_VALUE_WARNINGS)
     {
@@ -201,7 +205,8 @@ int safeMain (int argc, const char* argv[])
       throw std::runtime_error ("Optimization failed");
     }
 
-  roboptim::retargeting::writeTRC (options.outputFile, *finalTrajectory);
+  roboptim::retargeting::writeTRC
+    (options.outputFile, *finalTrajectory, safeGet (data.mapping));
 
   return 0;
 }

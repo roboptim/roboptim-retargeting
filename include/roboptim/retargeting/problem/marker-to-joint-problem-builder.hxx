@@ -64,6 +64,7 @@ namespace roboptim
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
       data.robotModel = loader.load (options.robotModel);
+      data.markersTrajectory.normalize ();
 
       if (!data.inputTrajectory)
 	{

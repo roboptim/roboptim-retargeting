@@ -17,13 +17,14 @@
 
 #ifndef ROBOPTIM_RETARGETING_TRC_HH
 # define ROBOPTIM_RETARGETING_TRC_HH
-# include <string>\
+# include <string>
 
 # include <boost/shared_ptr.hpp>
 
-# include <roboptim/trajectory/trajectory.hh>
+# include <roboptim/trajectory/vector-interpolation.hh>
 
 # include <roboptim/retargeting/config.hh>
+# include <roboptim/retargeting/marker-mapping.hh>
 
 namespace roboptim
 {
@@ -35,7 +36,8 @@ namespace roboptim
     /// \param[in] trajectory trajectory to be written
     ROBOPTIM_RETARGETING_DLLEXPORT void writeTRC
     (const std::string& filename,
-     const roboptim::Trajectory<3>& trajectory);
+     const roboptim::VectorInterpolation& trajectory,
+     const MarkerMapping& mapping);
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 

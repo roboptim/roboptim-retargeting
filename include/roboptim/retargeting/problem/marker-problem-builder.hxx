@@ -48,6 +48,7 @@ namespace roboptim
 	libmocap::MarkerSetFactory ().load (options.markerSet);
       data.markersTrajectory =
 	libmocap::MarkerTrajectoryFactory ().load (options.markersTrajectory);
+      data.markersTrajectory.normalize ();
 
       data.robotModel = loader.load (options.robotModel);
       data.morphing = loadMorphingData (options.morphing);

@@ -18,14 +18,15 @@
 #include <fstream>
 #include <boost/format.hpp>
 
-#include "trc.hh"
+#include <roboptim/retargeting/io/trc.hh>
 
 namespace roboptim
 {
   namespace retargeting
   {
     void writeTRC (const std::string& filename,
-		   const roboptim::Trajectory<3>& trajectory)
+		   const roboptim::VectorInterpolation& trajectory,
+		   const MarkerMapping& mapping)
     {
       typedef roboptim::Trajectory<3>::value_type value_type;
 
@@ -34,16 +35,11 @@ namespace roboptim
       std::string headerFormatStr =
 	"PathFileType	%d	%s	%s\n"
 	"DataRate	CameraRate	NumFrames	NumMarkers	Units	OrigDataRate	OrigDataStartFrame	OrigNumFrames\n"
-	"%f	%f	      %d	%d	%s	%f	%d	      %d\n"
-	"Frame#	Time	box1			box2			box3			box4\n"
-	"X1	Y1	Z1	X2	Y2	Z2	X3	Y3	Z3	X4	Y4	Z4\n";
-
+	"%f	%f	      %d	%d	%s	%f	%d	      %d\n";
       typedef roboptim::Function::vector_t::Index index_t;
       index_t numMarkers =
 	static_cast<index_t> (trajectory.outputSize () / 3);
-      index_t numFrames =
-	static_cast<index_t>
-	(trajectory.length () / static_cast<value_type> (trajectory.outputSize ()));
+      index_t numFrames = trajectory.numFrames ();
       index_t dataRate = static_cast<index_t>
 	(trajectory.length () / static_cast<value_type> (numFrames));
 
@@ -63,6 +59,25 @@ namespace roboptim
 	;
 
       file << headerFormat.str ();
+
+      // Columns descriptions (markers)
+      file << "Frame# Time ";
+      for (index_t nMarker = 0;
+	   nMarker < trajectory.outputSize () / 3; ++nMarker)
+	{
+	  file << mapping.markerNameEigen (nMarker) << "\t";
+	}
+      file << "\n";
+      // Columns descriptions (x, y, z...)
+      file << "\t \t ";
+      for (index_t nMarker = 0;
+	   nMarker < trajectory.outputSize () / 3; ++nMarker)
+	{
+	  file << "X" << nMarker << "\t";
+	  file << "Y" << nMarker << "\t";
+	  file << "Z" << nMarker << "\t";
+	}
+      file << "\n";
 
       for (index_t frameId = 0; frameId < numFrames; ++frameId)
 	{
