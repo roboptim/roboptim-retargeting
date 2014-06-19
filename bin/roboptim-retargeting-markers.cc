@@ -177,12 +177,15 @@ int safeMain (int argc, const char* argv[])
   const solver_t::result_t& result = solver.minimum ();
 
   //FIXME: does not work with splines.
+  roboptim::Function::size_type numFrames =
+    static_cast<roboptim::Function::size_type>
+    (safeGet (data.trajectory).parameters ().size ())
+    / safeGet (data.trajectory).outputSize ();
   boost::shared_ptr<roboptim::VectorInterpolation> finalTrajectory =
     boost::make_shared<roboptim::VectorInterpolation>
     (safeGet (data.trajectory).parameters (),
      safeGet (data.trajectory).outputSize (),
-     safeGet (data.trajectory).parameters ().size ()
-     / safeGet (data.trajectory).outputSize ());
+     safeGet (data.trajectory).length () / numFrames);
 
   if (result.which () == solver_t::SOLVER_VALUE_WARNINGS)
     {

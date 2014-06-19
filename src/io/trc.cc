@@ -40,8 +40,8 @@ namespace roboptim
       index_t numMarkers =
 	static_cast<index_t> (trajectory.outputSize () / 3);
       index_t numFrames = trajectory.numFrames ();
-      index_t dataRate = static_cast<index_t>
-	(trajectory.length () / static_cast<value_type> (numFrames));
+      value_type dataRate =
+	static_cast<value_type> (numFrames) / trajectory.length ();
 
       boost::format headerFormat (headerFormatStr);
       headerFormat
@@ -73,15 +73,18 @@ namespace roboptim
       for (index_t nMarker = 0;
 	   nMarker < trajectory.outputSize () / 3; ++nMarker)
 	{
-	  file << "X" << nMarker << "\t";
-	  file << "Y" << nMarker << "\t";
-	  file << "Z" << nMarker << "\t";
+	  // + 1 as indexed from 1, not 0
+	  file << "X" << 1 + nMarker << "\t";
+	  file << "Y" << 1 + nMarker << "\t";
+	  file << "Z" << 1 + nMarker << "\t";
 	}
       file << "\n";
 
-      for (index_t frameId = 0; frameId < numFrames; ++frameId)
+      value_type t = 0.;
+      for (index_t frameId = 0; frameId < numFrames;
+	   ++frameId, t += 1. / dataRate)
 	{
-	  file << (frameId + 1) << " ";
+	  file << (frameId + 1) << " " << t << " ";
 	  for (index_t markerId = 0; markerId < numMarkers; ++markerId)
 	    file
 	      << trajectory.parameters ()
