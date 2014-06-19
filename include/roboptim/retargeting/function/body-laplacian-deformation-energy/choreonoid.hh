@@ -120,10 +120,10 @@ namespace roboptim
 
       /// \brief Build the cost function.
       ///
+      /// \param markerMapping marker mapping
       /// \param mesh Interaction Mesh
-      /// \param initialJointsTrajectory initial articular trajectory
+      /// \param trajectory initial articular trajectory
       ///        for the whole motion (all frames).
-      ///
       /// \param jointToMarker shared pointer to the JointToMarker
       ///        function.
       explicit BodyLaplacianDeformationEnergyChoreonoid

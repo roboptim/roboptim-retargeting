@@ -59,9 +59,11 @@ namespace roboptim
     ROBOPTIM_RETARGETING_DLLEXPORT std::ostream&
     operator<< (std::ostream&, const InteractionMesh&);
 
-    /// \brief Build an interaction mesh from marker motion.
+    /// \brief Build an interaction mesh from marker motion and marker
+    ///        mapping.
     ///
     /// \param[in] trajectory marker trajectory
+    /// \param[in] markerMapping marker mapping
     /// \return Interaction Mesh
     ROBOPTIM_RETARGETING_DLLEXPORT InteractionMeshShPtr
     buildInteractionMeshFromMarkerMotion

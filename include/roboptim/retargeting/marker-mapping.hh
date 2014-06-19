@@ -84,12 +84,35 @@ namespace roboptim
       map_t mapping_;
     };
 
+    /// \brief Override the operator<< to display mapping objects.
+    ///
+    /// Like many other RobOptim classes, real display is done by the
+    /// MarkerMapping::print method.
     ROBOPTIM_RETARGETING_DLLEXPORT std::ostream&
     operator<< (std::ostream& o, const MarkerMapping& mapping);
 
+    /// \brief Build marker mapping from markers trajectory.
+    ///
+    /// A mapping between markers names and their ID can be created
+    /// using markers trajectory. libmocap provides all the information to do so.
+    ///
+    /// \param[in] markerTrajectory libmocap markers trajectory
+    /// \return return a shared pointer to the newly instantiated object
     ROBOPTIM_RETARGETING_DLLEXPORT MarkerMappingShPtr
     buildMarkerMappingFromMotion (const libmocap::MarkerTrajectory& markerTrajectory);
 
+    /// \brief Build marker mapping from a morphing object.
+    ///
+    /// When markers trajectory is not available (i.e. joint based
+    /// optimization), marker mapping can alternatively be built from
+    /// a morphing object.
+    ///
+    /// \warning there is no guarantee that the order will be the same
+    ///		 that when using the #buildMarkerMappingFromMotion
+    ///		 function.
+    ///
+    /// \param [in] morphing morphing data
+    /// \return return a shared pointer to the newly instantiated object
     ROBOPTIM_RETARGETING_DLLEXPORT MarkerMappingShPtr
     buildMarkerMappingFromMorphing (const MorphingData& morphing);
   } // end of namespace retargeting.

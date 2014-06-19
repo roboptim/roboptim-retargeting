@@ -32,7 +32,9 @@ namespace roboptim
     /// \brief Define a pair (marker, offset).
     struct ROBOPTIM_RETARGETING_DLLEXPORT MorphingDataMapping
     {
+      /// \brief marker name
       std::string marker;
+      /// \brief position of the marker w.r.t to the local body frame.
       Eigen::Vector3d offset;
 
     public:
@@ -111,7 +113,7 @@ namespace roboptim
     /// If an error occurs, this function throw a std::runtime_error
     /// exception or a subtype of this class.
     ///
-    /// \param[in] YAML file path
+    /// \param[in] filename file path
     /// \return Morphing data.
     ROBOPTIM_RETARGETING_DLLEXPORT MorphingData
     loadMorphingData (const std::string& filename);

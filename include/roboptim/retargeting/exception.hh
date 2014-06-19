@@ -60,12 +60,28 @@ namespace roboptim
     ROBOPTIM_RETARGETING_DLLEXPORT std::ostream&
     operator<< (std::ostream&, const Exception&);
 
+    /// \brief Exception thrown when an assertion check fails.
     ROBOPTIM_RETARGETING_EXCEPTION (Assertion);
+
+    /// \brief Exception thrown when a pre-condition fails.
+    ///
+    /// In contract programming, pre-condition are conditions that
+    /// must be met before running an algorithm.
     ROBOPTIM_RETARGETING_EXCEPTION (PreCondition);
+
+    /// \brief Exception thrown when a post-condition fails.
+    ///
+    /// In contract programming, post-condition are conditions that
+    /// must be met once an algorithm has finished.
     ROBOPTIM_RETARGETING_EXCEPTION (PostCondition);
 
+    /// \brief Exception thrown when dereferencing a null pointer.
     ROBOPTIM_RETARGETING_EXCEPTION (BadPointer);
 
+    /// \brief Exception thrown when a marker cannot be found.
+    ///
+    /// It usually happens when the number of loaded markers does not
+    /// match the data size.
     class ROBOPTIM_RETARGETING_DLLEXPORT MarkerNotFound : public Exception
     {
     public:

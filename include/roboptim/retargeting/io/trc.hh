@@ -34,6 +34,7 @@ namespace roboptim
     ///
     /// \param[in] filename output filename
     /// \param[in] trajectory trajectory to be written
+    /// \param[in] mapping marker mapping
     ROBOPTIM_RETARGETING_DLLEXPORT void writeTRC
     (const std::string& filename,
      const roboptim::VectorInterpolation& trajectory,

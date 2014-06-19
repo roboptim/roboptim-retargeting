@@ -35,7 +35,7 @@ namespace roboptim
     /// \param[in] trajectory trajectory to be written
     ROBOPTIM_RETARGETING_DLLEXPORT void
     writeBodyMotion (const std::string& filename,
-		     boost::shared_ptr<roboptim::Trajectory<3> > result);
+		     boost::shared_ptr<roboptim::Trajectory<3> > trajectory);
   } // end of namespace retargeting.
 } // end of namespace roboptim.
 
