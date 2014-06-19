@@ -24,6 +24,7 @@
 
 # include <cnoid/BodyLoader>
 # include <cnoid/BodyMotion>
+# include <cnoid/ValueTree>
 
 # include <roboptim/core/problem.hh>
 # include <roboptim/core/filter/bind.hh>
