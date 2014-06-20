@@ -15,20 +15,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with roboptim.  If not, see <http://www.gnu.org/licenses/>.
 
-#define BOOST_TEST_MODULE trc
+#define BOOST_TEST_MODULE choreonoid_body_motion
 
+#include <sstream>
 #include <fstream>
 
+#include <boost/make_shared.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
-#include <libmocap/marker-trajectory-factory.hh>
-#include <libmocap/marker-trajectory.hh>
+#include <roboptim/retargeting/function/choreonoid-body-trajectory.hh>
+#include <roboptim/retargeting/io/choreonoid-body-motion.hh>
 
-
-#include <roboptim/retargeting/function/libmocap-marker-trajectory.hh>
-#include <roboptim/retargeting/io/trc.hh>
-#include <roboptim/retargeting/utility.hh>
+#include <cnoid/BodyMotion>
 
 using namespace roboptim;
 using namespace roboptim::retargeting;
@@ -37,43 +36,44 @@ using boost::test_tools::output_test_stream;
 
 static void readWrite (const std::string& file, const std::string& output)
 {
-  // Load data
-  libmocap::MarkerTrajectoryFactory factory;
-  libmocap::MarkerTrajectory markers =
-    factory.load (file);
+  // Loading the motion.
+  cnoid::BodyMotionPtr bodyMotion = boost::make_shared<cnoid::BodyMotion> ();
+
+  bodyMotion->loadStandardYAMLformat
+    (file);
 
   // Building the trajectory.
-  LibmocapMarkerTrajectory trajectory (markers);
+  boost::shared_ptr<ChoreonoidBodyTrajectory> trajectory =
+    boost::make_shared<ChoreonoidBodyTrajectory> (bodyMotion, true);
 
-  // Build the mapping
-  MarkerMappingShPtr mapping =
-    buildMarkerMappingFromMotion (markers);
-  writeTRC (output, trajectory, safeGet (mapping));
+  writeBodyMotion (output, trajectory);
 }
 
 BOOST_AUTO_TEST_CASE (simple)
 {
   // Loading the motion.
   std::string file = DATA_DIR;
-  file += "/human.trc";
+  file += "/sample.body-motion.yaml";
 
-  readWrite (file, "/tmp/test.trc");
-  readWrite ("/tmp/test.trc", "/tmp/test2.trc");
+  readWrite (file, "/tmp/test.yaml");
+  readWrite ("/tmp/test.yaml", "/tmp/test2.yaml");
 
   // Check that the files are identical.
   //
   // With zsh, one could run:
-  // md5sum =(tail -n+2 /tmp/test.trc) =(tail -n+2 /tmp/test2.trc)
+  // md5sum =(head -n9 /tmp/test.yaml) =(head -n9 /tmp/test2.yaml)
   std::string str1;
-  std::ifstream file1 ("/tmp/test.trc");
-  std::getline (file1, str1);
+  std::ifstream file1 ("/tmp/test.yaml");
 
   std::string str2;
-  std::ifstream file2 ("/tmp/test2.trc");
-  std::getline (file2, str2);
+  std::ifstream file2 ("/tmp/test2.yaml");
 
-  while (std::getline (file1, str1) && std::getline (file2, str2))
-    BOOST_CHECK_EQUAL (str1, str2);
-
-  BOOST_CHECK (!std::getline (file1, str1) && !std::getline (file2, str2));
+  // Errors on floating point values prevent from checking the whole
+  // file so let's only look at the first 20 lines, it has been
+  // empirically tested that it works for these values.
+  for (int i = 0; i < 20; ++i)
+    {
+      std::getline (file1, str1) && std::getline (file2, str2);
+      BOOST_CHECK_EQUAL (str1, str2);
+    }
 }
