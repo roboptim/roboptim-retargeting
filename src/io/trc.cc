@@ -78,7 +78,7 @@ namespace roboptim
 	  file << "Y" << 1 + nMarker << "\t";
 	  file << "Z" << 1 + nMarker << "\t";
 	}
-      file << "\n";
+      file << "\n\n";
 
       value_type t = 0.;
       for (index_t frameId = 0; frameId < numFrames;
