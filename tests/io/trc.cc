@@ -35,9 +35,11 @@ using boost::test_tools::output_test_stream;
 
 static void readWrite (const std::string& file, const std::string& output)
 {
+  // Load data
   libmocap::MarkerTrajectoryFactory factory;
   libmocap::MarkerTrajectory markers =
     factory.load (file);
+
   // Building the trajectory.
   LibmocapMarkerTrajectory trajectory (markers);
 
@@ -55,4 +57,7 @@ BOOST_AUTO_TEST_CASE (simple)
 
   readWrite (file, "/tmp/test.trc");
   readWrite ("/tmp/test.trc", "/tmp/test2.trc");
+
+  //FIXME: check that test.trc and test2.trc are the same
+  //automatically...
 }
